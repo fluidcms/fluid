@@ -1,0 +1,23 @@
+{
+    "name": "fluidcms/fluid",
+    "type": "library",
+    "description": "CMS",
+    "keywords": ["CMS"],
+    "homepage": "https://bitbucket.org/fluidcms/fluid",
+    "license": "none",
+    "authors": [
+        {
+            "name": "Gabriel Bull",
+            "email": "gavroche.bull@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "twig/twig": "v1.9.2"
+    },
+    "autoload": {
+        "psr-0" : {
+            "Fluid" : "src/"
+        }
+    }
+}
