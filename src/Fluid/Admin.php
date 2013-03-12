@@ -14,7 +14,7 @@ class Admin {
 		if (!empty($request)) {
 			$file = __DIR__.'/Public/'.trim($request, ' ./');
 			if (file_exists($file)) {
-			    return file_get_contents($file);
+			    return new StaticFile($file);
 			}
 		}
 		

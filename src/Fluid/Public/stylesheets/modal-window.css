@@ -1,0 +1,261 @@
+/* #Font weight
+================================================== */
+/* #Margins
+================================================== */
+/* #Animations
+================================================== */
+/* #Modal Window
+================================================== */
+/* line 7, ../../../../sass/modal-window.scss */
+div.modal-container {
+  z-index: 100;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-box;
+  display: box;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  -ms-box-orient: horizontal;
+  box-orient: horizontal;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -ms-box-align: center;
+  box-align: center;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -ms-box-pack: center;
+  box-pack: center;
+  -webkit-animation-name: modal-opacity;
+  -webkit-animation-duration: 0.4s;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-timing-function: ease-in-out;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-name: modal-opacity;
+  -moz-animation-duration: 0.4s;
+  -moz-animation-iteration-count: 1;
+  -moz-animation-timing-function: ease-in-out;
+  -moz-animation-fill-mode: forwards;
+  -o-animation-name: modal-opacity;
+  -o-animation-duration: 0.4s;
+  -o-animation-iteration-count: 1;
+  -o-animation-timing-function: ease-in-out;
+  -o-animation-fill-mode: forwards;
+  -ms-animation-name: modal-opacity;
+  -ms-animation-duration: 0.4s;
+  -ms-animation-iteration-count: 1;
+  -ms-animation-timing-function: ease-in-out;
+  -ms-animation-fill-mode: forwards;
+  animation-name: modal-opacity;
+  animation-duration: 0.4s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+/* line 22, ../../../../sass/modal-window.scss */
+div.modal-container div.modal-window {
+  width: 320px;
+  padding: 20px 30px;
+  background: #f3f7fb;
+  margin-bottom: 200px;
+  border-radius: 3px;
+  border: 1px solid #cccccc;
+  -webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
+}
+/* line 30, ../../../../sass/modal-window.scss */
+div.modal-container div.modal-window div.buttons {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-box;
+  display: box;
+  -webkit-box-pack: end;
+  -moz-box-pack: end;
+  -ms-box-pack: end;
+  box-pack: end;
+}
+
+/* line 36, ../../../../sass/modal-window.scss */
+body.blur #main, body.blur #toolbar, body.blur #target {
+  -webkit-animation-name: modal-blur;
+  -webkit-animation-duration: 0.4s;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-timing-function: ease-in-out;
+  -webkit-animation-fill-mode: both;
+  -moz-animation-name: modal-blur;
+  -moz-animation-duration: 0.4s;
+  -moz-animation-iteration-count: 1;
+  -moz-animation-timing-function: ease-in-out;
+  -moz-animation-fill-mode: both;
+  -o-animation-name: modal-blur;
+  -o-animation-duration: 0.4s;
+  -o-animation-iteration-count: 1;
+  -o-animation-timing-function: ease-in-out;
+  -o-animation-fill-mode: both;
+  -ms-animation-name: modal-blur;
+  -ms-animation-duration: 0.4s;
+  -ms-animation-iteration-count: 1;
+  -ms-animation-timing-function: ease-in-out;
+  -ms-animation-fill-mode: both;
+  animation-name: modal-blur;
+  animation-duration: 0.4s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+}
+
+@-webkit-keyframes modal-blur {
+  /* line 42, ../../../../sass/modal-window.scss */
+  0% {
+    -webkit-filter: blur(0);
+    -moz-filter: blur(0);
+    -o-filter: blur(0);
+    filter: blur(0);
+  }
+
+  /* line 48, ../../../../sass/modal-window.scss */
+  100% {
+    -webkit-filter: blur(3px);
+    -moz-filter: blur(3px);
+    -o-filter: blur(3px);
+    filter: blur(3px);
+  }
+}
+
+@-moz-keyframes modal-blur {
+  /* line 42, ../../../../sass/modal-window.scss */
+  0% {
+    -webkit-filter: blur(0);
+    -moz-filter: blur(0);
+    -o-filter: blur(0);
+    filter: blur(0);
+  }
+
+  /* line 48, ../../../../sass/modal-window.scss */
+  100% {
+    -webkit-filter: blur(3px);
+    -moz-filter: blur(3px);
+    -o-filter: blur(3px);
+    filter: blur(3px);
+  }
+}
+
+@-o-keyframes modal-blur {
+  /* line 42, ../../../../sass/modal-window.scss */
+  0% {
+    -webkit-filter: blur(0);
+    -moz-filter: blur(0);
+    -o-filter: blur(0);
+    filter: blur(0);
+  }
+
+  /* line 48, ../../../../sass/modal-window.scss */
+  100% {
+    -webkit-filter: blur(3px);
+    -moz-filter: blur(3px);
+    -o-filter: blur(3px);
+    filter: blur(3px);
+  }
+}
+
+@-ms-keyframes modal-blur {
+  /* line 42, ../../../../sass/modal-window.scss */
+  0% {
+    -webkit-filter: blur(0);
+    -moz-filter: blur(0);
+    -o-filter: blur(0);
+    filter: blur(0);
+  }
+
+  /* line 48, ../../../../sass/modal-window.scss */
+  100% {
+    -webkit-filter: blur(3px);
+    -moz-filter: blur(3px);
+    -o-filter: blur(3px);
+    filter: blur(3px);
+  }
+}
+
+@keyframes modal-blur {
+  /* line 42, ../../../../sass/modal-window.scss */
+  0% {
+    -webkit-filter: blur(0);
+    -moz-filter: blur(0);
+    -o-filter: blur(0);
+    filter: blur(0);
+  }
+
+  /* line 48, ../../../../sass/modal-window.scss */
+  100% {
+    -webkit-filter: blur(3px);
+    -moz-filter: blur(3px);
+    -o-filter: blur(3px);
+    filter: blur(3px);
+  }
+}
+
+@-webkit-keyframes modal-opacity {
+  /* line 57, ../../../../sass/modal-window.scss */
+  0% {
+    opacity: 0;
+  }
+
+  /* line 60, ../../../../sass/modal-window.scss */
+  100% {
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes modal-opacity {
+  /* line 57, ../../../../sass/modal-window.scss */
+  0% {
+    opacity: 0;
+  }
+
+  /* line 60, ../../../../sass/modal-window.scss */
+  100% {
+    opacity: 1;
+  }
+}
+
+@-o-keyframes modal-opacity {
+  /* line 57, ../../../../sass/modal-window.scss */
+  0% {
+    opacity: 0;
+  }
+
+  /* line 60, ../../../../sass/modal-window.scss */
+  100% {
+    opacity: 1;
+  }
+}
+
+@-ms-keyframes modal-opacity {
+  /* line 57, ../../../../sass/modal-window.scss */
+  0% {
+    opacity: 0;
+  }
+
+  /* line 60, ../../../../sass/modal-window.scss */
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-opacity {
+  /* line 57, ../../../../sass/modal-window.scss */
+  0% {
+    opacity: 0;
+  }
+
+  /* line 60, ../../../../sass/modal-window.scss */
+  100% {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,105 @@
+/* #Font weight
+================================================== */
+$normal: 400;
+$medium: 500;
+$bold: 700;
+$black: 900;
+
+/* #Margins
+================================================== */
+$main-margin-top: 16px;
+$main-margin-left: 16px;
+$main-margin-right: 16px;
+$main-margin-bottom: 16px;
+
+/* #Animations
+================================================== */
+	@mixin keyframes-fix($name) {
+		@-webkit-keyframes $name {		
+			@content;
+		}
+		@-moz-keyframes $name {		
+			@content;
+		}
+		@-o-keyframes $name {		
+			@content;
+		}
+		@-ms-keyframes $name {
+			@content;
+		}
+		@keyframes $name {		
+			@content;
+		}
+	}
+	@mixin animation-fix($name, $duration: 1s, $iteration: infinite, $fill-mode: none, $function: ease-in-out) {
+		-webkit-animation-name: $name;
+		-webkit-animation-duration: $duration;
+		-webkit-animation-iteration-count: $iteration;
+		-webkit-animation-timing-function: $function;		
+		-webkit-animation-fill-mode: $fill-mode;
+		-moz-animation-name: $name;
+		-moz-animation-duration: $duration;
+		-moz-animation-iteration-count: $iteration;
+		-moz-animation-timing-function: $function;		
+		-moz-animation-fill-mode: $fill-mode;
+		-o-animation-name: $name;
+		-o-animation-duration: $duration;
+		-o-animation-iteration-count: $iteration;
+		-o-animation-timing-function: $function;		
+		-o-animation-fill-mode: $fill-mode;
+		-ms-animation-name: $name;
+		-ms-animation-duration: $duration;
+		-ms-animation-iteration-count: $iteration;
+		-ms-animation-timing-function: $function;		
+		-ms-animation-fill-mode: $fill-mode;
+		animation-name: $name;
+		animation-duration: $duration;
+		animation-iteration-count: $iteration;
+		animation-timing-function: $function;		
+		animation-fill-mode: $fill-mode;
+	}
+	@mixin no-animation() {
+		-webkit-animation-name: none;
+		-moz-animation-name: none;
+		-o-animation-name: none;
+		-ms-animation-name: none;
+		animation-name: none;
+	}
+	@mixin perspective($perspective) {
+		-webkit-perspective: $perspective;
+		-moz-perspective: $perspective;
+		-o-perspective: $perspective;
+		-ms-perspective: $perspective;
+		perspective: $perspective;
+	}
+	@mixin no-perspective() {
+		-webkit-perspective: inherit;
+		-moz-perspective: inherit;
+		-o-perspective: inherit;
+		-ms-perspective: inherit;
+		perspective: inherit;
+		-webkit-perspective-origin: inherit;
+		-moz-perspective-origin: inherit;
+		-o-perspective-origin: inherit;
+		-ms-perspective-origin: inherit;
+		perspective-origin: inherit;
+	}	
+	@mixin perspective-origin($perspective-origin) {
+		-webkit-perspective-origin: $perspective-origin;
+		-moz-perspective-origin: $perspective-origin;
+		-o-perspective-origin: $perspective-origin;
+		-ms-perspective-origin: $perspective-origin;
+		perspective-origin: $perspective-origin;
+	}
+	@mixin single-transition-fix($property: $default-transition-property, $duration: $default-transition-duration, $function: $default-transition-function, $delay: $default-transition-delay) {
+		$ms-value: comma-list();
+		$property: $property;
+		$duration: $duration;
+		$timing-function: $function;
+		$delay: $delay;
+
+		$ms-value: append($ms-value, compact(prefixed-for-transition(-ms, $property) $duration $timing-function));
+		
+		@include transition(compact($property $duration $function $delay));
+		-ms-transition: $ms-value;
+	}

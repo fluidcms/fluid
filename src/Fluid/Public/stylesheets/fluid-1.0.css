@@ -1,0 +1,866 @@
+@import url("http://fonts.googleapis.com/css?family=Roboto:400,500,700,900");
+/* #Font weight
+================================================== */
+/* #Margins
+================================================== */
+/* #Animations
+================================================== */
+/* #Reset
+================================================== */
+/* line 9, ../../../../sass/base.scss */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+}
+
+/* line 15, ../../../../sass/base.scss */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+/* line 18, ../../../../sass/base.scss */
+html, body {
+  width: 100%;
+  height: 100%;
+  line-height: 1;
+}
+
+/* line 23, ../../../../sass/base.scss */
+ol, ul {
+  list-style: none;
+}
+
+/* #Basic Styles
+================================================== */
+/* line 29, ../../../../sass/base.scss */
+body {
+  background: #383838 url("http://cdn.fluidcms.net/images/background.gif");
+  font: 12px/18px "Roboto", sans-serif;
+  color: #444;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* #Typography
+================================================== */
+/* #Links
+================================================== */
+/* line 43, ../../../../sass/base.scss */
+.link-button, .icon-button {
+  color: white;
+  font-weight: 700;
+  border-radius: 2px;
+  cursor: default;
+}
+/* line 48, ../../../../sass/base.scss */
+.link-button:active, .icon-button:active {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* line 52, ../../../../sass/base.scss */
+.link-button[disabled], [disabled].icon-button {
+  opacity: .3;
+}
+/* line 54, ../../../../sass/base.scss */
+.link-button[disabled]:active, [disabled].icon-button:active {
+  background: none;
+}
+
+/* line 59, ../../../../sass/base.scss */
+.icon-button {
+  position: relative;
+  padding-left: 14px;
+}
+/* line 63, ../../../../sass/base.scss */
+.icon-button:before {
+  position: absolute;
+  content: "";
+  display: block;
+  width: 10px;
+  height: 10px;
+  top: 3px;
+  left: 0;
+  background-image: url("http://cdn.fluidcms.net/images/sprite.png");
+}
+
+/* line 74, ../../../../sass/base.scss */
+.plus:before {
+  background-position: 0 -32px;
+}
+
+/* #Buttons
+================================================== */
+/* line 85, ../../../../sass/base.scss */
+.button,
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  display: inline-block;
+  font-size: 12px;
+  line-height: 24px;
+  text-decoration: none;
+  color: white;
+  font-weight: 900;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+  cursor: default;
+  background-color: #222;
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #a4a4a4), color-stop(5%, #a4a4a4), color-stop(6%, #7a7a7a), color-stop(100%, #515151));
+  background: -webkit-linear-gradient(top, #a4a4a4 0%, #a4a4a4 5%, #7a7a7a 6%, #515151 100%);
+  background: -moz-linear-gradient(top, #a4a4a4 0%, #a4a4a4 5%, #7a7a7a 6%, #515151 100%);
+  background: -o-linear-gradient(top, #a4a4a4 0%, #a4a4a4 5%, #7a7a7a 6%, #515151 100%);
+  background: linear-gradient(top, #a4a4a4 0%, #a4a4a4 5%, #7a7a7a 6%, #515151 100%);
+  background-repeat: no-repeat;
+  border-radius: 3px;
+  border: 1px solid #313131;
+  padding: 0 16px;
+}
+/* line 101, ../../../../sass/base.scss */
+.button.blue,
+button.blue,
+input[type="submit"].blue,
+input[type="reset"].blue,
+input[type="button"].blue {
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #6fc6fc), color-stop(5%, #6fc6fc), color-stop(6%, #2fabf7), color-stop(100%, #1677b4));
+  background: -webkit-linear-gradient(top, #6fc6fc 0%, #6fc6fc 5%, #2fabf7 6%, #1677b4 100%);
+  background: -moz-linear-gradient(top, #6fc6fc 0%, #6fc6fc 5%, #2fabf7 6%, #1677b4 100%);
+  background: -o-linear-gradient(top, #6fc6fc 0%, #6fc6fc 5%, #2fabf7 6%, #1677b4 100%);
+  background: linear-gradient(top, #6fc6fc 0%, #6fc6fc 5%, #2fabf7 6%, #1677b4 100%);
+}
+/* line 105, ../../../../sass/base.scss */
+.button:active,
+button:active,
+input[type="submit"]:active,
+input[type="reset"]:active,
+input[type="button"]:active {
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #a4a4a4), color-stop(5%, #a4a4a4), color-stop(6%, #515151), color-stop(100%, #7a7a7a));
+  background: -webkit-linear-gradient(top, #a4a4a4 0%, #a4a4a4 5%, #515151 6%, #7a7a7a 100%);
+  background: -moz-linear-gradient(top, #a4a4a4 0%, #a4a4a4 5%, #515151 6%, #7a7a7a 100%);
+  background: -o-linear-gradient(top, #a4a4a4 0%, #a4a4a4 5%, #515151 6%, #7a7a7a 100%);
+  background: linear-gradient(top, #a4a4a4 0%, #a4a4a4 5%, #515151 6%, #7a7a7a 100%);
+}
+/* line 107, ../../../../sass/base.scss */
+.button:active.blue,
+button:active.blue,
+input[type="submit"]:active.blue,
+input[type="reset"]:active.blue,
+input[type="button"]:active.blue {
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #6fc6fc), color-stop(5%, #6fc6fc), color-stop(6%, #1677b4), color-stop(100%, #2fabf7));
+  background: -webkit-linear-gradient(top, #6fc6fc 0%, #6fc6fc 5%, #1677b4 6%, #2fabf7 100%);
+  background: -moz-linear-gradient(top, #6fc6fc 0%, #6fc6fc 5%, #1677b4 6%, #2fabf7 100%);
+  background: -o-linear-gradient(top, #6fc6fc 0%, #6fc6fc 5%, #1677b4 6%, #2fabf7 100%);
+  background: linear-gradient(top, #6fc6fc 0%, #6fc6fc 5%, #1677b4 6%, #2fabf7 100%);
+}
+
+/* line 117, ../../../../sass/base.scss */
+.button[disabled],
+button[disabled],
+input[type="submit"][disabled],
+input[type="reset"][disabled],
+input[type="button"][disabled] {
+  opacity: .3;
+}
+/* line 119, ../../../../sass/base.scss */
+.button[disabled]:active,
+button[disabled]:active,
+input[type="submit"][disabled]:active,
+input[type="reset"][disabled]:active,
+input[type="button"][disabled]:active {
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #3f3f3f), color-stop(100%, #000000));
+  background: -webkit-linear-gradient(top, #3f3f3f, #000000);
+  background: -moz-linear-gradient(top, #3f3f3f, #000000);
+  background: -o-linear-gradient(top, #3f3f3f, #000000);
+  background: linear-gradient(top, #3f3f3f, #000000);
+}
+/* line 121, ../../../../sass/base.scss */
+.button[disabled]:active.blue,
+button[disabled]:active.blue,
+input[type="submit"][disabled]:active.blue,
+input[type="reset"][disabled]:active.blue,
+input[type="button"][disabled]:active.blue {
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #6fc6fc), color-stop(4%, #6fc6fc), color-stop(5%, #2fabf7), color-stop(100%, #1677b4));
+  background: -webkit-linear-gradient(top, #6fc6fc 0%, #6fc6fc 4%, #2fabf7 5%, #1677b4 100%);
+  background: -moz-linear-gradient(top, #6fc6fc 0%, #6fc6fc 4%, #2fabf7 5%, #1677b4 100%);
+  background: -o-linear-gradient(top, #6fc6fc 0%, #6fc6fc 4%, #2fabf7 5%, #1677b4 100%);
+  background: linear-gradient(top, #6fc6fc 0%, #6fc6fc 4%, #2fabf7 5%, #1677b4 100%);
+}
+
+/* Fix for odd Mozilla border & padding issues */
+/* line 129, ../../../../sass/base.scss */
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+/* #Forms
+================================================== */
+/* line 144, ../../../../sass/base.scss */
+input[type="text"],
+input[type="number"],
+input[type="password"],
+input[type="email"],
+input[type="search"],
+textarea,
+select {
+  -webkit-appearance: textfield;
+  border: 1px solid #aaaaaa;
+  border-radius: 3px;
+  height: 23px;
+  outline: none;
+  font-size: 13px;
+  color: #333;
+  margin: 0;
+  width: 210px;
+  max-width: 100%;
+  display: block;
+  background: #fff;
+  -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+  margin: 6px 0 18px 0;
+  padding: 2px 8px;
+}
+
+/* line 161, ../../../../sass/base.scss */
+select {
+  padding: 5px 0;
+  height: auto;
+}
+
+/* line 171, ../../../../sass/base.scss */
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="search"]:focus,
+textarea:focus {
+  -webkit-box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* #Container
+================================================== */
+/* line 7, ../../../../sass/fluid.scss */
+#main {
+  z-index: 3;
+  position: fixed;
+  background: #4d4d4d;
+  float: left;
+  height: 100%;
+  width: 306px;
+  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+}
+
+/* #Navigation
+================================================== */
+/* line 20, ../../../../sass/fluid.scss */
+#main nav {
+  width: 100%;
+  height: 42px;
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #292e34), color-stop(75%, #373d44), color-stop(100%, #2a2f35));
+  background: -webkit-linear-gradient(top, #292e34 0%, #373d44 75%, #2a2f35 100%);
+  background: -moz-linear-gradient(top, #292e34 0%, #373d44 75%, #2a2f35 100%);
+  background: -o-linear-gradient(top, #292e34 0%, #373d44 75%, #2a2f35 100%);
+  background: linear-gradient(top, #292e34 0%, #373d44 75%, #2a2f35 100%);
+}
+/* line 25, ../../../../sass/fluid.scss */
+#main nav ul {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-box;
+  display: box;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -ms-box-pack: center;
+  box-pack: center;
+}
+/* line 33, ../../../../sass/fluid.scss */
+#main nav a {
+  margin: 0 3px;
+  position: relative;
+  display: block;
+  width: 32px;
+  height: 42px;
+}
+/* line 39, ../../../../sass/fluid.scss */
+#main nav a:after {
+  position: absolute;
+  top: 13px;
+  left: 8px;
+  content: "";
+  display: block;
+  width: 16px;
+  height: 16px;
+  background-image: url("http://cdn.fluidcms.net/images/sprite.png");
+}
+/* line 49, ../../../../sass/fluid.scss */
+#main nav a.structure:after {
+  background-position-x: 0;
+}
+/* line 50, ../../../../sass/fluid.scss */
+#main nav a.components:after {
+  background-position-x: -16px;
+}
+/* line 51, ../../../../sass/fluid.scss */
+#main nav a.files:after {
+  background-position-x: -32px;
+}
+/* line 52, ../../../../sass/fluid.scss */
+#main nav a.intl:after {
+  background-position-x: -48px;
+}
+/* line 53, ../../../../sass/fluid.scss */
+#main nav a.diff:after {
+  background-position-x: -64px;
+}
+/* line 54, ../../../../sass/fluid.scss */
+#main nav a.current {
+  background: rgba(0, 0, 0, 0.14);
+  -webkit-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.43);
+  -moz-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.43);
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.43);
+}
+/* line 57, ../../../../sass/fluid.scss */
+#main nav a.current:after {
+  background-position-y: -16px;
+}
+
+/* #Toolbar
+================================================== */
+/* line 65, ../../../../sass/fluid.scss */
+#toolbar {
+  z-index: 2;
+  position: fixed;
+  top: 0;
+  height: 42px;
+  width: 100%;
+  padding-left: 306px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+/* line 76, ../../../../sass/fluid.scss */
+#toolbar > div {
+  position: absolute;
+  z-index: 5;
+  width: 100%;
+  height: 42px;
+  background: #e5e5e5;
+  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+}
+
+/* #Target
+================================================== */
+/* line 89, ../../../../sass/fluid.scss */
+#target {
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  padding: 42px 0 0 306px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+/* line 98, ../../../../sass/fluid.scss */
+#target iframe {
+  width: 100%;
+  height: 100%;
+}
+
+/* #Font weight
+================================================== */
+/* #Margins
+================================================== */
+/* #Animations
+================================================== */
+/* #Context Menu
+================================================== */
+/* line 6, ../../../../sass/context-menu.scss */
+div.context-menu {
+  z-index: 10;
+  position: absolute;
+  width: 260px;
+  background: white;
+  border: 1px solid #cccccc;
+  border-radius: 1px;
+  -webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
+}
+/* line 15, ../../../../sass/context-menu.scss */
+div.context-menu ul {
+  padding: 4px 0;
+}
+/* line 18, ../../../../sass/context-menu.scss */
+div.context-menu ul li a {
+  color: #333;
+  font-size: 13px;
+  display: block;
+  padding: 4px 8px;
+}
+/* line 23, ../../../../sass/context-menu.scss */
+div.context-menu ul li a:hover {
+  background: #ddd;
+}
+
+/* #Font weight
+================================================== */
+/* #Margins
+================================================== */
+/* #Animations
+================================================== */
+/* #Tool bar
+================================================== */
+/* line 7, ../../../../sass/toolbar.scss */
+div#toolbar a.toolbar-button {
+  position: relative;
+  float: left;
+  display: block;
+  font-weight: 700;
+  color: #747c84;
+  line-height: 42px;
+  padding: 0 20px 0 48px;
+  cursor: default;
+}
+/* line 16, ../../../../sass/toolbar.scss */
+div#toolbar a.toolbar-button:before {
+  content: "";
+  display: block;
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 13px;
+  left: 20px;
+  background-image: url("http://cdn.fluidcms.net/images/sprite.png");
+}
+/* line 26, ../../../../sass/toolbar.scss */
+div#toolbar a.toolbar-button.preview:before {
+  background-position: -10px -32px;
+}
+/* line 27, ../../../../sass/toolbar.scss */
+div#toolbar a.toolbar-button.edit:before {
+  background-position: -26px -32px;
+}
+/* line 29, ../../../../sass/toolbar.scss */
+div#toolbar a.toolbar-button.current {
+  background-color: #d5d5d5;
+  -webkit-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.3);
+  color: #50555a;
+}
+/* line 33, ../../../../sass/toolbar.scss */
+div#toolbar a.toolbar-button.current:before {
+  background-position-y: -48px;
+}
+
+/* #Font weight
+================================================== */
+/* #Margins
+================================================== */
+/* #Animations
+================================================== */
+/* #Modal Window
+================================================== */
+/* line 7, ../../../../sass/modal-window.scss */
+div.modal-container {
+  z-index: 100;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-box;
+  display: box;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  -ms-box-orient: horizontal;
+  box-orient: horizontal;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -ms-box-align: center;
+  box-align: center;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -ms-box-pack: center;
+  box-pack: center;
+  -webkit-animation-name: modal-opacity;
+  -webkit-animation-duration: 0.4s;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-timing-function: ease-in-out;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-name: modal-opacity;
+  -moz-animation-duration: 0.4s;
+  -moz-animation-iteration-count: 1;
+  -moz-animation-timing-function: ease-in-out;
+  -moz-animation-fill-mode: forwards;
+  -o-animation-name: modal-opacity;
+  -o-animation-duration: 0.4s;
+  -o-animation-iteration-count: 1;
+  -o-animation-timing-function: ease-in-out;
+  -o-animation-fill-mode: forwards;
+  -ms-animation-name: modal-opacity;
+  -ms-animation-duration: 0.4s;
+  -ms-animation-iteration-count: 1;
+  -ms-animation-timing-function: ease-in-out;
+  -ms-animation-fill-mode: forwards;
+  animation-name: modal-opacity;
+  animation-duration: 0.4s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+/* line 22, ../../../../sass/modal-window.scss */
+div.modal-container div.modal-window {
+  width: 320px;
+  padding: 20px 30px;
+  background: #f3f7fb;
+  margin-bottom: 200px;
+  border-radius: 3px;
+  border: 1px solid #cccccc;
+  -webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
+}
+/* line 30, ../../../../sass/modal-window.scss */
+div.modal-container div.modal-window div.buttons {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-box;
+  display: box;
+  -webkit-box-pack: end;
+  -moz-box-pack: end;
+  -ms-box-pack: end;
+  box-pack: end;
+}
+
+/* line 36, ../../../../sass/modal-window.scss */
+body.blur #main, body.blur #toolbar, body.blur #target {
+  -webkit-animation-name: modal-blur;
+  -webkit-animation-duration: 0.4s;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-timing-function: ease-in-out;
+  -webkit-animation-fill-mode: both;
+  -moz-animation-name: modal-blur;
+  -moz-animation-duration: 0.4s;
+  -moz-animation-iteration-count: 1;
+  -moz-animation-timing-function: ease-in-out;
+  -moz-animation-fill-mode: both;
+  -o-animation-name: modal-blur;
+  -o-animation-duration: 0.4s;
+  -o-animation-iteration-count: 1;
+  -o-animation-timing-function: ease-in-out;
+  -o-animation-fill-mode: both;
+  -ms-animation-name: modal-blur;
+  -ms-animation-duration: 0.4s;
+  -ms-animation-iteration-count: 1;
+  -ms-animation-timing-function: ease-in-out;
+  -ms-animation-fill-mode: both;
+  animation-name: modal-blur;
+  animation-duration: 0.4s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+}
+
+@-webkit-keyframes modal-blur {
+  /* line 42, ../../../../sass/modal-window.scss */
+  0% {
+    -webkit-filter: blur(0);
+    -moz-filter: blur(0);
+    -o-filter: blur(0);
+    filter: blur(0);
+  }
+
+  /* line 48, ../../../../sass/modal-window.scss */
+  100% {
+    -webkit-filter: blur(3px);
+    -moz-filter: blur(3px);
+    -o-filter: blur(3px);
+    filter: blur(3px);
+  }
+}
+
+@-moz-keyframes modal-blur {
+  /* line 42, ../../../../sass/modal-window.scss */
+  0% {
+    -webkit-filter: blur(0);
+    -moz-filter: blur(0);
+    -o-filter: blur(0);
+    filter: blur(0);
+  }
+
+  /* line 48, ../../../../sass/modal-window.scss */
+  100% {
+    -webkit-filter: blur(3px);
+    -moz-filter: blur(3px);
+    -o-filter: blur(3px);
+    filter: blur(3px);
+  }
+}
+
+@-o-keyframes modal-blur {
+  /* line 42, ../../../../sass/modal-window.scss */
+  0% {
+    -webkit-filter: blur(0);
+    -moz-filter: blur(0);
+    -o-filter: blur(0);
+    filter: blur(0);
+  }
+
+  /* line 48, ../../../../sass/modal-window.scss */
+  100% {
+    -webkit-filter: blur(3px);
+    -moz-filter: blur(3px);
+    -o-filter: blur(3px);
+    filter: blur(3px);
+  }
+}
+
+@-ms-keyframes modal-blur {
+  /* line 42, ../../../../sass/modal-window.scss */
+  0% {
+    -webkit-filter: blur(0);
+    -moz-filter: blur(0);
+    -o-filter: blur(0);
+    filter: blur(0);
+  }
+
+  /* line 48, ../../../../sass/modal-window.scss */
+  100% {
+    -webkit-filter: blur(3px);
+    -moz-filter: blur(3px);
+    -o-filter: blur(3px);
+    filter: blur(3px);
+  }
+}
+
+@keyframes modal-blur {
+  /* line 42, ../../../../sass/modal-window.scss */
+  0% {
+    -webkit-filter: blur(0);
+    -moz-filter: blur(0);
+    -o-filter: blur(0);
+    filter: blur(0);
+  }
+
+  /* line 48, ../../../../sass/modal-window.scss */
+  100% {
+    -webkit-filter: blur(3px);
+    -moz-filter: blur(3px);
+    -o-filter: blur(3px);
+    filter: blur(3px);
+  }
+}
+
+@-webkit-keyframes modal-opacity {
+  /* line 57, ../../../../sass/modal-window.scss */
+  0% {
+    opacity: 0;
+  }
+
+  /* line 60, ../../../../sass/modal-window.scss */
+  100% {
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes modal-opacity {
+  /* line 57, ../../../../sass/modal-window.scss */
+  0% {
+    opacity: 0;
+  }
+
+  /* line 60, ../../../../sass/modal-window.scss */
+  100% {
+    opacity: 1;
+  }
+}
+
+@-o-keyframes modal-opacity {
+  /* line 57, ../../../../sass/modal-window.scss */
+  0% {
+    opacity: 0;
+  }
+
+  /* line 60, ../../../../sass/modal-window.scss */
+  100% {
+    opacity: 1;
+  }
+}
+
+@-ms-keyframes modal-opacity {
+  /* line 57, ../../../../sass/modal-window.scss */
+  0% {
+    opacity: 0;
+  }
+
+  /* line 60, ../../../../sass/modal-window.scss */
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-opacity {
+  /* line 57, ../../../../sass/modal-window.scss */
+  0% {
+    opacity: 0;
+  }
+
+  /* line 60, ../../../../sass/modal-window.scss */
+  100% {
+    opacity: 1;
+  }
+}
+
+/* #Font weight
+================================================== */
+/* #Margins
+================================================== */
+/* #Animations
+================================================== */
+/* #Structure container
+================================================== */
+/* line 8, ../../../../sass/structure.scss */
+.structure ul.sections {
+  margin-bottom: 24px;
+}
+/* line 11, ../../../../sass/structure.scss */
+.structure > a.icon-button {
+  margin-left: 16px;
+  display: block;
+  float: left;
+  margin-top: 4px;
+}
+/* line 17, ../../../../sass/structure.scss */
+.structure div {
+  margin-right: 16px;
+  float: right;
+}
+/* line 18, ../../../../sass/structure.scss */
+.structure div a.cancel {
+  margin-right: 12px;
+}
+
+/* #Structure list
+================================================== */
+/* line 29, ../../../../sass/structure.scss */
+ul.sections {
+  margin-top: 16px;
+}
+/* line 31, ../../../../sass/structure.scss */
+ul.sections > li > a {
+  position: relative;
+  display: block;
+  border-top: 1px dotted #3e3e3e;
+  font-weight: 500;
+  color: white;
+  font-size: 12px;
+  padding-top: 2px;
+  line-height: 32px;
+  cursor: default;
+  padding-left: 34px;
+  text-shadow: 0px 1px 2px #aaaaaa, 0px 1px 2px rgba(0, 0, 0, 0.75) #aaaaaa;
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75) #aaaaaa, 0px 1px 2px rgba(0, 0, 0, 0.75) #aaaaaa;
+  /*		&:after {
+  			content: "";
+  			display: block;
+  			width: 10px;
+  			height: 10px;
+  			position: absolute;
+  			top: 14px;
+  			right: $main-margin-right;
+  			background-image: url('http://cdn.fluidcms.net/images/sprite.png');
+  			background-position: -85px 0;
+  		}*/
+}
+/* line 43, ../../../../sass/structure.scss */
+ul.sections > li > a:before {
+  content: "";
+  display: block;
+  width: 5px;
+  height: 7px;
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  background-image: url("http://cdn.fluidcms.net/images/sprite.png");
+  background-position: -80px 0;
+}
+/* line 66, ../../../../sass/structure.scss */
+ul.sections > li:last-child {
+  border-bottom: 1px dotted #3e3e3e;
+}
+/* line 69, ../../../../sass/structure.scss */
+ul.sections > li.sortable-placeholder {
+  height: 35px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* #Pages list
+================================================== */
+/* line 77, ../../../../sass/structure.scss */
+ul.pages {
+  min-height: 2px;
+  padding-bottom: 2px;
+  padding-left: 34px;
+}
+/* line 81, ../../../../sass/structure.scss */
+ul.pages > li {
+  position: relative;
+  padding-left: 30px;
+}
+/* line 83, ../../../../sass/structure.scss */
+ul.pages > li:before {
+  position: absolute;
+  background-image: url("http://cdn.fluidcms.net/images/structure-tree.png");
+  background-repeat: no-repeat;
+  background-position: left top;
+  padding-top: 12px;
+  height: 100%;
+  width: 16px;
+  content: "";
+  display: block;
+  top: -0;
+  left: 10px;
+}
+/* line 96, ../../../../sass/structure.scss */
+ul.pages > li:last-child:before {
+  background-image: url("http://cdn.fluidcms.net/images/structure-tree-bottom.png");
+  background-position: left bottom;
+}
+/* line 101, ../../../../sass/structure.scss */
+ul.pages > li a {
+  cursor: default;
+  color: white;
+  text-shadow: 0px 1px 2px #aaaaaa, 0px 1px 2px rgba(0, 0, 0, 0.75) #aaaaaa;
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75) #aaaaaa, 0px 1px 2px rgba(0, 0, 0, 0.75) #aaaaaa;
+}
+/* line 105, ../../../../sass/structure.scss */
+ul.pages > li a span {
+  display: block;
+  color: #808080;
+  text-shadow: none;
+}
+/* line 112, ../../../../sass/structure.scss */
+ul.pages > li.sortable-placeholder {
+  height: 37px;
+  background: rgba(255, 255, 255, 0.05);
+  background-clip: content-box;
+}
+
+/* line 118, ../../../../sass/structure.scss */
+ul.pages ul.pages {
+  padding-left: 0;
+}

@@ -12,3 +12,9 @@ Thumbs.db
 
 # Folder config file
 Desktop.ini
+
+# SASS
+*.sassc
+*.scssc
+.sass-cache
+compass_app_log.txt

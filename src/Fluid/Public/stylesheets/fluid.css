@@ -1,0 +1,133 @@
+/* #Container
+================================================== */
+/* line 7, ../../../../sass/fluid.scss */
+#main {
+  z-index: 3;
+  position: fixed;
+  background: #4d4d4d;
+  float: left;
+  height: 100%;
+  width: 306px;
+  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+}
+
+/* #Navigation
+================================================== */
+/* line 20, ../../../../sass/fluid.scss */
+#main nav {
+  width: 100%;
+  height: 42px;
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #292e34), color-stop(75%, #373d44), color-stop(100%, #2a2f35));
+  background: -webkit-linear-gradient(top, #292e34 0%, #373d44 75%, #2a2f35 100%);
+  background: -moz-linear-gradient(top, #292e34 0%, #373d44 75%, #2a2f35 100%);
+  background: -o-linear-gradient(top, #292e34 0%, #373d44 75%, #2a2f35 100%);
+  background: linear-gradient(top, #292e34 0%, #373d44 75%, #2a2f35 100%);
+}
+/* line 25, ../../../../sass/fluid.scss */
+#main nav ul {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-box;
+  display: box;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -ms-box-pack: center;
+  box-pack: center;
+}
+/* line 33, ../../../../sass/fluid.scss */
+#main nav a {
+  margin: 0 3px;
+  position: relative;
+  display: block;
+  width: 32px;
+  height: 42px;
+}
+/* line 39, ../../../../sass/fluid.scss */
+#main nav a:after {
+  position: absolute;
+  top: 13px;
+  left: 8px;
+  content: "";
+  display: block;
+  width: 16px;
+  height: 16px;
+  background-image: url("http://cdn.fluidcms.net/images/sprite.png");
+}
+/* line 49, ../../../../sass/fluid.scss */
+#main nav a.structure:after {
+  background-position-x: 0;
+}
+/* line 50, ../../../../sass/fluid.scss */
+#main nav a.components:after {
+  background-position-x: -16px;
+}
+/* line 51, ../../../../sass/fluid.scss */
+#main nav a.files:after {
+  background-position-x: -32px;
+}
+/* line 52, ../../../../sass/fluid.scss */
+#main nav a.intl:after {
+  background-position-x: -48px;
+}
+/* line 53, ../../../../sass/fluid.scss */
+#main nav a.diff:after {
+  background-position-x: -64px;
+}
+/* line 54, ../../../../sass/fluid.scss */
+#main nav a.current {
+  background: rgba(0, 0, 0, 0.14);
+  -webkit-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.43);
+  -moz-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.43);
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.43);
+}
+/* line 57, ../../../../sass/fluid.scss */
+#main nav a.current:after {
+  background-position-y: -16px;
+}
+
+/* #Toolbar
+================================================== */
+/* line 65, ../../../../sass/fluid.scss */
+#toolbar {
+  z-index: 2;
+  position: fixed;
+  top: 0;
+  height: 42px;
+  width: 100%;
+  padding-left: 306px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+/* line 76, ../../../../sass/fluid.scss */
+#toolbar > div {
+  position: absolute;
+  z-index: 5;
+  width: 100%;
+  height: 42px;
+  background: #e5e5e5;
+  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+}
+
+/* #Target
+================================================== */
+/* line 89, ../../../../sass/fluid.scss */
+#target {
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  padding: 42px 0 0 306px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+/* line 98, ../../../../sass/fluid.scss */
+#target iframe {
+  width: 100%;
+  height: 100%;
+}

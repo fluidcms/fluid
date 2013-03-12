@@ -1,0 +1,36 @@
+@import "lib";
+@import "compass/css3/box-shadow";
+
+/* #Tool bar
+================================================== */
+div#toolbar {
+	a.toolbar-button {
+		position: relative;
+		float: left;
+		display: block;
+		font-weight: $bold;
+		color: #747c84;
+		line-height: 42px;
+		padding: 0 20px 0 48px;
+		cursor: default;
+		&:before {
+			content: "";
+			display: block;
+			width: 16px;
+			height: 16px;
+			position: absolute;
+			top: 13px;
+			left: 20px;
+			background-image: url('http://cdn.fluidcms.net/images/sprite.png');
+		}
+		&.preview:before { background-position: -10px -32px; }
+		&.edit:before { background-position: -26px -32px; }
+		
+		&.current {
+			background-color: #d5d5d5;
+			@include box-shadow(inset 0 2px 3px rgba(0, 0, 0, .3));
+			color: #50555a;
+			&:before { background-position-y: -48px; }
+		}
+	}
+}

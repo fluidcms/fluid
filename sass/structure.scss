@@ -1,0 +1,120 @@
+@import "lib";
+@import "compass/css3/text-shadow";
+
+
+/* #Structure container
+================================================== */
+.structure {
+	ul.sections {
+		margin-bottom: 24px;
+	}
+	&>a.icon-button {
+		margin-left: $main-margin-left;
+		display: block;
+		float: left;
+		margin-top: 4px;
+	}
+	div {
+		a.cancel {
+			margin-right: 12px;
+		}
+		margin-right: $main-margin-right;
+		float: right;
+	}
+}
+
+
+/* #Structure list
+================================================== */
+ul.sections {
+	margin-top: $main-margin-top;
+	&>li>a {
+		position: relative;
+		display: block;
+		border-top: 1px dotted #3e3e3e;
+		font-weight: 500;
+		color: white;
+		font-size: 12px;
+		padding-top: 2px;
+		line-height: 32px;
+		cursor: default;
+		padding-left: 34px;
+		@include single-text-shadow(0px, 1px, 2px, rgba(0, 0, 0, .75));
+		&:before {
+			content: "";
+			display: block;
+			width: 5px;
+			height: 7px;
+			position: absolute;
+			top: 14px;
+			left: 16px;
+			background-image: url('http://cdn.fluidcms.net/images/sprite.png');
+			background-position: -80px 0;
+		}
+/*		&:after {
+			content: "";
+			display: block;
+			width: 10px;
+			height: 10px;
+			position: absolute;
+			top: 14px;
+			right: $main-margin-right;
+			background-image: url('http://cdn.fluidcms.net/images/sprite.png');
+			background-position: -85px 0;
+		}*/
+	}
+	&>li:last-child {
+		border-bottom: 1px dotted #3e3e3e;
+	}
+	&>li.sortable-placeholder {
+		height: 35px;
+		background: rgba(255, 255, 255, .05);
+	}
+}
+
+/* #Pages list
+================================================== */
+ul.pages {
+	min-height: 2px;
+	padding-bottom: 2px;
+	padding-left: 34px;
+	&>li {
+		position: relative;
+		&:before {
+			position: absolute;
+			background-image: url('http://cdn.fluidcms.net/images/structure-tree.png');
+			background-repeat: no-repeat;
+			background-position: left top;
+			padding-top: 12px;
+			height: 100%;
+			width: 16px;
+			content: "";
+			display: block;
+			top: -0;
+			left: 10px;
+		}
+		&:last-child:before {
+			background-image: url('http://cdn.fluidcms.net/images/structure-tree-bottom.png');
+			background-position: left bottom;
+		}
+		padding-left: 30px;
+		a {
+			cursor: default;
+			color: white;
+			@include single-text-shadow(0px, 1px, 2px, rgba(0, 0, 0, .75));
+			span {
+				display: block;
+				color: #808080;
+				@include single-text-shadow(none);
+			}
+		}
+	}
+	&>li.sortable-placeholder {
+		height: 37px;
+		background: rgba(255, 255, 255, .05);
+		background-clip: content-box;
+	}
+}
+ul.pages ul.pages {
+	padding-left: 0;
+}
