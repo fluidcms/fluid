@@ -2,16 +2,17 @@
 // Page Editor models
 //
 var PageEditor = Backbone.Model.extend({
-		
+	url: 'page.json',
+	
 	initialize: function(){
-		this.fetch();
+		this.set("page", {});
+		this.getPageContent();
 	},
 	
-	urlRoot: function() {
-		var page = $("#website").get(0).contentWindow.location.toString();
-		page = page.split($("#website").attr('src')).pop();
-		if (page == '' || page.substr(page.length - 1) == '/') page = page+'index';		
-		return "page/" + page + ".json";
+	getPageContent: function() {
+		var obj = this;
+		var url = app.page.get('url') + '?fluidtoken=' + app.page.get('token');
+		var pageData = $.ajax(url).done(function(data) { obj.fetch({ data: $.param({ content: data, url: url }), type: 'POST' }); });
 	}
 });
 
@@ -19,9 +20,19 @@ var PageEditor = Backbone.Model.extend({
 // Page Editor view
 //
 var PageEditorView = Backbone.View.extend({
+	className: 'page-editor',
+	
+	template: new EJS({url: 'templates/pageeditor/editor.ejs'}), 
+
+	initialize: function () {
+		this.model.bind('change', this.render, this);
+	},
+
 	render: function() {
-		console.log('yo');
-		//this.$el.html(this.template.render());
+		console.log(this.model.get('page'));
+		
+		this.$el.html(this.template.render({page: this.model.get('page')}));
+		$("#website").after(this.$el);
 		return this;
 	}
 });

@@ -1,4 +1,4 @@
-@import url("http://fonts.googleapis.com/css?family=Roboto:400,500,700,900");
+@import url("http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900");
 /* #Font weight
 ================================================== */
 /* #Margins
@@ -361,6 +361,7 @@ textarea:focus {
 ================================================== */
 /* line 89, ../../../../sass/fluid.scss */
 #target {
+  position: relative;
   z-index: 1;
   width: 100%;
   height: 100%;
@@ -370,7 +371,7 @@ textarea:focus {
   box-sizing: border-box;
   overflow: hidden;
 }
-/* line 98, ../../../../sass/fluid.scss */
+/* line 99, ../../../../sass/fluid.scss */
 #target iframe {
   width: 100%;
   height: 100%;
@@ -863,4 +864,65 @@ ul.pages > li.sortable-placeholder {
 /* line 118, ../../../../sass/structure.scss */
 ul.pages ul.pages {
   padding-left: 0;
+}
+
+/* #Font weight
+================================================== */
+/* #Margins
+================================================== */
+/* #Animations
+================================================== */
+/* #Page Editor
+================================================== */
+/* line 5, ../../../../sass/page-editor.scss */
+div.page-editor {
+  z-index: 10;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 42px 0 0 306px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+/* line 17, ../../../../sass/page-editor.scss */
+div.page-editor > div {
+  width: 100%;
+  height: 100%;
+  background: white;
+}
+/* line 22, ../../../../sass/page-editor.scss */
+div.page-editor > div form {
+  width: 660px;
+  margin: 0 auto;
+  padding: 40px 0;
+}
+/* line 27, ../../../../sass/page-editor.scss */
+div.page-editor > div form label {
+  display: block;
+  font-weight: 500;
+  color: #333;
+  font-size: 20px;
+  text-transform: capitalize;
+  margin: 0 0 18px 0;
+}
+/* line 36, ../../../../sass/page-editor.scss */
+div.page-editor > div form textarea {
+  margin: 0 0 36px 0;
+  border-radius: 0px;
+  width: 100%;
+  resize: none;
+  height: 18px;
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 18px;
+  padding: 8px 14px;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.13);
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.13);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.13);
+  border: 1px solid #bfbfbf;
 }

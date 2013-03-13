@@ -22,7 +22,7 @@ var ToolbarView = Backbone.View.extend({
 	editPage: function(e) {
 		$(e.target).parent().find('.toolbar-button').removeClass('current');
 		$(e.target).addClass('current');
-		new PageEditorView(new PageEditor()).render();
+		new PageEditorView({model: new PageEditor()}).render();
 	}
 });
 

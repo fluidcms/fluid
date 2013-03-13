@@ -4,6 +4,7 @@ class Fluid {
 	public static $storage;
 	public static $templates;
 	public static $urls;
+	public static $database;
 	
 	const NOT_FOUND = '404';
 	
@@ -16,6 +17,7 @@ class Fluid {
 	public function __construct( $config ) {
 		self::$storage = (substr($config['storage'], -1) === '/' ? $config['storage'] : $config['storage'] . '/');
 		self::$templates = (substr($config['templates'], -1) === '/' ? $config['templates'] : $config['templates'] . '/');
+		self::$database = (isset($config['database']) ? $config['database'] : array());
 		self::$urls = array();
 		self::$urls['staging'] = (isset($config['urls']['staging']) ? $config['urls']['staging'] : '');
 		self::$urls['production'] = (isset($config['urls']['production']) ? $config['urls']['production'] : '');

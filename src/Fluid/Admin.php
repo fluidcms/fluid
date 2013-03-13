@@ -1,7 +1,5 @@
 <?php namespace Fluid;
 
-use Fluid\Structure\Structure, Fluid\Page\Page;
-
 class Admin {
 	/**
 	 * Route an admin request
@@ -17,13 +15,7 @@ class Admin {
 			    return new StaticFile($file);
 			}
 		}
-		
-		// Pages Routing
-		if (strpos($request, 'page/') === 0) {
-			Page::getFields(substr($request, 5, -5));
-			die();
-		}
-		
+				
 		// Other files
 		switch($request) {
 			case '': return View::create(__DIR__."/Templates/", 'master.twig', [ // !! No PHP 5.4 Arrays you fool
@@ -36,9 +28,17 @@ class Admin {
 				],
 				'site_url' => Fluid::$urls['staging']
 			]);
-			case 'structure.json': return json_encode(Structure::getAll());
+			
+			// Structure
+			case 'structure.json': return json_encode(Structure\Structure::getAll());
+			
+			// Page
+			case 'page.json': return json_encode(Page\Page::getAllData($_POST['content'], $_POST['url']));
+			
+			// Page Token
+			case 'pagetoken.json': return json_encode(array('token'=>Page\Token::getToken()));
+			
 			default: return Fluid::NOT_FOUND;
 		}
 	}
-
 }

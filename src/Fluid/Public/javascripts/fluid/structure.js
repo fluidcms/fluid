@@ -3,7 +3,7 @@
 //
 var Section = Backbone.Model.extend({
 	initialize: function(){
-		this.set('pages', new Pages(this.get('pages')));
+		//this.set('pages', new Pages(this.get('pages')));
 	}
 });
 
@@ -40,7 +40,7 @@ var Sections = Backbone.Collection.extend({
 //
 // Page models
 //
-var Page = Backbone.Model.extend({
+/*var Page = Backbone.Model.extend({
 	initialize: function(){
 		this.set('pages', new Pages(this.get('pages')));
 	}
@@ -50,7 +50,7 @@ var Pages = Backbone.Collection.extend({
 	model: Page
 });
 
-
+*/
 //
 // Structure views
 //
@@ -115,11 +115,11 @@ var SectionView = Backbone.View.extend({
 	render: function() {
 		this.$el.html(this.template.render(this.model));
 		
-		if (this.model.get('pages')) {
+		/*if (this.model.get('pages')) {
 			this.pagesView = new PagesView({collection: this.model.get('pages')});
 			this.pagesView.parent = this;
 			$(this.$el).append(this.pagesView.render().$el);
-		}
+		}*/
 		
 		return this;
 	},

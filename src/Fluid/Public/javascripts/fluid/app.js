@@ -6,6 +6,13 @@ var AppRouter = Backbone.Router.extend({
 	},
 	
 	//
+	// Page
+	//
+	page: function() {
+		this.page = new Page();
+	},
+	
+	//
 	// Toolbar
 	//
 	toolbar: function() {
@@ -32,6 +39,7 @@ var mouseX;
 var mouseY;
 
 var app = new AppRouter();
+app.page();
 app.toolbar();
 Backbone.history.start();
 

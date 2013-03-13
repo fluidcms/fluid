@@ -1,6 +1,7 @@
 $(document).ready(function() {
-	var loaded = 5;
+	var loaded = 6;
 	
+	$.getScript('javascripts/fluid/page.js', function() { loaded--; });
 	$.getScript('javascripts/fluid/toolbar.js', function() { loaded--; });
 	$.getScript('javascripts/fluid/contextmenu.js', function() { loaded--; });
 	$.getScript('javascripts/fluid/modal.js', function() { loaded--; });

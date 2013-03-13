@@ -1,0 +1,10 @@
+<div>
+	<form action="" id="pageEditorForm" method="post" accept-charset="utf-8" novalidate>
+	
+		<% $.each(page, function(key, item) { %>
+			<label for="pageEditorField_<%= key %>"><%= key.replace('_', ' ') %></label>
+			<textarea id="pageEditorField_<%= key %>" name="<%= key %>"><%= item %></textarea>
+		<% }) %>
+		
+	</form>
+</div>
