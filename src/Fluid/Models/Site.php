@@ -1,4 +1,4 @@
-<?php namespace Fluid\Site;
+<?php namespace Fluid\Models;
 
 class Site extends \Fluid\Model {	
 	/**

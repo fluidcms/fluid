@@ -1,6 +1,15 @@
-<?php namespace Fluid\Structure;
+<?php
 
-class Structure extends \Fluid\Model {
+namespace Fluid\Models;
+
+use Fluid\Database\Storage;
+
+/**
+ * Site structure model
+ *
+ * @package fluid
+ */
+class Structure extends Storage {
 	protected static $file = 'structure.json';
 	
 	/**

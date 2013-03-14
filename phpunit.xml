@@ -1,0 +1,22 @@
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="test/bootstrap.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="true"
+         stopOnFailure="false"
+         syntaxCheck="false">
+  <testsuites>
+    <testsuite name="Fluid Test Suite">
+      <directory>./test/Fluid/</directory>
+    </testsuite>
+  </testsuites>
+  <php>
+    <var name="DB_DSN" value="mysql:dbname=xxxxxxxxx;host=localhost" />
+    <var name="DB_USER" value="xxxxxxxxx" />
+    <var name="DB_PASSWD" value="xxxxxxxxx" />
+    <var name="DB_DBNAME" value="xxxxxxxxx" />
+  </php>
+</phpunit>

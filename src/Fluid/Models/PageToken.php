@@ -1,8 +1,8 @@
-<?php namespace Fluid\Page;
+<?php namespace Fluid\Models;
 
 use PDO, Fluid\Database\Connection;
 
-class Token {
+class PageToken {
 	/**
 	 * Get a page token
 	 * 

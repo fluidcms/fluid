@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <meta charset="utf-8">
+		<title>Fluid JS Test Suite</title>
+		<link rel="stylesheet" href="qunit/qunit.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
+		<script src="javascripts/vendor/underscore-min.js"></script>
+		<script src="javascripts/vendor/backbone-min.js"></script>
+		<script src="javascripts/vendor/ejs_production.js"></script>
+		<script src="javascripts/fluid/bootstrap.js"></script>
+		<script src="qunit/qunit.js"></script>
+		<script src="javascripts/fluid-test/test.js"></script>
+	</head>
+	<body>
+		<div id="qunit"></div>
+		<div id="qunit-fixture">
+			<div id="main">
+				<nav>
+					<ul>
+						{% for item in navigation %}
+						<li><a title="{{ item.name }}" class="{{ item.class }}"></a></li>
+						{% endfor %}
+					</ul>
+				</nav>
+			</div>
+			
+			<div id="toolbar">
+			</div>
+			
+			<div id="target">
+				<iframe src="{{ site_url }}" id="website"></iframe>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,17 +1,26 @@
-<?php namespace Fluid;
+<?php 
 
-use Fluid\Structure\Structure;
+namespace Fluid;
 
+/**
+ * Route requests to pages.
+ *
+ * @package fluid
+ */
 class Router {
 	/**
 	 * Route a request
 	 * 
-	 * @param		
-	 * @return	
+	 * @param   string  $request
+	 * @return  mixed
 	 */
-	public static function route( Fluid $fluid, $request ) {
+	public static function route( $request = null ) {
+		if (null === $request) {
+			$request = '/';
+		}
+		
 		$request = '/'.ltrim($request, '/');
-		$structure = Structure::getAll();
+		$structure = Models\Structure::getAll();
 		
 		foreach($structure as $section) {
 			if (is_array($section->pages) && count($section->pages)) {
@@ -21,8 +30,11 @@ class Router {
 			}
 		}
 		
-		if ($page) return Build::page($page);
-		else return Fluid::NOT_FOUND;
+		if ($page) {
+			return Page::create($page->layout, Data::get($page->url));
+		} else {
+			return Fluid::NOT_FOUND;
+		}
 	}
 	
 	/**
@@ -32,7 +44,7 @@ class Router {
 	 * @param   array   $pages	
 	 * @return  bool
 	 */
-	public static function matchRequest( $request, $pages ) {
+	private static function matchRequest( $request, $pages ) {
 		foreach($pages as $page) {
 			if ($request == $page->url) {
 				return $page;

@@ -1,8 +1,15 @@
-<?php namespace Fluid\Page;
+<?php
 
-use Fluid\Structure\Structure;
+namespace Fluid\Models;
 
-class Page extends \Fluid\Model {	
+use Fluid\Database\Storage;
+
+/**
+ * File storage helper class
+ *
+ * @package fluid
+ */
+class Page extends Storage {	
 	/**
 	 * Get data for a page
 	 * 

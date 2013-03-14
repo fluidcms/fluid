@@ -1,37 +1,46 @@
-<?php namespace Fluid;
+<?php
 
+namespace Fluid;
+
+use Twig_Loader_Filesystem, Twig_Environment;
+
+/**
+ * View class
+ *
+ * @package fluid
+ */
 class View {
+	private static $templatesDir;
+	
 	/**
 	 * Create a view
 	 * 
-	 * @param   string   $dir
 	 * @param   string   $file
 	 * @param   array    $data
-	 * @param   array    $page
 	 * @return  string
 	 */
-	public static function create( $dir, $file, $data = array(), $page = array() ) {
+	public static function create( $file, $data = array() ) {
+		// If a valid token is provided, function will output the page Fluid data with the page content
 		if (isset($_SERVER['QUERY_STRING'])) {
 			parse_str($_SERVER['QUERY_STRING']);
-			if (isset($fluidtoken) && Page\Token::validateToken($fluidtoken)) {
-				return self::renderWithFields( $dir, $file, $data, $page );
+			if (isset($fluidtoken) && Models\PageToken::validateToken($fluidtoken)) {
+				return self::renderWithFields( $file, $data );
 			}
 		}
 		
-		return self::render( $dir, $file, $data );
+		return self::render( $file, $data );
 	}
 	
 	/**
 	 * Render a view
 	 * 
-	 * @param   string   $dir
 	 * @param   string   $file
 	 * @param   array    $data
 	 * @return  string
 	 */
-	public static function render( $dir, $file, $data = array() ) {
-		$loader = new \Twig_Loader_Filesystem($dir);
-		$twig = new \Twig_Environment($loader);
+	private static function render( $file, $data = array() ) {
+		$loader = new Twig_Loader_Filesystem(self::$templatesDir);
+		$twig = new Twig_Environment($loader);
 		$template = $twig->loadTemplate($file);
 		return $template->render($data);		
 	}
@@ -39,31 +48,44 @@ class View {
 	/**
 	 * Render a view and output fields and data
 	 * 
-	 * @param   string   $dir
 	 * @param   string   $file
 	 * @param   array    $data
-	 * @param   array    $page
 	 * @return  string
 	 */
-	public static function renderWithFields( $dir, $file, $data = array(), $page = array() ) {		
-		$loader = new \Twig_Loader_Filesystem($dir);
-		$twig = new \Twig_Environment($loader);
+	private static function renderWithFields( $file, $data = array() ) {		
+		$loader = new Twig_Loader_Filesystem(self::$templatesDir);
+		$twig = new Twig_Environment($loader);
 		
 		$twig->addNodeVisitor(new Twig\FieldNodeVisitor);
 				
 		$template = $twig->loadTemplate($file);
 		$render = $template->render($data);
 		
-		echo '<script data-type="fluid-data">' . 
-				json_encode(
-					array_merge(
-						array($page),
-						Twig\Field\FieldOutput::returnFields()
-					)
-				) . 
-				'</script>' .
-				PHP_EOL;
+		$render = '<script data-type="fluid-data">' . 
+					json_encode(Twig\Field\FieldOutput::returnFields()) . 
+					'</script>' .
+					PHP_EOL . 
+					$render;
 		
 		return $render;
 	}
+	
+	/**
+	 * Set templates directory
+	 * 
+	 * @param   string  $dir
+	 * @return  void
+	 */
+	public static function setTemplatesDir($dir) {
+		self::$templatesDir = $dir;
+	}
+	
+	/**
+	 * Get templates directory
+	 * 
+	 * @return  void
+	 */
+	public static function getTemplatesDir() {
+		return self::$templatesDir;
+	}	
 }
