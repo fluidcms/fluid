@@ -14,24 +14,17 @@ class Router {
 	 * @param   string  $request
 	 * @return  mixed
 	 */
-	public static function route( $request = null ) {
-		if (null === $request) {
-			$request = '/';
-		}
-		
+	public static function route( $request = null ) {		
 		$request = '/'.ltrim($request, '/');
-		$structure = Models\Structure::getAll();
 		
-		foreach($structure as $section) {
-			if (is_array($section->pages) && count($section->pages)) {
-				if ($page = self::matchRequest($request, $section->pages)) {
-					break;
-				}
-			}
+		if (!$structure = Data::getStructure()) {
+			Data::setStructure($structure = new Models\Structure());
 		}
 		
-		if ($page) {
-			return Page::create($page->layout, Data::get($page->url));
+		$page = self::matchRequest($request, $structure->pages);
+		
+		if (isset($page) && false !== $page) {
+			return Page::create($page->layout, Data::get($page->page));
 		} else {
 			return Fluid::NOT_FOUND;
 		}
@@ -41,15 +34,16 @@ class Router {
 	 * Try to match a request with an array of pages
 	 * 
 	 * @param   string  $request	
-	 * @param   array   $pages	
+	 * @param   array   $pages
 	 * @return  bool
 	 */
-	private static function matchRequest( $request, $pages ) {
+	private static function matchRequest( $request, $pages, $parent = '' ) {
 		foreach($pages as $page) {
-			if ($request == $page->url) {
+			if (isset($page->url) && $request == $page->url) {
+				$page->page = trim($parent . '/' . $page->page, '/');
 				return $page;
-			} else if (isset($page->pages) && count($page->pages)) {
-				$matchPages = self::matchRequest($request, $page->pages);
+			} else if (isset($page->pages) && is_array($page->pages)) {
+				$matchPages = self::matchRequest($request, $page->pages, $page->page);
 				if ($matchPages) {
 					return $matchPages;
 				}

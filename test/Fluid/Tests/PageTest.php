@@ -6,7 +6,7 @@ use Fluid, Fluid\View, PHPUnit_Framework_TestCase;
 
 class PageTest extends PHPUnit_Framework_TestCase {
 	public function testPage() {
-		View::setTemplatesDir(__DIR__.'/Fixtures/build/');
+		View::setTemplatesDir(__DIR__.'/Fixtures/templates/');
 		
 		$view = View::create(
 			'page.twig', 

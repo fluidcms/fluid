@@ -5,86 +5,39 @@ namespace Fluid\Models;
 use Fluid\Database\Storage;
 
 /**
- * File storage helper class
+ * Page model
  *
  * @package fluid
  */
-class Page extends Storage {	
-	/**
-	 * Get data for a page
-	 * 
-	 * @param		
-	 * @return	
-	 */
-	public static function getPage( $page ) {
-		return [];
-	}
+class Page extends Storage {
+	public $parent;
 	
 	/**
-	 * Get data for a page
+	 * Init
 	 * 
-	 * @param		
-	 * @return	
+	 * @param   Structure   $structure  The site's structure
+	 * @param   string      $name       The unique identifier of a page (i.e. contact/form)
+	 * @return  void
 	 */
-	public static function getFields( $page ) {
-		$page = Structure::findPage($page);
-		GetFields::loadPage( $page );
-	}
-	
-	/**
-	 * Get fields and data from template with fields and data from storage.
-	 * 
-	 * @param   string  $pageContent
-	 * @param   string  $pageUrl
-	 * @return	// !! xxx
-	 */
-	public static function getAllData( $pageContent, $pageUrl ) {
-		list($page, $templateData) = self::parsePageContent($pageContent);
-		return self::mergeTemplateData(self::getPage($page), $templateData);
-	}
-	
-	/**
-	 * Merge template fields and data with fields and data from storage.
-	 * 
-	 * @param   array   $storageData
-	 * @param   array   $templateData
-	 * @return  array
-	 */
-	private static function mergeTemplateData( $storageData, $templateData ) {
-		$data = array();
-		$order = array();
-		
-		// Add template data
-		foreach($templateData as $item) {
-			if ($item instanceof \stdClass && $item->type === 'variable') {
-				$keys = explode('.', $item->key);
-				
-				$code = '$data';
-				foreach($keys as $key) {
-					$code .= '["'.$key.'"]';
-				}
-				$code .= ' = "'.str_replace("'", "\'", $item->value).'";';
-				eval($code);
-			}
+	public function __construct(Structure $structure, $page) {
+		// Check if page has parents
+		$parent = explode('/', strrev($page), 2);
+		if (isset($parent[1])) {
+			$parent = strrev($parent[1]);
+			$this->parent = new Page($structure, $parent);
 		}
 		
-		// !! Merge storage data
+		$this->dataFile = $page;
 		
-		return $data;
+		var_dump($this->dataFile);
 	}
-	
+		
 	/**
-	 * Parse the page content and return the page info and the fields and data.
+	 * Check if page has parent page
 	 * 
-	 * @param   string  $pageContent
-	 * @return  array
+	 * @return  bool
 	 */
-	private static function parsePageContent( $pageContent ) {
-		$pageContents = explode(PHP_EOL, $pageContent, 2);
-		$data = preg_replace('{^<script data-type="fluid-data">(.*)</script>$}', '$1', $pageContents[0]);
-		$data = json_decode($data);
-		$page = $data[0];
-		array_shift($data);
-		return array($page, $data);
+	public function hasParent() {
+		return (isset($this->parent) ? true : false);
 	}
 }

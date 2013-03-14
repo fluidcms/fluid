@@ -1,0 +1,28 @@
+[
+	{
+	    "page": "home",
+		"name": "Home Page"
+	},
+	{
+	    "page": "services",
+		"name": "Services"
+	},
+	{
+	    "page": "contact",
+	    "name": "Contact",
+    	"pages": [
+    		{
+    			"page": "form",
+    			"name": "Contact Form"
+    		},
+    		{
+    			"page": "support",
+    			"name": "Support"
+    		}
+    	]
+	},
+	{
+		"page": "blog",
+		"name": "My Awesome Blog"
+	}
+]
