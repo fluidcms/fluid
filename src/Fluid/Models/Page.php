@@ -2,7 +2,7 @@
 
 namespace Fluid\Models;
 
-use Fluid\Database\Storage;
+use Exception, Fluid\Fluid, Fluid\Database\Storage;
 
 /**
  * Page model
@@ -11,7 +11,8 @@ use Fluid\Database\Storage;
  */
 class Page extends Storage {
 	public $parent;
-	
+	public $data;
+		
 	/**
 	 * Init
 	 * 
@@ -27,9 +28,12 @@ class Page extends Storage {
 			$this->parent = new Page($structure, $parent);
 		}
 		
-		$this->dataFile = $page;
-		
-		var_dump($this->dataFile);
+		// Load page data
+		try {
+			$this->data = self::load('pages/'.$page.'_'.Fluid::getLanguage().'.json');
+		} catch (Exception $e) {
+			null;
+		}
 	}
 		
 	/**

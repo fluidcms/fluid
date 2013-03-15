@@ -22,7 +22,7 @@ class Router {
 		}
 		
 		$page = self::matchRequest($request, $structure->pages);
-		
+				
 		if (isset($page) && false !== $page) {
 			return Page::create($page['layout'], Data::get($page['page']));
 		} else {
@@ -43,7 +43,7 @@ class Router {
 				$page['page'] = trim($parent . '/' . $page['page'], '/');
 				return $page;
 			} else if (isset($page['pages']) && is_array($page['pages'])) {
-				$matchPages = self::matchRequest($request, $page['pages'], $page['page']);
+				$matchPages = self::matchRequest($request, $page['pages'], trim($parent . '/' . $page['page'], '/'));
 				if ($matchPages) {
 					return $matchPages;
 				}

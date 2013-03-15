@@ -19,8 +19,31 @@ class Data {
 	public static function get($page) {
 		$page = new Models\Page(self::$structure, $page);
 		
+		// Make parents tree
+		$parentTree = null;
+		$current = $page;
+		$parents = array();
+		
+		while($current->parent instanceof Models\Page) {
+			$current = $current->parent;
+			$parents[] = $current->data;
+		}
+		
+		foreach($parents as $parent) {
+			if (!isset($parentTree)) {
+				$parentTree = $parent;
+				$last = &$parentTree;
+			} else {
+				$last['parent'] = $parent;
+				$last = &$last['parent'];
+			}
+		}
+				
 		return array(
-			'structure' => self::$structure->localized
+			'structure' => self::$structure->localized,
+			'parents' => $parents,
+			'parent' => $parentTree,
+			'page' => $page->data
 		);
 	}
 	

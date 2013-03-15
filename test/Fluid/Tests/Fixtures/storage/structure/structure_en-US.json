@@ -13,7 +13,13 @@
     	"pages": [
     		{
     			"page": "form",
-    			"name": "Contact Form"
+    			"name": "Contact Form",
+    			"pages": [
+		    		{
+		    			"page": "success",
+		    			"name": "Contact Form"
+		    		}
+		    	]
     		},
     		{
     			"page": "support",

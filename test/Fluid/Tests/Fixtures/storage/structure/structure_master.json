@@ -31,6 +31,17 @@
 				"languages": [
 					"en-US",
 					"de-DE"
+				],
+				"pages": [
+					{
+						"page": "success",
+						"url": "/contact/form/success/",
+						"layout": "default",
+						"languages": [
+							"en-US",
+							"de-DE"
+						]
+					}
 				]
     		},
     		{
