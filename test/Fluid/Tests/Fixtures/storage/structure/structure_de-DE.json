@@ -13,11 +13,11 @@
     	"pages": [
     		{
     			"page": "form",
-    			"name": "Kontaktformular",
+    			"name": "Kontaktformular"
     		},
     		{
     			"page": "support",
-    			"name": "Hilfe",
+    			"name": "Hilfe"
     		}
     	]
 	},

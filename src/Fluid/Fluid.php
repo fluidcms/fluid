@@ -15,6 +15,8 @@ class Fluid {
 	private static $database;
 	private static $languages;
 	private static $dirs;
+
+	private static $language;
 	
 	const NOT_FOUND = '404';
 	
@@ -22,15 +24,42 @@ class Fluid {
 	 * Initialize Fluid
 	 * 
 	 * @param   array   $config     The configuration array
+	 * @param   string  $language   The language of the instance
 	 * @return  void
 	 */
-	public function __construct($config) {
+	public function __construct($config = null, $language = null) {
 		self::$config = $config;
+		
+		// Set language
+		if (null === $language) {
+			$languages = self::getConfig('languages');
+			$language = reset($languages);
+		}
+		self::$language = $language;
 		
 		// Set View Templates Directory
 		if (null === View::getTemplatesDir()) {
 			View::setTemplatesDir(self::getConfig('templates'));
 		}
+	}
+	
+	/**
+	 * Get the language of the instance
+	 * 
+	 * @return  string
+	 */
+	public static function getLanguage() {
+		return self::$language;
+	}
+		
+	/**
+	 * Get the language of the instance
+	 * 
+	 * @param   string  $value
+	 * @return  string
+	 */
+	public static function setLanguage($value) {
+		self::$language = $value;
 	}
 	
 	/**
@@ -71,9 +100,14 @@ class Fluid {
 			case 'storage':
 			case 'templates':
 			case 'database':
-			case 'languages':
 			case 'dirs':
 				self::$config[$name] = $value;
+				break;
+			case 'languages':
+				self::$config[$name] = $value;
+				if (null === self::$language) {
+					self::$language = reset($value);
+				}
 				break;
 		}
 	}

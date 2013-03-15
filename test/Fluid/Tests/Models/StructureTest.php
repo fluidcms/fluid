@@ -6,7 +6,7 @@ use Fluid\Fluid, Fluid\Models\Structure, PHPUnit_Framework_TestCase;
 
 class StructureTest extends PHPUnit_Framework_TestCase {
 	public function setUp() {
-		Fluid::setConfig('storage', __DIR__.'/../Fixtures/storage/');
+		Fluid::setLanguage('de-DE');
 	}
 	
 	public function testInit() {
@@ -24,5 +24,12 @@ class StructureTest extends PHPUnit_Framework_TestCase {
 		foreach($structure->pages as $page) {
 			$this->assertObjectHasAttribute('page', $page);
 		}
+    }
+    
+    /**
+     * @depends testInit
+     */
+	public function testLocalization(Structure $structure) {
+		$this->assertEquals('Startseite', $structure->localized[0]->name);
     }
 }

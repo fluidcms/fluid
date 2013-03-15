@@ -5,10 +5,6 @@ namespace Fluid\Tests\Models;
 use Fluid\Fluid, Fluid\Models\Structure, Fluid\Models\Page, PHPUnit_Framework_TestCase;
 
 class PageTest extends PHPUnit_Framework_TestCase {
-	public function setUp() {
-		Fluid::setConfig('storage', __DIR__.'/../Fixtures/storage/');
-	}
-	
 	public function testInit() {
 		$structure = new Structure();
 		

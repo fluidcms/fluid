@@ -4,11 +4,7 @@ namespace Fluid\Tests;
 
 use Fluid\Fluid, Fluid\Router, PHPUnit_Framework_TestCase;
 
-class RouterTest extends PHPUnit_Framework_TestCase {
-	public function setUp() {
-		Fluid::setConfig('storage', __DIR__.'/Fixtures/storage/');
-	}
-	
+class RouterTest extends PHPUnit_Framework_TestCase {	
 	public function testBadRoute() {
 		$this->assertEquals(Fluid::NOT_FOUND, Router::route('foo'), 'Function should not find the page');		
     }
