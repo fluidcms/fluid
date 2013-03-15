@@ -22,7 +22,7 @@ class StructureTest extends PHPUnit_Framework_TestCase {
      */
 	public function testPagesIntegrity(Structure $structure) {
 		foreach($structure->pages as $page) {
-			$this->assertObjectHasAttribute('page', $page);
+			$this->assertArrayHasKey('page', $page);
 		}
     }
     
@@ -30,6 +30,6 @@ class StructureTest extends PHPUnit_Framework_TestCase {
      * @depends testInit
      */
 	public function testLocalization(Structure $structure) {
-		$this->assertEquals('Startseite', $structure->localized[0]->name);
+		$this->assertEquals('Startseite', $structure->localized[0]['name']);
     }
 }

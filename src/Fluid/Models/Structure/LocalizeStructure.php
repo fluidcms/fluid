@@ -51,12 +51,12 @@ class LocalizeStructure {
 		$output = array();
 		
 		foreach($pages as $page) {
-			if (isset($page->languages) && !in_array($language, $page->languages)) {
+			if (isset($page['languages']) && !in_array($language, $page['languages'])) {
 				continue;
 			}
 			
-			if (isset($page->pages) && is_array($page->pages)) {
-				$page->pages = self::removeUnlocalizedPages($page->pages, $language);
+			if (isset($page['pages']) && is_array($page['pages'])) {
+				$page['pages'] = self::removeUnlocalizedPages($page['pages'], $language);
 			}
 			
 			$output[] = $page;
@@ -76,34 +76,32 @@ class LocalizeStructure {
 	public static function addLocalizedNames($pages, $localizedPages, $defaultPages = null) {
 		$output = array();
 		
-		foreach ($pages as $page) {
-			$page = clone $page;
-			
+		foreach ($pages as $page) {			
 			// Search page in localized pages
 			foreach($localizedPages as $localizedPage) {
-				if (isset($localizedPage->page) && $page->page === $localizedPage->page) {
+				if (isset($localizedPage['page']) && $page['page'] === $localizedPage['page']) {
 					break;
 				}
 			}
 			// Search page in default pages
 			if (isset($defaultPages)) {
 				foreach($defaultPages as $defaultPage) {
-					if (isset($defaultPage->page) && $page->page === $defaultPage->page) {
+					if (isset($defaultPage['page']) && $page['page'] === $defaultPage['page']) {
 						break;
 					}
 				}
 			}
 			
-			if (!empty($localizedPage->name)) {
-				$page->name = $localizedPage->name;
-			} else if (isset($defaultPages) && !empty($defaultPage->name)) {
-				$page->name = $defaultPage->name;
+			if (!empty($localizedPage['name'])) {
+				$page['name'] = $localizedPage['name'];
+			} else if (isset($defaultPages) && !empty($defaultPage['name'])) {
+				$page['name'] = $defaultPage['name'];
 			} else {
-				$page->name = $page->page;
+				$page['name'] = $page['page'];
 			}
 			
-			if (isset($page->pages) && is_array($page->pages)) {
-				$page->pages = self::addLocalizedNames($page->pages, $localizedPage, (isset($defaultPage) ? $defaultPage : null));
+			if (isset($page['pages']) && is_array($page['pages'])) {
+				$page['pages'] = self::addLocalizedNames($page['pages'], $localizedPage, (isset($defaultPage) ? $defaultPage : null));
 			}
 			
 			$output[] = $page;		

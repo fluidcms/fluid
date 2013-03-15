@@ -24,7 +24,7 @@ class Router {
 		$page = self::matchRequest($request, $structure->pages);
 		
 		if (isset($page) && false !== $page) {
-			return Page::create($page->layout, Data::get($page->page));
+			return Page::create($page['layout'], Data::get($page['page']));
 		} else {
 			return Fluid::NOT_FOUND;
 		}
@@ -39,11 +39,11 @@ class Router {
 	 */
 	private static function matchRequest( $request, $pages, $parent = '' ) {
 		foreach($pages as $page) {
-			if (isset($page->url) && $request == $page->url) {
-				$page->page = trim($parent . '/' . $page->page, '/');
+			if (isset($page['url']) && $request == $page['url']) {
+				$page['page'] = trim($parent . '/' . $page['page'], '/');
 				return $page;
-			} else if (isset($page->pages) && is_array($page->pages)) {
-				$matchPages = self::matchRequest($request, $page->pages, $page->page);
+			} else if (isset($page['pages']) && is_array($page['pages'])) {
+				$matchPages = self::matchRequest($request, $page['pages'], $page['page']);
 				if ($matchPages) {
 					return $matchPages;
 				}

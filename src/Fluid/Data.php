@@ -19,7 +19,9 @@ class Data {
 	public static function get($page) {
 		$page = new Models\Page(self::$structure, $page);
 		
-		return [];
+		return array(
+			'structure' => self::$structure->localized
+		);
 	}
 	
 	/**

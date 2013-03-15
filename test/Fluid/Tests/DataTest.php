@@ -2,10 +2,14 @@
 
 namespace Fluid\Tests;
 
-use Fluid, Fluid\View, PHPUnit_Framework_TestCase;
+use Fluid, Fluid\Data, PHPUnit_Framework_TestCase;
 
 class DataTest extends PHPUnit_Framework_TestCase {
-	public function testGet() {
-		
+	public function setUp() {
+		Data::setStructure(new Fluid\Models\Structure());
+    }
+	
+	public function testGetStructure() {
+		$this->assertInstanceOf('Fluid\Models\Structure', Data::getStructure());
     }    
 }

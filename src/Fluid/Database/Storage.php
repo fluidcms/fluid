@@ -32,7 +32,7 @@ class Storage {
 		$file = Fluid::getConfig('storage') .  $file;
 		
 		if (file_exists($file)) {
-			return json_decode(file_get_contents($file));
+			return json_decode(file_get_contents($file), true);
 		} else {
 			throw new Exception("Failed to load data: File {$file} does not exists", E_USER_WARNING);
 		}
