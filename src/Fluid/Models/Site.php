@@ -1,14 +1,28 @@
-<?php namespace Fluid\Models;
+<?php
 
-class Site extends \Fluid\Model {	
+namespace Fluid\Models;
+
+use Exception, Fluid\Fluid, Fluid\Database\Storage;
+
+/**
+ * Page model
+ *
+ * @package fluid
+ */
+class Site extends Storage {
+	public $data;
+		
 	/**
+	 * Init
 	 * 
-	 * 
-	 * @param		
-	 * @return	
+	 * @return  void
 	 */
-	public static function getAll() {
-		return [];
+	public function __construct() {		
+		// Load page data
+		try {
+			$this->data = self::load('site/site_'.Fluid::getLanguage().'.json');
+		} catch (Exception $e) {
+			null;
+		}
 	}
-	
 }

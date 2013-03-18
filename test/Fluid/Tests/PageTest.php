@@ -14,5 +14,5 @@ class PageTest extends PHPUnit_Framework_TestCase {
 		);
 		
 		$this->assertRegExp('{<html>.?Hello World.?</html>}msU', $view);
-    }    
+	}
 }

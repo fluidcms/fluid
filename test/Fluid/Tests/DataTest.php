@@ -7,12 +7,12 @@ use Fluid, Fluid\Data, PHPUnit_Framework_TestCase;
 class DataTest extends PHPUnit_Framework_TestCase {
 	public function setUp() {
 		Data::setStructure(new Fluid\Models\Structure());
-    }
+	}
 	
 	public function testGetStructure() {
 		$this->assertInstanceOf('Fluid\Models\Structure', Data::getStructure());
-    }
-    
+	}
+	
 	public function testGet() {
 		$data = Data::get('contact/form');
 		
@@ -21,8 +21,8 @@ class DataTest extends PHPUnit_Framework_TestCase {
 		$this->assertStringMatchesFormat('%a', $data['page']['content']);
 		
 		return $data;
-    }
-    
+	}
+	
 	public function testPageParents() {
 		$data = Data::get('contact/form/test');
 		

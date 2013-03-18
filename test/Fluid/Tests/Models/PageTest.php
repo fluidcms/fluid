@@ -11,11 +11,11 @@ class PageTest extends PHPUnit_Framework_TestCase {
 		$page = new Page($structure, 'contact/form');
 		
 		return $page;
-    }
-    
-    /**
-     * @depends testInit
-     */
+	}
+	
+	/**
+	 * @depends testInit
+	 */
 	public function testPageParent(Page $page) {
 		$this->assertTrue($page->hasParent());
 		$this->assertInstanceOf('Fluid\Models\Page', $page->parent);

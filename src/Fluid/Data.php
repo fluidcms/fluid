@@ -17,6 +17,7 @@ class Data {
 	 * @return  array
 	 */
 	public static function get($page) {
+		$site = new Models\Site();
 		$page = new Models\Page(self::$structure, $page);
 		
 		// Make parents tree
@@ -40,6 +41,7 @@ class Data {
 		}
 				
 		return array(
+			'site' => $site->data,
 			'structure' => self::$structure->localized,
 			'parents' => $parents,
 			'parent' => $parentTree,

@@ -15,21 +15,21 @@ class StructureTest extends PHPUnit_Framework_TestCase {
 		$this->assertInternalType('array', $structure->pages);
 		
 		return $structure;
-    }
-    
-    /**
-     * @depends testInit
-     */
+	}
+	
+	/**
+	 * @depends testInit
+	 */
 	public function testPagesIntegrity(Structure $structure) {
 		foreach($structure->pages as $page) {
 			$this->assertArrayHasKey('page', $page);
 		}
-    }
-    
-    /**
-     * @depends testInit
-     */
+	}
+	
+	/**
+	 * @depends testInit
+	 */
 	public function testLocalization(Structure $structure) {
 		$this->assertEquals('Startseite', $structure->localized[0]['name']);
-    }
+	}
 }

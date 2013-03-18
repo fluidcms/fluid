@@ -9,5 +9,5 @@ class LanguageTest extends PHPUnit_Framework_TestCase {
 		$actual = Language::getLanguages();
 		$this->assertInternalType('array', $actual, 'Function did not return an array');
 		$this->assertEquals(array('en-US', 'de-DE'), $actual);
-    }
+	}
 }
