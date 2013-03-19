@@ -44,8 +44,9 @@ class Data {
 		}
 				
 		return array(
+			'language' => substr(Fluid::getLanguage(), 0, 2),
 			'site' => $site->data,
-			'structure' => self::$structure->localized,
+			'structure' => self::$structure->getLocalized(),
 			'parents' => $parents,
 			'parent' => $parentTree,
 			'page' => $page->data

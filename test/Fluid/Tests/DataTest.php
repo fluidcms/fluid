@@ -19,6 +19,7 @@ class DataTest extends PHPUnit_Framework_TestCase {
 		$this->assertGreaterThan(0, sizeof($data['structure']));
 		$this->assertStringMatchesFormat('%a', $data['page']['title']);
 		$this->assertStringMatchesFormat('%a', $data['page']['content']);
+		$this->assertStringMatchesFormat('%a', $data['language']);
 		
 		return $data;
 	}

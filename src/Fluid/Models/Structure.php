@@ -11,6 +11,7 @@ use Fluid\Fluid, Fluid\Database\Storage, Fluid\Models\Structure\LocalizeStructur
  */
 class Structure extends Storage {
 	protected static $dataFile = 'structure/structure_master.json';
+	private $localized = array();
 	
 	public $pages;
 	
@@ -21,6 +22,23 @@ class Structure extends Storage {
 	 */
 	public function __construct() {
 		$this->pages = LocalizeStructure::localize(self::getAll(), LocalizeStructure::getDefaultLanguage());
-		$this->localized = LocalizeStructure::localize($this->pages, Fluid::getLanguage());
+	}
+	
+	/**
+	 * Localize the structure
+	 * 
+	 * @param   string  $language
+	 * @return  array
+	 */
+	public function getLocalized($language = null) {
+		if (null === $language) {
+			$language = Fluid::getLanguage();
+		}
+		
+		if (!isset($this->localized[$language])) {
+			return $this->localized[$language] = LocalizeStructure::localize($this->pages, $language);
+		} else {
+			return $this->localized[$language];
+		}
 	}
 }

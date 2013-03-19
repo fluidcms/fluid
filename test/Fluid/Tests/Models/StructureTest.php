@@ -30,6 +30,6 @@ class StructureTest extends PHPUnit_Framework_TestCase {
 	 * @depends testInit
 	 */
 	public function testLocalization(Structure $structure) {
-		$this->assertEquals('Startseite', $structure->localized[0]['name']);
+		$this->assertEquals('Startseite', $structure->getLocalized()[0]['name']);
 	}
 }
