@@ -18,6 +18,10 @@ class Data {
 	 * @return  array
 	 */
 	public static function get($page) {
+		if (!isset(self::$structure)) {
+			self::$structure = new Models\Structure();
+		}
+		
 		self::$page = $page;
 		
 		$site = new Models\Site();

@@ -53,56 +53,58 @@ class MergeTemplateData {
 		$data = array();
 				
 		// Add template data
-		foreach($templateData as $item) {
-			// Variables
-			if ($item instanceof stdClass && $item->type === 'variable') {
-				$keys = explode('.', $item->key);
-				
-				$keyString = '';
-				foreach($keys as $key) {
-					$key = preg_replace('/[^a-zA-Z0-9_]/', '', $key);
-					$keyString .= "['{$key}']";
-				}
-				
-				// Add to variables
-				eval('if (!isset($variables'.$keyString.')) { $variables'.$keyString.' = "string"; }');
-				
-				// Add to data
-				eval('$data'.$keyString.' = "'.str_replace("'", "\'", $item->value).'";');
-			}
-			
-			// Arrays
-			else if ($item instanceof stdClass && $item->type === 'array') {
-				// Array key
-				$keys = explode('.', $item->expression);
-				
-				$keyString = '';
-				foreach($keys as $key) {
-					$key = preg_replace('/[^a-zA-Z0-9_]/', '', $key);
-					$keyString .= "['{$key}']";
-				}
-				
-				// Add array to variables
-				foreach($item->variables as $variable) {
-					$variable = preg_replace("/^{$item->key}\./", '', $variable);
-					$variableKeys = explode('.', $variable);
-					$variable = '';
-					foreach($variableKeys as $variableKey) {
-						$variableKey = preg_replace('/[^a-zA-Z0-9_]/', '', $variableKey);
-						$variable .= "['{$variableKey}']";
+		if (isset($templateData)) {
+			foreach($templateData as $item) {
+				// Variables
+				if ($item instanceof stdClass && $item->type === 'variable') {
+					$keys = explode('.', $item->key);
+					
+					$keyString = '';
+					foreach($keys as $key) {
+						$key = preg_replace('/[^a-zA-Z0-9_]/', '', $key);
+						$keyString .= "['{$key}']";
 					}
-					eval('if (!isset($variables'.$keyString.$variable.')) { $variables'.$keyString.$variable.' = "string"; }');
+					
+					// Add to variables
+					eval('if (!isset($variables'.$keyString.')) { $variables'.$keyString.' = "string"; }');
+					
+					// Add to data
+					eval('$data'.$keyString.' = "'.str_replace("'", "\'", $item->value).'";');
 				}
 				
-				// Add array to data
-				$count = 0;
-				foreach($item->items as $itemKey => $itemValue) {
-					$itemKey = preg_replace('/[^a-zA-Z0-9_]/', '', $itemKey);
-					eval('$data'.$keyString."[{$count}]['{$itemKey}']".' = "'.str_replace("'", "\'", $itemValue).'";');
-					$count++;
-				}				
+				// Arrays
+				else if ($item instanceof stdClass && $item->type === 'array') {
+					// Array key
+					$keys = explode('.', $item->expression);
+					
+					$keyString = '';
+					foreach($keys as $key) {
+						$key = preg_replace('/[^a-zA-Z0-9_]/', '', $key);
+						$keyString .= "['{$key}']";
+					}
+					
+					// Add array to variables
+					foreach($item->variables as $variable) {
+						$variable = preg_replace("/^{$item->key}\./", '', $variable);
+						$variableKeys = explode('.', $variable);
+						$variable = '';
+						foreach($variableKeys as $variableKey) {
+							$variableKey = preg_replace('/[^a-zA-Z0-9_]/', '', $variableKey);
+							$variable .= "['{$variableKey}']";
+						}
+						eval('if (!isset($variables'.$keyString.$variable.')) { $variables'.$keyString.$variable.' = "string"; }');
+					}
+					
+					// Add array to data
+					$count = 0;
+					foreach($item->items as $itemKey => $itemValue) {
+						$itemKey = preg_replace('/[^a-zA-Z0-9_]/', '', $itemKey);
+						eval('$data'.$keyString."[{$count}]['{$itemKey}']".' = "'.str_replace("'", "\'", $itemValue).'";');
+						$count++;
+					}				
+				}
+	
 			}
-
 		}
 		
 		return array($language, $page, $variables, $data);

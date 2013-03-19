@@ -26,7 +26,7 @@ class Router {
 			    return new Fluid\StaticFile($file);
 			}
 		}
-				
+		
 		// Other files
 		switch($request) {
 			// Index
@@ -72,7 +72,7 @@ class Router {
 			
 			// Not found
 			default:
-				return Fluid::NOT_FOUND;
+				return Fluid\Fluid::NOT_FOUND;
 		}
 	}
 }

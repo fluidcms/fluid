@@ -61,10 +61,10 @@ class Field implements FieldInterface {
 	/**
 	 * Match a Print Node with a FieldArray object and return the FieldArray object ID
 	 * 
-	 * @param   Twig_Node_Expression_GetAttr	$node
+	 * @param   mixed   $node
 	 * @return	string
 	 */
-	public static function matchNode( \Twig_Node_Expression_GetAttr $node ) {
+	public static function matchNode( $node ) {
 		foreach(self::$instances as $instance) {
 			if($instance->getNode('expr') == $node) {
 				return $instance->getId();
