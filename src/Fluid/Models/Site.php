@@ -5,13 +5,14 @@ namespace Fluid\Models;
 use Exception, Fluid\Fluid, Fluid\Database\Storage;
 
 /**
- * Page model
+ * Site model
  *
  * @package fluid
  */
 class Site extends Storage {
 	public $data;
-		
+	public $variables;
+	
 	/**
 	 * Init
 	 * 

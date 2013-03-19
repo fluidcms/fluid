@@ -171,6 +171,5 @@ class StaticFile {
 		header('Content-Length: '.strlen($this->content));	
 	
 		echo $this->content;
-		exit;
 	}
 }

@@ -50,7 +50,17 @@ class Router {
 			
 			// Page
 			case 'page.json':
-				return json_encode(Fluid\Models\Page::getAllData($_POST['content'], $_POST['url']));
+				$data = Fluid\Models\Page::mergeTemplateData($_POST['content']);
+				return json_encode(array(
+					'language' => Fluid\Fluid::getLanguage(),
+					'page' => $data['page']->page,
+					'data' => $data['page']->data,
+					'variables' => $data['page']->variables,
+					'site' => array(
+						'data' => $data['site']->data,
+						'variables' => $data['site']->variables
+					)
+				));
 			
 			// Languages
 			case 'languages.json':

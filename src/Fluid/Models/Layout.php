@@ -5,11 +5,11 @@ namespace Fluid\Models;
 use Exception, Fluid\Fluid;
 
 /**
- * File model
+ * Layout model
  *
  * @package fluid
  */
-class File {		
+class Layout {		
 	/**
 	 * Init
 	 * 

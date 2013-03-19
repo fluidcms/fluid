@@ -9,6 +9,7 @@ namespace Fluid;
  */
 class Data {
 	private static $structure;
+	private static $page;
 	
 	/**
 	 * Get data for a page
@@ -17,6 +18,8 @@ class Data {
 	 * @return  array
 	 */
 	public static function get($page) {
+		self::$page = $page;
+		
 		$site = new Models\Site();
 		$page = new Models\Page(self::$structure, $page);
 		
@@ -66,5 +69,14 @@ class Data {
 	 */
 	public static function getStructure() {
 		return self::$structure;
+	}
+	
+	/**
+	 * Get a list of the pages requested by the ::get() method
+	 * 
+	 * @return  array
+	 */
+	public static function getPage() {
+		return self::$page;
 	}
 }

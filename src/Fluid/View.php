@@ -61,9 +61,12 @@ class View {
 		$template = $twig->loadTemplate($file);
 		$render = $template->render($data);
 		
-		$render = '<script data-type="fluid-data">' . 
-					json_encode(Twig\Field\FieldOutput::returnFields()) . 
-					'</script>' .
+		$render = 	
+					'<script data-type="fluid-language">' . json_encode(Fluid::getLanguage()) . '</script>' .
+					PHP_EOL . 
+					'<script data-type="fluid-page">' . json_encode(Data::getPage()) . '</script>' .
+					PHP_EOL . 
+					'<script data-type="fluid-data">' . json_encode(Twig\Field\FieldOutput::returnFields()) . '</script>' .
 					PHP_EOL . 
 					$render;
 		

@@ -10,8 +10,10 @@ use Exception, Fluid\Fluid, Fluid\Database\Storage;
  * @package fluid
  */
 class Page extends Storage {
+	public $page;
 	public $parent;
 	public $data;
+	public $variables;
 		
 	/**
 	 * Init
@@ -21,6 +23,8 @@ class Page extends Storage {
 	 * @return  void
 	 */
 	public function __construct(Structure $structure, $page) {
+		$this->page = $page;
+		
 		// Check if page has parents
 		$parent = explode('/', strrev($page), 2);
 		if (isset($parent[1])) {
@@ -43,5 +47,28 @@ class Page extends Storage {
 	 */
 	public function hasParent() {
 		return (isset($this->parent) ? true : false);
+	}
+		
+	/**
+	 * Merge template data with the page data
+	 * 
+	 * @param   string  $content    The page content with the template data
+	 * @return  array
+	 */
+	public static function mergeTemplateData($content) {		
+		list($language, $page, $variables, $data) = Page\MergeTemplateData::getTemplateData($content);
+		Fluid::setLanguage($language);
+		
+		$site = new Site();
+		$structure = new Structure();
+		$page = new Page($structure, $page);
+		
+		Page\MergeTemplateData::merge($site, $page, $variables, $data);
+				
+		return array(
+			'page' => $page,
+			'site' => $site,
+			'structure' => $structure
+		);
 	}
 }
