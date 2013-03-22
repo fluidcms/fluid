@@ -33,7 +33,7 @@ div#toolbar {
 				position: absolute;
 				top: 13px;
 				left: 20px;
-				background-image: url('http://cdn.fluidcms.net/images/sprite.png');
+				background-image: url('../images/sprite.png');
 			}
 			&.preview:before { background-position: -10px -32px; }
 			&.edit:before { background-position: -26px -32px; }

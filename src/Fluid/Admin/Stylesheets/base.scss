@@ -2,7 +2,6 @@
 @import "compass/css3/background-size";
 @import "compass/css3/box-shadow";
 @import "compass/css3/images";
-@import url("http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900");
 
 /* #Reset
 ================================================== */
@@ -27,7 +26,7 @@ ol, ul {
 /* #Basic Styles
 ================================================== */
 body {
-	background: #383838 url('http://cdn.fluidcms.net/images/background.gif');
+	background: #383838 url('../images/background.gif');
 	font: 12px/18px 'Roboto', sans-serif;
 	color: #444;
 	-webkit-font-smoothing: antialiased;
@@ -68,7 +67,7 @@ body {
 		height: 10px;
 		top: 3px;
 		left: 0;
-		background-image: url('http://cdn.fluidcms.net/images/sprite.png');
+		background-image: url('../images/sprite.png');
 	}
 }
 .plus:before {

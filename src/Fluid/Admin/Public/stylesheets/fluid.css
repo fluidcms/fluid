@@ -53,7 +53,7 @@
   display: block;
   width: 16px;
   height: 16px;
-  background-image: url("http://cdn.fluidcms.net/images/sprite.png");
+  background-image: url("../images/sprite.png");
 }
 /* line 49, ../../Stylesheets/fluid.scss */
 #main nav a.structure:after {

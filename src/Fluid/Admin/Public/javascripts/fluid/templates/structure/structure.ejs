@@ -1,12 +1,25 @@
-<ul class="sections">
-	<% $.each(pages, function() { %>
-		<li>
-			<a data-id="<%= this.get('page') %>">
-				<%= this.get('page') %>
-				<span><%= this.get('url') %></span>
-			</a>
-		</li>
-	<% }) %>
+<ul class="structure">
+	<% function PagesList(pages) { %>
+		<% $.each(pages.models, function() { %>
+			<li>
+				<a data-id="<%= this.get('page') %>">
+					<%= this.get('page') %>
+					
+					<% if (this.get('url') !== '') { %>
+						<span><%= this.get('url') %></span>
+					<% } %>
+				</a>
+					
+				<% if (typeof this.get('pages') !== 'undefined') { %>
+					<ul>
+						<%= PagesList(this.get('pages')) %>	
+					</ul>
+				<% } %>
+			</li>
+		<% }) %>
+	<% } %>	
+	
+	<%= PagesList(pages) %>	
 </ul>
 
 <a data-action="addSection" class="icon-button plus">Section</a>

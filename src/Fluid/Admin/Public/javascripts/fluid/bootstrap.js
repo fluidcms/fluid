@@ -1,27 +1,35 @@
-var Fluid = {
-	Collection: {},
-	Model: {},
-	View: {},
-	Structure: {}
-};
-
-$(document).ready(function() {
-	var loaded = 9;
-	
-	$.getScript('javascripts/fluid/models/site.js', function() { loaded--; });
-	$.getScript('javascripts/fluid/models/page.js', function() { loaded--; });
-	$.getScript('javascripts/fluid/models/structure.js', function() { loaded--; });
-	$.getScript('javascripts/fluid/views/nav.js', function() { loaded--; });
-	$.getScript('javascripts/fluid/views/toolbar.js', function() { loaded--; });
-	$.getScript('javascripts/fluid/views/contextmenu.js', function() { loaded--; });
-	$.getScript('javascripts/fluid/views/modal.js', function() { loaded--; });
-	$.getScript('javascripts/fluid/views/structure.js', function() { loaded--; });
-	$.getScript('javascripts/fluid/views/pageeditor.js', function() { loaded--; });
-	
-	var loading = setInterval(function() {
-		if (loaded == 0) {
-			$.getScript('javascripts/fluid/app.js');
-			clearInterval(loading);
+(function () {
+	var root = this;
+ 
+	require.config({
+		baseUrl: "javascripts/fluid/",
+		urlArgs: (new Date()).getTime(), // !! Remove for production
+		paths: {
+			jquery: '../vendor/jquery',
+			'jquery-ui': '../vendor/jquery-ui',
+			underscore: '../vendor/underscore',
+			backbone: '../vendor/backbone',
+			ejs: '../vendor/ejs'
+		},
+		shim: {
+			underscore: { exports: '_' },
+			backbone: { deps: ['underscore', 'jquery'], exports: 'Backbone' },
+			ejs: { deps: ['backbone'], exports: 'EJS' }
 		}
-	}, 10);	
-});
+	});
+		
+	require(['app'], function (fluid) {
+		fluid.run();
+	});
+ 
+})();
+
+function updateQueryStringParameter(uri, key, value) {
+	var re = new RegExp("([?|&])" + key + "=.*?(&|$)", "i");
+	separator = uri.indexOf('?') !== -1 ? "&" : "?";
+	if (uri.match(re)) {
+		return uri.replace(re, '$1' + key + "=" + value + '$2');
+	} else {
+		return uri + separator + key + "=" + value;
+	}
+}

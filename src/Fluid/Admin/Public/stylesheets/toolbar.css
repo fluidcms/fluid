@@ -43,7 +43,7 @@ div#toolbar > div a.toolbar-button:before {
   position: absolute;
   top: 13px;
   left: 20px;
-  background-image: url("http://cdn.fluidcms.net/images/sprite.png");
+  background-image: url("../images/sprite.png");
 }
 /* line 38, ../../Stylesheets/toolbar.scss */
 div#toolbar > div a.toolbar-button.preview:before {

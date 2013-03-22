@@ -2,24 +2,11 @@
 <html>
 	<head>
         <meta charset="utf-8">
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900">
         <link rel="stylesheet" href="stylesheets/fluid-1.0.css">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
-		<script src="javascripts/vendor/underscore-min.js"></script>
-		<script src="javascripts/vendor/backbone-min.js"></script>
-		<script src="javascripts/vendor/ejs_production.js"></script>
-		<script src="javascripts/fluid/bootstrap.js"></script>
+		<script data-main="javascripts/fluid/bootstrap.js" src="javascripts/vendor/require.js"></script>
 	</head>
 	<body>
-		
-		<div id="main">
-		</div>
-		
-		<div id="toolbar">
-		</div>
-		
-		<div id="target">
-			<iframe src="{{ site_url }}" id="website"></iframe>
-		</div>
+		{% include 'app.twig' %}
 	</body>
 </html>

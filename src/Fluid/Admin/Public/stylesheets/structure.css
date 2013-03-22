@@ -7,46 +7,52 @@
 /* #Structure container
 ================================================== */
 /* line 8, ../../Stylesheets/structure.scss */
-.structure ul.sections {
-  margin-bottom: 24px;
-}
-/* line 11, ../../Stylesheets/structure.scss */
 .structure > a.icon-button {
   margin-left: 16px;
   display: block;
   float: left;
   margin-top: 4px;
 }
-/* line 17, ../../Stylesheets/structure.scss */
+/* line 14, ../../Stylesheets/structure.scss */
 .structure div {
   margin-right: 16px;
   float: right;
 }
-/* line 18, ../../Stylesheets/structure.scss */
+/* line 15, ../../Stylesheets/structure.scss */
 .structure div a.cancel {
   margin-right: 12px;
 }
 
 /* #Structure list
 ================================================== */
-/* line 29, ../../Stylesheets/structure.scss */
-ul.sections {
+/* line 26, ../../Stylesheets/structure.scss */
+ul.structure {
   margin-top: 16px;
+  margin-bottom: 24px;
 }
-/* line 31, ../../Stylesheets/structure.scss */
-ul.sections > li > a {
+/* line 30, ../../Stylesheets/structure.scss */
+ul.structure > li a {
   position: relative;
   display: block;
-  border-top: 1px dotted #3e3e3e;
-  font-weight: 500;
   color: white;
   font-size: 12px;
-  padding-top: 2px;
-  line-height: 32px;
+  line-height: 14px;
+  padding-bottom: 8px;
   cursor: default;
-  padding-left: 34px;
   text-shadow: 0px 1px 2px #aaaaaa, 0px 1px 2px rgba(0, 0, 0, 0.75) #aaaaaa;
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75) #aaaaaa, 0px 1px 2px rgba(0, 0, 0, 0.75) #aaaaaa;
+}
+/* line 40, ../../Stylesheets/structure.scss */
+ul.structure > li a span {
+  display: block;
+  color: #808080;
+  text-shadow: none;
+}
+/* line 46, ../../Stylesheets/structure.scss */
+ul.structure > li > a {
+  padding-top: 8px;
+  border-top: 1px dotted #3e3e3e;
+  padding-left: 34px;
   /*		&:after {
   			content: "";
   			display: block;
@@ -55,12 +61,12 @@ ul.sections > li > a {
   			position: absolute;
   			top: 14px;
   			right: $main-margin-right;
-  			background-image: url('http://cdn.fluidcms.net/images/sprite.png');
+  			background-image: url('../images/sprite.png');
   			background-position: -85px 0;
   		}*/
 }
-/* line 43, ../../Stylesheets/structure.scss */
-ul.sections > li > a:before {
+/* line 51, ../../Stylesheets/structure.scss */
+ul.structure > li > a:before {
   content: "";
   display: block;
   width: 5px;
@@ -68,36 +74,24 @@ ul.sections > li > a:before {
   position: absolute;
   top: 14px;
   left: 16px;
-  background-image: url("http://cdn.fluidcms.net/images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-position: -80px 0;
 }
-/* line 66, ../../Stylesheets/structure.scss */
-ul.sections > li:last-child {
-  border-bottom: 1px dotted #3e3e3e;
-}
-/* line 69, ../../Stylesheets/structure.scss */
-ul.sections > li.sortable-placeholder {
-  height: 35px;
-  background: rgba(255, 255, 255, 0.05);
-}
-
-/* #Pages list
-================================================== */
-/* line 77, ../../Stylesheets/structure.scss */
-ul.pages {
+/* line 74, ../../Stylesheets/structure.scss */
+ul.structure > li ul {
   min-height: 2px;
   padding-bottom: 2px;
   padding-left: 34px;
 }
-/* line 81, ../../Stylesheets/structure.scss */
-ul.pages > li {
+/* line 78, ../../Stylesheets/structure.scss */
+ul.structure > li ul li {
   position: relative;
   padding-left: 30px;
 }
-/* line 83, ../../Stylesheets/structure.scss */
-ul.pages > li:before {
+/* line 80, ../../Stylesheets/structure.scss */
+ul.structure > li ul li:before {
   position: absolute;
-  background-image: url("http://cdn.fluidcms.net/images/structure-tree.png");
+  background-image: url("../images/structure-tree.png");
   background-repeat: no-repeat;
   background-position: left top;
   padding-top: 12px;
@@ -108,32 +102,22 @@ ul.pages > li:before {
   top: -0;
   left: 10px;
 }
-/* line 96, ../../Stylesheets/structure.scss */
-ul.pages > li:last-child:before {
-  background-image: url("http://cdn.fluidcms.net/images/structure-tree-bottom.png");
+/* line 93, ../../Stylesheets/structure.scss */
+ul.structure > li ul li:last-child:before {
+  background-image: url("../images/structure-tree-bottom.png");
   background-position: left bottom;
 }
 /* line 101, ../../Stylesheets/structure.scss */
-ul.pages > li a {
-  cursor: default;
-  color: white;
-  text-shadow: 0px 1px 2px #aaaaaa, 0px 1px 2px rgba(0, 0, 0, 0.75) #aaaaaa;
-  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75) #aaaaaa, 0px 1px 2px rgba(0, 0, 0, 0.75) #aaaaaa;
+ul.structure > li:last-child {
+  border-bottom: 1px dotted #3e3e3e;
 }
-/* line 105, ../../Stylesheets/structure.scss */
-ul.pages > li a span {
-  display: block;
-  color: #808080;
-  text-shadow: none;
-}
-/* line 112, ../../Stylesheets/structure.scss */
-ul.pages > li.sortable-placeholder {
+/* line 104, ../../Stylesheets/structure.scss */
+ul.structure > li.sortable-placeholder {
   height: 37px;
   background: rgba(255, 255, 255, 0.05);
   background-clip: content-box;
 }
-
-/* line 118, ../../Stylesheets/structure.scss */
-ul.pages ul.pages {
+/* line 109, ../../Stylesheets/structure.scss */
+ul.structure ul ul {
   padding-left: 0;
 }
