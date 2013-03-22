@@ -1,3 +1,14 @@
+<ul class="sections">
+	<% $.each(pages, function() { %>
+		<li>
+			<a data-id="<%= this.get('page') %>">
+				<%= this.get('page') %>
+				<span><%= this.get('url') %></span>
+			</a>
+		</li>
+	<% }) %>
+</ul>
+
 <a data-action="addSection" class="icon-button plus">Section</a>
 <div>
 	<a data-action="cancelChanges" class="link-button cancel" disabled>Cancel</a>

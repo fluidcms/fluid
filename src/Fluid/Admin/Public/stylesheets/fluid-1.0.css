@@ -7,7 +7,7 @@
 ================================================== */
 /* #Reset
 ================================================== */
-/* line 9, ../../../../sass/base.scss */
+/* line 9, ../../Stylesheets/base.scss */
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
   margin: 0;
   padding: 0;
@@ -15,26 +15,26 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   vertical-align: baseline;
 }
 
-/* line 15, ../../../../sass/base.scss */
+/* line 15, ../../Stylesheets/base.scss */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
   display: block;
 }
 
-/* line 18, ../../../../sass/base.scss */
+/* line 18, ../../Stylesheets/base.scss */
 html, body {
   width: 100%;
   height: 100%;
   line-height: 1;
 }
 
-/* line 23, ../../../../sass/base.scss */
+/* line 23, ../../Stylesheets/base.scss */
 ol, ul {
   list-style: none;
 }
 
 /* #Basic Styles
 ================================================== */
-/* line 29, ../../../../sass/base.scss */
+/* line 29, ../../Stylesheets/base.scss */
 body {
   background: #383838 url("http://cdn.fluidcms.net/images/background.gif");
   font: 12px/18px "Roboto", sans-serif;
@@ -47,33 +47,33 @@ body {
 ================================================== */
 /* #Links
 ================================================== */
-/* line 43, ../../../../sass/base.scss */
+/* line 43, ../../Stylesheets/base.scss */
 .link-button, .icon-button {
   color: white;
   font-weight: 700;
   border-radius: 2px;
   cursor: default;
 }
-/* line 48, ../../../../sass/base.scss */
+/* line 48, ../../Stylesheets/base.scss */
 .link-button:active, .icon-button:active {
   background: rgba(0, 0, 0, 0.1);
 }
 
-/* line 52, ../../../../sass/base.scss */
+/* line 52, ../../Stylesheets/base.scss */
 .link-button[disabled], [disabled].icon-button {
   opacity: .3;
 }
-/* line 54, ../../../../sass/base.scss */
+/* line 54, ../../Stylesheets/base.scss */
 .link-button[disabled]:active, [disabled].icon-button:active {
   background: none;
 }
 
-/* line 59, ../../../../sass/base.scss */
+/* line 59, ../../Stylesheets/base.scss */
 .icon-button {
   position: relative;
   padding-left: 14px;
 }
-/* line 63, ../../../../sass/base.scss */
+/* line 63, ../../Stylesheets/base.scss */
 .icon-button:before {
   position: absolute;
   content: "";
@@ -85,14 +85,14 @@ body {
   background-image: url("http://cdn.fluidcms.net/images/sprite.png");
 }
 
-/* line 74, ../../../../sass/base.scss */
+/* line 74, ../../Stylesheets/base.scss */
 .plus:before {
   background-position: 0 -32px;
 }
 
 /* #Buttons
 ================================================== */
-/* line 85, ../../../../sass/base.scss */
+/* line 85, ../../Stylesheets/base.scss */
 .button,
 button,
 input[type="submit"],
@@ -117,7 +117,7 @@ input[type="button"] {
   border: 1px solid #313131;
   padding: 0 16px;
 }
-/* line 101, ../../../../sass/base.scss */
+/* line 101, ../../Stylesheets/base.scss */
 .button.blue,
 button.blue,
 input[type="submit"].blue,
@@ -129,7 +129,7 @@ input[type="button"].blue {
   background: -o-linear-gradient(top, #6fc6fc 0%, #6fc6fc 5%, #2fabf7 6%, #1677b4 100%);
   background: linear-gradient(top, #6fc6fc 0%, #6fc6fc 5%, #2fabf7 6%, #1677b4 100%);
 }
-/* line 105, ../../../../sass/base.scss */
+/* line 105, ../../Stylesheets/base.scss */
 .button:active,
 button:active,
 input[type="submit"]:active,
@@ -141,7 +141,7 @@ input[type="button"]:active {
   background: -o-linear-gradient(top, #a4a4a4 0%, #a4a4a4 5%, #515151 6%, #7a7a7a 100%);
   background: linear-gradient(top, #a4a4a4 0%, #a4a4a4 5%, #515151 6%, #7a7a7a 100%);
 }
-/* line 107, ../../../../sass/base.scss */
+/* line 107, ../../Stylesheets/base.scss */
 .button:active.blue,
 button:active.blue,
 input[type="submit"]:active.blue,
@@ -154,7 +154,7 @@ input[type="button"]:active.blue {
   background: linear-gradient(top, #6fc6fc 0%, #6fc6fc 5%, #1677b4 6%, #2fabf7 100%);
 }
 
-/* line 117, ../../../../sass/base.scss */
+/* line 117, ../../Stylesheets/base.scss */
 .button[disabled],
 button[disabled],
 input[type="submit"][disabled],
@@ -162,7 +162,7 @@ input[type="reset"][disabled],
 input[type="button"][disabled] {
   opacity: .3;
 }
-/* line 119, ../../../../sass/base.scss */
+/* line 119, ../../Stylesheets/base.scss */
 .button[disabled]:active,
 button[disabled]:active,
 input[type="submit"][disabled]:active,
@@ -174,7 +174,7 @@ input[type="button"][disabled]:active {
   background: -o-linear-gradient(top, #3f3f3f, #000000);
   background: linear-gradient(top, #3f3f3f, #000000);
 }
-/* line 121, ../../../../sass/base.scss */
+/* line 121, ../../Stylesheets/base.scss */
 .button[disabled]:active.blue,
 button[disabled]:active.blue,
 input[type="submit"][disabled]:active.blue,
@@ -188,7 +188,7 @@ input[type="button"][disabled]:active.blue {
 }
 
 /* Fix for odd Mozilla border & padding issues */
-/* line 129, ../../../../sass/base.scss */
+/* line 129, ../../Stylesheets/base.scss */
 button::-moz-focus-inner,
 input::-moz-focus-inner {
   border: 0;
@@ -197,7 +197,7 @@ input::-moz-focus-inner {
 
 /* #Forms
 ================================================== */
-/* line 144, ../../../../sass/base.scss */
+/* line 144, ../../Stylesheets/base.scss */
 input[type="text"],
 input[type="number"],
 input[type="password"],
@@ -224,13 +224,13 @@ select {
   padding: 2px 8px;
 }
 
-/* line 161, ../../../../sass/base.scss */
+/* line 161, ../../Stylesheets/base.scss */
 select {
   padding: 5px 0;
   height: auto;
 }
 
-/* line 171, ../../../../sass/base.scss */
+/* line 171, ../../Stylesheets/base.scss */
 input[type="text"]:focus,
 input[type="number"]:focus,
 input[type="password"]:focus,
@@ -244,7 +244,7 @@ textarea:focus {
 
 /* #Container
 ================================================== */
-/* line 7, ../../../../sass/fluid.scss */
+/* line 7, ../../Stylesheets/fluid.scss */
 #main {
   z-index: 3;
   position: fixed;
@@ -259,7 +259,7 @@ textarea:focus {
 
 /* #Navigation
 ================================================== */
-/* line 20, ../../../../sass/fluid.scss */
+/* line 20, ../../Stylesheets/fluid.scss */
 #main nav {
   width: 100%;
   height: 42px;
@@ -269,7 +269,7 @@ textarea:focus {
   background: -o-linear-gradient(top, #292e34 0%, #373d44 75%, #2a2f35 100%);
   background: linear-gradient(top, #292e34 0%, #373d44 75%, #2a2f35 100%);
 }
-/* line 25, ../../../../sass/fluid.scss */
+/* line 25, ../../Stylesheets/fluid.scss */
 #main nav ul {
   display: -webkit-box;
   display: -moz-box;
@@ -280,7 +280,7 @@ textarea:focus {
   -ms-box-pack: center;
   box-pack: center;
 }
-/* line 33, ../../../../sass/fluid.scss */
+/* line 33, ../../Stylesheets/fluid.scss */
 #main nav a {
   margin: 0 3px;
   position: relative;
@@ -288,7 +288,7 @@ textarea:focus {
   width: 32px;
   height: 42px;
 }
-/* line 39, ../../../../sass/fluid.scss */
+/* line 39, ../../Stylesheets/fluid.scss */
 #main nav a:after {
   position: absolute;
   top: 13px;
@@ -299,67 +299,41 @@ textarea:focus {
   height: 16px;
   background-image: url("http://cdn.fluidcms.net/images/sprite.png");
 }
-/* line 49, ../../../../sass/fluid.scss */
+/* line 49, ../../Stylesheets/fluid.scss */
 #main nav a.structure:after {
   background-position-x: 0;
 }
-/* line 50, ../../../../sass/fluid.scss */
+/* line 50, ../../Stylesheets/fluid.scss */
 #main nav a.components:after {
   background-position-x: -16px;
 }
-/* line 51, ../../../../sass/fluid.scss */
+/* line 51, ../../Stylesheets/fluid.scss */
 #main nav a.files:after {
   background-position-x: -32px;
 }
-/* line 52, ../../../../sass/fluid.scss */
+/* line 52, ../../Stylesheets/fluid.scss */
 #main nav a.intl:after {
   background-position-x: -48px;
 }
-/* line 53, ../../../../sass/fluid.scss */
+/* line 53, ../../Stylesheets/fluid.scss */
 #main nav a.diff:after {
   background-position-x: -64px;
 }
-/* line 54, ../../../../sass/fluid.scss */
+/* line 54, ../../Stylesheets/fluid.scss */
 #main nav a.current {
   background: rgba(0, 0, 0, 0.14);
   -webkit-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.43);
   -moz-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.43);
   box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.43);
 }
-/* line 57, ../../../../sass/fluid.scss */
+/* line 57, ../../Stylesheets/fluid.scss */
 #main nav a.current:after {
   background-position-y: -16px;
 }
 
-/* #Toolbar
-================================================== */
-/* line 65, ../../../../sass/fluid.scss */
-#toolbar {
-  z-index: 2;
-  position: fixed;
-  top: 0;
-  height: 42px;
-  width: 100%;
-  padding-left: 306px;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-}
-/* line 76, ../../../../sass/fluid.scss */
-#toolbar > div {
-  position: absolute;
-  z-index: 5;
-  width: 100%;
-  height: 42px;
-  background: #e5e5e5;
-  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
-}
-
 /* #Target
 ================================================== */
-/* line 89, ../../../../sass/fluid.scss */
+/* line 64, ../../Stylesheets/fluid.scss */
 #target {
   position: relative;
   z-index: 1;
@@ -371,7 +345,7 @@ textarea:focus {
   box-sizing: border-box;
   overflow: hidden;
 }
-/* line 99, ../../../../sass/fluid.scss */
+/* line 74, ../../Stylesheets/fluid.scss */
 #target iframe {
   width: 100%;
   height: 100%;
@@ -385,7 +359,7 @@ textarea:focus {
 ================================================== */
 /* #Context Menu
 ================================================== */
-/* line 6, ../../../../sass/context-menu.scss */
+/* line 6, ../../Stylesheets/context-menu.scss */
 div.context-menu {
   z-index: 10;
   position: absolute;
@@ -397,18 +371,18 @@ div.context-menu {
   -moz-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
 }
-/* line 15, ../../../../sass/context-menu.scss */
+/* line 15, ../../Stylesheets/context-menu.scss */
 div.context-menu ul {
   padding: 4px 0;
 }
-/* line 18, ../../../../sass/context-menu.scss */
+/* line 18, ../../Stylesheets/context-menu.scss */
 div.context-menu ul li a {
   color: #333;
   font-size: 13px;
   display: block;
   padding: 4px 8px;
 }
-/* line 23, ../../../../sass/context-menu.scss */
+/* line 23, ../../Stylesheets/context-menu.scss */
 div.context-menu ul li a:hover {
   background: #ddd;
 }
@@ -421,8 +395,25 @@ div.context-menu ul li a:hover {
 ================================================== */
 /* #Tool bar
 ================================================== */
-/* line 7, ../../../../sass/toolbar.scss */
-div#toolbar a.toolbar-button {
+/* line 6, ../../Stylesheets/toolbar.scss */
+div#toolbar {
+  z-index: 2;
+  position: fixed;
+  top: 0;
+  height: 42px;
+  width: 100%;
+}
+/* line 13, ../../Stylesheets/toolbar.scss */
+div#toolbar > div {
+  padding-left: 306px;
+  height: 42px;
+  background: #e5e5e5;
+  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+}
+/* line 19, ../../Stylesheets/toolbar.scss */
+div#toolbar > div a.toolbar-button {
   position: relative;
   float: left;
   display: block;
@@ -432,8 +423,8 @@ div#toolbar a.toolbar-button {
   padding: 0 20px 0 48px;
   cursor: default;
 }
-/* line 16, ../../../../sass/toolbar.scss */
-div#toolbar a.toolbar-button:before {
+/* line 28, ../../Stylesheets/toolbar.scss */
+div#toolbar > div a.toolbar-button:before {
   content: "";
   display: block;
   width: 16px;
@@ -443,25 +434,32 @@ div#toolbar a.toolbar-button:before {
   left: 20px;
   background-image: url("http://cdn.fluidcms.net/images/sprite.png");
 }
-/* line 26, ../../../../sass/toolbar.scss */
-div#toolbar a.toolbar-button.preview:before {
+/* line 38, ../../Stylesheets/toolbar.scss */
+div#toolbar > div a.toolbar-button.preview:before {
   background-position: -10px -32px;
 }
-/* line 27, ../../../../sass/toolbar.scss */
-div#toolbar a.toolbar-button.edit:before {
+/* line 39, ../../Stylesheets/toolbar.scss */
+div#toolbar > div a.toolbar-button.edit:before {
   background-position: -26px -32px;
 }
-/* line 29, ../../../../sass/toolbar.scss */
-div#toolbar a.toolbar-button.current {
+/* line 41, ../../Stylesheets/toolbar.scss */
+div#toolbar > div a.toolbar-button.current {
   background-color: #d5d5d5;
   -webkit-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.3);
   box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.3);
   color: #50555a;
 }
-/* line 33, ../../../../sass/toolbar.scss */
-div#toolbar a.toolbar-button.current:before {
+/* line 45, ../../Stylesheets/toolbar.scss */
+div#toolbar > div a.toolbar-button.current:before {
   background-position-y: -48px;
+}
+/* line 49, ../../Stylesheets/toolbar.scss */
+div#toolbar > div div.select {
+  position: absolute;
+  top: 12px;
+  right: 20px;
+  color: #747c84;
 }
 
 /* #Font weight
@@ -472,7 +470,7 @@ div#toolbar a.toolbar-button.current:before {
 ================================================== */
 /* #Modal Window
 ================================================== */
-/* line 7, ../../../../sass/modal-window.scss */
+/* line 7, ../../Stylesheets/modal-window.scss */
 div.modal-container {
   z-index: 100;
   position: absolute;
@@ -523,7 +521,7 @@ div.modal-container {
   animation-timing-function: ease-in-out;
   animation-fill-mode: forwards;
 }
-/* line 22, ../../../../sass/modal-window.scss */
+/* line 22, ../../Stylesheets/modal-window.scss */
 div.modal-container div.modal-window {
   width: 320px;
   padding: 20px 30px;
@@ -535,7 +533,7 @@ div.modal-container div.modal-window {
   -moz-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
 }
-/* line 30, ../../../../sass/modal-window.scss */
+/* line 30, ../../Stylesheets/modal-window.scss */
 div.modal-container div.modal-window div.buttons {
   display: -webkit-box;
   display: -moz-box;
@@ -547,7 +545,7 @@ div.modal-container div.modal-window div.buttons {
   box-pack: end;
 }
 
-/* line 36, ../../../../sass/modal-window.scss */
+/* line 36, ../../Stylesheets/modal-window.scss */
 body.blur #main, body.blur #toolbar, body.blur #target {
   -webkit-animation-name: modal-blur;
   -webkit-animation-duration: 0.4s;
@@ -577,7 +575,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @-webkit-keyframes modal-blur {
-  /* line 42, ../../../../sass/modal-window.scss */
+  /* line 42, ../../Stylesheets/modal-window.scss */
   0% {
     -webkit-filter: blur(0);
     -moz-filter: blur(0);
@@ -585,7 +583,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
     filter: blur(0);
   }
 
-  /* line 48, ../../../../sass/modal-window.scss */
+  /* line 48, ../../Stylesheets/modal-window.scss */
   100% {
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
@@ -595,7 +593,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @-moz-keyframes modal-blur {
-  /* line 42, ../../../../sass/modal-window.scss */
+  /* line 42, ../../Stylesheets/modal-window.scss */
   0% {
     -webkit-filter: blur(0);
     -moz-filter: blur(0);
@@ -603,7 +601,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
     filter: blur(0);
   }
 
-  /* line 48, ../../../../sass/modal-window.scss */
+  /* line 48, ../../Stylesheets/modal-window.scss */
   100% {
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
@@ -613,7 +611,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @-o-keyframes modal-blur {
-  /* line 42, ../../../../sass/modal-window.scss */
+  /* line 42, ../../Stylesheets/modal-window.scss */
   0% {
     -webkit-filter: blur(0);
     -moz-filter: blur(0);
@@ -621,7 +619,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
     filter: blur(0);
   }
 
-  /* line 48, ../../../../sass/modal-window.scss */
+  /* line 48, ../../Stylesheets/modal-window.scss */
   100% {
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
@@ -631,7 +629,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @-ms-keyframes modal-blur {
-  /* line 42, ../../../../sass/modal-window.scss */
+  /* line 42, ../../Stylesheets/modal-window.scss */
   0% {
     -webkit-filter: blur(0);
     -moz-filter: blur(0);
@@ -639,7 +637,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
     filter: blur(0);
   }
 
-  /* line 48, ../../../../sass/modal-window.scss */
+  /* line 48, ../../Stylesheets/modal-window.scss */
   100% {
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
@@ -649,7 +647,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @keyframes modal-blur {
-  /* line 42, ../../../../sass/modal-window.scss */
+  /* line 42, ../../Stylesheets/modal-window.scss */
   0% {
     -webkit-filter: blur(0);
     -moz-filter: blur(0);
@@ -657,7 +655,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
     filter: blur(0);
   }
 
-  /* line 48, ../../../../sass/modal-window.scss */
+  /* line 48, ../../Stylesheets/modal-window.scss */
   100% {
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
@@ -667,60 +665,60 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @-webkit-keyframes modal-opacity {
-  /* line 57, ../../../../sass/modal-window.scss */
+  /* line 57, ../../Stylesheets/modal-window.scss */
   0% {
     opacity: 0;
   }
 
-  /* line 60, ../../../../sass/modal-window.scss */
+  /* line 60, ../../Stylesheets/modal-window.scss */
   100% {
     opacity: 1;
   }
 }
 
 @-moz-keyframes modal-opacity {
-  /* line 57, ../../../../sass/modal-window.scss */
+  /* line 57, ../../Stylesheets/modal-window.scss */
   0% {
     opacity: 0;
   }
 
-  /* line 60, ../../../../sass/modal-window.scss */
+  /* line 60, ../../Stylesheets/modal-window.scss */
   100% {
     opacity: 1;
   }
 }
 
 @-o-keyframes modal-opacity {
-  /* line 57, ../../../../sass/modal-window.scss */
+  /* line 57, ../../Stylesheets/modal-window.scss */
   0% {
     opacity: 0;
   }
 
-  /* line 60, ../../../../sass/modal-window.scss */
+  /* line 60, ../../Stylesheets/modal-window.scss */
   100% {
     opacity: 1;
   }
 }
 
 @-ms-keyframes modal-opacity {
-  /* line 57, ../../../../sass/modal-window.scss */
+  /* line 57, ../../Stylesheets/modal-window.scss */
   0% {
     opacity: 0;
   }
 
-  /* line 60, ../../../../sass/modal-window.scss */
+  /* line 60, ../../Stylesheets/modal-window.scss */
   100% {
     opacity: 1;
   }
 }
 
 @keyframes modal-opacity {
-  /* line 57, ../../../../sass/modal-window.scss */
+  /* line 57, ../../Stylesheets/modal-window.scss */
   0% {
     opacity: 0;
   }
 
-  /* line 60, ../../../../sass/modal-window.scss */
+  /* line 60, ../../Stylesheets/modal-window.scss */
   100% {
     opacity: 1;
   }
@@ -734,34 +732,34 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 ================================================== */
 /* #Structure container
 ================================================== */
-/* line 8, ../../../../sass/structure.scss */
+/* line 8, ../../Stylesheets/structure.scss */
 .structure ul.sections {
   margin-bottom: 24px;
 }
-/* line 11, ../../../../sass/structure.scss */
+/* line 11, ../../Stylesheets/structure.scss */
 .structure > a.icon-button {
   margin-left: 16px;
   display: block;
   float: left;
   margin-top: 4px;
 }
-/* line 17, ../../../../sass/structure.scss */
+/* line 17, ../../Stylesheets/structure.scss */
 .structure div {
   margin-right: 16px;
   float: right;
 }
-/* line 18, ../../../../sass/structure.scss */
+/* line 18, ../../Stylesheets/structure.scss */
 .structure div a.cancel {
   margin-right: 12px;
 }
 
 /* #Structure list
 ================================================== */
-/* line 29, ../../../../sass/structure.scss */
+/* line 29, ../../Stylesheets/structure.scss */
 ul.sections {
   margin-top: 16px;
 }
-/* line 31, ../../../../sass/structure.scss */
+/* line 31, ../../Stylesheets/structure.scss */
 ul.sections > li > a {
   position: relative;
   display: block;
@@ -787,7 +785,7 @@ ul.sections > li > a {
   			background-position: -85px 0;
   		}*/
 }
-/* line 43, ../../../../sass/structure.scss */
+/* line 43, ../../Stylesheets/structure.scss */
 ul.sections > li > a:before {
   content: "";
   display: block;
@@ -799,11 +797,11 @@ ul.sections > li > a:before {
   background-image: url("http://cdn.fluidcms.net/images/sprite.png");
   background-position: -80px 0;
 }
-/* line 66, ../../../../sass/structure.scss */
+/* line 66, ../../Stylesheets/structure.scss */
 ul.sections > li:last-child {
   border-bottom: 1px dotted #3e3e3e;
 }
-/* line 69, ../../../../sass/structure.scss */
+/* line 69, ../../Stylesheets/structure.scss */
 ul.sections > li.sortable-placeholder {
   height: 35px;
   background: rgba(255, 255, 255, 0.05);
@@ -811,18 +809,18 @@ ul.sections > li.sortable-placeholder {
 
 /* #Pages list
 ================================================== */
-/* line 77, ../../../../sass/structure.scss */
+/* line 77, ../../Stylesheets/structure.scss */
 ul.pages {
   min-height: 2px;
   padding-bottom: 2px;
   padding-left: 34px;
 }
-/* line 81, ../../../../sass/structure.scss */
+/* line 81, ../../Stylesheets/structure.scss */
 ul.pages > li {
   position: relative;
   padding-left: 30px;
 }
-/* line 83, ../../../../sass/structure.scss */
+/* line 83, ../../Stylesheets/structure.scss */
 ul.pages > li:before {
   position: absolute;
   background-image: url("http://cdn.fluidcms.net/images/structure-tree.png");
@@ -836,32 +834,32 @@ ul.pages > li:before {
   top: -0;
   left: 10px;
 }
-/* line 96, ../../../../sass/structure.scss */
+/* line 96, ../../Stylesheets/structure.scss */
 ul.pages > li:last-child:before {
   background-image: url("http://cdn.fluidcms.net/images/structure-tree-bottom.png");
   background-position: left bottom;
 }
-/* line 101, ../../../../sass/structure.scss */
+/* line 101, ../../Stylesheets/structure.scss */
 ul.pages > li a {
   cursor: default;
   color: white;
   text-shadow: 0px 1px 2px #aaaaaa, 0px 1px 2px rgba(0, 0, 0, 0.75) #aaaaaa;
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75) #aaaaaa, 0px 1px 2px rgba(0, 0, 0, 0.75) #aaaaaa;
 }
-/* line 105, ../../../../sass/structure.scss */
+/* line 105, ../../Stylesheets/structure.scss */
 ul.pages > li a span {
   display: block;
   color: #808080;
   text-shadow: none;
 }
-/* line 112, ../../../../sass/structure.scss */
+/* line 112, ../../Stylesheets/structure.scss */
 ul.pages > li.sortable-placeholder {
   height: 37px;
   background: rgba(255, 255, 255, 0.05);
   background-clip: content-box;
 }
 
-/* line 118, ../../../../sass/structure.scss */
+/* line 118, ../../Stylesheets/structure.scss */
 ul.pages ul.pages {
   padding-left: 0;
 }
@@ -874,7 +872,7 @@ ul.pages ul.pages {
 ================================================== */
 /* #Page Editor
 ================================================== */
-/* line 5, ../../../../sass/page-editor.scss */
+/* line 6, ../../Stylesheets/page-editor.scss */
 div.page-editor {
   z-index: 10;
   position: absolute;
@@ -888,19 +886,19 @@ div.page-editor {
   box-sizing: border-box;
   overflow: hidden;
 }
-/* line 17, ../../../../sass/page-editor.scss */
+/* line 18, ../../Stylesheets/page-editor.scss */
 div.page-editor > div {
   width: 100%;
   height: 100%;
   background: white;
 }
-/* line 22, ../../../../sass/page-editor.scss */
+/* line 23, ../../Stylesheets/page-editor.scss */
 div.page-editor > div form {
   width: 660px;
   margin: 0 auto;
   padding: 40px 0;
 }
-/* line 27, ../../../../sass/page-editor.scss */
+/* line 28, ../../Stylesheets/page-editor.scss */
 div.page-editor > div form label {
   display: block;
   font-weight: 500;
@@ -909,7 +907,7 @@ div.page-editor > div form label {
   text-transform: capitalize;
   margin: 0 0 18px 0;
 }
-/* line 36, ../../../../sass/page-editor.scss */
+/* line 37, ../../Stylesheets/page-editor.scss */
 div.page-editor > div form textarea {
   margin: 0 0 36px 0;
   border-radius: 0px;

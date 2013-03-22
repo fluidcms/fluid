@@ -22,7 +22,7 @@ var PageEditor = Backbone.Model.extend({
 var PageEditorView = Backbone.View.extend({
 	className: 'page-editor',
 	
-	template: new EJS({url: 'templates/pageeditor/editor.ejs'}), 
+	template: new EJS({url: 'javascripts/fluid/templates/pageeditor/editor.ejs'}), 
 
 	initialize: function () {
 		this.model.bind('change', this.render, this);

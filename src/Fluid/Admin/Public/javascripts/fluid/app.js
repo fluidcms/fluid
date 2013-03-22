@@ -1,55 +1,56 @@
-// Router
-var AppRouter = Backbone.Router.extend({
+Fluid.Router = Backbone.Router.extend({
+	root: "/fluidcms/",
+	current: "",
 	
 	routes: {
-		"": "structure"
+		"*method": "make"
 	},
 	
-	//
-	// Page
-	//
-	page: function() {
-		this.page = new Page();
+	make: function(method) {
+		method = method ? method : 'structure';
+		if (typeof this[method] == 'function') {
+			this.current = method;
+			this[method]();
+		}
 	},
-	
-	//
-	// Toolbar
-	//
-	toolbar: function() {
-		this.toolbar = new ToolbarView().render();
-		$('#toolbar').append(this.toolbar.$el);
-	},
-	
-	//
-	// Structure page
-	//
+		
 	structure: function () {
-		$("#main>nav a.structure").addClass('current');
-		var view = new StructureView();
-		view.sections = new Sections();
-		view.sections.structureView = view;
-		var sectionsView = new SectionsView({collection: view.sections});
-		view.sections.fetch();
-		$('#main').append(view.render().$el);
-		view.$el.prepend(sectionsView.$el);
+		new Fluid.Structure.View({collection: new Fluid.Structure.Pages()});
+	},
+	
+	files: function () {
+		
 	}
 });
 
-var mouseX;
-var mouseY;
-
-var app = new AppRouter();
-app.page();
-app.toolbar();
-Backbone.history.start();
+// Start the app
+Fluid.router = new Fluid.Router();
+Fluid.site = new Fluid.Model.Site();
+Fluid.page = new Fluid.Model.Page();
+Fluid.nav = new Fluid.View.Nav().render();
+Fluid.toolbar = new Fluid.View.Toolbar().render();
 
 // Track mouse
+Fluid.mouse = {};
 $(document).mousemove( function(e) {
-	mouseX = e.pageX; 
-	mouseY = e.pageY;
+	Fluid.mouse.x = e.pageX; 
+	Fluid.mouse.y = e.pageY;
 });
 
 // Block default context menu
 $(document).contextmenu(function(e) {
 	e.preventDefault();
+});
+
+// Block default link behavior
+Backbone.history.start({pushState: true, root: Fluid.router.root});
+
+$(document).on('click', "a[href]", function(e) {
+	var href = { prop: $(this).prop("href"), attr: $(this).attr("href") };
+	var root = location.protocol + "//" + location.host + Fluid.router.root;
+		
+	if (href.prop && href.prop.slice(0, root.length) === root) {
+		e.preventDefault();
+		Backbone.history.navigate(href.attr, true);
+	}
 });

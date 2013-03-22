@@ -30,15 +30,8 @@ class Router {
 		// Other files
 		switch($request) {
 			// Index
-			case '':
-				return Fluid\View::create('master.twig', array(
-					'navigation' => array(
-						array('name'=>'Structure', 'class'=>'structure'),
-						array('name'=>'Components', 'class'=>'components'),
-						array('name'=>'Internationalization', 'class'=>'intl')
-					),
-					'site_url' => 'http://sinergi-fluid.zulu/' // !! Fluid\Fluid::$urls['staging']
-				));
+			case '': case 'files':
+				return Fluid\View::create('master.twig', array('site_url' => 'http://sinergi-fluid.zulu/' /* // !! Fluid\Fluid::$urls['staging'] */ ));
 			
 			// Test
 			case 'test':
@@ -50,7 +43,7 @@ class Router {
 			
 			// Page
 			case 'page.json':
-				$data = Fluid\Models\Page::mergeTemplateData($_POST['content']);
+				$data = Fluid\Models\Page::mergeTemplateData(isset($_POST['content']) ? $_POST['content'] : '');
 				return json_encode(array(
 					'language' => Fluid\Fluid::getLanguage(),
 					'page' => $data['page']->page,

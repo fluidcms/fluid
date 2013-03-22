@@ -6,7 +6,7 @@
 ================================================== */
 /* #Context Menu
 ================================================== */
-/* line 6, ../../../../sass/context-menu.scss */
+/* line 6, ../../Stylesheets/context-menu.scss */
 div.context-menu {
   z-index: 10;
   position: absolute;
@@ -18,18 +18,18 @@ div.context-menu {
   -moz-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
 }
-/* line 15, ../../../../sass/context-menu.scss */
+/* line 15, ../../Stylesheets/context-menu.scss */
 div.context-menu ul {
   padding: 4px 0;
 }
-/* line 18, ../../../../sass/context-menu.scss */
+/* line 18, ../../Stylesheets/context-menu.scss */
 div.context-menu ul li a {
   color: #333;
   font-size: 13px;
   display: block;
   padding: 4px 8px;
 }
-/* line 23, ../../../../sass/context-menu.scss */
+/* line 23, ../../Stylesheets/context-menu.scss */
 div.context-menu ul li a:hover {
   background: #ddd;
 }

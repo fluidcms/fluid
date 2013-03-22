@@ -6,8 +6,25 @@
 ================================================== */
 /* #Tool bar
 ================================================== */
-/* line 7, ../../../../sass/toolbar.scss */
-div#toolbar a.toolbar-button {
+/* line 6, ../../Stylesheets/toolbar.scss */
+div#toolbar {
+  z-index: 2;
+  position: fixed;
+  top: 0;
+  height: 42px;
+  width: 100%;
+}
+/* line 13, ../../Stylesheets/toolbar.scss */
+div#toolbar > div {
+  padding-left: 306px;
+  height: 42px;
+  background: #e5e5e5;
+  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+}
+/* line 19, ../../Stylesheets/toolbar.scss */
+div#toolbar > div a.toolbar-button {
   position: relative;
   float: left;
   display: block;
@@ -17,8 +34,8 @@ div#toolbar a.toolbar-button {
   padding: 0 20px 0 48px;
   cursor: default;
 }
-/* line 16, ../../../../sass/toolbar.scss */
-div#toolbar a.toolbar-button:before {
+/* line 28, ../../Stylesheets/toolbar.scss */
+div#toolbar > div a.toolbar-button:before {
   content: "";
   display: block;
   width: 16px;
@@ -28,23 +45,30 @@ div#toolbar a.toolbar-button:before {
   left: 20px;
   background-image: url("http://cdn.fluidcms.net/images/sprite.png");
 }
-/* line 26, ../../../../sass/toolbar.scss */
-div#toolbar a.toolbar-button.preview:before {
+/* line 38, ../../Stylesheets/toolbar.scss */
+div#toolbar > div a.toolbar-button.preview:before {
   background-position: -10px -32px;
 }
-/* line 27, ../../../../sass/toolbar.scss */
-div#toolbar a.toolbar-button.edit:before {
+/* line 39, ../../Stylesheets/toolbar.scss */
+div#toolbar > div a.toolbar-button.edit:before {
   background-position: -26px -32px;
 }
-/* line 29, ../../../../sass/toolbar.scss */
-div#toolbar a.toolbar-button.current {
+/* line 41, ../../Stylesheets/toolbar.scss */
+div#toolbar > div a.toolbar-button.current {
   background-color: #d5d5d5;
   -webkit-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.3);
   box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.3);
   color: #50555a;
 }
-/* line 33, ../../../../sass/toolbar.scss */
-div#toolbar a.toolbar-button.current:before {
+/* line 45, ../../Stylesheets/toolbar.scss */
+div#toolbar > div a.toolbar-button.current:before {
   background-position-y: -48px;
+}
+/* line 49, ../../Stylesheets/toolbar.scss */
+div#toolbar > div div.select {
+  position: absolute;
+  top: 12px;
+  right: 20px;
+  color: #747c84;
 }

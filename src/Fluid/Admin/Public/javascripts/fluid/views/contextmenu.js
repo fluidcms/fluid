@@ -1,7 +1,3 @@
-//
-// Context menu views
-//
-
 var ContextMenu = Backbone.View.extend({
 	tagName: 'div',
 	
@@ -13,7 +9,7 @@ var ContextMenu = Backbone.View.extend({
 	
 	initialize: function ( config ) {
 		this.parent = config.parent;
-		this.template = new EJS({url: 'templates/'+config.url});
+		this.template = new EJS({url: 'javascripts/fluid/templates/'+config.url});
 	},
 	
 	render: function() {

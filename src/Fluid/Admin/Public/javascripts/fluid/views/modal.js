@@ -1,7 +1,3 @@
-//
-// Modal Window Views
-//
-
 var ModalWindow = Backbone.View.extend({
 	tagName: 'div',
 	

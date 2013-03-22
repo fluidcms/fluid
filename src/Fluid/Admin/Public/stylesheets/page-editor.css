@@ -1,114 +1,60 @@
-/*
-Syntax error: Undefined mixin 'box-shadow'.
-        on line 47 of /Users/gabriel/Sites/sinergi-fluid/vendor/fluid/fluid/sass/page-editor.scss, in `box-shadow'
-        from line 47 of /Users/gabriel/Sites/sinergi-fluid/vendor/fluid/fluid/sass/page-editor.scss
-
-Backtrace:
-/Users/gabriel/Sites/sinergi-fluid/vendor/fluid/fluid/sass/page-editor.scss:47:in `box-shadow'
-/Users/gabriel/Sites/sinergi-fluid/vendor/fluid/fluid/sass/page-editor.scss:47
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:253:in `visit_mixin'
-org/jruby/RubyKernel.java:2109:in `send'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/base.rb:37:in `visit'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:100:in `visit'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/base.rb:53:in `visit_children'
-org/jruby/RubyArray.java:2339:in `collect'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/base.rb:53:in `visit_children'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:109:in `visit_children'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:121:in `with_environment'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:108:in `visit_children'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/base.rb:37:in `visit'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:320:in `visit_rule'
-org/jruby/RubyKernel.java:2109:in `send'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/base.rb:37:in `visit'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:100:in `visit'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/base.rb:53:in `visit_children'
-org/jruby/RubyArray.java:2339:in `collect'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/base.rb:53:in `visit_children'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:109:in `visit_children'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:121:in `with_environment'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:108:in `visit_children'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/base.rb:37:in `visit'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:320:in `visit_rule'
-org/jruby/RubyKernel.java:2109:in `send'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/base.rb:37:in `visit'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:100:in `visit'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/base.rb:53:in `visit_children'
-org/jruby/RubyArray.java:2339:in `collect'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/base.rb:53:in `visit_children'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:109:in `visit_children'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:121:in `with_environment'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:108:in `visit_children'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/base.rb:37:in `visit'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:320:in `visit_rule'
-org/jruby/RubyKernel.java:2109:in `send'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/base.rb:37:in `visit'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:100:in `visit'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/base.rb:53:in `visit_children'
-org/jruby/RubyArray.java:2339:in `collect'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/base.rb:53:in `visit_children'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:109:in `visit_children'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:121:in `with_environment'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:108:in `visit_children'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/base.rb:37:in `visit'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:320:in `visit_rule'
-org/jruby/RubyKernel.java:2109:in `send'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/base.rb:37:in `visit'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:100:in `visit'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/base.rb:53:in `visit_children'
-org/jruby/RubyArray.java:2339:in `collect'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/base.rb:53:in `visit_children'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:109:in `visit_children'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:121:in `with_environment'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:108:in `visit_children'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/base.rb:37:in `visit'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:128:in `visit_root'
-org/jruby/RubyKernel.java:2109:in `send'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/base.rb:37:in `visit'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:100:in `visit'
-org/jruby/RubyKernel.java:2109:in `send'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/visitors/perform.rb:7:in `visit'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/tree/root_node.rb:20:in `render'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/engine.rb:315:in `_render'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_common/sass-3.2.6/lib/sass/engine.rb:262:in `render'
-file:/Applications/compass.app/Contents/Resources/Java/compass-app.jar!/compass_patch.rb:60:in `compile'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_0.13/compass-0.13.alpha.2/lib/compass/compiler.rb:132:in `timed'
-file:/Applications/compass.app/Contents/Resources/Java/compass-app.jar!/compass_patch.rb:59:in `compile'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_0.13/compass-0.13.alpha.2/lib/compass/logger.rb:46:in `red'
-file:/Applications/compass.app/Contents/Resources/Java/compass-app.jar!/compass_patch.rb:58:in `compile'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_0.13/compass-0.13.alpha.2/lib/compass/compiler.rb:124:in `compile_if_required'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_0.13/compass-0.13.alpha.2/lib/compass/compiler.rb:109:in `run'
-org/jruby/RubyArray.java:1620:in `each'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_0.13/compass-0.13.alpha.2/lib/compass/compiler.rb:107:in `run'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_0.13/compass-0.13.alpha.2/lib/compass/compiler.rb:132:in `timed'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_0.13/compass-0.13.alpha.2/lib/compass/compiler.rb:106:in `run'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_0.13/compass-0.13.alpha.2/lib/compass/watcher/compiler.rb:24:in `compile'
-org/jruby/RubyKernel.java:2105:in `send'
-(__FORWARDABLE__):3:in `compile'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_0.13/compass-0.13.alpha.2/lib/compass/watcher/project_watcher.rb:89:in `sass_modified'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_0.13/compass-0.13.alpha.2/lib/compass/watcher/project_watcher.rb:82:in `sass_callback'
-org/jruby/RubyMethod.java:133:in `call'
-org/jruby/RubyProc.java:270:in `call'
-org/jruby/RubyProc.java:220:in `call'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_0.13/compass-0.13.alpha.2/lib/compass/watcher/watch.rb:17:in `run_callback'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_0.13/compass-0.13.alpha.2/lib/compass/watcher/project_watcher.rb:75:in `listen_callback'
-org/jruby/RubyArray.java:1620:in `each'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_0.13/compass-0.13.alpha.2/lib/compass/watcher/project_watcher.rb:74:in `listen_callback'
-org/jruby/RubyArray.java:1620:in `each'
-/Applications/compass.app/Contents/Resources/lib/ruby/compass_0.13/compass-0.13.alpha.2/lib/compass/watcher/project_watcher.rb:73:in `listen_callback'
-org/jruby/RubyMethod.java:133:in `call'
-org/jruby/RubyProc.java:270:in `call'
-org/jruby/RubyProc.java:220:in `call'
-/Applications/compass.app/Contents/Resources/lib/ruby/jruby/listen-0.7.2/lib/listen/listener.rb:212:in `on_change'
-/Applications/compass.app/Contents/Resources/lib/ruby/jruby/listen-0.7.2/lib/listen/listener.rb:221:in `initialize_adapter'
-org/jruby/RubyProc.java:270:in `call'
-org/jruby/RubyProc.java:220:in `call'
-/Applications/compass.app/Contents/Resources/lib/ruby/jruby/listen-0.7.2/lib/listen/adapter.rb:198:in `report_changes'
-/Applications/compass.app/Contents/Resources/lib/ruby/jruby/listen-0.7.2/lib/listen/adapter.rb:210:in `poll_changed_dirs'
-/Applications/compass.app/Contents/Resources/lib/ruby/jruby/listen-0.7.2/lib/listen/adapters/darwin.rb:38:in `start'
-org/jruby/RubyProc.java:270:in `call'
-org/jruby/RubyProc.java:224:in `call'
-*/
-body:before {
-  white-space: pre;
-  font-family: monospace;
-  content: "Syntax error: Undefined mixin 'box-shadow'.\A         on line 47 of /Users/gabriel/Sites/sinergi-fluid/vendor/fluid/fluid/sass/page-editor.scss, in `box-shadow'\A         from line 47 of /Users/gabriel/Sites/sinergi-fluid/vendor/fluid/fluid/sass/page-editor.scss"; }
+/* #Font weight
+================================================== */
+/* #Margins
+================================================== */
+/* #Animations
+================================================== */
+/* #Page Editor
+================================================== */
+/* line 6, ../../Stylesheets/page-editor.scss */
+div.page-editor {
+  z-index: 10;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 42px 0 0 306px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+/* line 18, ../../Stylesheets/page-editor.scss */
+div.page-editor > div {
+  width: 100%;
+  height: 100%;
+  background: white;
+}
+/* line 23, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form {
+  width: 660px;
+  margin: 0 auto;
+  padding: 40px 0;
+}
+/* line 28, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form label {
+  display: block;
+  font-weight: 500;
+  color: #333;
+  font-size: 20px;
+  text-transform: capitalize;
+  margin: 0 0 18px 0;
+}
+/* line 37, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form textarea {
+  margin: 0 0 36px 0;
+  border-radius: 0px;
+  width: 100%;
+  resize: none;
+  height: 18px;
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 18px;
+  padding: 8px 14px;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.13);
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.13);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.13);
+  border: 1px solid #bfbfbf;
+}
