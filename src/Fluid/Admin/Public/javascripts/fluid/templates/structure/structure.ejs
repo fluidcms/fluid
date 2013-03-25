@@ -1,8 +1,8 @@
-<ul class="structure">
+<ul class="structure structureSortable">
 	<% function PagesList(pages) { %>
 		<% $.each(pages.models, function() { %>
-			<li>
-				<a data-id="<%= this.get('page') %>">
+			<li data-id="<%= this.get('id') %>" data-page="<%= this.get('page') %>">
+				<a>
 					<%= this.get('page') %>
 					
 					<% if (this.get('url') !== '') { %>
@@ -10,11 +10,11 @@
 					<% } %>
 				</a>
 					
-				<% if (typeof this.get('pages') !== 'undefined') { %>
-					<ul>
+				<ul class="pages structureSortable">
+					<% if (typeof this.get('pages') !== 'undefined') { %>
 						<%= PagesList(this.get('pages')) %>	
-					</ul>
-				<% } %>
+					<% } %>
+				</ul>
 			</li>
 		<% }) %>
 	<% } %>	
@@ -22,7 +22,7 @@
 	<%= PagesList(pages) %>	
 </ul>
 
-<a data-action="addSection" class="icon-button plus">Section</a>
+<a data-action="addPage" class="icon-button plus">Page</a>
 <div>
 	<a data-action="cancelChanges" class="link-button cancel" disabled>Cancel</a>
 	<a data-action="saveChanges" class="button blue" disabled>Save</a>

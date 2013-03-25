@@ -37,6 +37,21 @@ class Storage {
 			throw new Exception("Failed to load data: File {$file} does not exists", E_USER_WARNING);
 		}
 	}
+		
+	/**
+	 * Save data to storage
+	 * 
+	 * @return  array
+	 */
+	public static function save($content, $file = null) {
+		if (null === $file) {
+			$file = static::$dataFile;
+		}
+		
+		$file = Fluid::getConfig('storage') .  $file;
+		
+		file_put_contents($file, $content);
+	}
 	
 	/**
 	 * Set the data file

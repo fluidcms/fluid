@@ -25,7 +25,8 @@
 ================================================== */
 ul.structure {
 	margin-top: $main-margin-top;
-	margin-bottom: 24px;
+	margin-bottom: 14px;
+	padding-bottom: 10px;
 	&>li {
 		a {
 			position: relative;
@@ -33,7 +34,6 @@ ul.structure {
 			color: white;
 			font-size: 12px;
 			line-height: 14px;
-			padding-bottom: 8px;
 			cursor: default;
 			@include single-text-shadow(0px, 1px, 2px, rgba(0, 0, 0, .75));
 	
@@ -72,8 +72,8 @@ ul.structure {
 			}*/
 		}
 		ul {
-			min-height: 2px;
 			padding-bottom: 2px;
+			padding-top: 8px;
 			padding-left: 34px;
 			li {
 				position: relative;
@@ -101,7 +101,7 @@ ul.structure {
 	&>li:last-child {
 		border-bottom: 1px dotted #3e3e3e;
 	}
-	&>li.sortable-placeholder {
+	li.sortable-placeholder {
 		height: 37px;
 		background: rgba(255, 255, 255, .05);
 		background-clip: content-box;

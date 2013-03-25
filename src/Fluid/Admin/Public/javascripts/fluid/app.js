@@ -38,13 +38,6 @@ define(['backbone', 'models/site', 'models/page', 'views/nav', 'views/toolbar'],
 			//boot up the app:
 			var fluidRouter = new FluidRouter();
 						
-			// Track mouse
-			var mousePos = {};
-			$(document).mousemove( function(e) {
-				mousePos.x = e.pageX; 
-				mousePos.y = e.pageY;
-			});
-			
 			// Block default context menu
 			$(document).contextmenu(function(e) {
 				e.preventDefault();
