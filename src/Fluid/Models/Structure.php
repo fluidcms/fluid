@@ -2,7 +2,7 @@
 
 namespace Fluid\Models;
 
-use Fluid\Fluid, Fluid\Database\Storage, Fluid\Models\Structure\LocalizeStructure;
+use Fluid\Fluid, Fluid\Database\Storage, Fluid\Models\Structure\LocalizeStructure, Fluid\Models\Structure\SaveStructure;
 
 /**
  * Site structure model
@@ -40,5 +40,16 @@ class Structure extends Storage {
 		} else {
 			return $this->localized[$language];
 		}
+	}
+	
+	/**
+	 * Save new data to data file.
+	 * 
+	 * @param   string  $content
+	 * @param   string  $file
+	 * @return  void
+	 */
+	public static function save($content, $file = null) {
+		SaveStructure::save(json_decode($content, true), self::$dataFile);
 	}
 }

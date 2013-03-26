@@ -20,6 +20,16 @@
 		]
 	},
 	{
+		"id" : "contact/form",
+		"page": "form",
+		"url": "/contact/form/",
+		"layout": "default",
+		"languages": [
+			"en-US",
+			"de-DE"
+		]
+    },
+    {
 	    "id" : "contact",
 	    "page": "contact",
 		"languages": [
@@ -27,39 +37,27 @@
 			"de-DE"
 		],
     	"pages": [
-    		{
-    			"id" : "form",
-    			"page": "form",
-    			"url": "/contact/form/",
-    			"layout": "default",
-				"languages": [
-					"en-US",
-					"de-DE"
-				],
-				"pages": [
-					{
-						"id" : "success",
-						"page": "success",
-						"url": "/contact/form/success/",
-						"layout": "default",
-						"languages": [
-							"en-US",
-							"de-DE"
-						]
-					}
-				]
-    		},
-    		{
-    			"id" : "support",
-    			"page": "support",
-    			"url": "/contact/support/",
-    			"layout": "default",
+			{
+				"id" : "contact/form/success",
+				"page": "success",
+				"url": "/contact/form/success/",
+				"layout": "default",
 				"languages": [
 					"en-US",
 					"de-DE"
 				]
-    		}
+			}
     	]
+	},
+	{
+		"id" : "contact/support",
+		"page": "support",
+		"url": "/support/",
+		"layout": "default",
+		"languages": [
+			"en-US",
+			"de-DE"
+		]
 	},
 	{
 		"id" : "blog",
