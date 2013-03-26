@@ -36,7 +36,7 @@ ol, ul {
 /* line 28, ../../Stylesheets/base.scss */
 body {
   background: #383838 url("../images/background.gif");
-  font: 12px/18px "Roboto", sans-serif;
+  font: 12px/18px 'Roboto', sans-serif;
   color: #444;
   -webkit-font-smoothing: antialiased;
   -webkit-text-size-adjust: 100%;
@@ -194,42 +194,82 @@ input::-moz-focus-inner {
   padding: 0;
 }
 
+/* #Big Buttons
+================================================== */
+/* line 135, ../../Stylesheets/base.scss */
+.button-big {
+  display: inline-block;
+  line-height: 30px;
+  text-decoration: none;
+  font-weight: 500;
+  color: #333;
+  font-size: 16px;
+  cursor: default;
+  background-color: #222;
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fefefe), color-stop(100%, #f8f8f8));
+  background: -webkit-linear-gradient(top, #fefefe 0%, #f8f8f8 100%);
+  background: -moz-linear-gradient(top, #fefefe 0%, #f8f8f8 100%);
+  background: -o-linear-gradient(top, #fefefe 0%, #f8f8f8 100%);
+  background: linear-gradient(top, #fefefe 0%, #f8f8f8 100%);
+  background-repeat: no-repeat;
+  border-radius: 3px;
+  border: 1px solid #bfbfbf;
+  padding: 0 20px;
+}
+/* line 152, ../../Stylesheets/base.scss */
+.button-big.blue {
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #eff8fe), color-stop(100%, #e7f4fc));
+  background: -webkit-linear-gradient(top, #eff8fe 0%, #e7f4fc 100%);
+  background: -moz-linear-gradient(top, #eff8fe 0%, #e7f4fc 100%);
+  background: -o-linear-gradient(top, #eff8fe 0%, #e7f4fc 100%);
+  background: linear-gradient(top, #eff8fe 0%, #e7f4fc 100%);
+}
+/* line 156, ../../Stylesheets/base.scss */
+.button-big:active {
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #e1e1e1), color-stop(100%, #f6f6f6));
+  background: -webkit-linear-gradient(top, #e1e1e1 0%, #f6f6f6 100%);
+  background: -moz-linear-gradient(top, #e1e1e1 0%, #f6f6f6 100%);
+  background: -o-linear-gradient(top, #e1e1e1 0%, #f6f6f6 100%);
+  background: linear-gradient(top, #e1e1e1 0%, #f6f6f6 100%);
+}
+/* line 158, ../../Stylesheets/base.scss */
+.button-big:active.blue {
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #cadeeb), color-stop(100%, #dae8f1));
+  background: -webkit-linear-gradient(top, #cadeeb 0%, #dae8f1 100%);
+  background: -moz-linear-gradient(top, #cadeeb 0%, #dae8f1 100%);
+  background: -o-linear-gradient(top, #cadeeb 0%, #dae8f1 100%);
+  background: linear-gradient(top, #cadeeb 0%, #dae8f1 100%);
+}
+
 /* #Forms
 ================================================== */
-/* line 143, ../../Stylesheets/base.scss */
+/* line 172, ../../Stylesheets/base.scss */
 input[type="text"],
 input[type="number"],
 input[type="password"],
 input[type="email"],
 input[type="search"],
-textarea,
-select {
+textarea {
   -webkit-appearance: textfield;
-  border: 1px solid #aaaaaa;
-  border-radius: 3px;
-  height: 23px;
-  outline: none;
-  font-size: 13px;
-  color: #333;
-  margin: 0;
-  width: 210px;
-  max-width: 100%;
-  display: block;
-  background: #fff;
-  -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
-  -moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
-  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
-  margin: 6px 0 18px 0;
-  padding: 2px 8px;
+  margin: 0 0 36px 0;
+  border-radius: 0px;
+  resize: none;
+  height: 34px;
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 18px;
+  padding: 8px 14px;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.13);
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.13);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.13);
+  border: 1px solid #bfbfbf;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-/* line 160, ../../Stylesheets/base.scss */
-select {
-  padding: 5px 0;
-  height: auto;
-}
-
-/* line 170, ../../Stylesheets/base.scss */
+/* line 194, ../../Stylesheets/base.scss */
 input[type="text"]:focus,
 input[type="number"]:focus,
 input[type="password"]:focus,
@@ -239,4 +279,54 @@ textarea:focus {
   -webkit-box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* line 198, ../../Stylesheets/base.scss */
+div.input-margin {
+  margin: 0 0 36px 0;
+}
+
+/* line 202, ../../Stylesheets/base.scss */
+select {
+  padding: 5px 0;
+  height: auto;
+}
+
+/* line 207, ../../Stylesheets/base.scss */
+label {
+  display: block;
+  font-weight: 500;
+  color: #333;
+  font-size: 20px;
+  text-transform: capitalize;
+  margin: 0 0 18px 0;
+}
+
+/* line 216, ../../Stylesheets/base.scss */
+label.no-text-transform {
+  text-transform: none;
+}
+
+/* line 220, ../../Stylesheets/base.scss */
+label.checkbox {
+  display: inline;
+  font-size: 14px;
+  margin: 0 18px 0 0;
+  font-weight: 300;
+  vertical-align: top;
+  line-height: 18px;
+}
+/* line 228, ../../Stylesheets/base.scss */
+label.checkbox input {
+  margin: 0;
+  -webkit-appearance: none;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background-image: url("../images/sprite.png");
+  background-position: 0 -64px;
+}
+/* line 236, ../../Stylesheets/base.scss */
+label.checkbox input:checked {
+  background-position: -18px -64px;
 }

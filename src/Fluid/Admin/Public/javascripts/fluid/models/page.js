@@ -1,9 +1,9 @@
 define(['backbone'], function (Backbone) {
 	var Model = Backbone.Model.extend({	
-		initialize: function( args ) {
+		initialize: function( attrs ) {
 			var obj = this;
 			
-			this.site = args.site;
+			this.site = attrs.site;
 			
 			this.bind('newtoken', this.fetchPage);
 			

@@ -32,29 +32,7 @@ div.page-editor > div form {
   margin: 0 auto;
   padding: 40px 0;
 }
-/* line 28, ../../Stylesheets/page-editor.scss */
-div.page-editor > div form label {
-  display: block;
-  font-weight: 500;
-  color: #333;
-  font-size: 20px;
-  text-transform: capitalize;
-  margin: 0 0 18px 0;
-}
-/* line 37, ../../Stylesheets/page-editor.scss */
-div.page-editor > div form textarea {
-  margin: 0 0 36px 0;
-  border-radius: 0px;
+/* line 27, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form input {
   width: 100%;
-  resize: none;
-  height: 18px;
-  font-family: "Roboto", sans-serif;
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 18px;
-  padding: 8px 14px;
-  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.13);
-  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.13);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.13);
-  border: 1px solid #bfbfbf;
 }

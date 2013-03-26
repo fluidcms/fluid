@@ -59,17 +59,15 @@ div.modal-container {
 }
 /* line 22, ../../Stylesheets/modal-window.scss */
 div.modal-container div.modal-window {
-  width: 320px;
-  padding: 20px 30px;
-  background: #f3f7fb;
+  width: 524px;
+  padding: 30px 30px 50px 30px;
+  background: white;
   margin-bottom: 200px;
-  border-radius: 3px;
-  border: 1px solid #cccccc;
-  -webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 5px 5px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 5px 5px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.75);
 }
-/* line 30, ../../Stylesheets/modal-window.scss */
+/* line 28, ../../Stylesheets/modal-window.scss */
 div.modal-container div.modal-window div.buttons {
   display: -webkit-box;
   display: -moz-box;
@@ -80,8 +78,14 @@ div.modal-container div.modal-window div.buttons {
   -ms-box-pack: end;
   box-pack: end;
 }
+/* line 32, ../../Stylesheets/modal-window.scss */
+div.modal-container div.modal-window input[type="text"] {
+  width: 524px;
+}
 
-/* line 36, ../../Stylesheets/modal-window.scss */
+/* #Blur
+================================================== */
+/* line 44, ../../Stylesheets/modal-window.scss */
 body.blur #main, body.blur #toolbar, body.blur #target {
   -webkit-animation-name: modal-blur;
   -webkit-animation-duration: 0.4s;
@@ -111,7 +115,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @-webkit-keyframes modal-blur {
-  /* line 42, ../../Stylesheets/modal-window.scss */
+  /* line 50, ../../Stylesheets/modal-window.scss */
   0% {
     -webkit-filter: blur(0);
     -moz-filter: blur(0);
@@ -119,7 +123,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
     filter: blur(0);
   }
 
-  /* line 48, ../../Stylesheets/modal-window.scss */
+  /* line 56, ../../Stylesheets/modal-window.scss */
   100% {
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
@@ -129,7 +133,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @-moz-keyframes modal-blur {
-  /* line 42, ../../Stylesheets/modal-window.scss */
+  /* line 50, ../../Stylesheets/modal-window.scss */
   0% {
     -webkit-filter: blur(0);
     -moz-filter: blur(0);
@@ -137,7 +141,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
     filter: blur(0);
   }
 
-  /* line 48, ../../Stylesheets/modal-window.scss */
+  /* line 56, ../../Stylesheets/modal-window.scss */
   100% {
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
@@ -147,7 +151,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @-o-keyframes modal-blur {
-  /* line 42, ../../Stylesheets/modal-window.scss */
+  /* line 50, ../../Stylesheets/modal-window.scss */
   0% {
     -webkit-filter: blur(0);
     -moz-filter: blur(0);
@@ -155,7 +159,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
     filter: blur(0);
   }
 
-  /* line 48, ../../Stylesheets/modal-window.scss */
+  /* line 56, ../../Stylesheets/modal-window.scss */
   100% {
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
@@ -165,7 +169,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @-ms-keyframes modal-blur {
-  /* line 42, ../../Stylesheets/modal-window.scss */
+  /* line 50, ../../Stylesheets/modal-window.scss */
   0% {
     -webkit-filter: blur(0);
     -moz-filter: blur(0);
@@ -173,7 +177,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
     filter: blur(0);
   }
 
-  /* line 48, ../../Stylesheets/modal-window.scss */
+  /* line 56, ../../Stylesheets/modal-window.scss */
   100% {
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
@@ -183,7 +187,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @keyframes modal-blur {
-  /* line 42, ../../Stylesheets/modal-window.scss */
+  /* line 50, ../../Stylesheets/modal-window.scss */
   0% {
     -webkit-filter: blur(0);
     -moz-filter: blur(0);
@@ -191,7 +195,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
     filter: blur(0);
   }
 
-  /* line 48, ../../Stylesheets/modal-window.scss */
+  /* line 56, ../../Stylesheets/modal-window.scss */
   100% {
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
@@ -201,60 +205,60 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @-webkit-keyframes modal-opacity {
-  /* line 57, ../../Stylesheets/modal-window.scss */
+  /* line 65, ../../Stylesheets/modal-window.scss */
   0% {
     opacity: 0;
   }
 
-  /* line 60, ../../Stylesheets/modal-window.scss */
+  /* line 68, ../../Stylesheets/modal-window.scss */
   100% {
     opacity: 1;
   }
 }
 
 @-moz-keyframes modal-opacity {
-  /* line 57, ../../Stylesheets/modal-window.scss */
+  /* line 65, ../../Stylesheets/modal-window.scss */
   0% {
     opacity: 0;
   }
 
-  /* line 60, ../../Stylesheets/modal-window.scss */
+  /* line 68, ../../Stylesheets/modal-window.scss */
   100% {
     opacity: 1;
   }
 }
 
 @-o-keyframes modal-opacity {
-  /* line 57, ../../Stylesheets/modal-window.scss */
+  /* line 65, ../../Stylesheets/modal-window.scss */
   0% {
     opacity: 0;
   }
 
-  /* line 60, ../../Stylesheets/modal-window.scss */
+  /* line 68, ../../Stylesheets/modal-window.scss */
   100% {
     opacity: 1;
   }
 }
 
 @-ms-keyframes modal-opacity {
-  /* line 57, ../../Stylesheets/modal-window.scss */
+  /* line 65, ../../Stylesheets/modal-window.scss */
   0% {
     opacity: 0;
   }
 
-  /* line 60, ../../Stylesheets/modal-window.scss */
+  /* line 68, ../../Stylesheets/modal-window.scss */
   100% {
     opacity: 1;
   }
 }
 
 @keyframes modal-opacity {
-  /* line 57, ../../Stylesheets/modal-window.scss */
+  /* line 65, ../../Stylesheets/modal-window.scss */
   0% {
     opacity: 0;
   }
 
-  /* line 60, ../../Stylesheets/modal-window.scss */
+  /* line 68, ../../Stylesheets/modal-window.scss */
   100% {
     opacity: 1;
   }

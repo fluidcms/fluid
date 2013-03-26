@@ -11,7 +11,9 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
 		initialize: function ( config ) {
 			this.event = config.event;			
 			this.parent = config.parent;
-			this.template = new EJS({url: config.url});
+			this.template = new EJS({
+				url: config.url+'?'+(new Date()).getTime() // !! Remove for production
+			});
 		},
 		
 		render: function() {

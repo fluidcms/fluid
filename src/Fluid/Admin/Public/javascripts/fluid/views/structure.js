@@ -1,4 +1,6 @@
-define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu'], function (Backbone, EJS, jUI, Modal, ContextMenu) {
+define(['backbone', 'ejs', 'jquery-ui', 'models/language', 'views/modal', 'views/contextmenu'], function (Backbone, EJS, jUI, Language, Modal, ContextMenu) {
+	var languages = new Language;
+	
 	var View = Backbone.View.extend({
 		events: {  
 			'click a[data-action=addPage]': 'addPage',
@@ -11,10 +13,10 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu'], fun
 		
 		dropbox: {},
 		
-		template: new EJS({url: 'javascripts/fluid/templates/structure/structure.ejs?'+(new Date()).getTime()}), 
+		template: new EJS({url: 'javascripts/fluid/templates/structure/structure.ejs?'+(new Date()).getTime()}),  // !! Remove for production
 	
 		initialize: function() {
-			this.collection.on('reset add remove', this.render, this);
+			this.collection.on('reset add remove update', this.render, this);
 			this.collection.on('change', this.enableControls, this);
 			this.collection.on('saved', this.disableControls, this);
 		},
@@ -76,11 +78,41 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu'], fun
 		},
 		
 		addPage: function() {
-			var modalWindow = new Modal({url: 'javascripts/fluid/templates/structure/addpage.ejs', parent: this, model: this.collection}).render();
+			new Page({ model: new this.collection.__proto__.model({parent: this.collection}), newPage: true }).render();
 		},
 		
-		deleteItem: function(item) {
-			this.collection.removeItem($(item).parents('li').attr('data-id'));
+		editPage: function(page) {
+			new Page({ model: this.collection.findItem($(page).parents('li').attr('data-id')) }).render();
+		},
+		
+		deletePage: function(page) {
+			this.collection.removeItem($(page).parents('li').attr('data-id'));
+		}
+	});
+	
+	var Page = Modal.extend({
+		events: _.extend({}, Modal.prototype.events),
+		
+		template: new EJS({url: 'javascripts/fluid/templates/structure/page.ejs?'+(new Date()).getTime()}),  // !! Remove for production
+		
+		initialize: function( attrs ) {
+			if (typeof attrs.newPage !== 'undefined') {
+				this.newPage = true;
+			} else {
+				this.newPage = false;
+			}
+		},
+		
+		renderData: function() {
+			return {
+				languages: languages
+			};
+		},
+		
+		submit: function() {
+			if (this.newPage) {
+				this.model.parent.add(this.model);
+			}
 		}
 	});
 	

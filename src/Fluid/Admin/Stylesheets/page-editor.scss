@@ -24,29 +24,8 @@ div.page-editor {
 			width: 660px;
 			margin: 0 auto;
 			padding: 40px 0;
-			
-			label {
-				display: block;
-				font-weight: $medium;
-				color: #333;
-				font-size: 20px;
-				text-transform: capitalize;
-				margin: 0 0 18px 0;
-			}
-			
-			textarea {
-				margin: 0 0 36px 0;
-				border-radius: 0px;
+			input {
 				width: 100%;
-				resize: none;
-				height: 18px;
-				font-family: "Roboto", sans-serif;
-				font-size: 14px;
-				font-weight: $light;
-				line-height: 18px;
-				padding: 8px 14px;
-				@include box-shadow(0 1px 3px rgba(0, 0, 0, .13));
-				border: 1px solid #bfbfbf;
 			}
 		}
 	}

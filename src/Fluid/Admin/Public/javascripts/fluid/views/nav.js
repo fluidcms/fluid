@@ -2,13 +2,13 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
 	var View = Backbone.View.extend({
 		template: new EJS({url: 'javascripts/fluid/templates/nav.ejs'}), 
 		
-		initialize: function( args ) {
+		initialize: function( attrs ) {
 			this.items = [
 				{name: 'Structure', className: 'structure'},
 				{name: 'Files', className: 'files'}
 			];
 			
-			this.router = args.router;
+			this.router = attrs.router;
 			this.router.on("route", this.render, this);
 		},
 		

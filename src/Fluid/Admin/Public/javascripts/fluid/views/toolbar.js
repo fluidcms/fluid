@@ -9,8 +9,8 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
 				
 		template: new EJS({url: 'javascripts/fluid/templates/toolbar.ejs'}), 
 		
-		initialize: function( args ) {
-			args.page.on('change:language', this.changeLanguage, this);
+		initialize: function( attrs ) {
+			attrs.page.on('change:language', this.changeLanguage, this);
 		},
 		
 		render: function() {

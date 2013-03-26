@@ -20,19 +20,27 @@ div.modal-container {
 	@include animation-fix(modal-opacity, .4s, 1, forwards);
 	
 	div.modal-window {
-		width: 320px;
-		padding: 20px 30px;
-		background: #f3f7fb;
+		width: 524px;
+		padding: 30px 30px 50px 30px;
+		background: white;
 		margin-bottom: 200px;
-		border-radius: 3px;
-		border: 1px solid #ccc;
-		@include box-shadow(0 3px 5px rgba(0, 0, 0, .50));
+		@include box-shadow(0 5px 5px rgba(0, 0, 0, .75));
 		div.buttons {
 			@include display-box;
 			@include box-pack(end);
 		}
+		input[type="text"] {
+			width: 524px;
+		}
+	}
+	
+	button, .button {
+		@extend .button-big;
 	}
 }
+
+/* #Blur
+================================================== */
 body.blur #main, body.blur #toolbar, body.blur #target {
 	@include animation-fix(modal-blur, .4s, 1, both);
 

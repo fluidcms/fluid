@@ -39,7 +39,7 @@ class Router {
 			
 			// Structure
 			case 'structure.json':
-				if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+				if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'PUT') {
 					Fluid\Models\Structure::save(file_get_contents("php://input"));
 					return json_encode(true);
 				}

@@ -2,10 +2,10 @@ define(['backbone'], function (Backbone) {
 	var Page = Backbone.Model.extend({
 		parent: null,
 		
-		initialize: function( args ) {
-			this.parent = args.parent;
-			if (typeof args.pages != 'undefined') {
-				this.set('pages', new Pages(args.pages, {parent: this}))
+		initialize: function( attrs ) {
+			this.parent = attrs.parent;
+			if (typeof attrs.pages != 'undefined') {
+				this.set('pages', new Pages(attrs.pages, {parent: this}))
 			} else {
 				this.set('pages', new Pages([], {parent: this}))
 			}
@@ -13,6 +13,11 @@ define(['backbone'], function (Backbone) {
 			if (typeof this.get('id') == 'undefined') {			
 				this.set('id', this.getId());
 			}
+			
+			this.on('change', function(e) {
+				this.set('id', this.getId());
+				this.parent.trigger('update');
+			});
 		},
 		
 		getId: function() {
@@ -41,6 +46,18 @@ define(['backbone'], function (Backbone) {
 				delete output.pages;
 			}
 			return output;
+		},
+		
+		validate: function(attrs, options) {
+			// Validate page
+			if (attrs.page === '') {
+				this.validationErrorAttr = 'page';
+				return 'You must enter a page.';
+			}
+			if (!attrs.page.match(/^[a-z0-9_]*$/i)) {
+				this.validationErrorAttr = 'page';
+				return 'The page must contain only letters, numbers and underscores.';
+			}
 		}
 	});
 	
@@ -51,11 +68,11 @@ define(['backbone'], function (Backbone) {
 		
 		parent: null,
 		
-		initialize: function( items, args ) {
-			if (this.parent == null && (typeof args == 'undefined' || typeof args.parent == 'undefined')) {
+		initialize: function( items, attrs ) {
+			if (this.parent == null && (typeof attrs == 'undefined' || typeof attrs.parent == 'undefined')) {
 				this.fetch();
 			} else {
-				this.parent = args.parent;
+				this.parent = attrs.parent;
 				var parent = this;
 				$.each(items, function() { this.parent = parent; });
 			}
