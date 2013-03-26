@@ -1,5 +1,6 @@
 [
 	{
+	    "id" : "home",
 	    "page": "home",
 		"url": "/",
 		"layout": "home",
@@ -9,15 +10,7 @@
 		]
 	},
 	{
-	    "page": "products",
-	    "url": "/products/",
-		"layout": "default",
-		"languages": [
-			"en-US",
-			"de-DE"
-		]
-	},
-	{
+	    "id" : "services",
 	    "page": "services",
 	    "url": "/services/",
 		"layout": "default",
@@ -27,6 +20,7 @@
 		]
 	},
 	{
+	    "id" : "contact",
 	    "page": "contact",
 		"languages": [
 			"en-US",
@@ -34,6 +28,7 @@
 		],
     	"pages": [
     		{
+    			"id" : "form",
     			"page": "form",
     			"url": "/contact/form/",
     			"layout": "default",
@@ -43,6 +38,7 @@
 				],
 				"pages": [
 					{
+						"id" : "success",
 						"page": "success",
 						"url": "/contact/form/success/",
 						"layout": "default",
@@ -54,6 +50,7 @@
 				]
     		},
     		{
+    			"id" : "support",
     			"page": "support",
     			"url": "/contact/support/",
     			"layout": "default",
@@ -65,7 +62,8 @@
     	]
 	},
 	{
-		"page": "blog",
+		"id" : "blog",
+		"page": "my_blog",
 		"layout": "blog/home",
 		"url": "/blog/",
 		"languages": [

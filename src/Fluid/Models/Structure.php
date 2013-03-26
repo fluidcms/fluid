@@ -21,7 +21,7 @@ class Structure extends Storage {
 	 * @return  void
 	 */
 	public function __construct() {
-		$this->pages = LocalizeStructure::localize(self::getAll(), LocalizeStructure::getDefaultLanguage());
+		$this->pages = self::getAll();
 	}
 	
 	/**

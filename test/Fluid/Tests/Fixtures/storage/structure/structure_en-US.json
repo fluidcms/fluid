@@ -8,6 +8,10 @@
 		"name": "Services"
 	},
 	{
+		"page": "blog",
+		"name": "My Awesome Blog"
+	},
+	{
 	    "page": "contact",
 	    "name": "Contact",
     	"pages": [
@@ -26,9 +30,5 @@
     			"name": "Support"
     		}
     	]
-	},
-	{
-		"page": "blog",
-		"name": "My Awesome Blog"
 	}
 ]
