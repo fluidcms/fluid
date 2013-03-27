@@ -49,9 +49,23 @@ class StructureTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('success', $structure->pages[3]['pages'][0]['pages'][0]['pages'][0]['page']);
 		
 		$this->assertEquals('Contact Form Success', $structure->getLocalized()[3]['pages'][0]['pages'][0]['pages'][0]['name']);
+		
+		Fluid::setLanguage('de-DE');
+		$structure = new Structure();
+		$this->assertEquals('Kontaktformular', $structure->getLocalized()[3]['pages'][0]['pages'][0]['name']);
 	}
 	
 	public function testSave2() {
+		Fluid::setLanguage('de-DE');
+		$content = file_get_contents(__DIR__."/../Fixtures/request/new_structure.json");
+		Structure::save($content);
+		
+		$structure = new Structure();
+		
+		$this->assertEquals('Kontaktformular', $structure->getLocalized()[3]['pages'][0]['pages'][0]['name']);
+	}
+	
+	public function testSave3() {
 		Fluid::setLanguage('en-US');
 		$content = file_get_contents(__DIR__."/../Fixtures/request/new_structure2.json");
 		Structure::save($content);
@@ -60,6 +74,28 @@ class StructureTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('form', $structure->pages[2]['page']);
 		
 		$this->assertEquals('Contact Form Success', $structure->getLocalized()[3]['pages'][0]['name']);
+	}
+	
+	public function testAdd() {
+		Fluid::setLanguage('en-US');
+		$content = file_get_contents(__DIR__."/../Fixtures/request/new_structure3.json");
+		Structure::save($content);
+		
+		$structure = new Structure();
+		$this->assertEquals('test', $structure->pages[2]['pages'][0]['page']);
+		
+		$this->assertEquals('', $structure->getLocalized()[2]['pages'][0]['name']);
+	}
+	
+	public function testDelete() {
+		Fluid::setLanguage('en-US');
+		$content = file_get_contents(__DIR__."/../Fixtures/request/new_structure4.json");
+		Structure::save($content);
+		
+		$structure = new Structure();
+		foreach($structure->getLocalized() as $page) {
+			$this->assertFalse($page['page'] === 'contact');
+		}
 	}
 	
 	public function tearDown() {

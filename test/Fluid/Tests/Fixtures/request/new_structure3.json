@@ -1,0 +1,98 @@
+[
+	{
+		"page": "home",
+		"url": "/",
+		"layout": "home",
+		"languages": [
+			"en-US",
+			"de-DE"
+		],
+		"id": "home"
+	},
+	{
+		"page": "products",
+		"url": "/products/",
+		"layout": "default",
+		"languages": [
+			"en-US",
+			"de-DE"
+		],
+		"id": "products"
+	},
+	{
+		"page": "services",
+		"url": "/services/",
+		"layout": "default",
+		"languages": [
+			"en-US",
+			"de-DE"
+		],
+		"id": "services",
+		"pages": [
+			{
+				"id": "services/test",
+				"page": "test",
+				"languages": [
+					"de-DE",
+					"en-US"
+				],
+				"url": "/test/"
+			}
+		]
+	},
+	{
+		"page": "contact",
+		"languages": [
+			"en-US",
+			"de-DE"
+		],
+		"pages": [
+			{
+				"page": "form",
+				"url": "/contact/form/",
+				"layout": "default",
+				"languages": [
+					"en-US",
+					"de-DE"
+				],
+				"pages": [
+					{
+						"page": "success",
+						"url": "/contact/form/success/",
+						"layout": "default",
+						"languages": [
+							"en-US",
+							"de-DE"
+						],
+						"id": "contact/form/success"
+					}
+				],
+				"id": "contact/form"
+			},
+			{
+				"page": "support",
+				"url": "/contact/support/",
+				"layout": "default",
+				"languages": [
+					"en-US",
+					"de-DE"
+				],
+				"id": "contact/support"
+			}
+		],
+		"id": "contact"
+	},
+	{
+		"page": "blog",
+		"layout": "blog/home",
+		"url": "/blog/",
+		"languages": [
+			"en-US"
+		],
+		"entries": {
+			"layout": "blog/entry",
+			"url": "/blog/?entry=(:id)"
+		},
+		"id": "blog"
+	}
+]

@@ -1,34 +1,38 @@
 [
 	{
-	    "page": "home",
+		"page": "home",
 		"name": "Home Page"
 	},
 	{
-	    "page": "services",
+		"page": "products",
+		"name": ""
+	},
+	{
+		"page": "services",
 		"name": "Services"
+	},
+	{
+		"page": "contact",
+		"name": "Contact",
+		"pages": [
+			{
+				"page": "form",
+				"name": "Contact Form",
+				"pages": [
+					{
+						"page": "success",
+						"name": "Contact Form Success"
+					}
+				]
+			},
+			{
+				"page": "support",
+				"name": "Support"
+			}
+		]
 	},
 	{
 		"page": "blog",
 		"name": "My Awesome Blog"
-	},
-	{
-	    "page": "contact",
-	    "name": "Contact",
-    	"pages": [
-    		{
-    			"page": "form",
-    			"name": "Contact Form",
-    			"pages": [
-		    		{
-		    			"page": "success",
-		    			"name": "Contact Form Success"
-		    		}
-		    	]
-    		},
-    		{
-    			"page": "support",
-    			"name": "Support"
-    		}
-    	]
 	}
 ]

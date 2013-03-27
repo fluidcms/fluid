@@ -4,6 +4,10 @@
 		"name": "Startseite"
 	},
 	{
+	    "page": "products",
+		"name": ""
+	},
+	{
 	    "page": "services",
 		"name": "Dienstleistungen"
 	},
@@ -13,7 +17,13 @@
     	"pages": [
     		{
     			"page": "form",
-    			"name": "Kontaktformular"
+    			"name": "Kontaktformular",
+    			"pages": [
+		    		{
+		    			"page": "success",
+		    			"name": ""
+		    		}
+		    	]
     		},
     		{
     			"page": "support",
@@ -22,6 +32,7 @@
     	]
 	},
 	{
-		"page": "blog"
+		"page": "blog",
+		"name": ""
 	}
 ]

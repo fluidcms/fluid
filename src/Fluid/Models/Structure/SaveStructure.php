@@ -14,6 +14,7 @@ class SaveStructure {
 	private static $localizedChanges = array();
 	private static $localizedAdds = array();
 	private static $localizedStructures = array();
+	private static $newLocalizedStructures = array();
 	private static $structure = array();
 	
 	/**
@@ -27,13 +28,18 @@ class SaveStructure {
 		self::$dir = dirname($dataFile) . "/";
 		self::getLocalizedStructures();
 		
+		foreach(Fluid::getConfig('languages') as $language) {
+			self::$newLocalizedStructures[$language] = array();
+		}
+		
 		$structure = self::loopStructure($newStructure);
 		
 		self::applyLocalizedChanges();
 		
-		Storage::save(json_encode($structure), $dataFile);
-		
+		Storage::save(json_encode($structure, JSON_PRETTY_PRINT), $dataFile);
+
 		foreach(Fluid::getConfig('languages') as $language) {
+			Storage::save(json_encode(self::$newLocalizedStructures[$language], JSON_PRETTY_PRINT), self::$dir . "structure_{$language}.json");
 		}
 	}
 	
@@ -58,12 +64,11 @@ class SaveStructure {
 	public static function loopStructure($structure, $parent = '') {
 		$output = array();
 		$count = 0;
+				
 		foreach($structure as $item) {
 			$id = trim($parent.'/'.$item['page'], '/');
 			
-			if ($id !== $item['id']) {
-				self::changeLocalizedStructure($item['id'], $id, $count);
-			}
+			self::changeLocalizedStructure($item['id'], $id, $count, $item['page']);
 			
 			if (isset($item['pages']) && count($item['pages'])) {
 				$item['pages'] = self::loopStructure($item['pages'], $id);
@@ -82,11 +87,12 @@ class SaveStructure {
 	 * @param   string  $id
 	 * @param   string  $newId
 	 * @param   int     $newPos
+	 * @param   string  $page
 	 * @return  void
 	 */
-	public static function changeLocalizedStructure($id, $newId, $newPos) {
+	public static function changeLocalizedStructure($id, $newId, $newPos, $page) {
 		$level = count(explode('/', $id));
-		self::$localizedChanges[] = array($level, $id, $newId, $newPos);
+		self::$localizedChanges[] = array($level, $id, $newId, $newPos, $page);
 	}
 	
 	/**
@@ -98,31 +104,32 @@ class SaveStructure {
 		array_multisort(self::$localizedChanges, SORT_DESC);
 		
 		foreach(self::$localizedChanges as $change) {
-			list($level, $id, $newId, $newPos) = $change;
+			list($level, $id, $newId, $newPos, $page) = $change;
 			foreach(self::$localizedStructures as $language => $localizedStructure) {
-				$item = self::removeItem($language, $id);
-				if (null !== $item) {
-					$level = count(explode('/', $newId));
-					self::$localizedAdds[] = array($level, $language, $item, $newId, $newPos);
+				$item = self::getLocalizedItem($language, $id);
+				if (null === $item) {
+					$item = array('page' => $page, "name" => "");
 				}
+				$level = count(explode('/', $newId));
+				self::$localizedAdds[] = array($level, $language, $item, $newId, $newPos);
 			}
 		}
 		
 		array_multisort(self::$localizedAdds);
 		foreach(self::$localizedAdds as $add) {
 			list($level, $language, $item, $newId, $newPos) = $add;
-			self::addItem($language, $item, $newId, $newPos);
+			self::addLocalizedItem($language, $item, $newId, $newPos);
 		}
 	}
 	
 	/**
-	 * Remove item from localized structure
+	 * Get an item from localized structure
 	 * 
 	 * @param   string  $language
 	 * @param   string  $id
 	 * @return	array
 	 */
-	public static function removeItem($language, $id) {
+	public static function getLocalizedItem($language, $id) {
 		$path = explode('/', $id);
 		$item = self::$localizedStructures[$language];
 		
@@ -147,6 +154,7 @@ class SaveStructure {
 			if (!$found) {
 				$item = null;
 				$count = -1;
+				unset($arrayKey);
 			}
 		} while (isset($path[$count]));
 		
@@ -166,11 +174,11 @@ class SaveStructure {
 	 * @param   int     $pos
 	 * @return  void
 	 */
-	public static function addItem($language, $item, $id, $pos) {
+	public static function addLocalizedItem($language, $item, $id, $pos) {
 		$path = explode('/', $id);
 		$name = end($path);
 		$path = array_slice($path, 0, -1);
-		$parent = self::$localizedStructures[$language];
+		$parent = self::$newLocalizedStructures[$language];
 		
 		$arrayKey = '';
 		$count = 0;
@@ -193,6 +201,6 @@ class SaveStructure {
 			array_slice($parent, $pos+1)
 		);
 		
-		eval('self::$localizedStructures["'.$language.'"]'.$arrayKey.' = $parent;');
+		eval('self::$newLocalizedStructures["'.$language.'"]'.$arrayKey.' = $parent;');
 	}
 }
