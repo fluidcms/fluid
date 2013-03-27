@@ -9,15 +9,28 @@ define(['backbone'], function (Backbone) {
 			} else {
 				this.set('pages', new Pages([], {parent: this}))
 			}
-			
+						
 			if (typeof this.get('id') == 'undefined') {			
 				this.set('id', this.getId());
+			}
+			
+			if (typeof this.get('origin') == 'undefined') {			
+				this.set('origin', this.get('id'));
 			}
 			
 			this.on('change', function(e) {
 				this.set('id', this.getId());
 				this.parent.trigger('update');
 			});
+		},
+		
+		resetOrigin: function() {
+			this.set('origin', this.getId());
+			if (this.get('pages').length) {
+				this.get('pages').each(function(item) {
+					item.resetOrigin();
+				});
+			}
 		},
 		
 		getId: function() {
@@ -39,7 +52,8 @@ define(['backbone'], function (Backbone) {
 		toJSON: function() {
 			var output = _.clone(this.attributes);
 			delete output.parent;
-			delete output.id;
+			output.id = output.origin;
+			delete output.origin;
 			if (this.get('pages').length) {
 				output.pages = this.get('pages').toJSON();
 			} else {
@@ -82,6 +96,12 @@ define(['backbone'], function (Backbone) {
 					this.parent.parent.trigger(e);
 				}
 			});
+			
+			this.on('saved', function(e) {
+				if (this.parent == null) {
+					this.resetOrigins();
+				}
+			});
 		},
 		
 		save: function() {
@@ -115,6 +135,9 @@ define(['backbone'], function (Backbone) {
 			item.parent.remove(item);
 			receiver.add(data, {at: position});
 			
+			receiver.models[position].set('id', receiver.models[position].getId());
+			receiver.models[position].attributes.id = receiver.models[position].get('id');
+						
 			this.trigger('change');
 		},
 		
@@ -140,6 +163,12 @@ define(['backbone'], function (Backbone) {
 			});
 			
 			return model;
+		},
+		
+		resetOrigins: function() {
+			this.each(function(item){
+				item.resetOrigin();
+			});
 		}
 	});
 	

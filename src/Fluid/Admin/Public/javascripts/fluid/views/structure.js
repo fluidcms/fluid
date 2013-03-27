@@ -17,7 +17,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'models/language', 'views/modal', 'views
 	
 		initialize: function() {
 			this.collection.on('reset add remove update', this.render, this);
-			this.collection.on('change', this.enableControls, this);
+			this.collection.on('change update', this.enableControls, this);
 			this.collection.on('saved', this.disableControls, this);
 		},
 		
@@ -26,10 +26,6 @@ define(['backbone', 'ejs', 'jquery-ui', 'models/language', 'views/modal', 'views
 			$("#main").append(this.$el);
 			this.sortable();
 			return this;
-		},
-		
-		saveChanges: function() {
-			this.collection.save();
 		},
 		
 		sortable: function() {
@@ -64,7 +60,13 @@ define(['backbone', 'ejs', 'jquery-ui', 'models/language', 'views/modal', 'views
 		disableControls: function() {
 			this.$el.find('[data-action=cancelChanges],[data-action=saveChanges]').attr('disabled', 'true');
 		},
-	
+		
+		saveChanges: function(e) {
+			if(!$(e.target).is("[disabled]")) {
+				this.collection.save();
+			}
+		},
+			
 		cancelChanges: function(e) {
 			if(!$(e.target).is("[disabled]") && confirm('Are you sure you want to cancel changes?')) {
 				this.collection.fetch({reset: true});

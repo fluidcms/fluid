@@ -40,9 +40,20 @@ class StructureTest extends PHPUnit_Framework_TestCase {
 		$this->assertFalse(isset($structure->getLocalized()[4]));
 	}
 	
-	public function testSave() {
+	public function testSave1() {
 		Fluid::setLanguage('en-US');
 		$content = file_get_contents(__DIR__."/../Fixtures/request/new_structure.json");
+		Structure::save($content);
+		
+		$structure = new Structure();
+		$this->assertEquals('success', $structure->pages[3]['pages'][0]['pages'][0]['pages'][0]['page']);
+		
+		$this->assertEquals('Contact Form Success', $structure->getLocalized()[3]['pages'][0]['pages'][0]['pages'][0]['name']);
+	}
+	
+	public function testSave2() {
+		Fluid::setLanguage('en-US');
+		$content = file_get_contents(__DIR__."/../Fixtures/request/new_structure2.json");
 		Structure::save($content);
 		
 		$structure = new Structure();

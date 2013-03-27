@@ -12,6 +12,7 @@ use Fluid\Fluid, Fluid\Models\Structure, Fluid\Database\Storage;
 class SaveStructure {
 	private static $dir = '';
 	private static $localizedChanges = array();
+	private static $localizedAdds = array();
 	private static $localizedStructures = array();
 	private static $structure = array();
 	
@@ -33,7 +34,6 @@ class SaveStructure {
 		Storage::save(json_encode($structure), $dataFile);
 		
 		foreach(Fluid::getConfig('languages') as $language) {
-			Storage::save(json_encode(self::$localizedStructures[$language]), self::$dir . "structure_{$language}.json");
 		}
 	}
 	
@@ -86,7 +86,7 @@ class SaveStructure {
 	 */
 	public static function changeLocalizedStructure($id, $newId, $newPos) {
 		$level = count(explode('/', $id));
-		self::$localizedChanges[] = [$level, $id, $newId, $newPos];		
+		self::$localizedChanges[] = array($level, $id, $newId, $newPos);
 	}
 	
 	/**
@@ -102,9 +102,16 @@ class SaveStructure {
 			foreach(self::$localizedStructures as $language => $localizedStructure) {
 				$item = self::removeItem($language, $id);
 				if (null !== $item) {
-					self::addItem($language, $item, $newId, $newPos);
+					$level = count(explode('/', $newId));
+					self::$localizedAdds[] = array($level, $language, $item, $newId, $newPos);
 				}
 			}
+		}
+		
+		array_multisort(self::$localizedAdds);
+		foreach(self::$localizedAdds as $add) {
+			list($level, $language, $item, $newId, $newPos) = $add;
+			self::addItem($language, $item, $newId, $newPos);
 		}
 	}
 	
@@ -139,11 +146,13 @@ class SaveStructure {
 			}
 			if (!$found) {
 				$item = null;
-				$count = -1;			
+				$count = -1;
 			}
 		} while (isset($path[$count]));
 		
-		eval('unset(self::$localizedStructures["'.$language.'"]'.$arrayKey.');');
+		if (!empty($arrayKey)) {
+			eval('unset(self::$localizedStructures["'.$language.'"]'.$arrayKey.');');
+		}
 				
 		return $item;
 	}
@@ -166,26 +175,16 @@ class SaveStructure {
 		$arrayKey = '';
 		$count = 0;
 		while (isset($path[$count])) {
-			$found = false;
 			foreach($parent as $key => $value) {
 				if ($value['page'] === $path[$count]) {
-					if (isset($value['pages']) && count($value['pages'])) {
-						$parent = $parent[$key]['pages'];
-						$arrayKey .= "[{$key}]['pages']";
-					} else {
-						$parent = $parent[$key];
-						$arrayKey .= "[{$key}]";
-					}
-					$found = true;
+					$parent = isset($parent[$key]['pages']) ? $parent[$key]['pages'] : array();
+					$arrayKey .= "[{$key}]['pages']";
 					$count++;
 					break;
 				}
 			}
-			if (!$found) {
-				$count = -1;			
-			}
 		}
-		
+				
 		$item['page'] = $name;
 		
 		$parent = array_merge(
