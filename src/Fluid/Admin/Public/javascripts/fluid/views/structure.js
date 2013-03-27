@@ -1,6 +1,4 @@
-define(['backbone', 'ejs', 'jquery-ui', 'models/language', 'views/modal', 'views/contextmenu'], function (Backbone, EJS, jUI, Language, Modal, ContextMenu) {
-	var languages = new Language;
-	
+define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu'], function (Backbone, EJS, jUI, Modal, ContextMenu) {	
 	var View = Backbone.View.extend({
 		events: {  
 			'click a[data-action=addPage]': 'addPage',
@@ -15,10 +13,12 @@ define(['backbone', 'ejs', 'jquery-ui', 'models/language', 'views/modal', 'views
 		
 		template: new EJS({url: 'javascripts/fluid/templates/structure/structure.ejs?'+(new Date()).getTime()}),  // !! Remove for production
 	
-		initialize: function() {
+		initialize: function( attrs ) {
 			this.collection.on('reset add remove update', this.render, this);
 			this.collection.on('change update', this.enableControls, this);
 			this.collection.on('saved', this.disableControls, this);
+			this.languages = attrs.languages;
+			this.layouts = attrs.layouts;
 		},
 		
 		render: function() {
@@ -80,11 +80,11 @@ define(['backbone', 'ejs', 'jquery-ui', 'models/language', 'views/modal', 'views
 		},
 		
 		addPage: function() {
-			new Page({ model: new this.collection.__proto__.model({parent: this.collection}), newPage: true }).render();
+			new Page({ model: new this.collection.__proto__.model({parent: this.collection}), languages: this.languages, layouts: this.layouts, newPage: true }).render();
 		},
 		
 		editPage: function(page) {
-			new Page({ model: this.collection.findItem($(page).parents('li').attr('data-id')) }).render();
+			new Page({ model: this.collection.findItem($(page).parents('li').attr('data-id')), languages: this.languages, layouts: this.layouts }).render();
 		},
 		
 		deletePage: function(page) {
@@ -98,6 +98,8 @@ define(['backbone', 'ejs', 'jquery-ui', 'models/language', 'views/modal', 'views
 		template: new EJS({url: 'javascripts/fluid/templates/structure/page.ejs?'+(new Date()).getTime()}),  // !! Remove for production
 		
 		initialize: function( attrs ) {
+			this.languages = attrs.languages;
+			this.layouts = attrs.layouts;
 			if (typeof attrs.newPage !== 'undefined') {
 				this.newPage = true;
 			} else {
@@ -107,7 +109,8 @@ define(['backbone', 'ejs', 'jquery-ui', 'models/language', 'views/modal', 'views
 		
 		renderData: function() {
 			return {
-				languages: languages
+				languages: this.languages,
+				layouts: this.layouts
 			};
 		},
 		

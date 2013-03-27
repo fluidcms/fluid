@@ -200,8 +200,22 @@ div.input-margin {
 }
 	
 select {
-	padding: 5px 0;
-	height: auto;
+	-webkit-appearance: none;
+	margin: 0 0 36px 0;
+	border-radius: 3px;
+	height: 34px;
+	font-family: "Roboto", sans-serif;
+	font-size: 14px;
+	font-weight: $light;
+	line-height: 18px;
+	padding: 8px 39px 8px 14px;
+	border: 1px solid #bfbfbf;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	@include background(image-url("../images/sprite.png"), linear-gradient(top, #ffffff 0%, #f7f7f7 100%));
+	background-position: right -86px, 0 0;
+	background-repeat: no-repeat, repeat;
 }
 
 label {

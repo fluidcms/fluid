@@ -288,11 +288,29 @@ div.input-margin {
 
 /* line 202, ../../Stylesheets/base.scss */
 select {
-  padding: 5px 0;
-  height: auto;
+  -webkit-appearance: none;
+  margin: 0 0 36px 0;
+  border-radius: 3px;
+  height: 34px;
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 18px;
+  padding: 8px 39px 8px 14px;
+  border: 1px solid #bfbfbf;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  background: url('../images/sprite.png'), -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #f7f7f7));
+  background: url('../images/sprite.png'), -webkit-linear-gradient(top, #ffffff 0%, #f7f7f7 100%);
+  background: url('../images/sprite.png'), -moz-linear-gradient(top, #ffffff 0%, #f7f7f7 100%);
+  background: url('../images/sprite.png'), -o-linear-gradient(top, #ffffff 0%, #f7f7f7 100%);
+  background: url('../images/sprite.png'), linear-gradient(top, #ffffff 0%, #f7f7f7 100%);
+  background-position: right -86px, 0 0;
+  background-repeat: no-repeat, repeat;
 }
 
-/* line 207, ../../Stylesheets/base.scss */
+/* line 221, ../../Stylesheets/base.scss */
 label {
   display: block;
   font-weight: 500;
@@ -302,12 +320,12 @@ label {
   margin: 0 0 18px 0;
 }
 
-/* line 216, ../../Stylesheets/base.scss */
+/* line 230, ../../Stylesheets/base.scss */
 label.no-text-transform {
   text-transform: none;
 }
 
-/* line 220, ../../Stylesheets/base.scss */
+/* line 234, ../../Stylesheets/base.scss */
 label.checkbox {
   display: inline;
   font-size: 14px;
@@ -316,7 +334,7 @@ label.checkbox {
   vertical-align: top;
   line-height: 18px;
 }
-/* line 228, ../../Stylesheets/base.scss */
+/* line 242, ../../Stylesheets/base.scss */
 label.checkbox input {
   margin: 0;
   -webkit-appearance: none;
@@ -326,7 +344,7 @@ label.checkbox input {
   background-image: url("../images/sprite.png");
   background-position: 0 -64px;
 }
-/* line 236, ../../Stylesheets/base.scss */
+/* line 250, ../../Stylesheets/base.scss */
 label.checkbox input:checked {
   background-position: -18px -64px;
 }

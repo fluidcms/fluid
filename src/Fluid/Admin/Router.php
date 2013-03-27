@@ -63,6 +63,10 @@ class Router {
 			case 'languages.json':
 				return json_encode(Fluid\Models\Language::getLanguages());
 			
+			// Layouts
+			case 'layouts.json':
+				return json_encode(Fluid\Models\Layout::getLayouts());
+			
 			// Page Token
 			case 'pagetoken.json':
 				return json_encode(array('token'=>Fluid\Models\PageToken::getToken()));

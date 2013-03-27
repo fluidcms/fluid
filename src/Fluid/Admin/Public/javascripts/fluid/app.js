@@ -1,5 +1,5 @@
-define(['backbone', 'models/site', 'models/page', 'views/nav', 'views/toolbar'],
-	function (Backbone, Site, Page, Nav, Toolbar) {
+define(['backbone', 'models/site', 'models/page', 'models/language', 'models/layout', 'views/nav', 'views/toolbar'],
+	function (Backbone, Site, Page, Language, Layout, Nav, Toolbar) {
 		var run = function () {
 			var FluidRouter = Backbone.Router.extend({
 				root: "/fluidcms/",
@@ -10,6 +10,8 @@ define(['backbone', 'models/site', 'models/page', 'views/nav', 'views/toolbar'],
 					this.page = new Page.Model({site: this.site});
 					this.nav = new Nav({router: this}).render();
 					this.toolbar = new Toolbar({page: this.page}).render();
+					this.languages = new Language;
+					this.layouts = new Layout;
 				},
 				
 				routes: {
@@ -25,8 +27,9 @@ define(['backbone', 'models/site', 'models/page', 'views/nav', 'views/toolbar'],
 				},
 					
 				structure: function () {
+					var root = this;
 					require(['models/structure', 'views/structure'], function(Structure, StructureView) {
-						new StructureView({collection: new Structure.Pages()});
+						new StructureView({collection: new Structure.Pages(), languages: root.languages, layouts: root.layouts});
 					});					
 				},
 				

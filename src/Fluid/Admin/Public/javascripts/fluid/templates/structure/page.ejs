@@ -16,6 +16,15 @@
 	<label for="pageUrlInput">URL</label>
 	<input type="text" id="pageUrlInput" name="url" value="<%= model.get("url") %>" tabindex="3" autocomplete="no" spellcheck="no" maxlength="255">
 	
+	<label for="pageLayoutSelect">Layout</label>
+	<select name="layout" id="pageLayoutSelect" tabindex="4">
+		<% $.each(layouts.attributes, function(key, item) { %>
+			<option value="<%= item %>" <% if(model.get("layout") == item) { %>selected<% } %>>
+				<%= item %>
+			</option>
+		<%}) %>
+	</select>
+		
 	<div class="buttons">
 		<a data-action="close" class="button">Cancel</a>
 		<button type="submit" ondblclick="$(this).attr('disabled', true);" class="blue" tabindex="4">OK</button>

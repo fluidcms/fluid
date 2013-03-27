@@ -15,7 +15,7 @@ class Page {
 	 * @return  void
 	 */
 	public static function create( $layout, $data = array() ) {		
-		$view = View::create(Fluid::getConfig('dirs')['layouts'] . "/{$layout}.twig", $data);
+		$view = View::create(Fluid::getConfig('layouts') . "/{$layout}.twig", $data);
 		
 		new StaticFile($view, 'html', true);
 	}

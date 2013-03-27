@@ -10,12 +10,6 @@ namespace Fluid;
 class Fluid {
 	private static $config;
 	
-	private static $storage;
-	private static $templates;
-	private static $database;
-	private static $languages;
-	private static $dirs;
-
 	private static $language;
 	
 	const NOT_FOUND = '404';
@@ -72,13 +66,13 @@ class Fluid {
 		switch($name) {
 			case 'storage':
 			case 'templates':
+			case 'layouts':
 				if (isset(self::$config[$name])) {
 					return (substr(self::$config[$name], -1) === '/' ? self::$config[$name] : self::$config[$name] . '/');
 				}
 				break;
 			case 'database':
 			case 'languages':
-			case 'dirs':
 				if (isset(self::$config[$name])) {
 					return self::$config[$name];
 				}
@@ -100,7 +94,7 @@ class Fluid {
 			case 'storage':
 			case 'templates':
 			case 'database':
-			case 'dirs':
+			case 'layouts':
 				self::$config[$name] = $value;
 				break;
 			case 'languages':
