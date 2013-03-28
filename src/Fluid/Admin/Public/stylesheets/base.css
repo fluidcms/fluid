@@ -321,11 +321,21 @@ label {
 }
 
 /* line 230, ../../Stylesheets/base.scss */
+label.no-class {
+  display: inherit;
+  font-weight: inherit;
+  color: inherit;
+  font-size: inherit;
+  text-transform: inherit;
+  margin: inherit;
+}
+
+/* line 239, ../../Stylesheets/base.scss */
 label.no-text-transform {
   text-transform: none;
 }
 
-/* line 234, ../../Stylesheets/base.scss */
+/* line 243, ../../Stylesheets/base.scss */
 label.checkbox {
   display: inline;
   font-size: 14px;
@@ -334,7 +344,7 @@ label.checkbox {
   vertical-align: top;
   line-height: 18px;
 }
-/* line 242, ../../Stylesheets/base.scss */
+/* line 251, ../../Stylesheets/base.scss */
 label.checkbox input {
   margin: 0;
   -webkit-appearance: none;
@@ -344,7 +354,7 @@ label.checkbox input {
   background-image: url("../images/sprite.png");
   background-position: 0 -64px;
 }
-/* line 250, ../../Stylesheets/base.scss */
+/* line 259, ../../Stylesheets/base.scss */
 label.checkbox input:checked {
   background-position: -18px -64px;
 }

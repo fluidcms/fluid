@@ -25,9 +25,13 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
 				});
 			}, 1);
 						
-			this.$el.find('form input:first').focus();
+			this.$el.find('input:first').focus();
 			
 			this.$el.find('form').trigger('change');
+			
+			if (typeof this.afterRender === 'function') {
+				this.afterRender();
+			}
 			
 			return this;
 		},

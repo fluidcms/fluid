@@ -14,6 +14,7 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
 		
 		render: function() {		
 			this.$el.html(this.template.render({items: this.items, current: this.router.current}));
+			$('#main').empty();
 			$('#main').append(this.$el);
 			return this;
 		}

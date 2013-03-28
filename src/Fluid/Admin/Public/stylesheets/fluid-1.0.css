@@ -321,11 +321,21 @@ label {
 }
 
 /* line 230, ../../Stylesheets/base.scss */
+label.no-class {
+  display: inherit;
+  font-weight: inherit;
+  color: inherit;
+  font-size: inherit;
+  text-transform: inherit;
+  margin: inherit;
+}
+
+/* line 239, ../../Stylesheets/base.scss */
 label.no-text-transform {
   text-transform: none;
 }
 
-/* line 234, ../../Stylesheets/base.scss */
+/* line 243, ../../Stylesheets/base.scss */
 label.checkbox {
   display: inline;
   font-size: 14px;
@@ -334,7 +344,7 @@ label.checkbox {
   vertical-align: top;
   line-height: 18px;
 }
-/* line 242, ../../Stylesheets/base.scss */
+/* line 251, ../../Stylesheets/base.scss */
 label.checkbox input {
   margin: 0;
   -webkit-appearance: none;
@@ -344,7 +354,7 @@ label.checkbox input {
   background-image: url("../images/sprite.png");
   background-position: 0 -64px;
 }
-/* line 250, ../../Stylesheets/base.scss */
+/* line 259, ../../Stylesheets/base.scss */
 label.checkbox input:checked {
   background-position: -18px -64px;
 }
@@ -394,8 +404,9 @@ label.checkbox input:checked {
   display: block;
   width: 32px;
   height: 42px;
+  cursor: default;
 }
-/* line 39, ../../Stylesheets/fluid.scss */
+/* line 40, ../../Stylesheets/fluid.scss */
 #main nav a:after {
   position: absolute;
   top: 13px;
@@ -406,41 +417,41 @@ label.checkbox input:checked {
   height: 16px;
   background-image: url("../images/sprite.png");
 }
-/* line 49, ../../Stylesheets/fluid.scss */
+/* line 50, ../../Stylesheets/fluid.scss */
 #main nav a.structure:after {
   background-position-x: 0;
 }
-/* line 50, ../../Stylesheets/fluid.scss */
+/* line 51, ../../Stylesheets/fluid.scss */
 #main nav a.components:after {
   background-position-x: -16px;
 }
-/* line 51, ../../Stylesheets/fluid.scss */
+/* line 52, ../../Stylesheets/fluid.scss */
 #main nav a.files:after {
   background-position-x: -32px;
 }
-/* line 52, ../../Stylesheets/fluid.scss */
+/* line 53, ../../Stylesheets/fluid.scss */
 #main nav a.intl:after {
   background-position-x: -48px;
 }
-/* line 53, ../../Stylesheets/fluid.scss */
+/* line 54, ../../Stylesheets/fluid.scss */
 #main nav a.diff:after {
   background-position-x: -64px;
 }
-/* line 54, ../../Stylesheets/fluid.scss */
+/* line 55, ../../Stylesheets/fluid.scss */
 #main nav a.current {
   background: rgba(0, 0, 0, 0.14);
   -webkit-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.43);
   -moz-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.43);
   box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.43);
 }
-/* line 57, ../../Stylesheets/fluid.scss */
+/* line 58, ../../Stylesheets/fluid.scss */
 #main nav a.current:after {
   background-position-y: -16px;
 }
 
 /* #Target
 ================================================== */
-/* line 64, ../../Stylesheets/fluid.scss */
+/* line 65, ../../Stylesheets/fluid.scss */
 #target {
   position: relative;
   z-index: 1;
@@ -452,7 +463,7 @@ label.checkbox input:checked {
   box-sizing: border-box;
   overflow: hidden;
 }
-/* line 74, ../../Stylesheets/fluid.scss */
+/* line 75, ../../Stylesheets/fluid.scss */
 #target iframe {
   width: 100%;
   height: 100%;
@@ -654,10 +665,14 @@ div.modal-container div.modal-window div.buttons {
 div.modal-container div.modal-window input[type="text"] {
   width: 524px;
 }
+/* line 41, ../../Stylesheets/modal-window.scss */
+div.modal-container input:last-child {
+  margin-bottom: 0;
+}
 
 /* #Blur
 ================================================== */
-/* line 44, ../../Stylesheets/modal-window.scss */
+/* line 48, ../../Stylesheets/modal-window.scss */
 body.blur #main, body.blur #toolbar, body.blur #target {
   -webkit-animation-name: modal-blur;
   -webkit-animation-duration: 0.4s;
@@ -687,7 +702,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @-webkit-keyframes modal-blur {
-  /* line 50, ../../Stylesheets/modal-window.scss */
+  /* line 54, ../../Stylesheets/modal-window.scss */
   0% {
     -webkit-filter: blur(0);
     -moz-filter: blur(0);
@@ -695,7 +710,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
     filter: blur(0);
   }
 
-  /* line 56, ../../Stylesheets/modal-window.scss */
+  /* line 60, ../../Stylesheets/modal-window.scss */
   100% {
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
@@ -705,7 +720,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @-moz-keyframes modal-blur {
-  /* line 50, ../../Stylesheets/modal-window.scss */
+  /* line 54, ../../Stylesheets/modal-window.scss */
   0% {
     -webkit-filter: blur(0);
     -moz-filter: blur(0);
@@ -713,7 +728,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
     filter: blur(0);
   }
 
-  /* line 56, ../../Stylesheets/modal-window.scss */
+  /* line 60, ../../Stylesheets/modal-window.scss */
   100% {
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
@@ -723,7 +738,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @-o-keyframes modal-blur {
-  /* line 50, ../../Stylesheets/modal-window.scss */
+  /* line 54, ../../Stylesheets/modal-window.scss */
   0% {
     -webkit-filter: blur(0);
     -moz-filter: blur(0);
@@ -731,7 +746,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
     filter: blur(0);
   }
 
-  /* line 56, ../../Stylesheets/modal-window.scss */
+  /* line 60, ../../Stylesheets/modal-window.scss */
   100% {
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
@@ -741,7 +756,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @-ms-keyframes modal-blur {
-  /* line 50, ../../Stylesheets/modal-window.scss */
+  /* line 54, ../../Stylesheets/modal-window.scss */
   0% {
     -webkit-filter: blur(0);
     -moz-filter: blur(0);
@@ -749,7 +764,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
     filter: blur(0);
   }
 
-  /* line 56, ../../Stylesheets/modal-window.scss */
+  /* line 60, ../../Stylesheets/modal-window.scss */
   100% {
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
@@ -759,7 +774,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @keyframes modal-blur {
-  /* line 50, ../../Stylesheets/modal-window.scss */
+  /* line 54, ../../Stylesheets/modal-window.scss */
   0% {
     -webkit-filter: blur(0);
     -moz-filter: blur(0);
@@ -767,7 +782,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
     filter: blur(0);
   }
 
-  /* line 56, ../../Stylesheets/modal-window.scss */
+  /* line 60, ../../Stylesheets/modal-window.scss */
   100% {
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
@@ -777,60 +792,60 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @-webkit-keyframes modal-opacity {
-  /* line 65, ../../Stylesheets/modal-window.scss */
+  /* line 69, ../../Stylesheets/modal-window.scss */
   0% {
     opacity: 0;
   }
 
-  /* line 68, ../../Stylesheets/modal-window.scss */
+  /* line 72, ../../Stylesheets/modal-window.scss */
   100% {
     opacity: 1;
   }
 }
 
 @-moz-keyframes modal-opacity {
-  /* line 65, ../../Stylesheets/modal-window.scss */
+  /* line 69, ../../Stylesheets/modal-window.scss */
   0% {
     opacity: 0;
   }
 
-  /* line 68, ../../Stylesheets/modal-window.scss */
+  /* line 72, ../../Stylesheets/modal-window.scss */
   100% {
     opacity: 1;
   }
 }
 
 @-o-keyframes modal-opacity {
-  /* line 65, ../../Stylesheets/modal-window.scss */
+  /* line 69, ../../Stylesheets/modal-window.scss */
   0% {
     opacity: 0;
   }
 
-  /* line 68, ../../Stylesheets/modal-window.scss */
+  /* line 72, ../../Stylesheets/modal-window.scss */
   100% {
     opacity: 1;
   }
 }
 
 @-ms-keyframes modal-opacity {
-  /* line 65, ../../Stylesheets/modal-window.scss */
+  /* line 69, ../../Stylesheets/modal-window.scss */
   0% {
     opacity: 0;
   }
 
-  /* line 68, ../../Stylesheets/modal-window.scss */
+  /* line 72, ../../Stylesheets/modal-window.scss */
   100% {
     opacity: 1;
   }
 }
 
 @keyframes modal-opacity {
-  /* line 65, ../../Stylesheets/modal-window.scss */
+  /* line 69, ../../Stylesheets/modal-window.scss */
   0% {
     opacity: 0;
   }
 
-  /* line 68, ../../Stylesheets/modal-window.scss */
+  /* line 72, ../../Stylesheets/modal-window.scss */
   100% {
     opacity: 1;
   }
@@ -997,4 +1012,77 @@ div.page-editor > div form {
 /* line 27, ../../Stylesheets/page-editor.scss */
 div.page-editor > div form input {
   width: 100%;
+}
+
+/* #Font weight
+================================================== */
+/* #Margins
+================================================== */
+/* #Animations
+================================================== */
+/* #File container
+================================================== */
+/* line 8, ../../Stylesheets/file.scss */
+.file input[type="file"] {
+  position: absolute;
+  visibility: hidden;
+}
+/* line 12, ../../Stylesheets/file.scss */
+.file > label a.icon-button {
+  margin-left: 16px;
+  display: block;
+  float: left;
+  margin-top: 16px;
+  margin-bottom: 10px;
+}
+/* line 20, ../../Stylesheets/file.scss */
+.file ul {
+  clear: both;
+  margin-left: 16px;
+}
+/* line 23, ../../Stylesheets/file.scss */
+.file ul li {
+  position: relative;
+  float: left;
+  display: block;
+  width: 82px;
+  height: 82px;
+  overflow: hidden;
+  padding: 0;
+  margin: 0 14px 14px 0;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-box;
+  display: box;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -ms-box-align: center;
+  box-align: center;
+}
+/* line 35, ../../Stylesheets/file.scss */
+.file ul li img {
+  display: block;
+}
+/* line 37, ../../Stylesheets/file.scss */
+.file ul li img.dark {
+  opacity: .1;
+}
+/* line 41, ../../Stylesheets/file.scss */
+.file ul li .progress {
+  position: absolute;
+  top: 56px;
+  left: 9px;
+  display: block;
+  width: 64px;
+  height: 3px;
+  border-radius: 2px;
+  background: black;
+}
+/* line 50, ../../Stylesheets/file.scss */
+.file ul li .progress div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #0084ff;
+  height: 3px;
 }

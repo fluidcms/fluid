@@ -7,11 +7,21 @@ define(['backbone'], function (Backbone) {
 			
 			this.bind('newtoken', this.fetchPage);
 			
-			// Track iframe location change
-			$("#website").bind('load', function() {
+			$("#website").ready(function() {
 				obj.set('url', $("#website").get(0).contentWindow.location.toString());
 				obj.fetchToken();
 			});
+			
+			// Track iframe location change
+			$("#website").find('load', function() {
+				obj.set('url', $("#website").get(0).contentWindow.location.toString());
+				obj.fetchToken();
+			});
+		},
+		
+		reload: function() {
+			$("#website")[0].contentWindow.location.reload();
+
 		},
 		
 		fetchToken: function() {

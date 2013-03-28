@@ -37,6 +37,10 @@ div.modal-container {
 	button, .button {
 		@extend .button-big;
 	}
+	
+	input:last-child {
+		margin-bottom: 0;
+	}
 }
 
 /* #Blur

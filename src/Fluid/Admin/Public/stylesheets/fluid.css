@@ -43,8 +43,9 @@
   display: block;
   width: 32px;
   height: 42px;
+  cursor: default;
 }
-/* line 39, ../../Stylesheets/fluid.scss */
+/* line 40, ../../Stylesheets/fluid.scss */
 #main nav a:after {
   position: absolute;
   top: 13px;
@@ -55,41 +56,41 @@
   height: 16px;
   background-image: url("../images/sprite.png");
 }
-/* line 49, ../../Stylesheets/fluid.scss */
+/* line 50, ../../Stylesheets/fluid.scss */
 #main nav a.structure:after {
   background-position-x: 0;
 }
-/* line 50, ../../Stylesheets/fluid.scss */
+/* line 51, ../../Stylesheets/fluid.scss */
 #main nav a.components:after {
   background-position-x: -16px;
 }
-/* line 51, ../../Stylesheets/fluid.scss */
+/* line 52, ../../Stylesheets/fluid.scss */
 #main nav a.files:after {
   background-position-x: -32px;
 }
-/* line 52, ../../Stylesheets/fluid.scss */
+/* line 53, ../../Stylesheets/fluid.scss */
 #main nav a.intl:after {
   background-position-x: -48px;
 }
-/* line 53, ../../Stylesheets/fluid.scss */
+/* line 54, ../../Stylesheets/fluid.scss */
 #main nav a.diff:after {
   background-position-x: -64px;
 }
-/* line 54, ../../Stylesheets/fluid.scss */
+/* line 55, ../../Stylesheets/fluid.scss */
 #main nav a.current {
   background: rgba(0, 0, 0, 0.14);
   -webkit-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.43);
   -moz-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.43);
   box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.43);
 }
-/* line 57, ../../Stylesheets/fluid.scss */
+/* line 58, ../../Stylesheets/fluid.scss */
 #main nav a.current:after {
   background-position-y: -16px;
 }
 
 /* #Target
 ================================================== */
-/* line 64, ../../Stylesheets/fluid.scss */
+/* line 65, ../../Stylesheets/fluid.scss */
 #target {
   position: relative;
   z-index: 1;
@@ -101,7 +102,7 @@
   box-sizing: border-box;
   overflow: hidden;
 }
-/* line 74, ../../Stylesheets/fluid.scss */
+/* line 75, ../../Stylesheets/fluid.scss */
 #target iframe {
   width: 100%;
   height: 100%;

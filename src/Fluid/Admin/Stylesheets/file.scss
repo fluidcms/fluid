@@ -1,0 +1,60 @@
+@import "lib";
+@import "compass/css3/box";
+
+
+/* #File container
+================================================== */
+.file {
+	input[type="file"] {
+		position: absolute;
+		visibility: hidden;
+	}
+	&>label a.icon-button {
+		margin-left: $main-margin-left;
+		display: block;
+		float: left;
+		margin-top: $main-margin-top;
+		margin-bottom: 10px;
+	}
+	
+	ul {
+		clear: both;
+		margin-left: $main-margin-left;
+		li {
+			position: relative;
+			float: left;
+			display: block;
+			width: 82px;
+			height: 82px;
+			overflow: hidden;
+			padding: 0;
+			margin: 0 14px 14px 0;
+			@include display-box;
+			@include box-align(center);
+			
+			img { display: block; }
+			
+			img.dark {
+				opacity: .1;
+			}
+			
+			.progress {
+				position: absolute;
+				top: 56px;
+				left: 9px;
+				display: block;
+				width: 64px;
+				height: 3px;
+				border-radius: 2px;
+				background: black;
+				div {
+					position: absolute;
+					top: 0;
+					left: 0;
+					background: #0084ff;
+					height: 3px;
+				}
+			}
+		}
+	}
+}

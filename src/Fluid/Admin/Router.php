@@ -45,6 +45,13 @@ class Router {
 				}
 				return json_encode(Fluid\Models\Structure::getAll());
 			
+			// Accept files
+			case 'upload':
+				if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+					$file = Fluid\Models\File::save();
+					return json_encode($file);
+				}
+			
 			// Page
 			case 'page.json':
 				$data = Fluid\Models\Page::mergeTemplateData(isset($_POST['content']) ? $_POST['content'] : '');

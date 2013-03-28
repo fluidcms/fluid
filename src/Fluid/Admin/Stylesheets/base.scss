@@ -227,6 +227,15 @@ label {
 	margin: 0 0 18px 0;
 }
 
+label.no-class {
+	display: inherit;
+	font-weight: inherit;
+	color: inherit;
+	font-size: inherit;
+	text-transform: inherit;
+	margin: inherit;
+}
+
 label.no-text-transform {
 	text-transform: none;
 }

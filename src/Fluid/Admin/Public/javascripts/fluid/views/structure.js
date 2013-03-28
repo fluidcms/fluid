@@ -14,9 +14,11 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu'], fun
 		template: new EJS({url: 'javascripts/fluid/templates/structure/structure.ejs?'+(new Date()).getTime()}),  // !! Remove for production
 	
 		initialize: function( attrs ) {
+			this.render();
 			this.collection.on('reset add remove update', this.render, this);
 			this.collection.on('change update', this.enableControls, this);
 			this.collection.on('saved', this.disableControls, this);
+			this.collection.on('saved', attrs.page.reload, this);
 			this.languages = attrs.languages;
 			this.layouts = attrs.layouts;
 		},

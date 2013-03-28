@@ -8,10 +8,11 @@ define(['backbone', 'models/site', 'models/page', 'models/language', 'models/lay
 				initialize: function () {
 					this.site = new Site.Model();
 					this.page = new Page.Model({site: this.site});
-					this.nav = new Nav({router: this}).render();
-					this.toolbar = new Toolbar({page: this.page}).render();
 					this.languages = new Language;
 					this.layouts = new Layout;
+					
+					this.nav = new Nav({router: this}).render();
+					this.toolbar = new Toolbar({page: this.page}).render();
 				},
 				
 				routes: {
@@ -29,23 +30,21 @@ define(['backbone', 'models/site', 'models/page', 'models/language', 'models/lay
 				structure: function () {
 					var root = this;
 					require(['models/structure', 'views/structure'], function(Structure, StructureView) {
-						new StructureView({collection: new Structure.Pages(), languages: root.languages, layouts: root.layouts});
+						new StructureView({collection: new Structure.Pages(), page: root.page, languages: root.languages, layouts: root.layouts});
 					});					
 				},
 				
 				files: function () {
-					
+					var root = this;
+					require(['models/file', 'views/file'], function(File, FileView) {
+						new FileView({collection: new File.Collection()});
+					});					
 				}
 			});
 	 
 			//boot up the app:
 			var fluidRouter = new FluidRouter();
 						
-			// Block default context menu
-			$(document).contextmenu(function(e) {
-				e.preventDefault();
-			});
-			
 			// Block default link behavior
 			Backbone.history.start({pushState: true, root: fluidRouter.root});
 			
