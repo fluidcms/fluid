@@ -27,6 +27,24 @@ class Router {
 			}
 		}
 		
+		// Files
+		if (!empty($request) && strpos($request, 'files/') === 0) {
+			if (strpos($request, 'files/preview/') === 0) {
+				$preview = true;
+				$request = preg_replace('{^files/preview/}', 'files/', $request);
+			}
+			$request = urldecode($request);
+			$file = Fluid\Fluid::getConfig('storage')."files/".substr($request, 6, 8).'_'.substr($request, 15);
+			if (file_exists($file)) {
+				if (!isset($preview)) {
+					return new Fluid\StaticFile($file);
+				} else {
+					$content = Fluid\Models\File::makePreview($file);
+					return new Fluid\StaticFile($content, 'jpg', true);
+				}
+			}
+		}
+		
 		// Other files
 		switch($request) {
 			// Index
@@ -73,6 +91,10 @@ class Router {
 			// Layouts
 			case 'layouts.json':
 				return json_encode(Fluid\Models\Layout::getLayouts());
+			
+			// Files
+			case 'files.json':
+				return json_encode(Fluid\Models\File::getFiles());
 			
 			// Page Token
 			case 'pagetoken.json':

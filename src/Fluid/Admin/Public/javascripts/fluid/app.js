@@ -29,16 +29,21 @@ define(['backbone', 'models/site', 'models/page', 'models/language', 'models/lay
 					
 				structure: function () {
 					var root = this;
-					require(['models/structure', 'views/structure'], function(Structure, StructureView) {
-						new StructureView({collection: new Structure.Pages(), page: root.page, languages: root.languages, layouts: root.layouts});
-					});					
+					var view;
+					if (typeof root.structureView === 'undefined') {
+						require(['models/structure', 'views/structure'], function(Structure, StructureView) {
+							root.structureView = new StructureView({collection: new Structure.Pages(), page: root.page, languages: root.languages, layouts: root.layouts});
+						});
+					}
 				},
 				
 				files: function () {
 					var root = this;
-					require(['models/file', 'views/file'], function(File, FileView) {
-						new FileView({collection: new File.Collection()});
-					});					
+					if (typeof root.fileView === 'undefined') {
+						require(['models/file', 'views/file'], function(File, FileView) {
+							root.fileView = new FileView({collection: new File.Collection()});
+						});
+					}
 				}
 			});
 	 

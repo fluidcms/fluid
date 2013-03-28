@@ -4,7 +4,10 @@
 
 /* #File container
 ================================================== */
-.file {
+#content .files {
+	height: 100%;
+	overflow: auto;
+	
 	input[type="file"] {
 		position: absolute;
 		visibility: hidden;
@@ -28,7 +31,7 @@
 			height: 82px;
 			overflow: hidden;
 			padding: 0;
-			margin: 0 14px 14px 0;
+			margin: 0 6px 6px 0;
 			@include display-box;
 			@include box-align(center);
 			
@@ -55,6 +58,9 @@
 					height: 3px;
 				}
 			}
+		}
+		li:nth-child(3n) {
+			margin: 0 0 14px 0;
 		}
 	}
 }

@@ -2,7 +2,7 @@
 
 namespace Fluid\Models;
 
-use Exception, Fluid\Fluid, Fluid\Models\File\FileInfo;
+use Exception, Fluid\Fluid, Fluid\Models\File\FileInfo, Fluid\Models\File\FilePreview;
 
 /**
  * File model
@@ -11,12 +11,23 @@ use Exception, Fluid\Fluid, Fluid\Models\File\FileInfo;
  */
 class File {		
 	/**
-	 * Init
+	 * Get all files
 	 * 
 	 * @return  void
 	 */
-	public function __construct() {		
-		
+	public static function getFiles() {		
+		$output = array();
+		$dir = scandir(Fluid::getConfig('storage').'files/');
+		foreach($dir as $file) {
+			$id = substr($file, 0, 8);
+			if (strlen($id) === 8 && ctype_alnum($id)) {
+				if ($file = FileInfo::getImageInfo(Fluid::getConfig('storage').'files/'.$file)) {
+					$file["name"] = substr($file["name"], 9);
+					$output[] = array_merge(array("id" => $id, 'src' => "/fluidcms/files/preview/{$id}/{$file['name']}"), $file);
+				}
+			}
+		}
+		return $output;
 	}
 		
 	/**
@@ -26,11 +37,19 @@ class File {
 	 */
 	public static function save() {
 		if ($file = self::upload()) {
-			
-			// !! Save file
-			
 			return $file;
 		}
+		return;
+	}
+	
+	/**
+	 * Make an image preview
+	 * 
+	 * @param   string  $file
+	 * @return  string
+	 */
+	public static function makePreview($file) {
+		return FilePreview::make($file);
 	}
 	
 	/**
@@ -41,11 +60,11 @@ class File {
 	public static function upload() {
 		foreach ($_FILES as $file) {
 			if (!$file['error'] && isset($_POST['id']) && strlen($_POST['id']) === 8 && self::idIsUnique($_POST['id'])) {
-				$file = FileInfo::getInfo($file);
+				$file = FileInfo::getTmpFileInfo($file);
 				if ($file['size'] <= 2097152) {
 					rename($file["tmp_name"], Fluid::getConfig('storage').'files/'.$_POST['id'].'_'.$file['name']);
 					unset($file["tmp_name"]);
-					return array_merge(array('id' => $_POST['id']), $file);
+					return array_merge(array('id' => $_POST['id'], 'src' => "/fluidcms/files/preview/{$_POST['id']}/{$file['name']}"), $file);
 				}
 			}
 		}

@@ -6,14 +6,14 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/contextmenu', 'views/modal'], fun
 			"contextmenu li": "contextmenu"
 		},
 	
-		className: 'file',
+		className: 'files',
 				
 		template: new EJS({url: 'javascripts/fluid/templates/file/file.ejs?'+(new Date()).getTime()}),  // !! Remove for production
 	
 		initialize: function( attrs ) {
 			this.render();
 			this.collection = attrs.collection;
-			this.collection.on("add remove", this.render, this);
+			this.collection.on("reset add remove", this.render, this);
 			this.collection.on("progress", this.progress, this);
 			this.collection.on("display", this.display, this);
 			this.collection.on("complete", this.complete, this);
@@ -21,14 +21,10 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/contextmenu', 'views/modal'], fun
 		
 		render: function() {
 			this.$el.html(this.template.render({collection: this.collection}));
-			$("#main").append(this.$el);
+			$("#main #content").append(this.$el);
 			return this;
 		},
-		
-		selectFile: function() {
-			$("fileUploader").trigger("click");
-		},
-		
+				
 		uploader: function(e) {
 			var root = this;
 			var files = e.target.files;
@@ -38,7 +34,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/contextmenu', 'views/modal'], fun
 				});
 			}
 		},
-		
+				
 		contextmenu: function(e) {
 			e.preventDefault();
 			if ($(e.currentTarget).attr('data-block') !== 'true') {

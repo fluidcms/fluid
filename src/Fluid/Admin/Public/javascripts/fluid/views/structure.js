@@ -25,7 +25,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu'], fun
 		
 		render: function() {
 			this.$el.html(this.template.render({pages: this.collection}));
-			$("#main").append(this.$el);
+			$("#main #content").append(this.$el);
 			this.sortable();
 			return this;
 		},

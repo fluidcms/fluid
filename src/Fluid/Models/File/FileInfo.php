@@ -16,9 +16,12 @@ class FileInfo {
 	 * @param   array   $file
 	 * @return  array
 	 */
-	public static function getInfo($file) {
+	public static function getTmpFileInfo($file) {
 		if (strpos($file['type'], 'image') !== false) {
-			return self::getImageInfo($file);
+			$info = self::getImageInfo($file['tmp_name']);
+			$info['tmp_name'] = $file['tmp_name'];
+			$info['name'] = $file['name'];
+			return $info;
 		}
 	}
 	
@@ -29,14 +32,14 @@ class FileInfo {
 	 * @return  array
 	 */
 	public static function getImageInfo($file) {
-		if (file_exists($file['tmp_name']) && $size = getimagesize($file['tmp_name'])) {
+		if (file_exists($file) && $size = getimagesize($file)) {
 			return array(
-				'tmp_name' => $file['tmp_name'],
-				'name' => $file['name'],
+				'name' => basename($file),
 				'width' => $size[0],
 				'height' => $size[1],
 				'type' => $size['mime'],
-				'size' => filesize($file['tmp_name'])
+				'size' => filesize($file),
+				'creation' => filectime($file)
 			);
 		}
 		
