@@ -45,6 +45,13 @@ class Router {
 			}
 		}
 		
+		// File
+		if (!empty($request) && strpos($request, "file/update/") === 0) {
+			if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'DELETE') {
+				return Fluid\Models\File::delete(basename($request));
+			}
+		}
+			
 		// Other files
 		switch($request) {
 			// Index

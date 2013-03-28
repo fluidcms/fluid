@@ -49,6 +49,14 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/contextmenu', 'views/modal'], fun
 			new Copy({content: path}).render();
 		},
 		
+		deleteImage: function(element) {
+			var id = $(element).parent('li').attr('data-id');
+			var model = this.collection.get(id);
+			if(confirm('Are you sur you want to delete '+model.get("name")+'?')) {
+				model.destroy();
+			}
+		},
+		
 		progress: function(model, progress) {
 			if (progress !== 100) {
 				var element = this.$el.find('li[data-id='+model.get('id')+']');

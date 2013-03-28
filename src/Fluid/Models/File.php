@@ -41,6 +41,25 @@ class File {
 		}
 		return;
 	}
+		
+	/**
+	 * Delete file
+	 * 
+	 * @param   string  $id
+	 * @return  void
+	 */
+	public static function delete($id) {
+		$dir = scandir(Fluid::getConfig('storage').'files/');
+		foreach($dir as $file) {
+			if (substr($file, 0, 8) === $id) {
+				unlink(Fluid::getConfig('storage').'files/'.$file);
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	
 	/**
 	 * Make an image preview

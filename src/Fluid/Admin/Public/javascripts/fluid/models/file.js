@@ -1,5 +1,7 @@
 define(['backbone'], function (Backbone) {
 	var File = Backbone.Model.extend({
+		urlRoot: "file/update",
+		
 		initialize: function( attrs, options ) {
 			var root = this;
 						
