@@ -2,24 +2,34 @@
 	<form action="" id="pageEditorForm" method="post" accept-charset="utf-8" novalidate>
 		<nav>
 			<ul>
-				<li><a data-target="site">site</a></li>
-				<li class="current"><a data-target="page"><%= page.get("page") %></a></li>
+				<% $.each(tree, function(key, item) { %>
+					<li <% if (current == key){ %>class="current"<% } %>>
+						<a data-target="<%= key %>"><% if (typeof item.get('page') !== 'undefined'){ %><%= item.get('page') %><% } else { %><%= key %><% } %></a>
+					</li>
+				<% }); %>
 			</ul>
 		</nav>
 		<% $.each(page.get("variables"), function(key, item) { %>
 			
 			<% if(typeof item == "object") { %>
 				
-				<label><%= key.replace('_', ' ') %></label>
+				<label data-action="array"><%= key.replace('_', ' ') %></label>
 				<ul class="array">
-					<% var count = 0; $.each(page.get("data")[key], function(arrayKey, arrayItem) { %>
+					<% if (typeof page.get("data")[key] !== 'undefined') { var count = 0; $.each(page.get("data")[key], function(arrayKey, arrayItem) { %>
 					<li>
 						<% $.each(page.get("variables")[key], function(arrayVariableKey, arrayVariableType) { %>
-						<label for="pageEditorArray_<%= key+count+'_'+arrayVariableKey %>"><%= arrayVariableKey.replace('_', ' ') %></label>
-						<textarea id="pageEditorArray_<%= key+count+'_'+arrayVariableKey %>" name="<%= key %>[<%= count %>]['<%= arrayVariableKey %>']" tabindex="1"><%= arrayItem[arrayVariableKey] %></textarea>
+						<label for="pageEditorArray_<%= count+'_'+key+'_'+arrayVariableKey %>"><%= arrayVariableKey.replace('_', ' ') %></label>
+						<textarea id="pageEditorArray_<%= count+'_'+key+'_'+arrayVariableKey %>" name="<%= key %>[<%= count %>]['<%= arrayVariableKey %>']" tabindex="1"><%= arrayItem[arrayVariableKey] %></textarea>
 						<% }) %>
 					</li>
-					<% count++; }) %>
+					<% count++; }); } %>
+					
+					<li data-role="clone" style="display: none;">
+						<% $.each(page.get("variables")[key], function(arrayVariableKey, arrayVariableType) { %>
+						<label for="pageEditorArray_<%= '%d'+'_'+key+'_'+arrayVariableKey %>"><%= arrayVariableKey.replace('_', ' ') %></label>
+						<textarea id="pageEditorArray_<%= '%d'+'_'+key+'_'+arrayVariableKey %>" name="<%= key %>[<%= '%d' %>]['<%= arrayVariableKey %>']" tabindex="1" disabled></textarea>
+						<% }) %>
+					</li>
 				</ul>
 				
 			<% } else if(typeof item == "string") { %>

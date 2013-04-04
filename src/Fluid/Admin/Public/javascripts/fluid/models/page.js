@@ -44,6 +44,7 @@ define(['backbone'], function (Backbone) {
 					obj.set("page", response.page);
 					obj.set("data", response.data);
 					obj.set("variables", response.variables);
+					obj.site.set("language", response.language);
 					obj.site.set("data", response.site.data);
 					obj.site.set("variables", response.site.variables);
 				}});

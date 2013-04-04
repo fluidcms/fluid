@@ -26,4 +26,17 @@ class Site extends Storage {
 			null;
 		}
 	}
+	
+	/**
+	 * Update the site
+	 * 
+	 * @param   string  $page
+	 * @param   string  $reqyest
+	 * @return  void
+	 */
+	public static function update($request) {
+		$request = json_decode($request, true);
+		$file = 'site/site_'.$request['language'].'.json';		
+		self::save(json_encode($request['data'], JSON_PRETTY_PRINT), $file);		
+	}
 }

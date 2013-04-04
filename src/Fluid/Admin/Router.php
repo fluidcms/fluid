@@ -59,6 +59,14 @@ class Router {
 				return json_encode(true);
 			}
 		}
+		
+		// Site
+		if (!empty($request) && $request === 'site') {
+			if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+				Fluid\Models\Site::update(file_get_contents("php://input"));
+				return json_encode(true);
+			}
+		}
 			
 		// Other files
 		switch($request) {
