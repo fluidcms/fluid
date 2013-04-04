@@ -18,6 +18,7 @@ class Router {
 	 */
 	public static function route($request) {
 		Fluid\View::setTemplatesDir(__DIR__."/Templates/");
+		Fluid\View::setLoader(null);
 		
 		// Public files
 		if (!empty($request)) {

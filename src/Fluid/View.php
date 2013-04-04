@@ -10,6 +10,7 @@ use Twig_Loader_Filesystem, Twig_Environment;
  * @package fluid
  */
 class View {
+	protected static $loader;
 	protected static $templatesDir;
 	
 	/**
@@ -32,6 +33,19 @@ class View {
 	}
 	
 	/**
+	 * Extends Twig Loader
+	 * 
+	 * @param   TwigLoaderInterface $loader
+	 * @return  void
+	 */
+	public static function setLoader($loader) {
+		if (null !== $loader && !$loader instanceof TwigLoaderInterface) {
+			trigger_error("Argument 1 passed to Fluid\View::setLoader() must implement interface Fluid\TwigLoaderInterface", E_USER_ERROR);
+		}
+		self::$loader = $loader;
+	}
+		
+	/**
 	 * Initialize Twig
 	 * 
 	 * @param   string   $file
@@ -39,6 +53,10 @@ class View {
 	 * @return  string
 	 */
 	public static function initTwig() {
+		if (null !== self::$loader) {
+			return call_user_func(array(self::$loader, 'loader'));
+		}
+		
 		return array(
 			$loader = new Twig_Loader_Filesystem(self::$templatesDir),
 			new Twig_Environment($loader)
