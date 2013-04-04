@@ -197,7 +197,7 @@ input::-moz-focus-inner {
 /* #Big Buttons
 ================================================== */
 /* line 135, ../../Stylesheets/base.scss */
-.button-big, div.modal-container button, div.modal-container .button {
+.button-big, div.modal-container button, div.modal-container .button, div.page-editor > div form button, div.page-editor > div form .button {
   display: inline-block;
   line-height: 30px;
   text-decoration: none;
@@ -217,7 +217,7 @@ input::-moz-focus-inner {
   padding: 0 20px;
 }
 /* line 152, ../../Stylesheets/base.scss */
-.button-big.blue, div.modal-container button.blue, div.modal-container .blue.button {
+.button-big.blue, div.modal-container button.blue, div.modal-container .blue.button, div.page-editor > div form button.blue, div.page-editor > div form .blue.button {
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #eff8fe), color-stop(100%, #e7f4fc));
   background: -webkit-linear-gradient(top, #eff8fe 0%, #e7f4fc 100%);
   background: -moz-linear-gradient(top, #eff8fe 0%, #e7f4fc 100%);
@@ -225,7 +225,7 @@ input::-moz-focus-inner {
   background: linear-gradient(top, #eff8fe 0%, #e7f4fc 100%);
 }
 /* line 156, ../../Stylesheets/base.scss */
-.button-big:active, div.modal-container button:active, div.modal-container .button:active {
+.button-big:active, div.modal-container button:active, div.modal-container .button:active, div.page-editor > div form button:active, div.page-editor > div form .button:active {
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #e1e1e1), color-stop(100%, #f6f6f6));
   background: -webkit-linear-gradient(top, #e1e1e1 0%, #f6f6f6 100%);
   background: -moz-linear-gradient(top, #e1e1e1 0%, #f6f6f6 100%);
@@ -233,7 +233,7 @@ input::-moz-focus-inner {
   background: linear-gradient(top, #e1e1e1 0%, #f6f6f6 100%);
 }
 /* line 158, ../../Stylesheets/base.scss */
-.button-big:active.blue, div.modal-container button:active.blue, div.modal-container .button:active.blue {
+.button-big:active.blue, div.modal-container button:active.blue, div.modal-container .button:active.blue, div.page-editor > div form button:active.blue, div.page-editor > div form .button:active.blue {
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #cadeeb), color-stop(100%, #dae8f1));
   background: -webkit-linear-gradient(top, #cadeeb 0%, #dae8f1 100%);
   background: -moz-linear-gradient(top, #cadeeb 0%, #dae8f1 100%);
@@ -1020,9 +1020,78 @@ div.page-editor > div form {
   margin: 0 auto;
   padding: 40px 0;
 }
-/* line 27, ../../Stylesheets/page-editor.scss */
-div.page-editor > div form input {
+/* line 28, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form nav {
+  margin-bottom: 40px;
+}
+/* line 30, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form nav ul {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-box;
+  display: box;
+}
+/* line 32, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form nav ul li {
+  padding: 0 14px;
+}
+/* line 34, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form nav ul li a {
+  cursor: default;
+  text-transform: capitalize;
+  font-size: 12px;
+  font-weight: 300;
+  padding-bottom: 4px;
+}
+/* line 41, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form nav ul li.current a {
+  border-bottom: 2px solid #1b81c0;
+}
+/* line 45, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form nav ul li:first-child {
+  padding-left: 0px;
+}
+/* line 49, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form textarea {
   width: 100%;
+  resize: vertical;
+  height: 36px;
+}
+/* line 55, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form ul.array {
+  margin-bottom: 36px;
+}
+/* line 57, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form ul.array li {
+  border-left: 6px solid #e5e5e5;
+  padding-left: 24px;
+  margin-bottom: 24px;
+}
+/* line 62, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form ul.array li label {
+  float: left;
+  width: 120px;
+  line-height: 36px;
+}
+/* line 68, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form ul.array li textarea {
+  width: 510px;
+  margin-bottom: 24px;
+}
+/* line 73, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form ul.array li textarea:last-child {
+  margin-bottom: 0;
+}
+/* line 79, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form div.buttons {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-box;
+  display: box;
+  -webkit-box-pack: end;
+  -moz-box-pack: end;
+  -ms-box-pack: end;
+  box-pack: end;
 }
 
 /* #Font weight

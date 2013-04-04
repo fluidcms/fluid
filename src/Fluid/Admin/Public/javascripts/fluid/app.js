@@ -12,7 +12,7 @@ define(['backbone', 'models/site', 'models/page', 'models/language', 'models/lay
 					this.layouts = new Layout;
 					
 					this.nav = new Nav({router: this}).render();
-					this.toolbar = new Toolbar({page: this.page}).render();
+					this.toolbar = new Toolbar({page: this.page, site: this.site}).render();
 				},
 				
 				routes: {
@@ -26,7 +26,7 @@ define(['backbone', 'models/site', 'models/page', 'models/language', 'models/lay
 						this[method]();
 					}
 				},
-					
+				
 				structure: function () {
 					var root = this;
 					var view;

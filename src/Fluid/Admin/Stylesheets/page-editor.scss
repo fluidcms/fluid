@@ -1,5 +1,5 @@
 @import "lib";
-@import "compass/css3/box-shadow";
+@import "compass/css3/box";
 
 /* #Page Editor
 ================================================== */
@@ -24,9 +24,67 @@ div.page-editor {
 			width: 660px;
 			margin: 0 auto;
 			padding: 40px 0;
-			input {
-				width: 100%;
+			
+			nav {
+				margin-bottom: 40px;
+				ul {
+					@include display-box;
+					li {
+						padding: 0 14px;
+						a {
+							cursor: default;
+							text-transform: capitalize;
+							font-size: 12px;
+							font-weight: $light;
+							padding-bottom: 4px;
+						}
+						&.current a {
+							border-bottom: 2px solid #1b81c0;
+						}
+					}
+					li:first-child { padding-left: 0px; }
+				}
 			}
+						
+			textarea {
+				width: 100%;
+				resize: vertical;
+				height: 36px;
+			}
+			
+			ul.array {
+				margin-bottom: 36px;
+				li {
+					border-left: 6px solid #e5e5e5;
+					padding-left: 24px;
+					margin-bottom: 24px;
+					
+					label {
+						float: left;
+						width: 120px;
+						line-height: 36px;
+					}
+					
+					textarea {
+						width: 510px;
+						margin-bottom: 24px;
+					}
+					
+					textarea:last-child {
+						margin-bottom: 0;
+					}				
+				}
+			}
+			
+			div.buttons {
+				@include display-box;
+				@include box-pack(end);
+			}
+			
+			button, .button {
+				@extend .button-big;
+			}
+			
 		}
 	}
 }

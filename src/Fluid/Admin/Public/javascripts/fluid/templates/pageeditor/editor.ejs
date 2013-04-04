@@ -1,10 +1,39 @@
 <div>
 	<form action="" id="pageEditorForm" method="post" accept-charset="utf-8" novalidate>
-	
-		<% $.each(page, function(key, item) { %>
-			<label for="pageEditorField_<%= key %>"><%= key.replace('_', ' ') %></label>
-			<textarea id="pageEditorField_<%= key %>" name="<%= key %>"><%= item %></textarea>
+		<nav>
+			<ul>
+				<li><a data-target="site">site</a></li>
+				<li class="current"><a data-target="page"><%= page.get("page") %></a></li>
+			</ul>
+		</nav>
+		<% $.each(page.get("variables"), function(key, item) { %>
+			
+			<% if(typeof item == "object") { %>
+				
+				<label><%= key.replace('_', ' ') %></label>
+				<ul class="array">
+					<% var count = 0; $.each(page.get("data")[key], function(arrayKey, arrayItem) { %>
+					<li>
+						<% $.each(page.get("variables")[key], function(arrayVariableKey, arrayVariableType) { %>
+						<label for="pageEditorArray_<%= key+count+'_'+arrayVariableKey %>"><%= arrayVariableKey.replace('_', ' ') %></label>
+						<textarea id="pageEditorArray_<%= key+count+'_'+arrayVariableKey %>" name="<%= key %>[<%= count %>]['<%= arrayVariableKey %>']" tabindex="1"><%= arrayItem[arrayVariableKey] %></textarea>
+						<% }) %>
+					</li>
+					<% count++; }) %>
+				</ul>
+				
+			<% } else if(typeof item == "string") { %>
+				
+				<label for="pageEditorField_<%= key %>"><%= key.replace('_', ' ') %></label>
+				<textarea id="pageEditorField_<%= key %>" name="<%= key %>" tabindex="1"><%= page.get("data")[key] %></textarea>
+			
+			<% } %>
+			
 		<% }) %>
 		
+		<div class="buttons">
+			<a data-action="cancel" class="button">Cancel</a>
+			<button type="submit" ondblclick="$(this).attr('disabled', true);" class="blue" tabindex="2">Save</button>
+		</div>
 	</form>
 </div>

@@ -99,7 +99,8 @@ class MergeTemplateData {
 					$count = 0;
 					foreach($item->items as $itemKey => $itemValue) {
 						$itemKey = preg_replace('/[^a-zA-Z0-9_]/', '', $itemKey);
-						eval('$data'.$keyString."[{$count}]['{$itemKey}']".' = "'.str_replace("'", "\'", $itemValue).'";');
+												
+						eval('$data'.$keyString."[{$count}]['{$itemKey}']".' = $itemValue;');
 						$count++;
 					}				
 				}

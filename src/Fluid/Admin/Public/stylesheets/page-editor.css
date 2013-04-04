@@ -32,7 +32,76 @@ div.page-editor > div form {
   margin: 0 auto;
   padding: 40px 0;
 }
-/* line 27, ../../Stylesheets/page-editor.scss */
-div.page-editor > div form input {
+/* line 28, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form nav {
+  margin-bottom: 40px;
+}
+/* line 30, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form nav ul {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-box;
+  display: box;
+}
+/* line 32, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form nav ul li {
+  padding: 0 14px;
+}
+/* line 34, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form nav ul li a {
+  cursor: default;
+  text-transform: capitalize;
+  font-size: 12px;
+  font-weight: 300;
+  padding-bottom: 4px;
+}
+/* line 41, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form nav ul li.current a {
+  border-bottom: 2px solid #1b81c0;
+}
+/* line 45, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form nav ul li:first-child {
+  padding-left: 0px;
+}
+/* line 49, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form textarea {
   width: 100%;
+  resize: vertical;
+  height: 36px;
+}
+/* line 55, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form ul.array {
+  margin-bottom: 36px;
+}
+/* line 57, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form ul.array li {
+  border-left: 6px solid #e5e5e5;
+  padding-left: 24px;
+  margin-bottom: 24px;
+}
+/* line 62, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form ul.array li label {
+  float: left;
+  width: 120px;
+  line-height: 36px;
+}
+/* line 68, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form ul.array li textarea {
+  width: 510px;
+  margin-bottom: 24px;
+}
+/* line 73, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form ul.array li textarea:last-child {
+  margin-bottom: 0;
+}
+/* line 79, ../../Stylesheets/page-editor.scss */
+div.page-editor > div form div.buttons {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-box;
+  display: box;
+  -webkit-box-pack: end;
+  -moz-box-pack: end;
+  -ms-box-pack: end;
+  box-pack: end;
 }

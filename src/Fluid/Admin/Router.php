@@ -51,6 +51,14 @@ class Router {
 				return Fluid\Models\File::delete(basename($request));
 			}
 		}
+		
+		// Page
+		if (!empty($request) && strpos($request, "page/") === 0) {
+			if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'PUT') {
+				Fluid\Models\Page::update(substr($request, strlen("page/")), file_get_contents("php://input"));
+				return json_encode(true);
+			}
+		}
 			
 		// Other files
 		switch($request) {

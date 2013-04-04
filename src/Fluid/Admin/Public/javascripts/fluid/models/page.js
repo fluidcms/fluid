@@ -1,5 +1,7 @@
 define(['backbone'], function (Backbone) {
 	var Model = Backbone.Model.extend({	
+		urlRoot: 'page',
+		
 		initialize: function( attrs ) {
 			var obj = this;
 			
@@ -13,7 +15,7 @@ define(['backbone'], function (Backbone) {
 			});
 			
 			// Track iframe location change
-			$("#website").find('load', function() {
+			$("#website").bind('load', function() {
 				obj.set('url', $("#website").get(0).contentWindow.location.toString());
 				obj.fetchToken();
 			});
@@ -37,6 +39,7 @@ define(['backbone'], function (Backbone) {
 			var url = updateQueryStringParameter(this.get('url'), 'fluidtoken', this.get('token'));
 			$.ajax(url, {success: function(response) {
 				$.ajax('page.json', {dataType: "json", type: "post", data: {"content": response}, success: function(response) {
+					obj.id = response.page;
 					obj.set("language", response.language);
 					obj.set("page", response.page);
 					obj.set("data", response.data);

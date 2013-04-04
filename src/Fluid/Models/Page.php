@@ -50,6 +50,20 @@ class Page extends Storage {
 	}
 		
 	/**
+	 * Update a page
+	 * 
+	 * @param   string  $page
+	 * @param   string  $reqyest
+	 * @return  void
+	 */
+	public static function update($page, $request) {
+		$request = json_decode($request, true);
+		$file = 'pages/'.$page.'_'.$request['language'].'.json';
+		
+		self::save(json_encode($request['data'], JSON_PRETTY_PRINT), $file);		
+	}
+	
+	/**
 	 * Merge template data with the page data
 	 * 
 	 * @param   string  $content    The page content with the template data

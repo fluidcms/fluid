@@ -10,7 +10,9 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
 		template: new EJS({url: 'javascripts/fluid/templates/toolbar.ejs'}), 
 		
 		initialize: function( attrs ) {
-			attrs.page.on('change:language', this.changeLanguage, this);
+			this.site = attrs.site;
+			this.page = attrs.page;
+			this.page.on('change:language', this.changeLanguage, this);
 		},
 		
 		render: function() {
@@ -20,14 +22,23 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
 		},
 		
 		previewPage: function(e) {
-			$(e.target).parent().find('.toolbar-button').removeClass('current');
-			$(e.target).addClass('current');
+			this.$el.find('.toolbar-button').removeClass('current');
+			$("a[data-action=preview]", this.$el).addClass('current');
+			
+			if (typeof this.pageEditor !== 'undefined') {
+				this.pageEditor.remove();
+			}
 		},
 		
 		editPage: function(e) {
+			var root = this;
+			
 			$(e.target).parent().find('.toolbar-button').removeClass('current');
 			$(e.target).addClass('current');
-			new PageEditorView({model: new PageEditor()}).render();
+			
+			require(['views/pageeditor'], function(PageEditorView) {
+				root.pageEditor = new PageEditorView({page: root.page, site: root.site, toolbar: root}).render();
+			});
 		},
 		
 		changeLanguage: function(model) {
