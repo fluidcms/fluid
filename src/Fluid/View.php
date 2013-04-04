@@ -10,7 +10,7 @@ use Twig_Loader_Filesystem, Twig_Environment;
  * @package fluid
  */
 class View {
-	private static $templatesDir;
+	protected static $templatesDir;
 	
 	/**
 	 * Create a view
@@ -32,15 +32,29 @@ class View {
 	}
 	
 	/**
+	 * Initialize Twig
+	 * 
+	 * @param   string   $file
+	 * @param   array    $data
+	 * @return  string
+	 */
+	public static function initTwig() {
+		return array(
+			$loader = new Twig_Loader_Filesystem(self::$templatesDir),
+			new Twig_Environment($loader)
+		);
+	}
+	
+	/**
 	 * Render a view
 	 * 
 	 * @param   string   $file
 	 * @param   array    $data
 	 * @return  string
 	 */
-	private static function render( $file, $data = array() ) {
-		$loader = new Twig_Loader_Filesystem(self::$templatesDir);
-		$twig = new Twig_Environment($loader);
+	protected static function render( $file, $data = array() ) {
+		list($loader, $twig) = static::initTwig();
+
 		$template = $twig->loadTemplate($file);
 		return $template->render($data);		
 	}
@@ -52,9 +66,8 @@ class View {
 	 * @param   array    $data
 	 * @return  string
 	 */
-	private static function renderWithFields( $file, $data = array() ) {		
-		$loader = new Twig_Loader_Filesystem(self::$templatesDir);
-		$twig = new Twig_Environment($loader);
+	protected static function renderWithFields( $file, $data = array() ) {		
+		list($loader, $twig) = static::initTwig();
 		
 		$twig->addNodeVisitor(new Twig\FieldNodeVisitor);
 				

@@ -11,14 +11,17 @@ class FieldNodePrint extends \Twig_Node_Print {
 	 */
 	public function compile(\Twig_Compiler $compiler) {
 		$field = Field::matchNode($this->getNode('expr')->getNode('node'));
-				
-		$compiler
-			->addDebugInfo($this)
-			->write('\Fluid\Twig\Field\Field::setValue("'.$field.'", str_replace("\"", "#34;", ')
-			->subcompile($this->getNode('expr'))
-			->write('))')
-			->raw(";\n");
-		;
+		
+		if (null !== $field) {
+			$compiler
+				->addDebugInfo($this)
+				->write('\Fluid\Twig\Field\Field::setValue("'.$field.'", str_replace("\"", "#34;", ')
+				->subcompile($this->getNode('expr'))
+				->write('))')
+				->raw(";\n");
+			;
+		}
+		
         $compiler
             ->addDebugInfo($this)
             ->write('echo ')

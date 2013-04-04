@@ -12,8 +12,7 @@ class NodeHandler {
 		else if ($node instanceof \Twig_Node_Expression_GetAttr) return self::getExpressionArrayName($node);
 		else if ($node instanceof \Twig_Node_Expression_Filter_Default) return self::getExpressionArrayName($node->getNode('node')->getNode('expr1'));
 		else if ($node instanceof \Twig_Node_Expression_Filter) {
-			if ($node->getNode('node')->getNode('node')->hasAttribute('name')) return $node->getNode('node')->getNode('node')->getAttribute('name');
-			else return self::getExpressionArrayName($node->getNode('node')->getNode('node')); 
+			return self::getExpressionName($node->getNode('node'));
 		}
 	}
 	
