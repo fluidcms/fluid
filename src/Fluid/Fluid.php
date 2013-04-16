@@ -71,7 +71,8 @@ class Fluid {
 					return (substr(self::$config[$name], -1) === '/' ? self::$config[$name] : self::$config[$name] . '/');
 				}
 				break;
-			case 'database':
+            case 'url':
+            case 'database':
 			case 'languages':
 				if (isset(self::$config[$name])) {
 					return self::$config[$name];
@@ -91,7 +92,8 @@ class Fluid {
 	 */
 	public static function setConfig($name, $value) {
 		switch($name) {
-			case 'storage':
+            case 'url':
+            case 'storage':
 			case 'templates':
 			case 'database':
 			case 'layouts':

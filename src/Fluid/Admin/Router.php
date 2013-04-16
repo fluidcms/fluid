@@ -73,7 +73,7 @@ class Router {
 		switch($request) {
 			// Index
 			case '': case 'files':
-				return Fluid\View::create('master.twig', array('site_url' => 'http://sinergi-fluid.zulu/' /* // !! Fluid\Fluid::$urls['staging'] */ ));
+				return Fluid\View::create('master.twig', array('site_url' => Fluid\Fluid::getConfig('url')));
 			
 			// Test
 			case 'test':

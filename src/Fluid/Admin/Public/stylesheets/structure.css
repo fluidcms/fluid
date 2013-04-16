@@ -6,32 +6,38 @@
 ================================================== */
 /* #Structure container
 ================================================== */
-/* line 8, ../../Stylesheets/structure.scss */
-.structure > a.icon-button {
+/* line 7, ../../Stylesheets/structure.scss */
+#content div.structure {
+  height: 100%;
+  overflow: auto;
+}
+/* line 10, ../../Stylesheets/structure.scss */
+#content div.structure > a.icon-button {
   margin-left: 16px;
   display: block;
   float: left;
   margin-top: 4px;
 }
-/* line 14, ../../Stylesheets/structure.scss */
-.structure div {
+/* line 16, ../../Stylesheets/structure.scss */
+#content div.structure div {
+  margin-bottom: 24px;
   margin-right: 16px;
   float: right;
 }
-/* line 15, ../../Stylesheets/structure.scss */
-.structure div a.cancel {
+/* line 18, ../../Stylesheets/structure.scss */
+#content div.structure div a.cancel {
   margin-right: 12px;
 }
 
 /* #Structure list
 ================================================== */
-/* line 26, ../../Stylesheets/structure.scss */
+/* line 29, ../../Stylesheets/structure.scss */
 ul.structure {
   margin-top: 16px;
   margin-bottom: 14px;
   padding-bottom: 10px;
 }
-/* line 31, ../../Stylesheets/structure.scss */
+/* line 34, ../../Stylesheets/structure.scss */
 ul.structure > li a {
   position: relative;
   display: block;
@@ -42,13 +48,13 @@ ul.structure > li a {
   text-shadow: 0px 1px 2px #aaaaaa, 0px 1px 2px rgba(0, 0, 0, 0.75) #aaaaaa;
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75) #aaaaaa, 0px 1px 2px rgba(0, 0, 0, 0.75) #aaaaaa;
 }
-/* line 40, ../../Stylesheets/structure.scss */
+/* line 43, ../../Stylesheets/structure.scss */
 ul.structure > li a span {
   display: block;
   color: #808080;
   text-shadow: none;
 }
-/* line 46, ../../Stylesheets/structure.scss */
+/* line 49, ../../Stylesheets/structure.scss */
 ul.structure > li > a {
   padding-top: 8px;
   border-top: 1px dotted #3e3e3e;
@@ -65,7 +71,7 @@ ul.structure > li > a {
   			background-position: -85px 0;
   		}*/
 }
-/* line 51, ../../Stylesheets/structure.scss */
+/* line 54, ../../Stylesheets/structure.scss */
 ul.structure > li > a:before {
   content: "";
   display: block;
@@ -77,18 +83,18 @@ ul.structure > li > a:before {
   background-image: url("../images/sprite.png");
   background-position: -80px 0;
 }
-/* line 74, ../../Stylesheets/structure.scss */
+/* line 77, ../../Stylesheets/structure.scss */
 ul.structure > li ul {
   padding-bottom: 2px;
   padding-top: 8px;
   padding-left: 34px;
 }
-/* line 78, ../../Stylesheets/structure.scss */
+/* line 81, ../../Stylesheets/structure.scss */
 ul.structure > li ul li {
   position: relative;
   padding-left: 30px;
 }
-/* line 80, ../../Stylesheets/structure.scss */
+/* line 83, ../../Stylesheets/structure.scss */
 ul.structure > li ul li:before {
   position: absolute;
   background-image: url("../images/structure-tree.png");
@@ -102,22 +108,22 @@ ul.structure > li ul li:before {
   top: -0;
   left: 10px;
 }
-/* line 93, ../../Stylesheets/structure.scss */
+/* line 96, ../../Stylesheets/structure.scss */
 ul.structure > li ul li:last-child:before {
   background-image: url("../images/structure-tree-bottom.png");
   background-position: left bottom;
 }
-/* line 101, ../../Stylesheets/structure.scss */
+/* line 104, ../../Stylesheets/structure.scss */
 ul.structure > li:last-child {
   border-bottom: 1px dotted #3e3e3e;
 }
-/* line 104, ../../Stylesheets/structure.scss */
+/* line 107, ../../Stylesheets/structure.scss */
 ul.structure li.sortable-placeholder {
   height: 37px;
   background: rgba(255, 255, 255, 0.05);
   background-clip: content-box;
 }
-/* line 109, ../../Stylesheets/structure.scss */
+/* line 112, ../../Stylesheets/structure.scss */
 ul.structure ul ul {
   padding-left: 0;
 }

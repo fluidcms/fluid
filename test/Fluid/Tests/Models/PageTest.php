@@ -6,7 +6,7 @@ use Fluid\Fluid, Fluid\Models\Structure, Fluid\Models\Page, PHPUnit_Framework_Te
 
 class PageTest extends PHPUnit_Framework_TestCase {
 	public function setUp() {
-		$_POST = require __DIR__."/../Fixtures/request/page_request.php";
+		$_POST = require __DIR__ . "/../Fixtures/request/page_request.php";
 	}
 	
 	public function testInit() {

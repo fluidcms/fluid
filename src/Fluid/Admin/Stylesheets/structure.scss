@@ -4,7 +4,9 @@
 
 /* #Structure container
 ================================================== */
-.structure {
+#content div.structure {
+    height: 100%;
+    overflow: auto;
 	&>a.icon-button {
 		margin-left: $main-margin-left;
 		display: block;
@@ -12,6 +14,7 @@
 		margin-top: 4px;
 	}
 	div {
+        margin-bottom: 24px;
 		a.cancel {
 			margin-right: 12px;
 		}

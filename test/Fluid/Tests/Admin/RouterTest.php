@@ -20,7 +20,7 @@ class RouterTest extends PHPUnit_Framework_TestCase {
 		$this->assertRegExp('/^[\[|{]/', $actual);
 
 		// Test page
-		$_POST = require __DIR__."/../Fixtures/request/page_request.php";
+		$_POST = require __DIR__ . "/../Fixtures/request/page_request.php";
 		$actual = Router::route('page.json');
 		$this->assertRegExp('/^[\[|{]/', $actual);
 		
