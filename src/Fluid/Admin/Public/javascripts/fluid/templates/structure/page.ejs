@@ -1,32 +1,38 @@
 <form accept-charset="utf-8">
-	<label for="pagePageInput">Page</label>
-	<input type="text" id="pagePageInput" name="page" value="<%= model.get("page") %>" tabindex="1" autocomplete="no" spellcheck="no" maxlength="64">
-	
-	<label>Languages</label>
-	<div class="input-margin">
-		<% $.each(languages.attributes, function(key, item) { %>
-		<label for="pageLanguageCheckbox<%= key %>" class="checkbox no-text-transform">
-			<input type="checkbox" id="pageLanguageCheckbox<%= key %>" name="languages[]" value="<%= item %>" tabindex="2" 
-				<% if(typeof model.get("languages") == 'undefined' || $.inArray(item, model.get("languages")) !== -1) { %>checked<% } %>>
-			<%= item %>
-		</label>
-		<%}) %>
-	</div>
-	
-	<label for="pageUrlInput">URL</label>
-	<input type="text" id="pageUrlInput" name="url" value="<%= model.get("url") %>" tabindex="3" autocomplete="no" spellcheck="no" maxlength="255">
-	
-	<label for="pageLayoutSelect">Layout</label>
-	<select name="layout" id="pageLayoutSelect" tabindex="4">
-		<% $.each(layouts.attributes, function(key, item) { %>
-			<option value="<%= item %>" <% if(model.get("layout") == item) { %>selected<% } %>>
-				<%= item %>
-			</option>
-		<%}) %>
-	</select>
-		
-	<div class="buttons">
-		<a data-action="close" class="button">Cancel</a>
-		<button type="submit" ondblclick="$(this).attr('disabled', true);" class="blue" tabindex="4">OK</button>
-	</div>
+    <label for="pagePageInput">Page</label>
+    <input type="text" id="pagePageInput" name="page" value="<%= model.get(" page") %>" tabindex="1" autocomplete="no"
+    spellcheck="no" maxlength="64">
+
+    <label>Languages</label>
+
+    <div class="input-margin">
+        <% $.each(languages.attributes, function(key, item) { %>
+        <label for="pageLanguageCheckbox<%= key %>" class="checkbox no-text-transform">
+            <input type="checkbox" id="pageLanguageCheckbox<%= key %>" name="languages[]" value="<%= item %>"
+                   tabindex="2"
+            <% if(typeof model.get("languages") == 'undefined' || $.inArray(item, model.get("languages")) !== -1) {
+            %>checked<% } %>>
+            <%= item %>
+        </label>
+        <%}) %>
+    </div>
+
+    <label for="pageUrlInput">URL</label>
+    <input type="text" id="pageUrlInput" name="url" value="<%= model.get(" url") %>" tabindex="3" autocomplete="no"
+    spellcheck="no" maxlength="255">
+
+    <label for="pageLayoutSelect">Layout</label>
+    <select name="layout" id="pageLayoutSelect" tabindex="4">
+        <% $.each(layouts.attributes, function(key, item) { %>
+        <option value="<%= item %>"
+        <% if(model.get("layout") == item) { %>selected<% } %>>
+        <%= item %>
+        </option>
+        <%}) %>
+    </select>
+
+    <div class="buttons">
+        <a data-action="close" class="button">Cancel</a>
+        <button type="submit" ondblclick="$(this).attr('disabled', true);" class="blue" tabindex="4">OK</button>
+    </div>
 </form>

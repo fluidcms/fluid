@@ -4,93 +4,95 @@
 /* #Page Editor
 ================================================== */
 div.page-editor {
-	z-index: 10;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	padding: 42px 0 0 306px;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	box-sizing: border-box;
-	overflow: auto;
-		background: white;
-	&>div {
-		width: 100%;
-		height: 100%;
-		background: white;
-		
-		form {
-			width: 660px;
-			margin: 0 auto;
-			padding: 40px 0;
-			
-			nav {
-				margin-bottom: 40px;
-				ul {
-					@include display-box;
-					li {
-						padding: 0 14px;
-						a {
-							cursor: default;
-							text-transform: capitalize;
-							font-size: 12px;
-							font-weight: $light;
-							padding-bottom: 4px;
-						}
-						&.current a {
-							border-bottom: 2px solid #1b81c0;
-						}
-					}
-					li:first-child { padding-left: 0px; }
-				}
-			}
-						
-			textarea {
-				width: 100%;
-				resize: vertical;
-				height: 36px;
-			}
-			
-			ul.array {
-				margin-bottom: 36px;
-				li {
-					border-left: 6px solid #e5e5e5;
-					padding-left: 24px;
-					margin-bottom: 24px;
-					
-					label {
-						float: left;
-						width: 120px;
-						line-height: 36px;
-					}
-					
-					textarea {
-						width: 510px;
-						margin-bottom: 24px;
-					}
-					
-					textarea:last-child {
-						margin-bottom: 0;
-					}				
-				}
-				
-				li.sortable-placeholder {
-					height: 60px;
-					background: #f1f1f1;
-				}
-			}
-			
-			div.buttons {
-				@include display-box;
-				@include box-pack(end);
-			}
-			
-			button, .button {
-				@extend .button-big;
-			}
-			
-		}
-	}
+  z-index: 10;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 42px 0 0 306px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow: auto;
+  background: white;
+  &>div {
+    width: 100%;
+    height: 100%;
+    background: white;
+
+    form {
+      width: 660px;
+      margin: 0 auto;
+      padding: 40px 0;
+
+      nav {
+        margin-bottom: 40px;
+        ul {
+          @include display-box;
+          li {
+            padding: 0 14px;
+            a {
+              cursor: default;
+              text-transform: capitalize;
+              font-size: 12px;
+              font-weight: $light;
+              padding-bottom: 4px;
+            }
+            &.current a {
+              border-bottom: 2px solid #1b81c0;
+            }
+          }
+          li:first-child {
+            padding-left: 0px;
+          }
+        }
+      }
+
+      textarea {
+        width: 100%;
+        resize: vertical;
+        height: 36px;
+      }
+
+      ul.array {
+        margin-bottom: 36px;
+        li {
+          border-left: 6px solid #e5e5e5;
+          padding-left: 24px;
+          margin-bottom: 24px;
+
+          label {
+            float: left;
+            width: 120px;
+            line-height: 36px;
+          }
+
+          textarea {
+            width: 510px;
+            margin-bottom: 24px;
+          }
+
+          textarea:last-child {
+            margin-bottom: 0;
+          }
+        }
+
+        li.sortable-placeholder {
+          height: 60px;
+          background: #f1f1f1;
+        }
+      }
+
+      div.buttons {
+        @include display-box;
+        @include box-pack(end);
+      }
+
+      button, .button {
+        @extend .button-big;
+      }
+
+    }
+  }
 }

@@ -9,13 +9,15 @@ use Fluid;
  *
  * @package fluid
  */
-class Language {
-	/**
-	 * Get languages
-	 * 
-	 * @return  array
-	 */
-	public static function getLanguages() {
-		return Fluid\Fluid::getConfig('languages');
-	}
+class Language
+{
+    /**
+     * Get languages
+     *
+     * @return  array
+     */
+    public static function getLanguages()
+    {
+        return Fluid\Fluid::getConfig('languages');
+    }
 }

@@ -1,49 +1,57 @@
 <div>
-	<form action="" id="pageEditorForm" method="post" accept-charset="utf-8" novalidate>
-		<nav>
-			<ul>
-				<% $.each(tree, function(key, item) { %>
-					<li <% if (current == key){ %>class="current"<% } %>>
-						<a data-target="<%= key %>"><% if (typeof item.get('page') !== 'undefined'){ %><%= item.get('page') %><% } else { %><%= key %><% } %></a>
-					</li>
-				<% }); %>
-			</ul>
-		</nav>
-		<% $.each(page.get("variables"), function(key, item) { %>
-			
-			<% if(typeof item == "object") { %>
-				
-				<label data-action="array"><%= key.replace('_', ' ') %></label>
-				<ul class="array">
-					<% if (typeof page.get("data")[key] !== 'undefined') { var count = 0; $.each(page.get("data")[key], function(arrayKey, arrayItem) { %>
-					<li>
-						<% $.each(page.get("variables")[key], function(arrayVariableKey, arrayVariableType) { %>
-						<label for="pageEditorArray_<%= count+'_'+key+'_'+arrayVariableKey %>"><%= arrayVariableKey.replace('_', ' ') %></label>
-						<textarea id="pageEditorArray_<%= count+'_'+key+'_'+arrayVariableKey %>" name="<%= key %>[<%= count %>]['<%= arrayVariableKey %>']" tabindex="1"><%= arrayItem[arrayVariableKey] %></textarea>
-						<% }) %>
-					</li>
-					<% count++; }); } %>
-					
-					<li data-role="clone" style="display: none;">
-						<% $.each(page.get("variables")[key], function(arrayVariableKey, arrayVariableType) { %>
-						<label for="pageEditorArray_<%= '%d'+'_'+key+'_'+arrayVariableKey %>"><%= arrayVariableKey.replace('_', ' ') %></label>
-						<textarea id="pageEditorArray_<%= '%d'+'_'+key+'_'+arrayVariableKey %>" name="<%= key %>[<%= '%d' %>]['<%= arrayVariableKey %>']" tabindex="1" disabled></textarea>
-						<% }) %>
-					</li>
-				</ul>
-				
-			<% } else if(typeof item == "string") { %>
-				
-				<label for="pageEditorField_<%= key %>"><%= key.replace('_', ' ') %></label>
-				<textarea id="pageEditorField_<%= key %>" name="<%= key %>" tabindex="1"><%= page.get("data")[key] %></textarea>
-			
-			<% } %>
-			
-		<% }) %>
-		
-		<div class="buttons">
-			<a data-action="cancel" class="button">Cancel</a>
-			<button type="submit" ondblclick="$(this).attr('disabled', true);" class="blue" tabindex="2">Save</button>
-		</div>
-	</form>
+    <form action="" id="pageEditorForm" method="post" accept-charset="utf-8" novalidate>
+        <nav>
+            <ul>
+                <% $.each(tree, function(key, item) { %>
+                <li
+                <% if (current == key){ %>class="current"<% } %>>
+                <a data-target="<%= key %>"><% if (typeof item.get('page') !== 'undefined'){ %><%= item.get('page') %><%
+                    } else { %><%= key %><% } %></a>
+                </li>
+                <% }); %>
+            </ul>
+        </nav>
+        <% $.each(page.get("variables"), function(key, item) { %>
+
+        <% if(typeof item == "object") { %>
+
+        <label data-action="array"><%= key.replace('_', ' ') %></label>
+        <ul class="array">
+            <% if (typeof page.get("data")[key] !== 'undefined') { var count = 0; $.each(page.get("data")[key],
+            function(arrayKey, arrayItem) { %>
+            <li>
+                <% $.each(page.get("variables")[key], function(arrayVariableKey, arrayVariableType) { %>
+                <label for="pageEditorArray_<%= count+'_'+key+'_'+arrayVariableKey %>"><%= arrayVariableKey.replace('_',
+                    ' ') %></label>
+                <textarea id="pageEditorArray_<%= count+'_'+key+'_'+arrayVariableKey %>"
+                          name="<%= key %>[<%= count %>]['<%= arrayVariableKey %>']" tabindex="1"><%=
+                    arrayItem[arrayVariableKey] %></textarea>
+                <% }) %>
+            </li>
+            <% count++; }); } %>
+
+            <li data-role="clone" style="display: none;">
+                <% $.each(page.get("variables")[key], function(arrayVariableKey, arrayVariableType) { %>
+                <label for="pageEditorArray_<%= '%d'+'_'+key+'_'+arrayVariableKey %>"><%= arrayVariableKey.replace('_',
+                    ' ') %></label>
+                <textarea id="pageEditorArray_<%= '%d'+'_'+key+'_'+arrayVariableKey %>"
+                          name="<%= key %>[<%= '%d' %>]['<%= arrayVariableKey %>']" tabindex="1" disabled></textarea>
+                <% }) %>
+            </li>
+        </ul>
+
+        <% } else if(typeof item == "string") { %>
+
+        <label for="pageEditorField_<%= key %>"><%= key.replace('_', ' ') %></label>
+        <textarea id="pageEditorField_<%= key %>" name="<%= key %>" tabindex="1"><%= page.get("data")[key] %></textarea>
+
+        <% } %>
+
+        <% }) %>
+
+        <div class="buttons">
+            <a data-action="cancel" class="button">Cancel</a>
+            <button type="submit" ondblclick="$(this).attr('disabled', true);" class="blue" tabindex="2">Save</button>
+        </div>
+    </form>
 </div>

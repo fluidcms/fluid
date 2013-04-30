@@ -5,86 +5,98 @@
 /* #Container
 ================================================== */
 #main {
-	z-index: 3;
-	position: fixed;
-	background: #4d4d4d;
-	float: left;
-	height: 100%;
-	width: 306px;
-	@include box-shadow(0 0 5px rgba(0, 0, 0, .75));
+  z-index: 3;
+  position: fixed;
+  background: #4d4d4d;
+  float: left;
+  height: 100%;
+  width: 306px;
+  @include box-shadow(0 0 5px rgba(0, 0, 0, .75));
 }
 
 #main {
-	#content {
-		height: 100%;
-		padding-top: 42px;
-		max-width: 306px;
-		-moz-box-sizing: border-box;
-		-webkit-box-sizing: border-box;
-		box-sizing: border-box;
-	}
+  #content {
+    height: 100%;
+    padding-top: 42px;
+    max-width: 306px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
 }
 
 /* #Navigation
 ================================================== */
 #main nav {
-	position: fixed;
-	width: 306px;
-	height: 42px;
-	@include background(linear-gradient(top, #292e34 0%, #373d44 75%, #2a2f35 100%));
-	
-	ul {
-		@include display-box;
-		@include box-pack(center);
-		
-		li {
-		}
-	}
-	
-	a {
-		margin: 0 3px;
-		position: relative;
-		display: block;
-		width: 32px;
-		height: 42px;
-		cursor: default;
-		&:after {
-			position: absolute;
-			top: 13px;
-			left: 8px;
-			content: "";
-			display: block;
-			width: 16px;
-			height: 16px;
-			background-image: url('../images/sprite.png');
-		}
-		&.structure:after { background-position-x: 0; }
-		&.components:after { background-position-x: -16px; }
-		&.files:after { background-position-x: -32px; }
-		&.intl:after { background-position-x: -48px; }
-		&.diff:after { background-position-x: -64px; }
-		&.current {
-			background: rgba(0, 0, 0, .14);
-			@include box-shadow(inset 0 2px 3px rgba(0, 0, 0, .43));
-			&:after { background-position-y: -16px; }
-		}
-	}
+  position: fixed;
+  width: 306px;
+  height: 42px;
+  @include background(linear-gradient(top, #292e34 0%, #373d44 75%, #2a2f35 100%));
+
+  ul {
+    @include display-box;
+    @include box-pack(center);
+
+    li {
+    }
+  }
+
+  a {
+    margin: 0 3px;
+    position: relative;
+    display: block;
+    width: 32px;
+    height: 42px;
+    cursor: default;
+    &:after {
+      position: absolute;
+      top: 13px;
+      left: 8px;
+      content: "";
+      display: block;
+      width: 16px;
+      height: 16px;
+      background-image: url('../images/sprite.png');
+    }
+    &.structure:after {
+      background-position-x: 0;
+    }
+    &.components:after {
+      background-position-x: -16px;
+    }
+    &.files:after {
+      background-position-x: -32px;
+    }
+    &.intl:after {
+      background-position-x: -48px;
+    }
+    &.diff:after {
+      background-position-x: -64px;
+    }
+    &.current {
+      background: rgba(0, 0, 0, .14);
+      @include box-shadow(inset 0 2px 3px rgba(0, 0, 0, .43));
+      &:after {
+        background-position-y: -16px;
+      }
+    }
+  }
 }
 
 /* #Target
 ================================================== */
 #target {
-	position: relative;
-	z-index: 1;
-	width: 100%;
-	height: 100%;
-	padding: 42px 0 0 306px;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	box-sizing: border-box;
-	overflow: hidden;
-	iframe {
-		width: 100%;
-		height: 100%;
-	}
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  padding: 42px 0 0 306px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow: hidden;
+  iframe {
+    width: 100%;
+    height: 100%;
+  }
 }

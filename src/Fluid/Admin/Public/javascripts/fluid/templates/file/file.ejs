@@ -1,23 +1,25 @@
 <input id="fileUploader" type="file" accept="image/jpeg,image/png,image/gif" multiple>
 
 <label class="no-class" for="fileUploader">
-	<a data-action="addFile" class="icon-button plus">File</a>
+    <a data-action="addFile" class="icon-button plus">File</a>
 </label>
 
 <ul class="file">
-	<% collection.each(function(file, key) { %>
-		
-		<li data-id="<%= file.get('id') %>" data-name="<%= file.get('name') %>">
-			<% if (typeof file.get('src') !== 'undefined') { %>
-				<img src="<%= file.get('src') %>" width="<%= file.get('previewWidth') %>" height="<%= file.get('previewHeight') %>" alt="">
-			<% } else if(typeof file.get('previewSrc') !== 'undefined') { %>
-				<img src="<%= file.get('previewSrc') %>" width="<%= file.get('previewWidth') %>" height="<%= file.get('previewHeight') %>" alt="">
-			<% } else { %>
-				<img src="" width="0" height="0" alt="" style="display: none;">
-			<% } %>
-		</li>
-		
-	<% }); %>
+    <% collection.each(function(file, key) { %>
+
+    <li data-id="<%= file.get('id') %>" data-name="<%= file.get('name') %>">
+        <% if (typeof file.get('src') !== 'undefined') { %>
+        <img src="<%= file.get('src') %>" width="<%= file.get('previewWidth') %>"
+             height="<%= file.get('previewHeight') %>" alt="">
+        <% } else if(typeof file.get('previewSrc') !== 'undefined') { %>
+        <img src="<%= file.get('previewSrc') %>" width="<%= file.get('previewWidth') %>"
+             height="<%= file.get('previewHeight') %>" alt="">
+        <% } else { %>
+        <img src="" width="0" height="0" alt="" style="display: none;">
+        <% } %>
+    </li>
+
+    <% }); %>
 </ul>
 
 <br style="clear: left;">

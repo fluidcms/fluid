@@ -6,7 +6,6 @@
 ================================================== */
 /* #Reset
 ================================================== */
-/* line 8, ../../Stylesheets/base.scss */
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
   margin: 0;
   padding: 0;
@@ -14,26 +13,22 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   vertical-align: baseline;
 }
 
-/* line 14, ../../Stylesheets/base.scss */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
   display: block;
 }
 
-/* line 17, ../../Stylesheets/base.scss */
 html, body {
   width: 100%;
   height: 100%;
   line-height: 1;
 }
 
-/* line 22, ../../Stylesheets/base.scss */
 ol, ul {
   list-style: none;
 }
 
 /* #Basic Styles
 ================================================== */
-/* line 28, ../../Stylesheets/base.scss */
 body {
   background: #383838 url("../images/background.gif");
   font: 12px/18px 'Roboto', sans-serif;
@@ -46,33 +41,27 @@ body {
 ================================================== */
 /* #Links
 ================================================== */
-/* line 42, ../../Stylesheets/base.scss */
 .link-button, .icon-button {
   color: white;
   font-weight: 700;
   border-radius: 2px;
   cursor: default;
 }
-/* line 47, ../../Stylesheets/base.scss */
 .link-button:active, .icon-button:active {
   background: rgba(0, 0, 0, 0.1);
 }
 
-/* line 51, ../../Stylesheets/base.scss */
 .link-button[disabled], [disabled].icon-button {
   opacity: .3;
 }
-/* line 53, ../../Stylesheets/base.scss */
 .link-button[disabled]:active, [disabled].icon-button:active {
   background: none;
 }
 
-/* line 58, ../../Stylesheets/base.scss */
 .icon-button {
   position: relative;
   padding-left: 14px;
 }
-/* line 62, ../../Stylesheets/base.scss */
 .icon-button:before {
   position: absolute;
   content: "";
@@ -84,14 +73,12 @@ body {
   background-image: url("../images/sprite.png");
 }
 
-/* line 73, ../../Stylesheets/base.scss */
 .plus:before {
   background-position: 0 -32px;
 }
 
 /* #Buttons
 ================================================== */
-/* line 84, ../../Stylesheets/base.scss */
 .button,
 button,
 input[type="submit"],
@@ -116,7 +103,6 @@ input[type="button"] {
   border: 1px solid #313131;
   padding: 0 16px;
 }
-/* line 100, ../../Stylesheets/base.scss */
 .button.blue,
 button.blue,
 input[type="submit"].blue,
@@ -128,7 +114,6 @@ input[type="button"].blue {
   background: -o-linear-gradient(top, #6fc6fc 0%, #6fc6fc 5%, #2fabf7 6%, #1677b4 100%);
   background: linear-gradient(top, #6fc6fc 0%, #6fc6fc 5%, #2fabf7 6%, #1677b4 100%);
 }
-/* line 104, ../../Stylesheets/base.scss */
 .button:active,
 button:active,
 input[type="submit"]:active,
@@ -140,7 +125,6 @@ input[type="button"]:active {
   background: -o-linear-gradient(top, #a4a4a4 0%, #a4a4a4 5%, #515151 6%, #7a7a7a 100%);
   background: linear-gradient(top, #a4a4a4 0%, #a4a4a4 5%, #515151 6%, #7a7a7a 100%);
 }
-/* line 106, ../../Stylesheets/base.scss */
 .button:active.blue,
 button:active.blue,
 input[type="submit"]:active.blue,
@@ -153,7 +137,6 @@ input[type="button"]:active.blue {
   background: linear-gradient(top, #6fc6fc 0%, #6fc6fc 5%, #1677b4 6%, #2fabf7 100%);
 }
 
-/* line 116, ../../Stylesheets/base.scss */
 .button[disabled],
 button[disabled],
 input[type="submit"][disabled],
@@ -161,7 +144,6 @@ input[type="reset"][disabled],
 input[type="button"][disabled] {
   opacity: .3;
 }
-/* line 118, ../../Stylesheets/base.scss */
 .button[disabled]:active,
 button[disabled]:active,
 input[type="submit"][disabled]:active,
@@ -173,7 +155,6 @@ input[type="button"][disabled]:active {
   background: -o-linear-gradient(top, #3f3f3f, #000000);
   background: linear-gradient(top, #3f3f3f, #000000);
 }
-/* line 120, ../../Stylesheets/base.scss */
 .button[disabled]:active.blue,
 button[disabled]:active.blue,
 input[type="submit"][disabled]:active.blue,
@@ -187,7 +168,6 @@ input[type="button"][disabled]:active.blue {
 }
 
 /* Fix for odd Mozilla border & padding issues */
-/* line 128, ../../Stylesheets/base.scss */
 button::-moz-focus-inner,
 input::-moz-focus-inner {
   border: 0;
@@ -196,7 +176,6 @@ input::-moz-focus-inner {
 
 /* #Big Buttons
 ================================================== */
-/* line 135, ../../Stylesheets/base.scss */
 .button-big, div.modal-container button, div.modal-container .button, div.page-editor > div form button, div.page-editor > div form .button {
   display: inline-block;
   line-height: 30px;
@@ -216,7 +195,6 @@ input::-moz-focus-inner {
   border: 1px solid #bfbfbf;
   padding: 0 20px;
 }
-/* line 152, ../../Stylesheets/base.scss */
 .button-big.blue, div.modal-container button.blue, div.modal-container .blue.button, div.page-editor > div form button.blue, div.page-editor > div form .blue.button {
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #eff8fe), color-stop(100%, #e7f4fc));
   background: -webkit-linear-gradient(top, #eff8fe 0%, #e7f4fc 100%);
@@ -224,7 +202,6 @@ input::-moz-focus-inner {
   background: -o-linear-gradient(top, #eff8fe 0%, #e7f4fc 100%);
   background: linear-gradient(top, #eff8fe 0%, #e7f4fc 100%);
 }
-/* line 156, ../../Stylesheets/base.scss */
 .button-big:active, div.modal-container button:active, div.modal-container .button:active, div.page-editor > div form button:active, div.page-editor > div form .button:active {
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #e1e1e1), color-stop(100%, #f6f6f6));
   background: -webkit-linear-gradient(top, #e1e1e1 0%, #f6f6f6 100%);
@@ -232,7 +209,6 @@ input::-moz-focus-inner {
   background: -o-linear-gradient(top, #e1e1e1 0%, #f6f6f6 100%);
   background: linear-gradient(top, #e1e1e1 0%, #f6f6f6 100%);
 }
-/* line 158, ../../Stylesheets/base.scss */
 .button-big:active.blue, div.modal-container button:active.blue, div.modal-container .button:active.blue, div.page-editor > div form button:active.blue, div.page-editor > div form .button:active.blue {
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #cadeeb), color-stop(100%, #dae8f1));
   background: -webkit-linear-gradient(top, #cadeeb 0%, #dae8f1 100%);
@@ -243,7 +219,6 @@ input::-moz-focus-inner {
 
 /* #Forms
 ================================================== */
-/* line 172, ../../Stylesheets/base.scss */
 input[type="text"],
 input[type="number"],
 input[type="password"],
@@ -269,7 +244,6 @@ textarea {
   box-sizing: border-box;
 }
 
-/* line 194, ../../Stylesheets/base.scss */
 input[type="text"]:focus,
 input[type="number"]:focus,
 input[type="password"]:focus,
@@ -281,12 +255,10 @@ textarea:focus {
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
 }
 
-/* line 198, ../../Stylesheets/base.scss */
 div.input-margin {
   margin: 0 0 36px 0;
 }
 
-/* line 202, ../../Stylesheets/base.scss */
 select {
   -webkit-appearance: none;
   margin: 0 0 36px 0;
@@ -310,7 +282,6 @@ select {
   background-repeat: no-repeat, repeat;
 }
 
-/* line 221, ../../Stylesheets/base.scss */
 label {
   display: block;
   font-weight: 500;
@@ -320,7 +291,6 @@ label {
   margin: 0 0 18px 0;
 }
 
-/* line 230, ../../Stylesheets/base.scss */
 label.no-class {
   display: inherit;
   font-weight: inherit;
@@ -330,12 +300,10 @@ label.no-class {
   margin: inherit;
 }
 
-/* line 239, ../../Stylesheets/base.scss */
 label.no-text-transform {
   text-transform: none;
 }
 
-/* line 243, ../../Stylesheets/base.scss */
 label.checkbox {
   display: inline;
   font-size: 14px;
@@ -344,7 +312,6 @@ label.checkbox {
   vertical-align: top;
   line-height: 18px;
 }
-/* line 251, ../../Stylesheets/base.scss */
 label.checkbox input {
   margin: 0;
   -webkit-appearance: none;
@@ -354,14 +321,12 @@ label.checkbox input {
   background-image: url("../images/sprite.png");
   background-position: 0 -64px;
 }
-/* line 259, ../../Stylesheets/base.scss */
 label.checkbox input:checked {
   background-position: -18px -64px;
 }
 
 /* #Container
 ================================================== */
-/* line 7, ../../Stylesheets/fluid.scss */
 #main {
   z-index: 3;
   position: fixed;
@@ -374,7 +339,6 @@ label.checkbox input:checked {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
 }
 
-/* line 18, ../../Stylesheets/fluid.scss */
 #main #content {
   height: 100%;
   padding-top: 42px;
@@ -386,7 +350,6 @@ label.checkbox input:checked {
 
 /* #Navigation
 ================================================== */
-/* line 30, ../../Stylesheets/fluid.scss */
 #main nav {
   position: fixed;
   width: 306px;
@@ -397,7 +360,6 @@ label.checkbox input:checked {
   background: -o-linear-gradient(top, #292e34 0%, #373d44 75%, #2a2f35 100%);
   background: linear-gradient(top, #292e34 0%, #373d44 75%, #2a2f35 100%);
 }
-/* line 36, ../../Stylesheets/fluid.scss */
 #main nav ul {
   display: -webkit-box;
   display: -moz-box;
@@ -408,7 +370,6 @@ label.checkbox input:checked {
   -ms-box-pack: center;
   box-pack: center;
 }
-/* line 44, ../../Stylesheets/fluid.scss */
 #main nav a {
   margin: 0 3px;
   position: relative;
@@ -417,7 +378,6 @@ label.checkbox input:checked {
   height: 42px;
   cursor: default;
 }
-/* line 51, ../../Stylesheets/fluid.scss */
 #main nav a:after {
   position: absolute;
   top: 13px;
@@ -428,41 +388,33 @@ label.checkbox input:checked {
   height: 16px;
   background-image: url("../images/sprite.png");
 }
-/* line 61, ../../Stylesheets/fluid.scss */
 #main nav a.structure:after {
   background-position-x: 0;
 }
-/* line 62, ../../Stylesheets/fluid.scss */
 #main nav a.components:after {
   background-position-x: -16px;
 }
-/* line 63, ../../Stylesheets/fluid.scss */
 #main nav a.files:after {
   background-position-x: -32px;
 }
-/* line 64, ../../Stylesheets/fluid.scss */
 #main nav a.intl:after {
   background-position-x: -48px;
 }
-/* line 65, ../../Stylesheets/fluid.scss */
 #main nav a.diff:after {
   background-position-x: -64px;
 }
-/* line 66, ../../Stylesheets/fluid.scss */
 #main nav a.current {
   background: rgba(0, 0, 0, 0.14);
   -webkit-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.43);
   -moz-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.43);
   box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.43);
 }
-/* line 69, ../../Stylesheets/fluid.scss */
 #main nav a.current:after {
   background-position-y: -16px;
 }
 
 /* #Target
 ================================================== */
-/* line 76, ../../Stylesheets/fluid.scss */
 #target {
   position: relative;
   z-index: 1;
@@ -474,7 +426,6 @@ label.checkbox input:checked {
   box-sizing: border-box;
   overflow: hidden;
 }
-/* line 86, ../../Stylesheets/fluid.scss */
 #target iframe {
   width: 100%;
   height: 100%;
@@ -488,7 +439,6 @@ label.checkbox input:checked {
 ================================================== */
 /* #Context Menu
 ================================================== */
-/* line 6, ../../Stylesheets/context-menu.scss */
 div.context-menu {
   z-index: 10;
   position: absolute;
@@ -500,11 +450,9 @@ div.context-menu {
   -moz-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
 }
-/* line 15, ../../Stylesheets/context-menu.scss */
 div.context-menu ul {
   padding: 4px 0;
 }
-/* line 18, ../../Stylesheets/context-menu.scss */
 div.context-menu ul li a {
   cursor: default;
   color: #333;
@@ -512,7 +460,6 @@ div.context-menu ul li a {
   display: block;
   padding: 4px 8px;
 }
-/* line 24, ../../Stylesheets/context-menu.scss */
 div.context-menu ul li a:hover {
   background: #ddd;
 }
@@ -525,7 +472,6 @@ div.context-menu ul li a:hover {
 ================================================== */
 /* #Tool bar
 ================================================== */
-/* line 6, ../../Stylesheets/toolbar.scss */
 div#toolbar {
   z-index: 2;
   position: fixed;
@@ -533,7 +479,6 @@ div#toolbar {
   height: 42px;
   width: 100%;
 }
-/* line 13, ../../Stylesheets/toolbar.scss */
 div#toolbar > div {
   padding-left: 306px;
   height: 42px;
@@ -542,7 +487,6 @@ div#toolbar > div {
   -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
 }
-/* line 19, ../../Stylesheets/toolbar.scss */
 div#toolbar > div a.toolbar-button {
   position: relative;
   float: left;
@@ -553,7 +497,6 @@ div#toolbar > div a.toolbar-button {
   padding: 0 20px 0 48px;
   cursor: default;
 }
-/* line 28, ../../Stylesheets/toolbar.scss */
 div#toolbar > div a.toolbar-button:before {
   content: "";
   display: block;
@@ -564,15 +507,12 @@ div#toolbar > div a.toolbar-button:before {
   left: 20px;
   background-image: url("../images/sprite.png");
 }
-/* line 38, ../../Stylesheets/toolbar.scss */
 div#toolbar > div a.toolbar-button.preview:before {
   background-position: -10px -32px;
 }
-/* line 39, ../../Stylesheets/toolbar.scss */
 div#toolbar > div a.toolbar-button.edit:before {
   background-position: -26px -32px;
 }
-/* line 41, ../../Stylesheets/toolbar.scss */
 div#toolbar > div a.toolbar-button.current {
   background-color: #d5d5d5;
   -webkit-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.3);
@@ -580,11 +520,9 @@ div#toolbar > div a.toolbar-button.current {
   box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.3);
   color: #50555a;
 }
-/* line 45, ../../Stylesheets/toolbar.scss */
 div#toolbar > div a.toolbar-button.current:before {
   background-position-y: -48px;
 }
-/* line 49, ../../Stylesheets/toolbar.scss */
 div#toolbar > div div.select {
   position: absolute;
   top: 12px;
@@ -600,7 +538,6 @@ div#toolbar > div div.select {
 ================================================== */
 /* #Modal Window
 ================================================== */
-/* line 7, ../../Stylesheets/modal-window.scss */
 div.modal-container {
   z-index: 100;
   position: absolute;
@@ -651,7 +588,6 @@ div.modal-container {
   animation-timing-function: ease-in-out;
   animation-fill-mode: forwards;
 }
-/* line 22, ../../Stylesheets/modal-window.scss */
 div.modal-container div.modal-window {
   width: 524px;
   padding: 30px 30px 50px 30px;
@@ -661,7 +597,6 @@ div.modal-container div.modal-window {
   -moz-box-shadow: 0 5px 5px rgba(0, 0, 0, 0.75);
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.75);
 }
-/* line 28, ../../Stylesheets/modal-window.scss */
 div.modal-container div.modal-window div.buttons {
   display: -webkit-box;
   display: -moz-box;
@@ -672,18 +607,15 @@ div.modal-container div.modal-window div.buttons {
   -ms-box-pack: end;
   box-pack: end;
 }
-/* line 32, ../../Stylesheets/modal-window.scss */
 div.modal-container div.modal-window input[type="text"] {
   width: 524px;
 }
-/* line 41, ../../Stylesheets/modal-window.scss */
 div.modal-container input:last-child {
   margin-bottom: 0;
 }
 
 /* #Blur
 ================================================== */
-/* line 48, ../../Stylesheets/modal-window.scss */
 body.blur #main, body.blur #toolbar, body.blur #target {
   -webkit-animation-name: modal-blur;
   -webkit-animation-duration: 0.4s;
@@ -713,7 +645,6 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @-webkit-keyframes modal-blur {
-  /* line 54, ../../Stylesheets/modal-window.scss */
   0% {
     -webkit-filter: blur(0);
     -moz-filter: blur(0);
@@ -721,7 +652,6 @@ body.blur #main, body.blur #toolbar, body.blur #target {
     filter: blur(0);
   }
 
-  /* line 60, ../../Stylesheets/modal-window.scss */
   100% {
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
@@ -731,7 +661,6 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @-moz-keyframes modal-blur {
-  /* line 54, ../../Stylesheets/modal-window.scss */
   0% {
     -webkit-filter: blur(0);
     -moz-filter: blur(0);
@@ -739,7 +668,6 @@ body.blur #main, body.blur #toolbar, body.blur #target {
     filter: blur(0);
   }
 
-  /* line 60, ../../Stylesheets/modal-window.scss */
   100% {
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
@@ -749,7 +677,6 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @-o-keyframes modal-blur {
-  /* line 54, ../../Stylesheets/modal-window.scss */
   0% {
     -webkit-filter: blur(0);
     -moz-filter: blur(0);
@@ -757,7 +684,6 @@ body.blur #main, body.blur #toolbar, body.blur #target {
     filter: blur(0);
   }
 
-  /* line 60, ../../Stylesheets/modal-window.scss */
   100% {
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
@@ -767,7 +693,6 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @-ms-keyframes modal-blur {
-  /* line 54, ../../Stylesheets/modal-window.scss */
   0% {
     -webkit-filter: blur(0);
     -moz-filter: blur(0);
@@ -775,7 +700,6 @@ body.blur #main, body.blur #toolbar, body.blur #target {
     filter: blur(0);
   }
 
-  /* line 60, ../../Stylesheets/modal-window.scss */
   100% {
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
@@ -785,7 +709,6 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @keyframes modal-blur {
-  /* line 54, ../../Stylesheets/modal-window.scss */
   0% {
     -webkit-filter: blur(0);
     -moz-filter: blur(0);
@@ -793,7 +716,6 @@ body.blur #main, body.blur #toolbar, body.blur #target {
     filter: blur(0);
   }
 
-  /* line 60, ../../Stylesheets/modal-window.scss */
   100% {
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
@@ -803,60 +725,50 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 }
 
 @-webkit-keyframes modal-opacity {
-  /* line 69, ../../Stylesheets/modal-window.scss */
   0% {
     opacity: 0;
   }
 
-  /* line 72, ../../Stylesheets/modal-window.scss */
   100% {
     opacity: 1;
   }
 }
 
 @-moz-keyframes modal-opacity {
-  /* line 69, ../../Stylesheets/modal-window.scss */
   0% {
     opacity: 0;
   }
 
-  /* line 72, ../../Stylesheets/modal-window.scss */
   100% {
     opacity: 1;
   }
 }
 
 @-o-keyframes modal-opacity {
-  /* line 69, ../../Stylesheets/modal-window.scss */
   0% {
     opacity: 0;
   }
 
-  /* line 72, ../../Stylesheets/modal-window.scss */
   100% {
     opacity: 1;
   }
 }
 
 @-ms-keyframes modal-opacity {
-  /* line 69, ../../Stylesheets/modal-window.scss */
   0% {
     opacity: 0;
   }
 
-  /* line 72, ../../Stylesheets/modal-window.scss */
   100% {
     opacity: 1;
   }
 }
 
 @keyframes modal-opacity {
-  /* line 69, ../../Stylesheets/modal-window.scss */
   0% {
     opacity: 0;
   }
 
-  /* line 72, ../../Stylesheets/modal-window.scss */
   100% {
     opacity: 1;
   }
@@ -870,38 +782,32 @@ body.blur #main, body.blur #toolbar, body.blur #target {
 ================================================== */
 /* #Structure container
 ================================================== */
-/* line 7, ../../Stylesheets/structure.scss */
 #content div.structure {
   height: 100%;
   overflow: auto;
 }
-/* line 10, ../../Stylesheets/structure.scss */
 #content div.structure > a.icon-button {
   margin-left: 16px;
   display: block;
   float: left;
   margin-top: 4px;
 }
-/* line 16, ../../Stylesheets/structure.scss */
 #content div.structure div {
   margin-bottom: 24px;
   margin-right: 16px;
   float: right;
 }
-/* line 18, ../../Stylesheets/structure.scss */
 #content div.structure div a.cancel {
   margin-right: 12px;
 }
 
 /* #Structure list
 ================================================== */
-/* line 29, ../../Stylesheets/structure.scss */
 ul.structure {
   margin-top: 16px;
   margin-bottom: 14px;
   padding-bottom: 10px;
 }
-/* line 34, ../../Stylesheets/structure.scss */
 ul.structure > li a {
   position: relative;
   display: block;
@@ -912,30 +818,27 @@ ul.structure > li a {
   text-shadow: 0px 1px 2px #aaaaaa, 0px 1px 2px rgba(0, 0, 0, 0.75) #aaaaaa;
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75) #aaaaaa, 0px 1px 2px rgba(0, 0, 0, 0.75) #aaaaaa;
 }
-/* line 43, ../../Stylesheets/structure.scss */
 ul.structure > li a span {
   display: block;
   color: #808080;
   text-shadow: none;
 }
-/* line 49, ../../Stylesheets/structure.scss */
 ul.structure > li > a {
   padding-top: 8px;
   border-top: 1px dotted #3e3e3e;
   padding-left: 34px;
   /*		&:after {
-  			content: "";
-  			display: block;
-  			width: 10px;
-  			height: 10px;
-  			position: absolute;
-  			top: 14px;
-  			right: $main-margin-right;
-  			background-image: url('../images/sprite.png');
-  			background-position: -85px 0;
-  		}*/
+              content: "";
+              display: block;
+              width: 10px;
+              height: 10px;
+              position: absolute;
+              top: 14px;
+              right: $main-margin-right;
+              background-image: url('../images/sprite.png');
+              background-position: -85px 0;
+          }*/
 }
-/* line 54, ../../Stylesheets/structure.scss */
 ul.structure > li > a:before {
   content: "";
   display: block;
@@ -947,18 +850,15 @@ ul.structure > li > a:before {
   background-image: url("../images/sprite.png");
   background-position: -80px 0;
 }
-/* line 77, ../../Stylesheets/structure.scss */
 ul.structure > li ul {
   padding-bottom: 2px;
   padding-top: 8px;
   padding-left: 34px;
 }
-/* line 81, ../../Stylesheets/structure.scss */
 ul.structure > li ul li {
   position: relative;
   padding-left: 30px;
 }
-/* line 83, ../../Stylesheets/structure.scss */
 ul.structure > li ul li:before {
   position: absolute;
   background-image: url("../images/structure-tree.png");
@@ -972,22 +872,18 @@ ul.structure > li ul li:before {
   top: -0;
   left: 10px;
 }
-/* line 96, ../../Stylesheets/structure.scss */
 ul.structure > li ul li:last-child:before {
   background-image: url("../images/structure-tree-bottom.png");
   background-position: left bottom;
 }
-/* line 104, ../../Stylesheets/structure.scss */
 ul.structure > li:last-child {
   border-bottom: 1px dotted #3e3e3e;
 }
-/* line 107, ../../Stylesheets/structure.scss */
 ul.structure li.sortable-placeholder {
   height: 37px;
   background: rgba(255, 255, 255, 0.05);
   background-clip: content-box;
 }
-/* line 112, ../../Stylesheets/structure.scss */
 ul.structure ul ul {
   padding-left: 0;
 }
@@ -1000,7 +896,6 @@ ul.structure ul ul {
 ================================================== */
 /* #Page Editor
 ================================================== */
-/* line 6, ../../Stylesheets/page-editor.scss */
 div.page-editor {
   z-index: 10;
   position: absolute;
@@ -1015,34 +910,28 @@ div.page-editor {
   overflow: auto;
   background: white;
 }
-/* line 19, ../../Stylesheets/page-editor.scss */
 div.page-editor > div {
   width: 100%;
   height: 100%;
   background: white;
 }
-/* line 24, ../../Stylesheets/page-editor.scss */
 div.page-editor > div form {
   width: 660px;
   margin: 0 auto;
   padding: 40px 0;
 }
-/* line 29, ../../Stylesheets/page-editor.scss */
 div.page-editor > div form nav {
   margin-bottom: 40px;
 }
-/* line 31, ../../Stylesheets/page-editor.scss */
 div.page-editor > div form nav ul {
   display: -webkit-box;
   display: -moz-box;
   display: -ms-box;
   display: box;
 }
-/* line 33, ../../Stylesheets/page-editor.scss */
 div.page-editor > div form nav ul li {
   padding: 0 14px;
 }
-/* line 35, ../../Stylesheets/page-editor.scss */
 div.page-editor > div form nav ul li a {
   cursor: default;
   text-transform: capitalize;
@@ -1050,51 +939,41 @@ div.page-editor > div form nav ul li a {
   font-weight: 300;
   padding-bottom: 4px;
 }
-/* line 42, ../../Stylesheets/page-editor.scss */
 div.page-editor > div form nav ul li.current a {
   border-bottom: 2px solid #1b81c0;
 }
-/* line 46, ../../Stylesheets/page-editor.scss */
 div.page-editor > div form nav ul li:first-child {
   padding-left: 0px;
 }
-/* line 50, ../../Stylesheets/page-editor.scss */
 div.page-editor > div form textarea {
   width: 100%;
   resize: vertical;
   height: 36px;
 }
-/* line 56, ../../Stylesheets/page-editor.scss */
 div.page-editor > div form ul.array {
   margin-bottom: 36px;
 }
-/* line 58, ../../Stylesheets/page-editor.scss */
 div.page-editor > div form ul.array li {
   border-left: 6px solid #e5e5e5;
   padding-left: 24px;
   margin-bottom: 24px;
 }
-/* line 63, ../../Stylesheets/page-editor.scss */
 div.page-editor > div form ul.array li label {
   float: left;
   width: 120px;
   line-height: 36px;
 }
-/* line 69, ../../Stylesheets/page-editor.scss */
 div.page-editor > div form ul.array li textarea {
   width: 510px;
   margin-bottom: 24px;
 }
-/* line 74, ../../Stylesheets/page-editor.scss */
 div.page-editor > div form ul.array li textarea:last-child {
   margin-bottom: 0;
 }
-/* line 79, ../../Stylesheets/page-editor.scss */
 div.page-editor > div form ul.array li.sortable-placeholder {
   height: 60px;
   background: #f1f1f1;
 }
-/* line 85, ../../Stylesheets/page-editor.scss */
 div.page-editor > div form div.buttons {
   display: -webkit-box;
   display: -moz-box;
@@ -1114,17 +993,14 @@ div.page-editor > div form div.buttons {
 ================================================== */
 /* #File container
 ================================================== */
-/* line 7, ../../Stylesheets/file.scss */
 #content .files {
   height: 100%;
   overflow: auto;
 }
-/* line 11, ../../Stylesheets/file.scss */
 #content .files input[type="file"] {
   position: absolute;
   visibility: hidden;
 }
-/* line 15, ../../Stylesheets/file.scss */
 #content .files > label a.icon-button {
   margin-left: 16px;
   display: block;
@@ -1132,12 +1008,10 @@ div.page-editor > div form div.buttons {
   margin-top: 16px;
   margin-bottom: 10px;
 }
-/* line 23, ../../Stylesheets/file.scss */
 #content .files ul {
   clear: both;
   margin-left: 16px;
 }
-/* line 26, ../../Stylesheets/file.scss */
 #content .files ul li {
   position: relative;
   float: left;
@@ -1156,15 +1030,12 @@ div.page-editor > div form div.buttons {
   -ms-box-align: center;
   box-align: center;
 }
-/* line 38, ../../Stylesheets/file.scss */
 #content .files ul li img {
   display: block;
 }
-/* line 40, ../../Stylesheets/file.scss */
 #content .files ul li img.dark {
   opacity: .1;
 }
-/* line 44, ../../Stylesheets/file.scss */
 #content .files ul li .progress {
   position: absolute;
   top: 56px;
@@ -1175,7 +1046,6 @@ div.page-editor > div form div.buttons {
   border-radius: 2px;
   background: black;
 }
-/* line 53, ../../Stylesheets/file.scss */
 #content .files ul li .progress div {
   position: absolute;
   top: 0;
@@ -1183,7 +1053,6 @@ div.page-editor > div form div.buttons {
   background: #0084ff;
   height: 3px;
 }
-/* line 62, ../../Stylesheets/file.scss */
 #content .files ul li:nth-child(3n) {
   margin: 0 0 14px 0;
 }
