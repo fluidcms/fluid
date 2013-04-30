@@ -76,7 +76,14 @@ class Router
             // Index
             case '':
             case 'files':
-                return Fluid\View::create('master.twig', array('site_url' => Fluid\Fluid::getConfig('url')));
+                return Fluid\View::create(
+                    'master.twig',
+                    array(
+                        'site_url' => Fluid\Fluid::getConfig('url'),
+                        'token' => Fluid\Models\PageToken::getToken(),
+                        'branch' => 'develop'
+                    )
+                );
 
             // Test
             case 'test':

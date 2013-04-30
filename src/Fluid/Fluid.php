@@ -37,6 +37,33 @@ class Fluid
         if (null === View::getTemplatesDir()) {
             View::setTemplatesDir(self::getConfig('templates'));
         }
+
+        // Init Fluid
+        Init::check();
+
+        // Check if using branch
+        if (isset($_SERVER['QUERY_STRING'])) {
+            parse_str($_SERVER['QUERY_STRING']);
+            if (isset($fluidBranch) && isset($fluidBranchToken) && Models\PageToken::validateToken($fluidBranchToken)) {
+                self::switchBranch($fluidBranch);
+            }
+        }
+    }
+
+    /**
+     * Get the language of the instance
+     *
+     * @param   string  $branch
+     * @return  void
+     */
+    public static function switchBranch($branch)
+    {
+        if ($branch = Git::branch($branch)) {
+            self::setConfig(
+                'storage',
+                self::getConfig('storage') . "branches/{$branch}/"
+            );
+        }
     }
 
     /**

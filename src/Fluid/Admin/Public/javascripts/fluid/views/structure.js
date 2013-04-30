@@ -1,9 +1,7 @@
-define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu'], function (Backbone, EJS, jUI, Modal, ContextMenu) {
+define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu', 'models/structure'], function (Backbone, EJS, jUI, Modal, ContextMenu, Structure) {
     var View = Backbone.View.extend({
         events: {
             'click a[data-action=addPage]': 'addPage',
-            'click a[data-action=cancelChanges]': 'cancelChanges',
-            'click a[data-action=saveChanges]': 'saveChanges',
             'contextmenu li a': 'contextmenu'
         },
 
@@ -14,13 +12,21 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu'], fun
         template: new EJS({url: 'javascripts/fluid/templates/structure/structure.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
+            var root = this;
             this.render();
             this.collection.on('reset add remove update', this.render, this);
-            this.collection.on('change update', this.enableControls, this);
-            this.collection.on('saved', this.disableControls, this);
             this.collection.on('saved', attrs.page.reload, this);
             this.languages = attrs.languages;
             this.layouts = attrs.layouts;
+
+            // Control + Z or Command + Z events
+            setTimeout(function () {
+                $(document).keydown(function (e) {
+                    if ((e.ctrlKey || e.metaKey) && e.keyCode == 90) {
+                        root.cancelChange();
+                    }
+                });
+            }, 1);
         },
 
         render: function () {
@@ -57,34 +63,22 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu'], fun
             this.collection.sort(this.dropbox.item, this.dropbox.receiver, this.dropbox.position);
         },
 
-        enableControls: function () {
-            this.$el.find('[data-action=cancelChanges],[data-action=saveChanges]').removeAttr('disabled');
-        },
-
-        disableControls: function () {
-            this.$el.find('[data-action=cancelChanges],[data-action=saveChanges]').attr('disabled', 'true');
-        },
-
-        saveChanges: function (e) {
-            if (!$(e.target).is("[disabled]")) {
-                this.collection.save();
-            }
-        },
-
-        cancelChanges: function (e) {
-            if (!$(e.target).is("[disabled]") && confirm('Are you sure you want to cancel changes?')) {
-                this.collection.fetch({reset: true});
-                this.disableControls();
-            }
+        cancelChange: function() {
+            console.log('cancel change');
         },
 
         contextmenu: function (e) {
             e.preventDefault();
-            var contextMenu = new ContextMenu({url: 'javascripts/fluid/templates/structure/contextmenu.ejs', parent: this, event: e}).render();
+            new ContextMenu({url: 'javascripts/fluid/templates/structure/contextmenu.ejs', parent: this, event: e}).render();
         },
 
-        addPage: function () {
-            new Page({ model: new this.collection.__proto__.model({parent: this.collection}), languages: this.languages, layouts: this.layouts, newPage: true }).render();
+        addPage: function (e) {
+            if ($(e).parents('li').length > 0) {
+                var parent = this.collection.get($(e).parents('li').attr('data-id')).get('pages');
+            } else {
+                var parent = this.collection;
+            }
+            new Page({ model: new Structure.Page({ parent: parent }), languages: this.languages, layouts: this.layouts, newPage: true }).render();
         },
 
         editPage: function (page) {
@@ -121,6 +115,10 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu'], fun
         submit: function () {
             if (this.newPage) {
                 this.model.parent.add(this.model);
+                var id = this.model.get('id');
+                this.model.set('id', null);
+                //console.log(this.model.get('id'));
+                this.model.save();
             }
         }
     });
