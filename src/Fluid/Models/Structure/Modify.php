@@ -28,7 +28,7 @@ class Modify
     {
         $paths = explode("/", preg_replace("/\\/?{$page}$/", '', $id));
 
-        $structure->pages = self::insertPageIntoStructure(
+        $structure->pages = self::insertPageIntoPages(
             $structure->pages,
             $paths,
             $index,
@@ -44,16 +44,16 @@ class Modify
     }
 
     /**
-     * Add a page to the structure.
+     * Insert the page into the pages.
      *
      * @param   array   $pages
-     * @param   string  $paths
+     * @param   array   $paths
      * @param   int     $index
      * @param   array   $newPage
      * @throws  Exception
      * @return  array
      */
-    private static function insertPageIntoStructure($pages, $paths, $index, $newPage)
+    private static function insertPageIntoPages($pages, $paths, $index, $newPage)
     {
         if (count($paths) && !empty($paths[0])) {
             $needle = reset($paths);
@@ -65,7 +65,7 @@ class Modify
                     if (!isset($item["pages"]) || !is_array($item["pages"])) {
                         $item["pages"] = array();
                     }
-                    $pages[$key]['pages'] = self::insertPageIntoStructure($item["pages"], $paths, $index, $newPage);
+                    $pages[$key]['pages'] = self::insertPageIntoPages($item["pages"], $paths, $index, $newPage);
                     break;
                 }
             }
@@ -78,6 +78,49 @@ class Modify
                 array($newPage),
                 array_slice($pages, $index)
             );
+        }
+
+        return $pages;
+    }
+
+    /**
+     * Delete a page from the structure.
+     *
+     * @param   Structure   $structure
+     * @param   string      $id
+     * @return  Structure
+     */
+    public static function deletePage(Structure $structure, $id)
+    {
+        $paths = explode("/", $id);
+        $structure->pages = self::removePageFromPages($structure->pages, $paths);
+        return $structure;
+    }
+
+    /**
+     * Remove a page from the pages.
+     *
+     * @param   array   $pages
+     * @param   array   $paths
+     * @throws  Exception
+     * @return  array
+     */
+    private static function removePageFromPages($pages, $paths)
+    {
+        $needle = reset($paths);
+        $paths = array_slice($paths, 1);
+
+        foreach($pages as $key=>$page) {
+            if ($pages[$key]['page'] == $needle) {
+                if (count($paths) && isset($pages[$key]['pages'])) {
+                    $pages[$key]['pages'] = self::removePageFromPages($pages[$key]['pages'], $paths);
+                } else {
+                    unset($pages[$key]);
+                }
+            }
+            if (isset($pages[$key]['pages']) && !count($pages[$key]['pages'])) {
+                unset($pages[$key]['pages']);
+            }
         }
 
         return $pages;

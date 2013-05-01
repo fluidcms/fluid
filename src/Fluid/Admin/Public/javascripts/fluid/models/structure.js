@@ -1,6 +1,7 @@
 define(['backbone'], function (Backbone) {
     var Page = Backbone.Model.extend({
         parent: null,
+        urlRoot: fluidBranch + '/structure',
 
         initialize: function (attrs) {
             this.parent = attrs.parent;
@@ -145,9 +146,9 @@ define(['backbone'], function (Backbone) {
         },
 
         removeItem: function (item) {
-            var item = this.findItem(item);
+            item = this.findItem(item);
             item.parent.remove(item);
-
+            item.destroy();
             this.trigger('change');
         },
 

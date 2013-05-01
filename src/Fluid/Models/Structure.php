@@ -52,16 +52,12 @@ class Structure extends Storage
      * Create a new page.
      *
      * @param   array   $attrs
-     * @return  bool|string
+     * @throws  Exception
+     * @return  array
      */
     public static function createPage($attrs)
     {
-        try {
-            Page::create($attrs['path'], $attrs['languages'], array());
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
-
+        Page::create($attrs['path'], $attrs['languages'], array());
         $structure = Structure\Modify::addPage(new self, $attrs["path"], $attrs["index"], $attrs["page"], $attrs["url"], $attrs["layout"], $attrs["languages"]);
         $structure->store();
 
@@ -72,6 +68,21 @@ class Structure extends Storage
             "layout" => $attrs["layout"],
             "languages" => $attrs["languages"]
         );
+    }
+
+    /**
+     * Create a new page.
+     *
+     * @param   string   $id
+     * @return  bool
+     */
+    public static function deletePage($id)
+    {
+        Page::delete($id);
+        $structure = Structure\Modify::deletePage(new self, $id);
+        $structure->store();
+
+        return true;
     }
 
     /**

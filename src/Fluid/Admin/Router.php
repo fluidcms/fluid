@@ -2,7 +2,7 @@
 
 namespace Fluid\Admin;
 
-use Fluid;
+use Fluid, Exception;
 
 /**
  * Route requests to admin interface.
@@ -229,11 +229,22 @@ class Router
                     echo json_encode(Fluid\Models\Structure::getAll());
                     return true;
                 case 'POST':
-                    Fluid\Models\Structure::createPage(self::$input);
+                    try {
+                        echo json_encode(Fluid\Models\Structure::createPage(self::$input));
+                    } catch (Exception $e) {
+                        header('X-Error-Message: ' . $e->getMessage(), true, 500);
+                        exit;
+                    }
                     return true;
                 case 'PUT':
                     return true;
                 case 'DELETE':
+                    try {
+                        echo json_encode(Fluid\Models\Structure::deletePage(trim(urldecode($match[3]), '/')));
+                    } catch(Exception $e) {
+                        header('X-Error-Message: ' . $e->getMessage(), true, 500);
+                        exit;
+                    }
                     return true;
             }
         }

@@ -100,6 +100,27 @@ class Page extends Storage
     }
 
     /**
+     * Delete a page
+     *
+     * @param   string      $page
+     * @throws  Exception
+     * @return  bool
+     */
+    public static function delete($page)
+    {
+        $page = str_replace(array('..', '//'), '', $page);
+        $dir = Fluid::getConfig('storage') . "pages/" . dirname($page);
+        $page = basename($page);
+        foreach (scandir($dir) as $file) {
+            if (preg_match("/^{$page}_[a-z]{2,2}\\-[A-Z]{2,2}\\.json$/", $file)) {
+                unlink($dir."/".$file);
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Merge template data with the page data
      *
      * @param   string  $content    The page content with the template data
