@@ -1,6 +1,6 @@
 define(['backbone'], function (Backbone) {
     return Backbone.Model.extend({
-        url: 'layouts.json',
+        url: fluidBranch + '/layouts',
 
         initialize: function () {
             this.fetch();

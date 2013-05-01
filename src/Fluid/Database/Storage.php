@@ -46,12 +46,19 @@ class Storage
     /**
      * Save data to storage
      *
-     * @return  array
+     * @param   array   $content
+     * @param   mixed   $file
+     * @return  void
      */
     public static function save($content, $file = null)
     {
         if (null === $file) {
             $file = static::$dataFile;
+        }
+
+        $dir = Fluid::getConfig('storage') . dirname($file);
+        if (!is_dir($dir)) {
+            mkdir($dir);
         }
 
         $file = Fluid::getConfig('storage') . $file;

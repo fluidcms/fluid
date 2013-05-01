@@ -16,7 +16,7 @@ class RouterTest extends PHPUnit_Framework_TestCase {
 	
 	public function testModels() {
 		// Test structure
-		$actual = Router::route('structure.json');
+		$actual = Router::route('master/structure');
 		$this->assertRegExp('/^[\[|{]/', $actual);
 
 		// Test page
@@ -25,7 +25,7 @@ class RouterTest extends PHPUnit_Framework_TestCase {
 		$this->assertRegExp('/^[\[|{]/', $actual);
 		
 		// Test languages
-		$actual = Router::route('languages.json');
+		$actual = Router::route('master/languages');
 		$this->assertRegExp('/^[\[|{]/', $actual);
 
 		// Test page token

@@ -72,13 +72,14 @@ define(['backbone'], function (Backbone) {
                 this.validationErrorAttr = 'page';
                 return 'The page must contain only letters, numbers and underscores.';
             }
+            return '';
         }
     });
 
     var Pages = Backbone.Collection.extend({
         model: Page,
 
-        url: 'structure.json',
+        url: fluidBranch + '/structure',
 
         parent: null,
 

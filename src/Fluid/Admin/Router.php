@@ -11,6 +11,8 @@ use Fluid;
  */
 class Router
 {
+    private static $request, $method, $input;
+
     /**
      * Route an admin request
      *
@@ -22,11 +24,20 @@ class Router
         Fluid\View::setTemplatesDir(__DIR__ . "/Templates/");
         Fluid\View::setLoader(null);
 
-        // Public files
-        if (!empty($request)) {
-            $file = __DIR__ . '/Public/' . trim($request, ' ./');
-            if (file_exists($file)) {
-                return new Fluid\StaticFile($file);
+        self::$request = $request;
+
+        if (isset($_SERVER['REQUEST_METHOD'])) {
+            self::$method = $_SERVER['REQUEST_METHOD'];
+        } else {
+            self::$method = 'GET';
+        }
+
+        if (isset($_REQUEST) && is_array($_REQUEST) && count($_REQUEST)) {
+            self::$input = $_REQUEST;
+        } else {
+            $input = file_get_contents("php://input");
+            if (!empty($input)) {
+                self::$input = json_decode($input, true);
             }
         }
 
@@ -73,18 +84,6 @@ class Router
 
         // Other files
         switch ($request) {
-            // Index
-            case '':
-            case 'files':
-                return Fluid\View::create(
-                    'master.twig',
-                    array(
-                        'site_url' => Fluid\Fluid::getConfig('url'),
-                        'token' => Fluid\Models\PageToken::getToken(),
-                        'branch' => 'develop'
-                    )
-                );
-
             // Test
             case 'test':
                 return Fluid\View::create('test.twig');
@@ -119,14 +118,6 @@ class Router
                     )
                 ));
 
-            // Languages
-            case 'languages.json':
-                return json_encode(Fluid\Models\Language::getLanguages());
-
-            // Layouts
-            case 'layouts.json':
-                return json_encode(Fluid\Models\Layout::getLayouts());
-
             // Files
             case 'files.json':
                 return json_encode(Fluid\Models\File::getFiles());
@@ -134,10 +125,118 @@ class Router
             // Page Token
             case 'pagetoken.json':
                 return json_encode(array('token' => Fluid\Models\PageToken::getToken()));
-
-            // Not found
-            default:
-                return Fluid\Fluid::NOT_FOUND;
         }
+
+        return (
+            self::publicFiles() ||
+                self::htmlPages() ||
+                self::structure() ||
+                self::languages() ||
+                self::layouts() ||
+                Fluid\Fluid::NOT_FOUND
+        );
+    }
+
+    /**
+     * Route public files.
+     *
+     * @return  bool
+     */
+    private static function publicFiles()
+    {
+        if (!empty(self::$request)) {
+            $file = __DIR__ . '/Public/' . trim(self::$request, ' ./');
+            $file = str_replace('..', '', $file);
+            if (file_exists($file)) {
+                new Fluid\StaticFile($file);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Route html pages.
+     *
+     * @return  bool
+     */
+    private static function htmlPages()
+    {
+        if (self::$request == '' || self::$request == 'files') {
+            echo Fluid\View::create(
+                'master.twig',
+                array(
+                    'site_url' => Fluid\Fluid::getConfig('url'),
+                    'token' => Fluid\Models\PageToken::getToken(),
+                    'branch' => 'develop'
+                )
+            );
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Route languages requests.
+     *
+     * @return  bool
+     */
+    private static function languages()
+    {
+        if (!empty(self::$request) && preg_match('{^([a-z0-9]*)/(languages)(/.*)?$}', self::$request, $match)) {
+            $branch = $match[1];
+            Fluid\Fluid::switchBranch($branch);
+            switch (self::$method) {
+                case 'GET':
+                    echo json_encode(Fluid\Models\Language::getLanguages());
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Route layouts requests.
+     *
+     * @return  bool
+     */
+    private static function layouts()
+    {
+        if (!empty(self::$request) && preg_match('{^([a-z0-9]*)/(layouts)(/.*)?$}', self::$request, $match)) {
+            $branch = $match[1];
+            Fluid\Fluid::switchBranch($branch);
+            switch (self::$method) {
+                case 'GET':
+                    echo json_encode(Fluid\Models\Layout::getLayouts());
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Route structure requests.
+     *
+     * @return  bool
+     */
+    private static function structure()
+    {
+        if (!empty(self::$request) && preg_match('{^([a-z0-9]*)/(structure)(/.*)?$}', self::$request, $match)) {
+            $branch = $match[1];
+            Fluid\Fluid::switchBranch($branch);
+            switch (self::$method) {
+                case 'GET':
+                    echo json_encode(Fluid\Models\Structure::getAll());
+                    return true;
+                case 'POST':
+                    Fluid\Models\Structure::createPage(self::$input);
+                    return true;
+                case 'PUT':
+                    return true;
+                case 'DELETE':
+                    return true;
+            }
+        }
+        return false;
     }
 }

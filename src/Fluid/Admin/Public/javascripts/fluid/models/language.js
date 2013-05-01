@@ -1,6 +1,6 @@
 define(['backbone'], function (Backbone) {
     return Backbone.Model.extend({
-        url: 'languages.json',
+        url: fluidBranch + '/languages',
 
         initialize: function () {
             this.fetch();

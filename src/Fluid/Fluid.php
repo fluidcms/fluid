@@ -2,6 +2,8 @@
 
 namespace Fluid;
 
+use Exception;
+
 /**
  * The fluid class
  *
@@ -45,7 +47,7 @@ class Fluid
         if (isset($_SERVER['QUERY_STRING'])) {
             parse_str($_SERVER['QUERY_STRING']);
             if (isset($fluidBranch) && isset($fluidBranchToken) && Models\PageToken::validateToken($fluidBranchToken)) {
-                self::switchBranch($fluidBranch);
+                self::switchBranch($fluidBranch, true);
             }
         }
     }
@@ -54,15 +56,29 @@ class Fluid
      * Get the language of the instance
      *
      * @param   string  $branch
+     * @param   bool    $create Create the branch if it does not exists
+     * @throws  Exception   Branch does not exists
      * @return  void
      */
-    public static function switchBranch($branch)
+    public static function switchBranch($branch, $create = false)
     {
-        if ($branch = Git::branch($branch)) {
+        if ($branch == 'master') {
+            return;
+        }
+        if ($create && $branch = Git::branch($branch)) {
             self::setConfig(
                 'storage',
                 self::getConfig('storage') . "branches/{$branch}/"
             );
+        } else {
+            if (is_dir(self::getConfig('storage') . "branches/{$branch}/")) {
+                self::setConfig(
+                    'storage',
+                    self::getConfig('storage') . "branches/{$branch}/"
+                );
+            } else {
+                throw new Exception("Branch does not exists.");
+            }
         }
     }
 

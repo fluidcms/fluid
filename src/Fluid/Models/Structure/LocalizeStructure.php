@@ -67,6 +67,6 @@ class LocalizeStructure
 
         $page = Storage::load('pages/' . $parent . $page . '_' . $language . ".json");
 
-        return $page['name'];
+        return isset($page['name']) ? $page['name'] : '';
     }
 }

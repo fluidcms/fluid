@@ -2,7 +2,7 @@
 
 namespace Fluid\Models;
 
-use Fluid;
+use Fluid, Exception;
 
 /**
  * Language model
@@ -19,5 +19,23 @@ class Language
     public static function getLanguages()
     {
         return Fluid\Fluid::getConfig('languages');
+    }
+
+    /**
+     * Validate languages
+     *
+     * @param   array       $input
+     * @throws  Exception   Invalid language
+     * @return  bool
+     */
+    public static function validateLanguages($input)
+    {
+        $valid = self::getLanguages();
+        foreach($input as $language) {
+            if (!in_array($language, $valid)) {
+                throw new Exception("Invalid language.");
+            }
+        }
+        return true;
     }
 }

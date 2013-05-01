@@ -2,7 +2,10 @@
 
 namespace Fluid\Models;
 
-use Fluid\Fluid, Fluid\Database\Storage, Fluid\Models\Structure\LocalizeStructure, Fluid\Models\Structure\SaveStructure;
+use Fluid\Fluid,
+    Fluid\Database\Storage,
+    Fluid\Models\Structure\LocalizeStructure,
+    Exception;
 
 /**
  * Site structure model
@@ -46,14 +49,38 @@ class Structure extends Storage
     }
 
     /**
-     * Save new data to data file.
+     * Create a new page.
      *
-     * @param   string  $content
-     * @param   string  $file
+     * @param   array   $attrs
+     * @return  bool|string
+     */
+    public static function createPage($attrs)
+    {
+        try {
+            Page::create($attrs['path'], $attrs['languages'], array());
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+
+        $structure = Structure\Modify::addPage(new self, $attrs["path"], $attrs["index"], $attrs["page"], $attrs["url"], $attrs["layout"], $attrs["languages"]);
+        $structure->store();
+
+        return array(
+            "id" => $attrs["path"],
+            "page" => $attrs["page"],
+            "url" => $attrs["url"],
+            "layout" => $attrs["layout"],
+            "languages" => $attrs["languages"]
+        );
+    }
+
+    /**
+     * Save structure.
+     *
      * @return  void
      */
-    public static function save($content, $file = null)
+    public function store()
     {
-        SaveStructure::save(json_decode($content, true), self::$dataFile);
+        self::save(json_encode($this->pages, JSON_PRETTY_PRINT), self::$dataFile);
     }
 }

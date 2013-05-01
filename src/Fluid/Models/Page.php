@@ -20,7 +20,7 @@ class Page extends Storage
      * Init
      *
      * @param   Structure   $structure  The site's structure
-     * @param   string      $name       The unique identifier of a page (i.e. contact/form)
+     * @param   string      $page       The unique identifier of a page (i.e. contact/form)
      * @return  void
      */
     public function __construct(Structure $structure, $page)
@@ -56,7 +56,7 @@ class Page extends Storage
      * Update a page
      *
      * @param   string  $page
-     * @param   string  $reqyest
+     * @param   string  $request
      * @return  void
      */
     public static function update($page, $request)
@@ -65,6 +65,38 @@ class Page extends Storage
         $file = 'pages/' . $page . '_' . $request['language'] . '.json';
 
         self::save(json_encode($request['data'], JSON_PRETTY_PRINT), $file);
+    }
+
+    /**
+     * Create a page
+     *
+     * @param   string      $page
+     * @param   array       $languages
+     * @param   array       $content
+     * @throws  Exception
+     * @return  void
+     */
+    public static function create($page, $languages, $content = array())
+    {
+        if (!is_array($languages)) {
+            $languages = array($languages);
+        }
+
+        try {
+            Language::validateLanguages($languages);
+            $path = explode('/', $page);
+            array_walk($path, array("Fluid\\Models\\Page\\Validator", "name"));
+            Page\Validator::content($content);
+        } catch (Exception $e) {
+            throw new Exception("Cannot create page: " . $e->getMessage());
+        }
+
+        $page = trim($page, "/");
+
+        foreach ($languages as $language) {
+            $file = 'pages/' . $page . '_' . $language . '.json';
+            self::save(json_encode($content, JSON_PRETTY_PRINT), $file);
+        }
     }
 
     /**

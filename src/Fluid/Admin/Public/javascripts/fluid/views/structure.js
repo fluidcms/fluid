@@ -74,7 +74,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu', 'mod
 
         addPage: function (e) {
             if ($(e).parents('li').length > 0) {
-                var parent = this.collection.get($(e).parents('li').attr('data-id')).get('pages');
+                var parent = this.collection.findItem($(e).parents('li').attr('data-id')).get('pages');
             } else {
                 var parent = this.collection;
             }
@@ -115,9 +115,12 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu', 'mod
         submit: function () {
             if (this.newPage) {
                 this.model.parent.add(this.model);
-                var id = this.model.get('id');
-                this.model.set('id', null);
-                //console.log(this.model.get('id'));
+                this.model.set({
+                    'path': this.model.id,
+                    'index': this.model.parent.indexOf(this.model),
+                    'id': null
+                });
+                this.model.id = null;
                 this.model.save();
             }
         }
