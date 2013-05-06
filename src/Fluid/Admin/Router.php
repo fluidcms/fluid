@@ -66,14 +66,6 @@ class Router
             }
         }
 
-        // Page
-        if (!empty($request) && strpos($request, "page/") === 0) {
-            if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'PUT') {
-                Fluid\Models\Page::update(substr($request, strlen("page/")), file_get_contents("php://input"));
-                return json_encode(true);
-            }
-        }
-
         // Site
         if (!empty($request) && $request === 'site') {
             if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -104,37 +96,35 @@ class Router
                 }
                 break;
 
-            // Page
-            case 'page.json':
-                $data = Fluid\Models\Page::mergeTemplateData(isset($_POST['content']) ? $_POST['content'] : '');
-                return json_encode(array(
-                    'language' => Fluid\Fluid::getLanguage(),
-                    'page' => $data['page']->page,
-                    'data' => $data['page']->data,
-                    'variables' => $data['page']->variables,
-                    'site' => array(
-                        'data' => $data['site']->data,
-                        'variables' => $data['site']->variables
-                    )
-                ));
-
             // Files
             case 'files.json':
                 return json_encode(Fluid\Models\File::getFiles());
-
-            // Page Token
-            case 'pagetoken.json':
-                return json_encode(array('token' => Fluid\Models\PageToken::getToken()));
         }
 
         return (
             self::publicFiles() ||
                 self::htmlPages() ||
                 self::structure() ||
+                self::page() ||
                 self::languages() ||
                 self::layouts() ||
+                self::pageToken() ||
                 Fluid\Fluid::NOT_FOUND
         );
+    }
+
+    /**
+     * Output a page token.
+     *
+     * @return  bool
+     */
+    private static function pageToken()
+    {
+        if (self::$request == 'pagetoken.json') {
+            echo json_encode(array('token' => Fluid\Models\PageToken::getToken()));
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -237,6 +227,16 @@ class Router
                     }
                     return true;
                 case 'PUT':
+                    // Sort
+                    if (isset($match[3]) && strpos($match[3], '/sort') == 0) {
+                        try {
+                            $id = trim(urldecode(preg_replace('{/sort/}', '', $match[3])), '/');
+                            echo json_encode(Fluid\Models\Structure::sortPage($id, self::$input['page'], self::$input['index']));
+                        } catch(Exception $e) {
+                            header('X-Error-Message: ' . $e->getMessage(), true, 500);
+                            exit;
+                        }
+                    }
                     return true;
                 case 'DELETE':
                     try {
@@ -245,6 +245,47 @@ class Router
                         header('X-Error-Message: ' . $e->getMessage(), true, 500);
                         exit;
                     }
+                    return true;
+            }
+        }
+        return false;
+    }
+    /**
+     * Route page requests.
+     *
+     * @return  bool
+     */
+    private static function page()
+    {
+        if (!empty(self::$request) && preg_match('{^([a-z0-9]*)/(page)(/.*)?$}', self::$request, $match)) {
+            $branch = $match[1];
+            Fluid\Fluid::switchBranch($branch);
+            switch (self::$method) {
+                case 'POST':
+                    if (empty($match[3])) {
+                        $data = Fluid\Models\Page::mergeTemplateData(isset($_POST['content']) ? $_POST['content'] : '');
+                        echo json_encode(array(
+                            'language' => Fluid\Fluid::getLanguage(),
+                            'page' => $data['page']->page,
+                            'data' => $data['page']->data,
+                            'variables' => $data['page']->variables,
+                            'site' => array(
+                                'data' => $data['site']->data,
+                                'variables' => $data['site']->variables
+                            )
+                        ));
+
+                    }
+                    return true;
+                case 'PUT':
+                    try {
+                        echo json_encode(Fluid\Models\Page::update(trim(urldecode($match[3]), '/'), self::$input));
+                    } catch(Exception $e) {
+                        header('X-Error-Message: ' . $e->getMessage(), true, 500);
+                        exit;
+                    }
+                    return true;
+                case 'DELETE':
                     return true;
             }
         }

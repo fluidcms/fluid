@@ -11,7 +11,11 @@ use Exception;
  */
 class Fluid
 {
+    private static $branch;
+
     private static $config;
+
+    private static $storage;
 
     private static $language;
 
@@ -27,6 +31,7 @@ class Fluid
     public function __construct($config = null, $language = null)
     {
         self::$config = $config;
+        self::$storage = $config['storage'];
 
         // Set language
         if (null === $language) {
@@ -62,10 +67,11 @@ class Fluid
      */
     public static function switchBranch($branch, $create = false)
     {
-        if ($branch == 'master') {
+        if ($branch == self::$branch) {
             return;
-        }
-        if ($create && $branch = Git::branch($branch)) {
+        } else if ($branch == 'master') {
+            self::setConfig('storage', self::$storage);
+        } else if ($create && $branch = Git::branch($branch)) {
             self::setConfig(
                 'storage',
                 self::getConfig('storage') . "branches/{$branch}/"
@@ -80,6 +86,7 @@ class Fluid
                 throw new Exception("Branch does not exists.");
             }
         }
+        self::$branch = $branch;
     }
 
     /**

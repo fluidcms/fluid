@@ -11,6 +11,10 @@ use stdClass, Fluid\Models\Site, Fluid\Models\Page;
  */
 class MergeTemplateData
 {
+    private static $defaultVars = array(
+        'name' => 'string'
+    );
+
     /**
      * Merge template data with site and page data.
      *
@@ -18,25 +22,51 @@ class MergeTemplateData
      * @param   Page    $siteData
      * @param   array   $variables
      * @param   array   $data
-     * @return  array
+     * @return  void
      */
     public static function merge(Site $site, Page $page, $variables, $data)
     {
+        // Default vars
+        foreach (self::$defaultVars as $defaultVar => $defaultType) {
+            if (!isset($page->variables[$defaultVar])) {
+                $page->variables[$defaultVar] = $defaultType;
+            }
+            if (!isset($page->data[$defaultVar])) {
+                $page->data[$defaultVar] = "";
+            }
+            if (!isset($site->variables[$defaultVar])) {
+                $site->variables[$defaultVar] = $defaultType;
+            }
+            if (!isset($site->data[$defaultVar])) {
+                $site->data[$defaultVar] = "";
+            }
+        }
+
         if (isset($variables['page'])) {
-            $page->variables = $variables['page'];
+            $page->variables = array_merge($page->variables, $variables['page']);
         }
         if (isset($variables['site'])) {
-            $site->variables = $variables['site'];
+            $site->variables = array_merge($site->variables, $variables['site']);
         }
 
         // Merge page data
         if (isset($data['page'])) {
             $page->data = array_merge($data['page'], (is_array($page->data) ? $page->data : array()));
+            foreach ($page->data as $key => $value) {
+                if (!isset($page->variables[$key])) {
+                    $page->variables[$key] = is_array($value) ? 'array' : 'string';
+                }
+            }
         }
 
         // Merge site data
         if (isset($data['site'])) {
             $site->data = array_merge($data['site'], (is_array($site->data) ? $site->data : array()));
+            foreach ($site->data as $key => $value) {
+                if (!isset($site->variables[$key])) {
+                    $site->variables[$key] = is_array($value) ? 'array' : 'string';
+                }
+            }
         }
     }
 
@@ -72,7 +102,7 @@ class MergeTemplateData
                     eval('if (!isset($variables' . $keyString . ')) { $variables' . $keyString . ' = "string"; }');
 
                     // Add to data
-                    eval('$data' . $keyString . ' = "' . str_replace("'", "\'", $item->value) . '";');
+                    eval('$data' . $keyString . ' = "' . str_replace("'", "\\'", $item->value) . '";');
                 } // Arrays
                 else if ($item instanceof stdClass && $item->type === 'array') {
                     // Array key
@@ -86,7 +116,7 @@ class MergeTemplateData
 
                     // Add array to variables
                     foreach ($item->variables as $variable) {
-                        $variable = preg_replace("/^{$item->key}\./", '', $variable);
+                        $variable = preg_replace("/^{$item->key}\\./", '', $variable);
                         $variableKeys = explode('.', $variable);
                         $variable = '';
                         foreach ($variableKeys as $variableKey) {

@@ -21,23 +21,30 @@ class Modify
      * @param   string      $url
      * @param   string      $layout
      * @param   array       $languages
+     * @param   array       $pages
      * @throws  Exception
      * @return  Structure
      */
-    public static function addPage(Structure $structure, $id, $index, $page, $url, $layout, $languages)
+    public static function addPage(Structure $structure, $id, $index, $page, $url, $layout, $languages, $pages = null)
     {
         $paths = explode("/", preg_replace("/\\/?{$page}$/", '', $id));
+
+        $page = array(
+            'page' => $page,
+            'url' => $url,
+            'layout' => $layout,
+            'languages' => $languages
+        );
+
+        if (null !== $pages) {
+            $page['pages'] = $pages;
+        }
 
         $structure->pages = self::insertPageIntoPages(
             $structure->pages,
             $paths,
             $index,
-            array(
-                'page' => $page,
-                'url' => $url,
-                'layout' => $layout,
-                'languages' => $languages
-            )
+            $page
         );
 
         return $structure;
@@ -92,8 +99,7 @@ class Modify
      */
     public static function deletePage(Structure $structure, $id)
     {
-        $paths = explode("/", $id);
-        $structure->pages = self::removePageFromPages($structure->pages, $paths);
+        $structure->pages = self::removePageFromPages($structure->pages, explode("/", $id));
         return $structure;
     }
 
@@ -102,7 +108,6 @@ class Modify
      *
      * @param   array   $pages
      * @param   array   $paths
-     * @throws  Exception
      * @return  array
      */
     private static function removePageFromPages($pages, $paths)
@@ -124,5 +129,53 @@ class Modify
         }
 
         return $pages;
+    }
+
+    /**
+     * Delete a page from the structure.
+     *
+     * @param   Structure   $structure
+     * @param   string      $id
+     * @param   string      $to
+     * @param   int         $index
+     * @return  Structure
+     */
+    public static function sortPage(Structure $structure, $id, $to, $index)
+    {
+        $page = self::getPage($structure->pages, explode("/", $id));
+        self::deletePage($structure, $id);
+        $to = "$to/{$page['page']}";
+        $pages = isset($page['pages']) ? $page['pages'] : null;
+        self::addPage($structure, $to, $index, $page['page'], $page['url'], $page['layout'], $page['languages'], $pages);
+
+        return $structure;
+    }
+
+    /**
+     * Get a page.
+     *
+     * @param   array   $pages
+     * @param   array   $paths
+     * @return  array
+     */
+    private static function getPage($pages, $paths)
+    {
+        $needle = reset($paths);
+        $paths = array_slice($paths, 1);
+
+        foreach($pages as $page) {
+            if ($page['page'] == $needle) {
+                if (count($paths) && isset($page['pages'])) {
+                    $match = self::getPage($page['pages'], $paths);
+                    if ($match) {
+                        return $match;
+                    }
+                } else {
+                    return $page;
+                }
+            }
+        }
+
+        return false;
     }
 }

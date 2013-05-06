@@ -21,8 +21,6 @@ class Structure extends Storage
 
     /**
      * Init
-     *
-     * @return  void
      */
     public function __construct()
     {
@@ -71,7 +69,41 @@ class Structure extends Storage
     }
 
     /**
-     * Create a new page.
+     * Find a page in a structure.
+     *
+     * @param   string|array    $paths
+     * @param   array           $pages
+     * @return  array
+     */
+    public function findPage($paths, $pages = null)
+    {
+        if (null === $pages) {
+            $pages = $this->pages;
+        }
+        if (!is_array($paths)) {
+            $paths = explode('/', $paths);
+        }
+
+        $needle = reset($paths);
+        $paths = array_slice($paths, 1);
+
+        foreach($pages as $page) {
+            if ($page['page'] == $needle) {
+                if (isset($page['pages']) && count($paths)) {
+                    if ($match = $this->findPage($paths, $page['pages'])) {
+                        return $match;
+                    }
+                } else if (!count($paths)) {
+                    return $page;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Delete a page.
      *
      * @param   string   $id
      * @return  bool
@@ -80,6 +112,23 @@ class Structure extends Storage
     {
         Page::delete($id);
         $structure = Structure\Modify::deletePage(new self, $id);
+        $structure->store();
+
+        return true;
+    }
+
+    /**
+     * Sort a page.
+     *
+     * @param   string   $id
+     * @param   string   $to
+     * @param   string   $index
+     * @return  bool
+     */
+    public static function sortPage($id, $to, $index)
+    {
+        Page::move($id, $to);
+        $structure = Structure\Modify::sortPage(new self, $id, $to, $index);
         $structure->store();
 
         return true;

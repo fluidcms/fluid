@@ -57,14 +57,15 @@ class Page extends Storage
      *
      * @param   string  $page
      * @param   string  $request
-     * @return  void
+     * @return  bool
      */
     public static function update($page, $request)
     {
-        $request = json_decode($request, true);
         $file = 'pages/' . $page . '_' . $request['language'] . '.json';
 
         self::save(json_encode($request['data'], JSON_PRETTY_PRINT), $file);
+
+        return true;
     }
 
     /**
@@ -108,13 +109,53 @@ class Page extends Storage
      */
     public static function delete($page)
     {
-        $page = str_replace(array('..', '//'), '', $page);
+        $page = trim(str_replace('..', '', $page), '/.');
         $dir = Fluid::getConfig('storage') . "pages/" . dirname($page);
         $page = basename($page);
         foreach (scandir($dir) as $file) {
             if (preg_match("/^{$page}_[a-z]{2,2}\\-[A-Z]{2,2}\\.json$/", $file)) {
                 unlink($dir."/".$file);
             }
+        }
+
+        return true;
+    }
+
+    /**
+     * Move a page
+     *
+     * @param   string      $from
+     * @param   string      $to
+     * @throws  Exception
+     * @return  bool
+     */
+    public static function move($from, $to)
+    {
+        $from = trim(str_replace('..', '', $from), '/.');
+        $to = trim(str_replace('..', '', $to), '/.');
+
+        $fromDir = Fluid::getConfig('storage') . "pages/" . trim(dirname($from), '.');
+        $toDir = Fluid::getConfig('storage') . "pages/" . trim($to, '.');
+
+        $page = basename($from);
+
+        $found = false;
+
+        foreach (scandir($fromDir) as $file) {
+            if (preg_match("/^{$page}_[a-z]{2,2}\\-[A-Z]{2,2}\\.json$/", $file)) {
+                if (!is_dir($toDir)) {
+                    mkdir($toDir);
+                }
+                rename(
+                    $fromDir."/".$file,
+                    $toDir."/".$file
+                );
+                $found = true;
+            }
+        }
+
+        if (!$found) {
+            throw new Exception("The page does not exists");
         }
 
         return true;

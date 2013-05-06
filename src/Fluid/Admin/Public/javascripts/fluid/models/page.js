@@ -1,23 +1,23 @@
 define(['backbone'], function (Backbone) {
     var Model = Backbone.Model.extend({
-        urlRoot: 'page',
+        urlRoot: fluidBranch + '/page',
 
         initialize: function (attrs) {
-            var obj = this;
+            var root = this;
 
             this.site = attrs.site;
 
             this.bind('newtoken', this.fetchPage);
 
             $("#website").ready(function () {
-                obj.set('url', $("#website").get(0).contentWindow.location.toString());
-                obj.fetchToken();
+                root.set('url', $("#website").get(0).contentWindow.location.toString());
+                root.fetchToken();
             });
 
             // Track iframe location change
             $("#website").bind('load', function () {
-                obj.set('url', $("#website").get(0).contentWindow.location.toString());
-                obj.fetchToken();
+                root.set('url', $("#website").get(0).contentWindow.location.toString());
+                root.fetchToken();
             });
         },
 
@@ -27,27 +27,44 @@ define(['backbone'], function (Backbone) {
         },
 
         fetchToken: function () {
-            var obj = this;
+            var root = this;
             $.getJSON('pagetoken.json', function (response) {
-                obj.set('token', response.token);
-                obj.trigger('newtoken');
+                root.set('token', response.token);
+                root.trigger('newtoken');
             });
         },
 
         fetchPage: function () {
-            var obj = this;
+            var root = this;
             var url = updateQueryStringParameter(this.get('url'), 'fluidtoken', this.get('token'));
             $.ajax(url, {success: function (response) {
-                $.ajax('page.json', {dataType: "json", type: "post", data: {"content": response}, success: function (response) {
-                    obj.id = response.page;
-                    obj.set("language", response.language);
-                    obj.set("page", response.page);
-                    obj.set("data", response.data);
-                    obj.set("variables", response.variables);
-                    obj.site.set("language", response.language);
-                    obj.site.set("data", response.site.data);
-                    obj.site.set("variables", response.site.variables);
-                }});
+                $.ajax({
+                    url: root.urlRoot,
+                    dataType: "json",
+                    type: "POST",
+                    data: {"content": response}
+                }).done(
+                    function (response) {
+                        root.id = response.page;
+                        root.set("language", response.language);
+                        root.set("page", response.page);
+                        root.set("data", response.data);
+                        root.set("variables", response.variables);
+                        root.site.set("language", response.language);
+                        root.site.set("data", response.site.data);
+                        root.site.set("variables", response.site.variables);
+                    }
+                ).error(
+                    function (XMLHttpRequest) {
+                        var error = XMLHttpRequest.getResponseHeader('X-Error-Message');
+                        if (error !== null) {
+                            alert('An error as occured: ' + error);
+                        } else {
+                            alert('The connection has timed out.');
+                        }
+                        //location.reload();
+                    }
+                );
             }});
         }
     });

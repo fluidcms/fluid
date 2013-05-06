@@ -53,9 +53,10 @@ class Data
             'language' => substr(Fluid::getLanguage(), 0, 2),
             'site' => $site->data,
             'structure' => self::$structure->getLocalized(),
+            'path' => explode('/', $page->page),
             'parents' => $parents,
             'parent' => $parentTree,
-            'page' => $page->data
+            'page' => array_merge((array) $page->data, self::$structure->findPage($page->page))
         );
     }
 
