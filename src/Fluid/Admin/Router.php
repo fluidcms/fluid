@@ -48,7 +48,7 @@ class Router
                 $request = preg_replace('{^files/preview/}', 'files/', $request);
             }
             $request = urldecode($request);
-            $file = Fluid\Fluid::getConfig('storage') . "files/" . substr($request, 6, 8) . '_' . substr($request, 15);
+            $file = Fluid\Fluid::getBranchStorage() . "files/" . substr($request, 6, 8) . '_' . substr($request, 15);
             if (file_exists($file)) {
                 if (!isset($preview)) {
                     return new Fluid\StaticFile($file);

@@ -11,12 +11,11 @@ use Exception;
  */
 class Fluid
 {
+    private static $ready = false;
+    private static $tables = array('fluid_api_consumers', 'fluid_api_nonce', 'fluid_api_tokens', 'fluid_page_tokens');
     private static $branch;
-
     private static $config;
-
     private static $storage;
-
     private static $language;
 
     const NOT_FOUND = '404';
@@ -30,8 +29,14 @@ class Fluid
      */
     public function __construct($config = null, $language = null)
     {
+        self::$branch = 'master';
         self::$config = $config;
         self::$storage = $config['storage'];
+
+        // Init Fluid
+        if (!Check::check() && php_sapi_name() !== 'cli') {
+            Admin\Init::init();
+        }
 
         // Set language
         if (null === $language) {
@@ -44,9 +49,6 @@ class Fluid
         if (null === View::getTemplatesDir()) {
             View::setTemplatesDir(self::getConfig('templates'));
         }
-
-        // Init Fluid
-        Init::check();
 
         // Check if using branch
         if (isset($_SERVER['QUERY_STRING'])) {
@@ -90,6 +92,16 @@ class Fluid
     }
 
     /**
+     * Returns the status of Fluid
+     *
+     * @return  bool
+     */
+    public static function isReady()
+    {
+        return self::$ready;
+    }
+
+    /**
      * Get the language of the instance
      *
      * @return  string
@@ -97,6 +109,36 @@ class Fluid
     public static function getLanguage()
     {
         return self::$language;
+    }
+
+    /**
+     * Get the fluid database tables
+     *
+     * @return  string
+     */
+    public static function getTables()
+    {
+        return self::$tables;
+    }
+
+    /**
+     * Get the current branch
+     *
+     * @return  string
+     */
+    public static function getBranch()
+    {
+        return self::$branch;
+    }
+
+    /**
+     * Get the current branch
+     *
+     * @return  string
+     */
+    public static function getBranchStorage()
+    {
+        return self::getConfig('storage') . self::$branch . "/";
     }
 
     /**
@@ -129,6 +171,7 @@ class Fluid
             case 'url':
             case 'database':
             case 'languages':
+            case 'git':
                 if (isset(self::$config[$name])) {
                     return self::$config[$name];
                 }
@@ -153,6 +196,7 @@ class Fluid
             case 'templates':
             case 'database':
             case 'layouts':
+            case 'git':
                 self::$config[$name] = $value;
                 break;
             case 'languages':

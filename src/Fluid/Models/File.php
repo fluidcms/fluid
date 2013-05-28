@@ -19,11 +19,11 @@ class File
     public static function getFiles()
     {
         $output = array();
-        $dir = scandir(Fluid::getConfig('storage') . 'files/');
+        $dir = scandir(Fluid::getBranchStorage() . 'files/');
         foreach ($dir as $file) {
             $id = substr($file, 0, 8);
             if (strlen($id) === 8 && ctype_alnum($id)) {
-                if ($file = FileInfo::getImageInfo(Fluid::getConfig('storage') . 'files/' . $file)) {
+                if ($file = FileInfo::getImageInfo(Fluid::getBranchStorage() . 'files/' . $file)) {
                     $file["name"] = substr($file["name"], 9);
                     $output[] = array_merge(array("id" => $id, 'src' => "/fluidcms/files/preview/{$id}/{$file['name']}"), $file);
                 }
@@ -53,10 +53,10 @@ class File
      */
     public static function delete($id)
     {
-        $dir = scandir(Fluid::getConfig('storage') . 'files/');
+        $dir = scandir(Fluid::getBranchStorage() . 'files/');
         foreach ($dir as $file) {
             if (substr($file, 0, 8) === $id) {
-                unlink(Fluid::getConfig('storage') . 'files/' . $file);
+                unlink(Fluid::getBranchStorage() . 'files/' . $file);
                 return true;
             }
         }
@@ -87,7 +87,7 @@ class File
             if (!$file['error'] && isset($_POST['id']) && strlen($_POST['id']) === 8 && self::idIsUnique($_POST['id'])) {
                 $file = FileInfo::getTmpFileInfo($file);
                 if ($file['size'] <= 2097152) {
-                    rename($file["tmp_name"], Fluid::getConfig('storage') . 'files/' . $_POST['id'] . '_' . $file['name']);
+                    rename($file["tmp_name"], Fluid::getBranchStorage() . 'files/' . $_POST['id'] . '_' . $file['name']);
                     unset($file["tmp_name"]);
                     return array_merge(array('id' => $_POST['id'], 'src' => "/fluidcms/files/preview/{$_POST['id']}/{$file['name']}"), $file);
                 }
@@ -104,7 +104,7 @@ class File
      */
     public static function idIsUnique($id)
     {
-        $dir = scandir(Fluid::getConfig('storage') . 'files/');
+        $dir = scandir(Fluid::getBranchStorage() . 'files/');
         foreach ($dir as $file) {
             if (substr($file, 0, 8) === $id) {
                 return false;

@@ -34,7 +34,7 @@ class Storage
             $file = static::$dataFile;
         }
 
-        $file = Fluid::getConfig('storage') . $file;
+        $file = Fluid::getBranchStorage() . $file;
 
         if (file_exists($file)) {
             return json_decode(file_get_contents($file), true);
@@ -56,12 +56,12 @@ class Storage
             $file = static::$dataFile;
         }
 
-        $dir = Fluid::getConfig('storage') . dirname($file);
+        $dir = Fluid::getBranchStorage() . dirname($file);
         if (!is_dir($dir)) {
             mkdir($dir);
         }
 
-        $file = Fluid::getConfig('storage') . $file;
+        $file = Fluid::getBranchStorage() . $file;
 
         file_put_contents($file, $content);
     }
