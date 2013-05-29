@@ -1,6 +1,6 @@
 define(['backbone'], function (Backbone) {
     var File = Backbone.Model.extend({
-        urlRoot: "file/update",
+        urlRoot: fluidBranch + "/file",
 
         initialize: function (attrs, options) {
             var root = this;
@@ -104,7 +104,7 @@ define(['backbone'], function (Backbone) {
             data.append('id', this.get('id'));
             data.append('file', file);
 
-            xhr.open("POST", "upload", true);
+            xhr.open("POST", root.urlRoot, true);
             xhr.send(data);
         }
     });
@@ -112,7 +112,7 @@ define(['backbone'], function (Backbone) {
     var Collection = Backbone.Collection.extend({
         model: File,
 
-        url: 'files.json',
+        url: fluidBranch + '/file',
 
         initialize: function () {
             this.fetch({success: function (collection, response) {

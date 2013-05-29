@@ -40,7 +40,7 @@ class File
             if (strlen($id) === 8 && ctype_alnum($id)) {
                 if ($file = FileInfo::getImageInfo(Fluid::getBranchStorage() . 'files/' . $file)) {
                     $file["name"] = substr($file["name"], 9);
-                    $output[] = array_merge(array("id" => $id, 'src' => "/fluidcms/files/preview/{$id}/{$file['name']}"), $file);
+                    $output[] = array_merge(array("id" => $id, 'src' => "/fluidcms/".Fluid::getBranch()."/files/preview/{$id}/{$file['name']}"), $file);
                 }
             }
         }

@@ -53,16 +53,15 @@ class FilePreview
 
         $newImg = imagecreatetruecolor($width, $height);
 
-        // Fill background
-        $white = imagecolorallocate($newImg, 255, 255, 255);
-        imagefill($newImg, 0, 0, $white);
+        imagealphablending($newImg, false);
+        imagesavealpha($newImg, true);
 
         // Crop and resize image.
         imagecopyresampled($newImg, $img, 0, 0, 0, 0, $width, $height, $size[0], $size[1]);
         imagedestroy($img);
 
         ob_start();
-        imagejpeg($newImg, null, 100);
+        imagepng($newImg, null, 9);
         $out = ob_get_clean();
         ob_end_clean();
 

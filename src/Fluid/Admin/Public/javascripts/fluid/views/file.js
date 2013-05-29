@@ -44,7 +44,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/contextmenu', 'views/modal'], fun
 
         copyLink: function (element) {
             var target = $(element).parent('li');
-            var path = "/fluidcms/files/" + target.attr('data-id') + "/" + target.attr('data-name');
+            var path = "/fluidcms/"+fluidBranch+"/files/" + target.attr('data-id') + "/" + target.attr('data-name');
 
             new Copy({content: path}).render();
         },

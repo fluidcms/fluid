@@ -44,31 +44,6 @@ class Router
             }
         }
 
-        // Files
-        if (!empty($request) && strpos($request, 'files/') === 0) {
-            if (strpos($request, 'files/preview/') === 0) {
-                $preview = true;
-                $request = preg_replace('{^files/preview/}', 'files/', $request);
-            }
-            $request = urldecode($request);
-            $file = Fluid\Fluid::getBranchStorage() . "files/" . substr($request, 6, 8) . '_' . substr($request, 15);
-            if (file_exists($file)) {
-                if (!isset($preview)) {
-                    return new Fluid\StaticFile($file);
-                } else {
-                    $content = Fluid\Models\File::makePreview($file);
-                    return new Fluid\StaticFile($content, 'jpg', true);
-                }
-            }
-        }
-
-        // File
-        if (!empty($request) && strpos($request, "file/update/") === 0) {
-            if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'DELETE') {
-                return Fluid\Models\File::delete(basename($request));
-            }
-        }
-
         // Site
         if (!empty($request) && $request === 'site') {
             if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -90,18 +65,6 @@ class Router
                     return json_encode(true);
                 }
                 return json_encode(Fluid\Models\Structure::getAll());
-
-            // Accept files
-            case 'upload':
-                if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $file = Fluid\Models\File::save();
-                    return json_encode($file);
-                }
-                break;
-
-            // Files
-            case 'files.json':
-                return json_encode(Fluid\Models\File::getFiles());
         }
 
         return (
@@ -112,6 +75,7 @@ class Router
                 self::languages() ||
                 self::layouts() ||
                 self::pageToken() ||
+                self::file() ||
                 Fluid\Fluid::NOT_FOUND
         );
     }
@@ -213,6 +177,57 @@ class Router
                     return true;
             }
         }
+        return false;
+    }
+
+    /**
+     * Route file requests.
+     *
+     * @return  bool
+     */
+    private static function file()
+    {
+        // Files and files preview
+        if (preg_match('{^([a-z0-9]*)/files/(.*)}', self::$request, $match)) {
+            $file = $match[2];
+            $branch = $match[1];
+            Fluid\Fluid::switchBranch($branch);
+            if (strpos($file, 'preview/') === 0) {
+                $preview = true;
+                $file = preg_replace('{^preview/}', '', $file);
+            }
+            $file = urldecode($file);
+            $file = Fluid\Fluid::getBranchStorage() . "files/" . substr($file, 0, 8) . '_' . substr($file, 9);
+            if (file_exists($file)) {
+                if (!isset($preview)) {
+                    new Fluid\StaticFile($file);
+                    return true;
+                } else {
+                    $content = Fluid\Models\File::makePreview($file);
+                    new Fluid\StaticFile($content, 'png', true);
+                    return true;
+                }
+            }
+        }
+
+        // File model
+        if (preg_match('{^([a-z0-9]*)/file}', self::$request, $match)) {
+            $branch = $match[1];
+            Fluid\Fluid::switchBranch($branch);
+            switch (self::$method) {
+                case 'GET':
+                    echo json_encode(Fluid\Models\File::getFiles());
+                    return true;
+                case 'POST':
+                    echo json_encode(Fluid\Models\File::save());
+                    return true;
+                case 'DELETE':
+                    // File
+                    echo json_encode(Fluid\Models\File::delete(basename(self::$request)));
+                    return true;
+            }
+        }
+
         return false;
     }
 
