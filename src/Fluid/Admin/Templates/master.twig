@@ -6,7 +6,11 @@
     <link rel="stylesheet" href="stylesheets/fluid-1.0.css">
     <script>
         var fluidBranch = "{{ branch }}";
+        var fluidUrl = "{{ site_url }}";
+        var fluidWebSocketUrl = "{{ websocket_url }}";
+        var fluidUserId = "{{ user_id }}";
     </script>
+    <script src="javascripts/vendor/autobahn.js"></script>
     <script data-main="javascripts/fluid/bootstrap.js" src="javascripts/vendor/require.js"></script>
 </head>
 <body>

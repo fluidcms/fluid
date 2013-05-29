@@ -132,6 +132,8 @@ class Router
             echo Fluid\View::create(
                 'master.twig',
                 array(
+                    'websocket_url' => preg_replace('!^https?://([^/]*)!i', "ws://$1:8180", $url),
+                    'user_id' => uniqid(),
                     'site_url' => $url,
                     'token' => Fluid\Models\PageToken::getToken(),
                     'branch' => 'develop'

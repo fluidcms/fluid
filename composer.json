@@ -12,7 +12,11 @@
         }
     ],
     "require": {
-        "twig/twig": "v1.12.3"
+        "php": ">=5.4.0",
+        "ext-gearman": "*",
+        "twig/twig": "v1.12.3",
+        "cboden/ratchet": "v0.2.5",
+        "react/zmq": "v0.1.1"
     },
     "autoload": {
         "psr-0" : {
