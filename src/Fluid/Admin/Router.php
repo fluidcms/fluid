@@ -35,9 +35,12 @@ class Router
         if (isset($_REQUEST) && is_array($_REQUEST) && count($_REQUEST)) {
             self::$input = $_REQUEST;
         } else {
+            $fluidInput = Fluid\Fluid::getRequestPayload();
             $input = file_get_contents("php://input");
             if (!empty($input)) {
                 self::$input = json_decode($input, true);
+            } else if (!empty($fluidInput)) {
+                self::$input = json_decode($fluidInput, true);
             }
         }
 
@@ -153,10 +156,19 @@ class Router
     private static function htmlPages()
     {
         if (self::$request == '' || self::$request == 'files') {
+            if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) {
+                $url = 'https://';
+            } else {
+                $url = 'http://';
+            }
+
+            $url .= "{$_SERVER['SERVER_NAME']}{$_SERVER['REQUEST_URI']}";
+            $url = preg_replace("!/fluidcms/(.*)$!i", "/", $url);
+
             echo Fluid\View::create(
                 'master.twig',
                 array(
-                    'site_url' => Fluid\Fluid::getConfig('url'),
+                    'site_url' => $url,
                     'token' => Fluid\Models\PageToken::getToken(),
                     'branch' => 'develop'
                 )

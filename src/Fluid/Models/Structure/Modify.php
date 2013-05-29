@@ -128,7 +128,7 @@ class Modify
             }
         }
 
-        return $pages;
+        return array_values($pages);
     }
 
     /**

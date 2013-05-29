@@ -11,14 +11,14 @@ class Branch
      *
      * @param   string  $branch
      */
-    public function __construct($branch)
+    public function __construct($branch, $tracking = 'master')
     {
         if (!is_dir(Fluid::getConfig("storage") . $branch . "/.git")) {
             self::createDir($branch);
             self::initGit($branch);
         }
         self::fetchRemote($branch);
-        self::checkout($branch);
+        self::checkout($branch, $tracking);
     }
 
     /**
@@ -52,6 +52,7 @@ class Branch
     /**
      * Init git repo
      *
+     * @param   string  $branch
      * @return  void
      */
     public static function fetchRemote($branch)
@@ -62,15 +63,17 @@ class Branch
     /**
      * Checkout branch
      *
+     * @param   string  $branch
+     * @param   string  $tracking
      * @return  void
      */
-    public static function checkout($branch)
+    public static function checkout($branch, $tracking)
     {
-        if (!Git::isTracking($branch, $branch)) {
+        if (!Git::isTracking($branch, $tracking)) {
             $remoteBranches = Git::getRemoteBranches($branch);
 
             foreach($remoteBranches as $remoteBranch) {
-                if (strpos($remoteBranch, $branch) == (strlen($remoteBranch) - strlen($branch))) {
+                if (strpos($remoteBranch, $tracking) == (strlen($remoteBranch) - strlen($tracking))) {
                     Git::checkoutRemote($branch, $remoteBranch);
                 }
             }

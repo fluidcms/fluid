@@ -12,12 +12,27 @@ use Exception, Fluid\Fluid, Fluid\Models\File\FileInfo, Fluid\Models\File\FilePr
 class File
 {
     /**
+     * Check if dir exists or create it
+     *
+     * @return  bool
+     */
+    public static function checkDir()
+    {
+        if (!is_dir(Fluid::getBranchStorage() . 'files/')) {
+            return mkdir(Fluid::getBranchStorage() . 'files/');
+        } else {
+            return true;
+        }
+    }
+
+    /**
      * Get all files
      *
      * @return  array
      */
     public static function getFiles()
     {
+        self::checkDir();
         $output = array();
         $dir = scandir(Fluid::getBranchStorage() . 'files/');
         foreach ($dir as $file) {
@@ -39,6 +54,7 @@ class File
      */
     public static function save()
     {
+        self::checkDir();
         if ($file = self::upload()) {
             return $file;
         }
@@ -53,6 +69,7 @@ class File
      */
     public static function delete($id)
     {
+        self::checkDir();
         $dir = scandir(Fluid::getBranchStorage() . 'files/');
         foreach ($dir as $file) {
             if (substr($file, 0, 8) === $id) {
@@ -73,6 +90,7 @@ class File
      */
     public static function makePreview($file)
     {
+        self::checkDir();
         return FilePreview::make($file);
     }
 
@@ -83,6 +101,7 @@ class File
      */
     public static function upload()
     {
+        self::checkDir();
         foreach ($_FILES as $file) {
             if (!$file['error'] && isset($_POST['id']) && strlen($_POST['id']) === 8 && self::idIsUnique($_POST['id'])) {
                 $file = FileInfo::getTmpFileInfo($file);
@@ -104,6 +123,7 @@ class File
      */
     public static function idIsUnique($id)
     {
+        self::checkDir();
         $dir = scandir(Fluid::getBranchStorage() . 'files/');
         foreach ($dir as $file) {
             if (substr($file, 0, 8) === $id) {

@@ -17,6 +17,7 @@ class Fluid
     private static $config;
     private static $storage;
     private static $language;
+    private static $requestPayload;
 
     const NOT_FOUND = '404';
 
@@ -70,25 +71,15 @@ class Fluid
     public static function switchBranch($branch, $create = false)
     {
         if ($branch == self::$branch) {
-            return;
-        } else if ($branch == 'master') {
-            self::setConfig('storage', self::$storage);
-        } else if ($create && $branch = Git::branch($branch)) {
-            self::setConfig(
-                'storage',
-                self::getConfig('storage') . "branches/{$branch}/"
-            );
+            return null;
+        } else if (is_dir(self::getConfig('storage') . $branch)) {
+            self::$branch = $branch;
+        } else if ($create) {
+            new \Fluid\Tasks\Branch($branch);
+            self::$branch = $branch;
         } else {
-            if (is_dir(self::getConfig('storage') . "branches/{$branch}/")) {
-                self::setConfig(
-                    'storage',
-                    self::getConfig('storage') . "branches/{$branch}/"
-                );
-            } else {
-                throw new Exception("Branch does not exists.");
-            }
+            throw new Exception("Branch does not exists.");
         }
-        self::$branch = $branch;
     }
 
     /**
@@ -206,5 +197,27 @@ class Fluid
                 }
                 break;
         }
+    }
+
+    /**
+     * Set the request payload in case you use file_get_contents("php://input") before Fluid
+     *
+     * @param   string  $value
+     * @return  void
+     */
+    public static function setRequestPayload($value)
+    {
+        self::$requestPayload = $value;
+    }
+
+    /**
+     * Get request payload
+     *
+     * @param   string  $value
+     * @return  string
+     */
+    public static function getRequestPayload()
+    {
+        return self::$requestPayload;
     }
 }
