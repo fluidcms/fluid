@@ -1,0 +1,7 @@
+
+Fluid Gearman Daemon Status
+===========================
+
+%uptime minutes uptime
+%amount tasks executed
+

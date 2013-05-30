@@ -18,6 +18,15 @@ class Server implements Ratchet\Wamp\WampServerInterface
         }
     }
 
+    /**
+     * Get active connections
+     *
+     * @return  array
+     */
+    public function getConnections() {
+        return $this->connections;
+    }
+
     public function onSubscribe(Ratchet\ConnectionInterface $conn, $topic)
     {
         $topidId = explode('/', $topic->getId());
