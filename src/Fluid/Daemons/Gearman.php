@@ -4,23 +4,10 @@ namespace Fluid\Daemons;
 
 use GearmanWorker, Fluid;
 
-class Gearman
+class Gearman extends Fluid\Daemon implements Fluid\DaemonInterface
 {
-    private $status;
-    private $lines = 0;
-    private $timeStart;
+    protected $statusFile = 'GearmanStatus.txt';
     public $amount = 0;
-
-    /*
-     * Gearman Daemon
-     *
-     * @param   function    A callback to know if the daemon is still running, called at least every 10 seconds
-     */
-    public function __construct($upTimeCallback = null) {
-        $this->status = file_get_contents(__DIR__ . '/GearmanStatus.txt');
-        $this->timeStart = time();
-        $this->upTimeCallback = $upTimeCallback;
-    }
 
     /*
      * Create gearman server for Fluid
@@ -29,11 +16,8 @@ class Gearman
      */
     public function run()
     {
-        $this->displayStatus();
-
-        if (is_callable($this->upTimeCallback)) {
-            call_user_func($this->upTimeCallback);
-        }
+        $this->upTimeCallback();
+        $this->renderStatus();
 
         $worker = new GearmanWorker();
 
@@ -41,13 +25,13 @@ class Gearman
 
         $worker->addFunction('WatchBranchStatus', function($job) {
             $workload = json_decode($job->workload(), true);
-            Fluid\Tasks\WatchBranchStatus::execute($workload[0], $workload[1], (isset($workload[2]) ? $workload[2] : false));
+            call_user_func_array(array("\\Fluid\\Tasks\\WatchBranchStatus", "execute"), $workload);
             return true;
         });
 
         $worker->addFunction('CommitPush', function($job) {
             $workload = json_decode($job->workload(), true);
-            Fluid\Tasks\CommitPush::execute($workload[0], $workload[1]);
+            call_user_func_array(array("\\Fluid\\Tasks\\CommitPush", "execute"), $workload);
             return true;
         });
 
@@ -57,19 +41,11 @@ class Gearman
         while (true) {
             while ($worker->work()) {
                 $this->amount++;
-
-                if (is_callable($this->upTimeCallback)) {
-                    call_user_func($this->upTimeCallback);
-                }
-
-                $this->displayStatus();
+                $this->renderStatus();
             }
 
-            if (is_callable($this->upTimeCallback)) {
-                call_user_func($this->upTimeCallback);
-            }
-
-            $this->displayStatus();
+            $this->upTimeCallback();
+            $this->renderStatus();
         }
     }
 
@@ -78,21 +54,12 @@ class Gearman
      *
      * @return  void
      */
-    public function displayStatus()
+    public function renderStatus()
     {
-        $clear = '';
-        for($i = 0; $i < $this->lines; $i++) {
-            $clear .= '\033[A';
-        }
-
-        passthru('printf "'.$clear.'"');
-
         $status = $this->status;
-        $status = str_replace('%uptime', floor((time() - $this->timeStart)/60), $status);
+        $status = str_replace('%uptime', $this->getReadableUpTime(true), $status);
         $status = str_replace('%amount', $this->amount, $status);
-        passthru('echo "'.$status.'"');
-
-        $lines = explode(PHP_EOL, $status);
-        $this->lines = count($lines);
+        $status = str_replace('%memory', $this->getReadableMemoryUsage(), $status);
+        $this->displayStatus($status);
     }
 }

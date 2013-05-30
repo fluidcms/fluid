@@ -7,8 +7,13 @@ use Ratchet, Fluid;
 class Server implements Ratchet\Wamp\WampServerInterface
 {
     protected $connections = array();
+    private $tasks;
 
-    public function parse($data)
+    public function push($data)
+    {}
+
+
+    /*public function parse($data)
     {
         $data = json_decode($data, true);
         switch($data['task']) {
@@ -16,7 +21,7 @@ class Server implements Ratchet\Wamp\WampServerInterface
                 WatchBranchStatus::parse($data, $this->connections);
                 break;
         }
-    }
+    }*/
 
     /**
      * Get active connections
@@ -31,12 +36,14 @@ class Server implements Ratchet\Wamp\WampServerInterface
     {
         $topidId = explode('/', $topic->getId());
         $branch = (isset($topidId[0]) ? $topidId[0] : null);
-        $user = (isset($topidId[1]) ? $topidId[1] : null);
-
-        Fluid\Task::execute('WatchBranchStatus', array($branch, $user));
+        $subject = 'all'; // TODO implement different subscriptions subjects (isset($topidId[1]) ? $topidId[1] : 'all');
 
         if (!array_key_exists($topic->getId(), $this->connections[$conn->WAMP->sessionId])) {
-            $this->connections[$conn->WAMP->sessionId][$topic->getId()] = $topic;
+            $this->connections[$conn->WAMP->sessionId][$topic->getId()] = array(
+                'user' => $topic,
+                'branch' => $branch,
+                'subject' => $subject
+            );
         }
     }
 
@@ -57,7 +64,7 @@ class Server implements Ratchet\Wamp\WampServerInterface
 
     public function onCall(Ratchet\ConnectionInterface $conn, $id, $topic, array $params)
     {
-        $conn->callError($id, $topic, 'Error')->close();
+        $conn->callError($id, $topic, 'You cannot send messages to the server.')->close();
     }
 
     public function onPublish(Ratchet\ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible)

@@ -2,6 +2,6 @@
 Fluid Web Socket Daemon Status
 ==============================
 
-%uptime seconds uptime
-%connections active connections
-
+Memory usage: %memory
+Daemon up time: %uptime
+Active connections: %connections

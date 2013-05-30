@@ -4,34 +4,35 @@ namespace Fluid\Daemons;
 
 use Fluid, React, Ratchet, ZMQ;
 
-class WebSocket
+class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
 {
-    private $status;
-    private $lines = 0;
-    private $timeStart;
+    protected $statusFile = 'WebSocketStatus.txt';
 
     /*
      * Run the web socket server
      *
      * @return  void
      */
-    public static function run()
+    public function run()
     {
-        $daemon = new self;
-        $daemon->status = file_get_contents(__DIR__ . '/WebSocketStatus.txt');
-        $daemon->timeStart = time();
+        $this->upTimeCallback();
 
         $server = new Fluid\WebSockets\Server;
         $tasks = new Fluid\WebSockets\Tasks($server);
         $tasks->execute();
 
-        $daemon->displayStatus($server, $tasks);
+        $this->renderStatus($server);
 
         $loop = React\EventLoop\Factory::create();
 
-        $loop->addPeriodicTimer(1, function() use ($daemon, $server, $tasks) {
-            $daemon->displayStatus($server, $tasks);
+        $root = $this;
+        $loop->addPeriodicTimer(1, function() use ($root, $server, $tasks) {
+            $root->renderStatus($server);
             $tasks->execute();
+        });
+
+        $loop->addPeriodicTimer(10, function() use ($root) {
+            $root->upTimeCallback();
         });
 
         $context = new React\ZMQ\Context($loop);
@@ -39,7 +40,7 @@ class WebSocket
         $pull = $context->getSocket(ZMQ::SOCKET_PULL);
 
         $pull->bind('tcp://127.0.0.1:57586');
-        $pull->on('message', array($server, 'parse'));
+        $pull->on('message', array($tasks, 'message'));
 
         $socket = new React\Socket\Server($loop);
         $socket->listen(8180, '0.0.0.0');
@@ -60,24 +61,14 @@ class WebSocket
      * Display daemon status
      *
      * @param   Fluid\WebSockets\Server $server
-     * @param   Fluid\WebSockets\Tasks  $tasks
      * @return  void
      */
-    public function displayStatus(Fluid\WebSockets\Server $server, Fluid\WebSockets\Tasks $tasks)
+    private function renderStatus(Fluid\WebSockets\Server $server)
     {
-        $clear = '';
-        for($i = 0; $i < $this->lines; $i++) {
-            $clear .= '\033[A';
-        }
-
-        passthru('printf "'.$clear.'"');
-
         $status = $this->status;
-        $status = str_replace('%uptime', time() - $this->timeStart, $status);
+        $status = str_replace('%uptime', $this->getReadableUpTime(), $status);
         $status = str_replace('%connections', count($server->getConnections()), $status);
-        passthru('echo "'.$status.'"');
-
-        $lines = explode(PHP_EOL, $status);
-        $this->lines = count($lines);
+        $status = str_replace('%memory', $this->getReadableMemoryUsage(), $status);
+        $this->displayStatus($status);
     }
 }
