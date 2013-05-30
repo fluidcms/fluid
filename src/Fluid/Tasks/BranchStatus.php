@@ -4,10 +4,10 @@ namespace Fluid\Tasks;
 
 use Fluid\Fluid, Fluid\Git, Fluid\MessageQueue;
 
-class WatchBranchStatus
+class BranchStatus
 {
     /**
-     * Check the status of a branch until it is changed and send an alert to the user
+     * Check the status of a branch
      *
      * @param   string  $branch
      * @return  string

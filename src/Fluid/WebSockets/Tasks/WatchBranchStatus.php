@@ -36,7 +36,7 @@ class WatchBranchStatus extends Fluid\WebSockets\Task implements Fluid\WebSocket
                 }
             }
             foreach($branches as $branch => $value) {
-                Fluid\Task::execute('WatchBranchStatus', array($branch), 'WatchBranchStatus/' . $branch);
+                Fluid\Task::execute('BranchStatus', array($branch), 'WatchBranchStatus/' . $branch);
             }
         }
     }

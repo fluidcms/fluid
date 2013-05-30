@@ -23,9 +23,21 @@ class Gearman extends Fluid\Daemon implements Fluid\DaemonInterface
 
         $worker->addServer('127.0.0.1');
 
-        $worker->addFunction('WatchBranchStatus', function($job) {
+        $worker->addFunction('BranchStatus', function($job) {
             $workload = json_decode($job->workload(), true);
-            call_user_func_array(array("\\Fluid\\Tasks\\WatchBranchStatus", "execute"), $workload);
+            call_user_func_array(array("\\Fluid\\Tasks\\BranchStatus", "execute"), $workload);
+            return true;
+        });
+
+        $worker->addFunction('Fetch', function($job) {
+            $workload = json_decode($job->workload(), true);
+            call_user_func_array(array("\\Fluid\\Tasks\\Fetch", "execute"), $workload);
+            return true;
+        });
+
+        $worker->addFunction('FetchPull', function($job) {
+            $workload = json_decode($job->workload(), true);
+            call_user_func_array(array("\\Fluid\\Tasks\\FetchPull", "execute"), $workload);
             return true;
         });
 

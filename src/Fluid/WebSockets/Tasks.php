@@ -16,6 +16,7 @@ class Tasks
     {
         $this->server = $server;
         $this->register(new Fluid\WebSockets\Tasks\WatchBranchStatus($server));
+        $this->register(new Fluid\WebSockets\Tasks\WatchRemote($server));
     }
 
     /**
