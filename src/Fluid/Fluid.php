@@ -75,7 +75,7 @@ class Fluid
         } else if (is_dir(self::getConfig('storage') . $branch)) {
             self::$branch = $branch;
         } else if ($create) {
-            new \Fluid\Tasks\Branch($branch);
+            Tasks\Branch::execute($branch);
             self::$branch = $branch;
         } else {
             throw new Exception("Branch does not exists.");
@@ -105,7 +105,7 @@ class Fluid
     /**
      * Get the fluid database tables
      *
-     * @return  string
+     * @return  array
      */
     public static function getTables()
     {

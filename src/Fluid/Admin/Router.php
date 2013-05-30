@@ -329,6 +329,12 @@ class Router
      */
     private static function version()
     {
+        // Update master
+        if (self::$request == 'update') {
+            Fluid\Tasks\FetchPull::execute('master');
+        }
+
+        // Other
         if (preg_match('{^([a-z0-9]*)/(commit\+push|pull)$}', self::$request, $match)) {
             $action = $match[2];
             $branch = $match[1];
@@ -336,8 +342,8 @@ class Router
             switch (self::$method) {
                 case 'POST':
                     if ($action === 'commit+push') {
-                        new Fluid\Tasks\CommitPush($branch, self::$input["msg"]);
-                        //new Fluid\Task("CommitPush", array($branch, self::$input["msg"])); TODO not working?
+                        Fluid\Tasks\CommitPush::execute($branch, self::$input["msg"]);
+                        // Fluid\Task::run("CommitPush", array($branch, self::$input["msg"])); TODO not working?
                         return true;
                     }
                     break;

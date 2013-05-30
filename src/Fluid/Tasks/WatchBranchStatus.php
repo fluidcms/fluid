@@ -12,8 +12,9 @@ class WatchBranchStatus
      * @param   string  $branch
      * @param   string  $user
      * @param   int     $lastTime
+     * @return  void
      */
-    public function __construct($branch, $user, $wait = false)
+    public static function execute($branch, $user, $wait = false)
     {
         $context = new ZMQContext();
 
@@ -37,12 +38,5 @@ class WatchBranchStatus
         }
 
         $socket->send(json_encode($data));
-
-        return true;
-    }
-
-    public static function run($branch, $user, $wait = false)
-    {
-        return new self($branch, $user, $wait);
     }
 }

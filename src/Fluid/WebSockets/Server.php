@@ -24,7 +24,7 @@ class Server implements Ratchet\Wamp\WampServerInterface
         $branch = (isset($topidId[0]) ? $topidId[0] : null);
         $user = (isset($topidId[1]) ? $topidId[1] : null);
 
-        Fluid\Tasks\GearmanClient::run('watchBranchStatus', array($branch, $user));
+        Fluid\Task::execute('WatchBranchStatus', array($branch, $user));
 
         if (!array_key_exists($topic->getId(), $this->connections[$conn->WAMP->sessionId])) {
             $this->connections[$conn->WAMP->sessionId][$topic->getId()] = $topic;

@@ -11,8 +11,9 @@ class Branch
      *
      * @param   string  $branch
      * @param   string  $tracking
+     * @return  void
      */
-    public function __construct($branch, $tracking = 'master')
+    public static function execute($branch, $tracking = 'master')
     {
         if (!is_dir(Fluid::getConfig("storage") . $branch . "/.git")) {
             self::createDir($branch);

@@ -11,15 +11,18 @@ class CommitPush
      *
      * @param   string  $branch
      * @param   string  $msg
+     * @return  void
      */
-    public function __construct($branch, $msg)
+    public static function execute($branch, $msg)
     {
         Git::commit($branch, $msg);
         Git::push($branch);
-    }
 
-    public static function run($branch, $msg)
-    {
-        return new self($branch, $msg);
+        // Trigger update on remote server
+        $gitConfig = Fluid::getConfig('git');
+        $url = preg_replace('!repo.git$!', 'update', $gitConfig['url']);
+        file_get_contents($url);
+
+        FetchPull::execute('master');
     }
 }

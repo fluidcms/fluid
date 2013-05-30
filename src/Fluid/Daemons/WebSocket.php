@@ -1,6 +1,6 @@
 <?php
 
-namespace Fluid\Tasks;
+namespace Fluid\Daemons;
 
 use Fluid, React, Ratchet, ZMQ;
 
@@ -9,8 +9,9 @@ class WebSocket
     /*
      * Run the websocket server
      *
+     * @return  void
      */
-    public function __construct()
+    public static function run()
     {
         $server = new Fluid\WebSockets\Server;
 

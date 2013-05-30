@@ -4,12 +4,14 @@ namespace Fluid\WebSockets;
 
 use Fluid;
 
-class WatchBranchStatus {
+class WatchBranchStatus
+{
     private static $lastStatuses = array();
 
-    public static function parse($response, $connections) {
-        foreach($connections as $connection => $subscribers) {
-            foreach($subscribers as $subscriber) {
+    public static function parse($response, $connections)
+    {
+        foreach ($connections as $connection => $subscribers) {
+            foreach ($subscribers as $subscriber) {
                 if (strpos($subscriber->getId(), $response['branch']) === 0) {
 
                     if (!empty($response['message']) && (!isset(self::$lastStatuses[$connection]) || self::$lastStatuses[$connection] !== $response['message'])) {
@@ -17,7 +19,7 @@ class WatchBranchStatus {
                     }
 
                     self::$lastStatuses[$connection] = $response['message'];
-                    Fluid\Tasks\GearmanClient::run('watchBranchStatus', array($response['branch'], $response['user'], true));
+                    Fluid\Task::execute('WatchBranchStatus', array($response['branch'], $response['user'], true));
 
                 }
             }

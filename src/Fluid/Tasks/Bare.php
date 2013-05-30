@@ -8,8 +8,10 @@ class Bare
 {
     /**
      * Create git repository and default branches
+     *
+     * @return  void
      */
-    public function __construct()
+    public static function execute()
     {
         if (!is_dir(Fluid::getConfig("storage") . "bare")) {
             self::createDir();

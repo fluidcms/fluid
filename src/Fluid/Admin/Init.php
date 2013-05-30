@@ -20,7 +20,8 @@ class Init {
 
         if (!in_array($_SERVER['PHP_SELF'], self::$allowed)) {
             if ($_SERVER['PHP_SELF'] == '/fluidcms/init') {
-                return self::triggerInit();
+                self::triggerInit();
+                return;
             }
 
             Fluid\View::setTemplatesDir(__DIR__ . "/Templates/");
@@ -36,6 +37,6 @@ class Init {
      * @return  string
      */
     public static function triggerInit() {
-        return new Fluid\Tasks\Init();
+        Fluid\Tasks\Init::execute();
     }
 }

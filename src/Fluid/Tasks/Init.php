@@ -6,10 +6,11 @@ class Init {
     /*
      * Create git repository and default branches
      *
+     * @return  void
      */
-    public function __construct() {
-        new Bare;
-        new Branch('master');
-        new Database;
+    public static function execute() {
+        Bare::execute();
+        Branch::execute('master');
+        Database::execute();
     }
 }

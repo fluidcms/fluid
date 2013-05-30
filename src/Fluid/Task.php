@@ -9,16 +9,12 @@ class Task
      *
      * @param   string  $task
      * @param   array   $data
+     * @return  void
      */
-    public function __construct($task, $data = [])
+    public static function execute($task, $data = [])
     {
         $client = new \GearmanClient();
-        $client->addServers("127.0.0.1:4730");
+        $client->addServers("127.0.0.1");
         $client->doLowBackground($task, json_encode($data));
-    }
-
-    public static function run($task, $data = [])
-    {
-        return new self($task, $data);
     }
 }

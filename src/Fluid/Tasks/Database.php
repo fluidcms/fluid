@@ -2,14 +2,16 @@
 
 namespace Fluid\Tasks;
 
-use Fluid\Fluid, Fluid\Database\Connection;
+use Fluid\Fluid, Fluid\Database\Connection, PDO, PDOException, Exception;
 
 class Database
 {
     /**
      * Create Fluid database tables if they do not exists
+     *
+     * @return  void
      */
-    public function __construct()
+    public static function execute()
     {
         try {
             $dbh = Connection::getConnection();
@@ -36,7 +38,7 @@ class Database
      * @param   PDO $dbh
      * @return  void
      */
-    public static function initDB($dbh) {
+    public static function initDB(PDO $dbh) {
         $query = file_get_contents(__DIR__ . "/../Database/Structure/Structure.sql");
         $dbh->query($query);
     }

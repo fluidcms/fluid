@@ -177,11 +177,12 @@ class Git
      * Pull
      *
      * @param   string $branch
+     * @param   string $tracking
      * @return  string
      */
-    public static function pull($branch)
+    public static function pull($branch, $remote = 'master')
     {
-        return self::command($branch, "git pull origin master");
+        return self::command($branch, "git pull origin {$remote}");
     }
 
     /**
