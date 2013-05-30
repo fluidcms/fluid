@@ -18,11 +18,24 @@ class Git
      */
     private static function command($branch, $command)
     {
-        chdir(Fluid::getConfig("storage") . $branch);
+        $dir = Fluid::getConfig("storage") . $branch;
+        $dir = preg_replace('!/{2,}!', '/', $dir);
+        $dir = rtrim($dir, '/');
+
+        $returnPath = '';
+        $tmp = preg_replace('!^./!', '', trim($dir, '/'));
+        foreach(explode('/', $tmp) as $part) {
+            $returnPath .= '../';
+        }
+
+        chdir($dir);
+
         ob_start();
         passthru($command);
         $retval = ob_get_contents();
         ob_end_clean();
+
+        chdir($returnPath);
 
         return $retval;
     }
@@ -99,7 +112,7 @@ class Git
     public static function addRemote($branch, $url, $username, $password)
     {
         $url = preg_replace("{^(https?://)(.*)$}i", "$1{$username}:{$password}@$2", $url); // TODO this is not secure
-        return self::command($branch, 'git remote add origin '.$url);
+        return self::command($branch, 'git remote add origin ' . $url);
     }
 
     /**
@@ -111,7 +124,7 @@ class Git
      */
     public static function checkoutRemote($branch, $remoteBranch)
     {
-        return self::command($branch, 'git checkout --track '.$remoteBranch);
+        return self::command($branch, 'git checkout --track ' . $remoteBranch);
     }
 
     /**
@@ -148,39 +161,48 @@ class Git
     /**
      * Commit.
      *
+     * @param   string $branch
      * @param   string $msg    The commit message
-     * @return  void
+     * @return  string
      */
-//    public static function commit($msg)
-//    {
-//        $msg = preg_replace('/[^a-zA-Z0-9\.\'", \-]/', '', $msg);
-//        chdir(Fluid::getConfig('storage'));
-//        exec("git add .");
-//        exec("git commit -m '{$msg}'");
-//    }
+    public static function commit($branch, $msg)
+    {
+        $msg = preg_replace('/[^\s\w]/', '', $msg);
+
+        self::command($branch, 'git add -A');
+        return self::command($branch, "git commit -m " . escapeshellarg($msg));
+    }
 
     /**
-     * Branch.
+     * Pull
      *
-     * @param   string $branchName The branch name
-     * @return  string  Branch name
+     * @param   string $branch
+     * @return  string
      */
-//    public static function branch($branchName)
-//    {
-//        $branchName = preg_replace('/[^a-zA-Z0-9]/', '', $branchName);
-//        if (!is_dir(Fluid::getConfig('storage') . "branches/{$branchName}/.git")) {
-//            chdir(Fluid::getConfig('storage').'/branches/');
-//            $retval = exec("git clone --no-hardlinks ../ {$branchName}");
-//            if (stristr($retval, 'Initialized') !== false) {
-//                chdir(Fluid::getConfig('storage')."/branches/{$branchName}");
-//                echo exec("git branch {$branchName}");
-//                echo exec("git checkout {$branchName}");
-//                return $branchName;
-//            } else {
-//                return false;
-//            }
-//        } else {
-//            return $branchName;
-//        }
-//    }
+    public static function pull($branch)
+    {
+        return self::command($branch, "git pull origin master");
+    }
+
+    /**
+     * Push
+     *
+     * @param   string $branch
+     * @return  string
+     */
+    public static function push($branch)
+    {
+        return self::command($branch, "git push origin");
+    }
+
+    /**
+     * Status
+     *
+     * @param   string $branch
+     * @return  string
+     */
+    public static function status($branch)
+    {
+        return self::command($branch, "git status");
+    }
 }

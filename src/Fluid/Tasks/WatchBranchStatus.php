@@ -2,7 +2,7 @@
 
 namespace Fluid\Tasks;
 
-use ZMQ, ZMQContext, React, Fluid\Fluid;
+use ZMQ, ZMQContext, React, Fluid\Fluid, Fluid\Git;
 
 class WatchBranchStatus
 {
@@ -22,13 +22,14 @@ class WatchBranchStatus
 
         $data = array('task' => 'watchBranchStatus', 'user' => $user, 'branch' => $branch, 'message' => '');
 
-        chdir(Fluid::getConfig('storage') . $branch);
-        $retval = exec("git status", $retval);
+        $status = Git::status($branch);
 
-        if (strpos($retval, "nothing to commit") === false) {
-            $data['message'] = 'ready to publish';
+        if (preg_match("/branch is behind '(.*)' by (\d*)/", $status, $match)) {
+            $data['message'] = json_encode(array('target' => 'version', 'data' => array('status' => 'behind', 'amount' => $match[2])));
+        } else if (strpos($status, "nothing to commit") === false) {
+            $data['message'] = json_encode(array('target' => 'version', 'data' => array('status' => 'ahead')));
         } else {
-            $data['message'] = 'not ready to publish';
+            $data['message'] = json_encode(array('target' => 'version', 'data' => array('status' => 'nothing')));
         }
 
         if ($wait) {

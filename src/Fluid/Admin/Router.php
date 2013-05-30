@@ -75,8 +75,8 @@ class Router
                 self::languages() ||
                 self::layouts() ||
                 self::pageToken() ||
-                self::file() ||
-                Fluid\Fluid::NOT_FOUND
+                self::version() ||
+                self::file()
         );
     }
 
@@ -279,6 +279,7 @@ class Router
         }
         return false;
     }
+
     /**
      * Route page requests.
      *
@@ -318,6 +319,37 @@ class Router
                     return true;
             }
         }
+        return false;
+    }
+
+    /**
+     * Route version requests.
+     *
+     * @return  bool
+     */
+    private static function version()
+    {
+        if (preg_match('{^([a-z0-9]*)/(commit\+push|pull)$}', self::$request, $match)) {
+            $action = $match[2];
+            $branch = $match[1];
+            Fluid\Fluid::switchBranch($branch);
+            switch (self::$method) {
+                case 'POST':
+                    if ($action === 'commit+push') {
+                        new Fluid\Tasks\CommitPush($branch, self::$input["msg"]);
+                        //new Fluid\Task("CommitPush", array($branch, self::$input["msg"])); TODO not working?
+                        return true;
+                    }
+                    break;
+                case 'GET':
+                    if ($action === 'pull') {
+                        Fluid\Git::pull($branch);
+                        return true;
+                    }
+                    break;
+            }
+        }
+
         return false;
     }
 }

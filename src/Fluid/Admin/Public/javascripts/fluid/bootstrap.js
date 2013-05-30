@@ -5,6 +5,7 @@
         baseUrl: "javascripts/fluid/",
         urlArgs: (new Date()).getTime(), // !! Remove for production
         paths: {
+            async: '../vendor/async',
             jquery: '../vendor/jquery',
             'jquery-ui': '../vendor/jquery-ui',
             underscore: '../vendor/underscore',

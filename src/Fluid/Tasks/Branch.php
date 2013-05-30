@@ -10,6 +10,7 @@ class Branch
      * Create git repository and default branches
      *
      * @param   string  $branch
+     * @param   string  $tracking
      */
     public function __construct($branch, $tracking = 'master')
     {

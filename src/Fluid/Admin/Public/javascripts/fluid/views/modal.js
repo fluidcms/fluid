@@ -11,7 +11,13 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
         render: function () {
             var obj = this;
 
-            this.$el.html('<div class="modal-window">' + this.template.render(_.extend({model: this.model}, this.renderData())) + '</div>');
+            if (typeof this.renderData == 'function') {
+                var data = _.extend({model: this.model}, this.renderData());
+            } else {
+                var data = {model: this.model};
+            }
+
+            this.$el.html('<div class="modal-window">' + this.template.render(data) + '</div>');
 
             $(document.body).append(this.$el);
             $(document.body).addClass('blur');

@@ -1,0 +1,56 @@
+@import "../lib";
+@import "lib";
+@import "compass/css3/box-shadow";
+
+/* Table of Content
+==================================================
+	#Version￼ */
+
+/* #Version
+================================================== */
+div.version {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 22px 0;
+  width: 306px;
+  text-align: center;
+  background-color: #5f5f5f;
+  border-top: 1px solid #7f7f7f;
+  @include box-shadow(0px -1px 0px #282828);
+
+  h4 {
+    font-size: 12px;
+    font-weight: $bold;
+    color: $green;
+    margin-bottom: 14px;
+    line-height: 16px;
+    vertical-align: top;
+    &:before {
+      content: "";
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      margin-right: 8px;
+      background-image: url('../images/sprite.png');
+      background-position: -97px 0;
+    }
+    &.pull {
+      color: $yellow;
+      &:before {
+        background-position: -97px -16px;
+      }
+    }
+  }
+
+  p {
+    color: $light-gray;
+    margin-bottom: 14px;
+    padding: 0 20px;
+  }
+
+  button {
+    @extend .light-gray;
+  }
+}
+

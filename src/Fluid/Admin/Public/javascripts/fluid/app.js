@@ -1,5 +1,5 @@
-define(['backbone', 'models/site', 'models/page', 'models/language', 'models/layout', 'views/nav', 'views/toolbar'],
-    function (Backbone, Site, Page, Language, Layout, Nav, Toolbar) {
+define(['backbone', 'models/site', 'models/page', 'models/language', 'models/layout', 'models/socket', 'views/nav', 'views/toolbar', 'views/version'],
+    function (Backbone, Site, Page, Language, Layout, Socket, Nav, Toolbar, Version) {
         var run = function () {
             var FluidRouter = Backbone.Router.extend({
                 root: "/fluidcms/",
@@ -13,6 +13,11 @@ define(['backbone', 'models/site', 'models/page', 'models/language', 'models/lay
 
                     this.nav = new Nav({router: this}).render();
                     this.toolbar = new Toolbar({page: this.page, site: this.site}).render();
+                    this.version = new Version();
+
+                    this.socket = new Socket({
+                        version: this.version
+                    });
                 },
 
                 routes: {

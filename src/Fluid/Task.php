@@ -1,10 +1,8 @@
 <?php
 
-namespace Fluid\Tasks;
+namespace Fluid;
 
-// TODO deprecated, replaced by Fluid\Task
-
-class GearmanClient
+class Task
 {
     /*
      * Send a job to the gearman server

@@ -1,0 +1,12 @@
+<% if (action == 'push') { %>
+    <h4 class="push">Updates to publish</h4>
+    <p>You have unpublised updates, click on publish to publish them.</p>
+    <button data-action="push">Publish</button>
+<% } else if(action == 'pull') { %>
+    <h4 class="pull">Updates avaliable</h4>
+    <p><%= amount %> updates are avalaible, click on update to download them.</p>
+    <button data-action="pull">Update</button>
+<% } else if(action == 'loading') { %>
+    <p><%= msg %></p>
+    <img src="images/loader.gif" width="20" height="20" alt="">
+<% } %>
