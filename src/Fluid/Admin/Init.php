@@ -38,5 +38,6 @@ class Init {
      */
     public static function triggerInit() {
         Fluid\Tasks\Init::execute();
+        exit;
     }
 }
