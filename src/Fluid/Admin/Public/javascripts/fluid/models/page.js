@@ -31,6 +31,10 @@ define(['backbone'], function (Backbone) {
             $.getJSON('pagetoken.json', function (response) {
                 root.set('token', response.token);
                 root.trigger('newtoken');
+
+                // Add client script to page // TODO doesnt really matter if its in the iframe or not
+                $("body", $("#website").contents()).append($('<script>var fluidNewPageToken = "'+response.token+'";</script>'));
+                $("body", $("#website").contents()).append($('<script src="/fluidcms/javascripts/fluid-client/app.js"></script>'));
             });
         },
 
