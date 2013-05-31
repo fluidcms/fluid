@@ -13,8 +13,8 @@
     ],
     "require": {
         "ext-gearman": "*",
-        "twig/twig": "v1.12.3",
-        "cboden/ratchet": "v0.2.5",
+        "twig/twig": "v1.13.0",
+        "cboden/ratchet": "dev-master",
         "react/zmq": "v0.1.1"
     },
     "autoload": {
