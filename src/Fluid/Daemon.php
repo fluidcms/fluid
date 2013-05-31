@@ -4,6 +4,7 @@ namespace Fluid;
 
 abstract class Daemon
 {
+    protected $displayStatus = false;
     protected $statusFile;
     protected $status;
     protected $timeStart;
@@ -14,10 +15,13 @@ abstract class Daemon
      *
      * @param   function    A callback to know if the daemon is still running, called every 10 seconds
      */
-    public function __construct($upTimeCallback = null)
+    public function __construct($upTimeCallback = null, $displayStatus = false)
     {
-        if (isset($this->statusFile)) {
-            $this->status = file_get_contents(__DIR__ . '/Daemons/' . $this->statusFile);
+        $this->displayStatus = $displayStatus;
+        if ($this->displayStatus) {
+            if (isset($this->statusFile)) {
+                $this->status = file_get_contents(__DIR__ . '/Daemons/' . $this->statusFile);
+            }
         }
         $this->timeStart = time();
         $this->upTimeCallback = $upTimeCallback;
@@ -31,18 +35,20 @@ abstract class Daemon
      */
     protected function displayStatus($status)
     {
-        $clear = '';
-        for($i = 0; $i < $this->lines; $i++) {
-            $clear .= '\033[A';
-        }
+        if ($this->displayStatus) {
+            $clear = '';
+            for($i = 0; $i < $this->lines; $i++) {
+                $clear .= '\033[A';
+            }
 
-        passthru('printf "'.$clear.'"');
-        foreach (explode(PHP_EOL, $status) as $line) {
-            passthru('echo "'.$line.'                                  "');
-        }
+            passthru('printf "'.$clear.'"');
+            foreach (explode(PHP_EOL, $status) as $line) {
+                passthru('echo "'.$line.'                                  "');
+            }
 
-        $lines = explode(PHP_EOL, $status);
-        $this->lines = count($lines);
+            $lines = explode(PHP_EOL, $status);
+            $this->lines = count($lines);
+        }
     }
 
     /**

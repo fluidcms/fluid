@@ -68,10 +68,12 @@ class Gearman extends Fluid\Daemon implements Fluid\DaemonInterface
      */
     public function renderStatus()
     {
-        $status = $this->status;
-        $status = str_replace('%uptime', $this->getReadableUpTime(true), $status);
-        $status = str_replace('%amount', $this->amount, $status);
-        $status = str_replace('%memory', $this->getReadableMemoryUsage(), $status);
-        $this->displayStatus($status);
+        if ($this->displayStatus) {
+            $status = $this->status;
+            $status = str_replace('%uptime', $this->getReadableUpTime(true), $status);
+            $status = str_replace('%amount', $this->amount, $status);
+            $status = str_replace('%memory', $this->getReadableMemoryUsage(), $status);
+            $this->displayStatus($status);
+        }
     }
 }

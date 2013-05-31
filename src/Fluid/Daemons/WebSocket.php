@@ -71,10 +71,12 @@ class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
      */
     private function renderStatus(Fluid\WebSockets\Server $server)
     {
-        $status = $this->status;
-        $status = str_replace('%uptime', $this->getReadableUpTime(), $status);
-        $status = str_replace('%connections', count($server->getConnections()), $status);
-        $status = str_replace('%memory', $this->getReadableMemoryUsage(), $status);
-        $this->displayStatus($status);
+        if ($this->displayStatus) {
+            $status = $this->status;
+            $status = str_replace('%uptime', $this->getReadableUpTime(), $status);
+            $status = str_replace('%connections', count($server->getConnections()), $status);
+            $status = str_replace('%memory', $this->getReadableMemoryUsage(), $status);
+            $this->displayStatus($status);
+        }
     }
 }
