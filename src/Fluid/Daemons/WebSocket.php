@@ -2,7 +2,7 @@
 
 namespace Fluid\Daemons;
 
-use Fluid, React, Ratchet, ZMQ;
+use Fluid, React, Ratchet, ZMQ, ZMQSocketException;
 
 class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
 {
@@ -21,8 +21,6 @@ class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
         $tasks = new Fluid\WebSockets\Tasks($server);
         $tasks->execute();
 
-        $this->renderStatus($server);
-
         $loop = React\EventLoop\Factory::create();
 
         $root = $this;
@@ -35,15 +33,21 @@ class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
             $root->upTimeCallback();
         });
 
-        $context = new React\ZMQ\Context($loop);
+        try {
+            $context = new React\ZMQ\Context($loop);
+            $pull = $context->getSocket(ZMQ::SOCKET_PULL);
+            $pull->bind('tcp://127.0.0.1:57586');
+            $pull->on('message', array($tasks, 'message'));
+        } catch (ZMQSocketException $e) {
+            return;
+        }
 
-        $pull = $context->getSocket(ZMQ::SOCKET_PULL);
-
-        $pull->bind('tcp://127.0.0.1:57586');
-        $pull->on('message', array($tasks, 'message'));
-
-        $socket = new React\Socket\Server($loop);
-        $socket->listen(8180, '0.0.0.0');
+        try {
+            $socket = new React\Socket\Server($loop);
+            $socket->listen(8180, '0.0.0.0');
+        } catch(React\Socket\ConnectionException $e) {
+            return;
+        }
 
         new Ratchet\Server\IoServer(
             new Ratchet\WebSocket\WsServer(
@@ -53,6 +57,8 @@ class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
             ),
             $socket
         );
+
+        $this->renderStatus($server);
 
         $loop->run();
     }
