@@ -122,6 +122,42 @@ class Page extends Storage
     }
 
     /**
+     * Rename a page
+     *
+     * @param   string      $oldId
+     * @param   string      $newId
+     * @throws  Exception
+     * @return  bool
+     */
+    public static function rename($oldId, $newId)
+    {
+        $dir = trim(str_replace('..', '', $oldId), '/.');
+
+        $dir = Fluid::getBranchStorage() . "pages/" . trim(dirname($dir), '.');
+
+        $oldName = basename($oldId);
+        $newName = basename($newId);
+
+        $found = false;
+
+        foreach (scandir($dir) as $file) {
+            if (preg_match("/^{$oldName}(_[a-z]{2,2}\\-[A-Z]{2,2})\\.json$/", $file, $match)) {
+                rename(
+                    $dir."/".$file,
+                    $dir."/".$newName . $match[1] . ".json"
+                );
+                $found = true;
+            }
+        }
+
+        if (!$found) {
+            throw new Exception("The page does not exists");
+        }
+
+        return true;
+    }
+
+    /**
      * Move a page
      *
      * @param   string      $from

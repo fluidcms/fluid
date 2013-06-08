@@ -103,6 +103,28 @@ class Structure extends Storage
     }
 
     /**
+     * Edit a page.
+     *
+     * @param   array   $attrs
+     * @return  bool
+     */
+    public static function editPage($attrs)
+    {
+        list($structure, $id) = Structure\Modify::editPage(new self, $attrs["id"], $attrs["page"], $attrs["url"], $attrs["layout"], $attrs["languages"]);
+        $structure->store();
+
+        Page::rename($attrs["id"], $id);
+
+        return array(
+            "id" => $id,
+            "page" => $attrs["page"],
+            "url" => $attrs["url"],
+            "layout" => $attrs["layout"],
+            "languages" => $attrs["languages"]
+        );
+    }
+
+    /**
      * Delete a page.
      *
      * @param   string   $id

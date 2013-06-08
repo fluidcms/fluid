@@ -52,21 +52,6 @@ class Router
             }
         }
 
-        // Other files
-        switch ($request) {
-            // Test
-            case 'test':
-                return Fluid\View::create('test.twig');
-
-            // Structure
-            case 'structure.json':
-                if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'PUT') {
-                    Fluid\Models\Structure::save(file_get_contents("php://input"));
-                    return json_encode(true);
-                }
-                return json_encode(Fluid\Models\Structure::getAll());
-        }
-
         return (
             self::publicFiles() ||
                 self::htmlPages() ||
@@ -141,6 +126,12 @@ class Router
             );
             return true;
         }
+
+        if (self::$request == 'test') {
+            echo Fluid\View::create('test.twig');
+            return true;
+        }
+
         return false;
     }
 
@@ -257,7 +248,7 @@ class Router
                     return true;
                 case 'PUT':
                     // Sort
-                    if (isset($match[3]) && strpos($match[3], '/sort') == 0) {
+                    if (isset($match[3]) && strpos($match[3], '/sort') === 0) {
                         try {
                             $id = trim(urldecode(preg_replace('{/sort/}', '', $match[3])), '/');
                             echo json_encode(Fluid\Models\Structure::sortPage($id, self::$input['page'], self::$input['index']));
@@ -265,6 +256,16 @@ class Router
                             header('X-Error-Message: ' . $e->getMessage(), true, 500);
                             exit;
                         }
+                    }
+                    // Edit
+                    else {
+                        try {
+                            echo json_encode(Fluid\Models\Structure::editPage(self::$input));
+                        } catch (Exception $e) {
+                            header('X-Error-Message: ' . $e->getMessage(), true, 500);
+                            exit;
+                        }
+                        return true;
                     }
                     return true;
                 case 'DELETE':
@@ -277,6 +278,7 @@ class Router
                     return true;
             }
         }
+
         return false;
     }
 

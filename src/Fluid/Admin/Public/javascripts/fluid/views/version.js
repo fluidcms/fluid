@@ -70,10 +70,10 @@ define(['backbone', 'ejs', 'views/modal'], function (Backbone, EJS, Modal) {
         }
     });
 
-    var Commit = Modal.extend({
-        events: _.extend(Modal.prototype.events, {
+    var Commit = Backbone.View.extend($.extend({}, Modal, {
+        events: $.extend({
             "keypress :input": "submit"
-        }),
+        }, Modal.events),
 
         template: new EJS({url: 'javascripts/fluid/templates/version/commit-modal.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
@@ -88,7 +88,7 @@ define(['backbone', 'ejs', 'views/modal'], function (Backbone, EJS, Modal) {
                 this.close();
             }
         }
-    });
+    }));
 
     return view;
 });

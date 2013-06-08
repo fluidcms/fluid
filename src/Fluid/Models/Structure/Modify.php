@@ -51,6 +51,50 @@ class Modify
     }
 
     /**
+     * Edit a page in the structure.
+     *
+     * @param   Structure   $structure
+     * @param   string      $id
+     * @param   string      $page
+     * @param   string      $url
+     * @param   string      $layout
+     * @param   array       $languages
+     * @throws  Exception
+     * @return  array       [Structure, id]
+     */
+    public static function editPage(Structure $structure, $id, $page, $url, $layout, $languages)
+    {
+        $structure->pages = self::findAndEditPage($structure->pages, explode("/", $id), array(
+            'page' => $page,
+            'url' => $url,
+            'layout' => $layout,
+            'languages' => $languages
+        ));
+
+        $newId = dirname($id) . '/' . $page;
+        $newId = trim($newId, './');
+
+        if (self::getPage($structure->pages, explode('/', $newId))) {
+            return array($structure, $newId);
+        } else {
+            throw new Exception('Did not find the page to edit.');
+        }
+    }
+
+    /**
+     * Delete a page from the structure.
+     *
+     * @param   Structure   $structure
+     * @param   string      $id
+     * @return  Structure
+     */
+    public static function deletePage(Structure $structure, $id)
+    {
+        $structure->pages = self::removePageFromPages($structure->pages, explode("/", $id));
+        return $structure;
+    }
+
+    /**
      * Insert the page into the pages.
      *
      * @param   array   $pages
@@ -88,19 +132,6 @@ class Modify
         }
 
         return $pages;
-    }
-
-    /**
-     * Delete a page from the structure.
-     *
-     * @param   Structure   $structure
-     * @param   string      $id
-     * @return  Structure
-     */
-    public static function deletePage(Structure $structure, $id)
-    {
-        $structure->pages = self::removePageFromPages($structure->pages, explode("/", $id));
-        return $structure;
     }
 
     /**
@@ -177,5 +208,34 @@ class Modify
         }
 
         return false;
+    }
+
+    /**
+     * Find the page and edit it.
+     *
+     * @param   array   $pages
+     * @param   array   $paths
+     * @param   array   $data
+     * @return  array
+     */
+    private static function findAndEditPage($pages, $paths, $data)
+    {
+        $needle = reset($paths);
+        $paths = array_slice($paths, 1);
+
+        foreach($pages as $key=>$page) {
+            if ($pages[$key]['page'] == $needle) {
+                if (count($paths) && isset($pages[$key]['pages'])) {
+                    $pages[$key]['pages'] = self::findAndEditPage($pages[$key]['pages'], $paths, $data);
+                } else {
+                    $pages[$key] = array_merge($pages[$key], $data);
+                }
+            }
+            if (isset($pages[$key]['pages']) && !count($pages[$key]['pages'])) {
+                unset($pages[$key]['pages']);
+            }
+        }
+
+        return array_values($pages);
     }
 }

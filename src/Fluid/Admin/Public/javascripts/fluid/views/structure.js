@@ -90,9 +90,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu', 'mod
         }
     });
 
-    var Page = Modal.extend({
-        events: _.extend({}, Modal.prototype.events),
-
+    var Page = Backbone.View.extend($.extend({}, Modal, {
         template: new EJS({url: 'javascripts/fluid/templates/structure/page.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
@@ -122,9 +120,12 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu', 'mod
                 });
                 this.model.id = null;
                 this.model.save();
+            } else {
+                console.log(this.model);
+                this.model.save();
             }
         }
-    });
+    }));
 
     return View;
 });

@@ -19,8 +19,8 @@ define(['backbone'], function (Backbone) {
                 this.set('origin', this.get('id'));
             }
 
-            this.on('change', function (e) {
-                this.set('id', this.getId());
+            this.on('sync', function (e) {
+                this.set('origin', this.get('id'));
                 this.parent.trigger('update');
             });
         },
@@ -34,6 +34,7 @@ define(['backbone'], function (Backbone) {
             }
         },
 
+        // TODO get ID from the server response would be a better way
         getId: function () {
             var parent = this.parent;
             var id = this.get('page');

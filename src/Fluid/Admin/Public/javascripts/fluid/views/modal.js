@@ -1,5 +1,5 @@
 define(['backbone', 'ejs'], function (Backbone, EJS) {
-    var Modal = Backbone.View.extend({
+    var Modal = {
         className: 'modal-container',
 
         events: {
@@ -79,7 +79,7 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                 this.close();
             }
         }
-    });
+    };
 
     return Modal;
 });
