@@ -1,8 +1,47 @@
-/* #Font weight
-================================================== */
-/* #Margins
+/* Table of Content
+==================================================
+#Media Queries
+#Animations
+#Flexbox
+#Flexbox Container
+#Flexbox Item */
+/* #Media Queries
 ================================================== */
 /* #Animations
+================================================== */
+/* #Flexbox
+================================================== */
+/* #Flexbox Container
+================================================== */
+/* #Flexbox Item
+================================================== */
+/* Table of Content
+==================================================
+  #Font weight
+  #Margins and dimensions
+  #Colors definitions */
+/* #Font weight
+================================================== */
+/* #Margins and dimensions
+================================================== */
+/* #Colors definitions
+================================================== */
+/* Table of Content
+==================================================
+#Media Queries
+#Animations
+#Flexbox
+#Flexbox Container
+#Flexbox Item */
+/* #Media Queries
+================================================== */
+/* #Animations
+================================================== */
+/* #Flexbox
+================================================== */
+/* #Flexbox Container
+================================================== */
+/* #Flexbox Item
 ================================================== */
 /* #Reset
 ================================================== */
@@ -351,6 +390,51 @@ label.checkbox input:checked {
   background-position: -18px -64px;
 }
 
+/* Table of Content
+==================================================
+#Media Queries
+#Animations
+#Flexbox
+#Flexbox Container
+#Flexbox Item */
+/* #Media Queries
+================================================== */
+/* #Animations
+================================================== */
+/* #Flexbox
+================================================== */
+/* #Flexbox Container
+================================================== */
+/* #Flexbox Item
+================================================== */
+/* Table of Content
+==================================================
+  #Font weight
+  #Margins and dimensions
+  #Colors definitions */
+/* #Font weight
+================================================== */
+/* #Margins and dimensions
+================================================== */
+/* #Colors definitions
+================================================== */
+/* Table of Content
+==================================================
+#Media Queries
+#Animations
+#Flexbox
+#Flexbox Container
+#Flexbox Item */
+/* #Media Queries
+================================================== */
+/* #Animations
+================================================== */
+/* #Flexbox
+================================================== */
+/* #Flexbox Container
+================================================== */
+/* #Flexbox Item
+================================================== */
 /* #Container
 ================================================== */
 #main {
@@ -457,11 +541,50 @@ label.checkbox input:checked {
   height: 100%;
 }
 
-/* #Font weight
-================================================== */
-/* #Margins
+/* Table of Content
+==================================================
+#Media Queries
+#Animations
+#Flexbox
+#Flexbox Container
+#Flexbox Item */
+/* #Media Queries
 ================================================== */
 /* #Animations
+================================================== */
+/* #Flexbox
+================================================== */
+/* #Flexbox Container
+================================================== */
+/* #Flexbox Item
+================================================== */
+/* Table of Content
+==================================================
+  #Font weight
+  #Margins and dimensions
+  #Colors definitions */
+/* #Font weight
+================================================== */
+/* #Margins and dimensions
+================================================== */
+/* #Colors definitions
+================================================== */
+/* Table of Content
+==================================================
+#Media Queries
+#Animations
+#Flexbox
+#Flexbox Container
+#Flexbox Item */
+/* #Media Queries
+================================================== */
+/* #Animations
+================================================== */
+/* #Flexbox
+================================================== */
+/* #Flexbox Container
+================================================== */
+/* #Flexbox Item
 ================================================== */
 /* #Context Menu
 ================================================== */
@@ -490,11 +613,50 @@ div.context-menu ul li a:hover {
   background: #ddd;
 }
 
-/* #Font weight
-================================================== */
-/* #Margins
+/* Table of Content
+==================================================
+#Media Queries
+#Animations
+#Flexbox
+#Flexbox Container
+#Flexbox Item */
+/* #Media Queries
 ================================================== */
 /* #Animations
+================================================== */
+/* #Flexbox
+================================================== */
+/* #Flexbox Container
+================================================== */
+/* #Flexbox Item
+================================================== */
+/* Table of Content
+==================================================
+  #Font weight
+  #Margins and dimensions
+  #Colors definitions */
+/* #Font weight
+================================================== */
+/* #Margins and dimensions
+================================================== */
+/* #Colors definitions
+================================================== */
+/* Table of Content
+==================================================
+#Media Queries
+#Animations
+#Flexbox
+#Flexbox Container
+#Flexbox Item */
+/* #Media Queries
+================================================== */
+/* #Animations
+================================================== */
+/* #Flexbox
+================================================== */
+/* #Flexbox Container
+================================================== */
+/* #Flexbox Item
 ================================================== */
 /* #Tool bar
 ================================================== */
@@ -512,8 +674,25 @@ div#toolbar > div {
   -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: -o-flex;
+  display: flex;
 }
-div#toolbar > div a.toolbar-button {
+div#toolbar > div > div:first-child {
+  -webkit-box-grow: 1;
+  -webkit-flex-grow: 1;
+  -moz-box-grow: 1;
+  -moz-flex-grow: 1;
+  -ms-box-grow: 1;
+  -ms-flex-grow: 1;
+  -o-box-grow: 1;
+  -o-flex-grow: 1;
+  flex-grow: 1;
+}
+div#toolbar > div > div:first-child a.toolbar-button {
   position: relative;
   float: left;
   display: block;
@@ -523,7 +702,7 @@ div#toolbar > div a.toolbar-button {
   padding: 0 20px 0 48px;
   cursor: default;
 }
-div#toolbar > div a.toolbar-button:before {
+div#toolbar > div > div:first-child a.toolbar-button:before {
   content: "";
   display: block;
   width: 16px;
@@ -533,34 +712,103 @@ div#toolbar > div a.toolbar-button:before {
   left: 20px;
   background-image: url("../images/sprite.png");
 }
-div#toolbar > div a.toolbar-button.preview:before {
+div#toolbar > div > div:first-child a.toolbar-button.preview:before {
   background-position: -10px -32px;
 }
-div#toolbar > div a.toolbar-button.edit:before {
+div#toolbar > div > div:first-child a.toolbar-button.edit:before {
   background-position: -26px -32px;
 }
-div#toolbar > div a.toolbar-button.current {
+div#toolbar > div > div:first-child a.toolbar-button.current {
   background-color: #d5d5d5;
   -webkit-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.3);
   box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.3);
   color: #50555a;
 }
-div#toolbar > div a.toolbar-button.current:before {
+div#toolbar > div > div:first-child a.toolbar-button.current:before {
   background-position-y: -48px;
 }
-div#toolbar > div div.select {
-  position: absolute;
-  top: 12px;
-  right: 20px;
+div#toolbar > div > div:last-child {
+  padding-right: 12px;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: -o-flex;
+  display: flex;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  -ms-align-items: center;
+  -o-align-items: center;
+  align-items: center;
+}
+div#toolbar > div > div:last-child > * + * {
+  margin-left: 12px;
+}
+div#toolbar > div > div:last-child a.reload {
+  width: 24px;
+  height: 24px;
+  display: block;
+  overflow: hidden;
+  text-indent: -9999px;
+  white-space: nowrap;
+  padding: 0;
+  margin: 0;
+  background-image: url("../images/sprite.png");
+  background-position: -113px 0;
+}
+div#toolbar > div > div:last-child a.reload:active {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+div#toolbar > div > div:last-child div.select {
   color: #747c84;
+  white-space: nowrap;
 }
 
-/* #Font weight
-================================================== */
-/* #Margins
+/* Table of Content
+==================================================
+#Media Queries
+#Animations
+#Flexbox
+#Flexbox Container
+#Flexbox Item */
+/* #Media Queries
 ================================================== */
 /* #Animations
+================================================== */
+/* #Flexbox
+================================================== */
+/* #Flexbox Container
+================================================== */
+/* #Flexbox Item
+================================================== */
+/* Table of Content
+==================================================
+  #Font weight
+  #Margins and dimensions
+  #Colors definitions */
+/* #Font weight
+================================================== */
+/* #Margins and dimensions
+================================================== */
+/* #Colors definitions
+================================================== */
+/* Table of Content
+==================================================
+#Media Queries
+#Animations
+#Flexbox
+#Flexbox Container
+#Flexbox Item */
+/* #Media Queries
+================================================== */
+/* #Animations
+================================================== */
+/* #Flexbox
+================================================== */
+/* #Flexbox Container
+================================================== */
+/* #Flexbox Item
 ================================================== */
 /* #Modal Window
 ================================================== */
@@ -800,11 +1048,50 @@ body.blur #main, body.blur #toolbar, body.blur #target {
   }
 }
 
-/* #Font weight
-================================================== */
-/* #Margins
+/* Table of Content
+==================================================
+#Media Queries
+#Animations
+#Flexbox
+#Flexbox Container
+#Flexbox Item */
+/* #Media Queries
 ================================================== */
 /* #Animations
+================================================== */
+/* #Flexbox
+================================================== */
+/* #Flexbox Container
+================================================== */
+/* #Flexbox Item
+================================================== */
+/* Table of Content
+==================================================
+  #Font weight
+  #Margins and dimensions
+  #Colors definitions */
+/* #Font weight
+================================================== */
+/* #Margins and dimensions
+================================================== */
+/* #Colors definitions
+================================================== */
+/* Table of Content
+==================================================
+#Media Queries
+#Animations
+#Flexbox
+#Flexbox Container
+#Flexbox Item */
+/* #Media Queries
+================================================== */
+/* #Animations
+================================================== */
+/* #Flexbox
+================================================== */
+/* #Flexbox Container
+================================================== */
+/* #Flexbox Item
 ================================================== */
 /* #Structure container
 ================================================== */
@@ -914,11 +1201,50 @@ ul.structure ul ul {
   padding-left: 0;
 }
 
-/* #Font weight
-================================================== */
-/* #Margins
+/* Table of Content
+==================================================
+#Media Queries
+#Animations
+#Flexbox
+#Flexbox Container
+#Flexbox Item */
+/* #Media Queries
 ================================================== */
 /* #Animations
+================================================== */
+/* #Flexbox
+================================================== */
+/* #Flexbox Container
+================================================== */
+/* #Flexbox Item
+================================================== */
+/* Table of Content
+==================================================
+  #Font weight
+  #Margins and dimensions
+  #Colors definitions */
+/* #Font weight
+================================================== */
+/* #Margins and dimensions
+================================================== */
+/* #Colors definitions
+================================================== */
+/* Table of Content
+==================================================
+#Media Queries
+#Animations
+#Flexbox
+#Flexbox Container
+#Flexbox Item */
+/* #Media Queries
+================================================== */
+/* #Animations
+================================================== */
+/* #Flexbox
+================================================== */
+/* #Flexbox Container
+================================================== */
+/* #Flexbox Item
 ================================================== */
 /* #Page Editor
 ================================================== */
@@ -1011,11 +1337,50 @@ div.page-editor > div form div.buttons {
   box-pack: end;
 }
 
-/* #Font weight
-================================================== */
-/* #Margins
+/* Table of Content
+==================================================
+#Media Queries
+#Animations
+#Flexbox
+#Flexbox Container
+#Flexbox Item */
+/* #Media Queries
 ================================================== */
 /* #Animations
+================================================== */
+/* #Flexbox
+================================================== */
+/* #Flexbox Container
+================================================== */
+/* #Flexbox Item
+================================================== */
+/* Table of Content
+==================================================
+  #Font weight
+  #Margins and dimensions
+  #Colors definitions */
+/* #Font weight
+================================================== */
+/* #Margins and dimensions
+================================================== */
+/* #Colors definitions
+================================================== */
+/* Table of Content
+==================================================
+#Media Queries
+#Animations
+#Flexbox
+#Flexbox Container
+#Flexbox Item */
+/* #Media Queries
+================================================== */
+/* #Animations
+================================================== */
+/* #Flexbox
+================================================== */
+/* #Flexbox Container
+================================================== */
+/* #Flexbox Item
 ================================================== */
 /* #File container
 ================================================== */
@@ -1083,16 +1448,50 @@ div.page-editor > div form div.buttons {
   margin: 0 0 14px 0;
 }
 
-/* #Font weight
-================================================== */
-/* #Margins
+/* Table of Content
+==================================================
+#Media Queries
+#Animations
+#Flexbox
+#Flexbox Container
+#Flexbox Item */
+/* #Media Queries
 ================================================== */
 /* #Animations
 ================================================== */
+/* #Flexbox
+================================================== */
+/* #Flexbox Container
+================================================== */
+/* #Flexbox Item
+================================================== */
 /* Table of Content
 ==================================================
-#Colors definitions */
+  #Font weight
+  #Margins and dimensions
+  #Colors definitions */
+/* #Font weight
+================================================== */
+/* #Margins and dimensions
+================================================== */
 /* #Colors definitions
+================================================== */
+/* Table of Content
+==================================================
+#Media Queries
+#Animations
+#Flexbox
+#Flexbox Container
+#Flexbox Item */
+/* #Media Queries
+================================================== */
+/* #Animations
+================================================== */
+/* #Flexbox
+================================================== */
+/* #Flexbox Container
+================================================== */
+/* #Flexbox Item
 ================================================== */
 /* Table of Content
 ==================================================

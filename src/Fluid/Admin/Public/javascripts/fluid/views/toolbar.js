@@ -4,10 +4,11 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
 
         events: {
             'click a[data-action=preview]': 'previewPage',
-            'click a[data-action=edit]': 'editPage'
+            'click a[data-action=edit]': 'editPage',
+            'click a[data-action=reload]': 'reloadPage'
         },
 
-        template: new EJS({url: 'javascripts/fluid/templates/toolbar.ejs'}),
+        template: new EJS({url: 'javascripts/fluid/templates/toolbar.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
             this.site = attrs.site;
@@ -39,6 +40,10 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
             require(['views/pageeditor'], function (PageEditorView) {
                 root.pageEditor = new PageEditorView({page: root.page, site: root.site, toolbar: root}).render();
             });
+        },
+
+        reloadPage: function(e) {
+            this.page.reload();
         },
 
         changeLanguage: function (model) {

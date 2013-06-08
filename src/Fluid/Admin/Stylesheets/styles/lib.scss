@@ -1,11 +1,29 @@
+@import "../_mixins";
+
 /* Table of Content
 ==================================================
-#Colors definitions */
+  #Font weight
+  #Margins and dimensions
+  #Colors definitions */
+
+
+/* #Font weight
+================================================== */
+$light: 300;
+$normal: 400;
+$medium: 500;
+$bold: 700;
+$black: 900;
+
+/* #Margins and dimensions
+================================================== */
+$main-margin-top: 16px;
+$main-margin-left: 16px;
+$main-margin-right: 16px;
+$main-margin-bottom: 16px;
 
 /* #Colors definitions
 ================================================== */
 $yellow: #ecc800;
-
 $green: #5ed754;
-
 $light-gray: #dcdcdc;

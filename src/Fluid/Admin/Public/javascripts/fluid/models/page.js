@@ -22,7 +22,7 @@ define(['backbone'], function (Backbone) {
         },
 
         reload: function () {
-            $("#website")[0].contentWindow.location.reload();
+            $("#website")[0].contentWindow.location.reload(true);
 
         },
 
