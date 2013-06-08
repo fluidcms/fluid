@@ -82,11 +82,10 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/contextmenu', 'views/modal'], fun
             element.find('img').removeClass('dark');
         }
     });
-
-    var Copy = Modal.extend({
+    var Copy = Backbone.View.extend($.extend({}, Modal, {
         events: _.extend({
             "copy :input": "copied"
-        }, Modal.prototype.events),
+        }, Modal.events),
 
         template: new EJS({url: 'javascripts/fluid/templates/file/copy-modal.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
@@ -106,7 +105,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/contextmenu', 'views/modal'], fun
                 root.close()
             }, 100);
         }
-    });
+    }));
 
     return View;
 });
