@@ -93,6 +93,12 @@ class Page extends Storage
     {
         $file = 'pages/' . $page . '_' . $request['language'] . '.json';
 
+        unset($request['data']['pages']); // TODO first, don't send these, then find a better way to sanitize inputs
+        unset($request['data']['url']); //  !! SAME
+        unset($request['data']['page']); // !! SAME
+        unset($request['data']['layout']); //  !! SAME
+        unset($request['data']['languages']); // !! SAME
+
         self::save(json_encode($request['data'], JSON_PRETTY_PRINT), $file);
 
         return true;
