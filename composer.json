@@ -14,7 +14,7 @@
     "require": {
         "ext-gearman": "*",
         "twig/twig": "v1.13.0",
-        "cboden/ratchet": "dev-master",
+        "cboden/ratchet": "v0.2.7",
         "react/zmq": "v0.1.1"
     },
     "autoload": {
