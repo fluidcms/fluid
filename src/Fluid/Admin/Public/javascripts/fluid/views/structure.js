@@ -112,16 +112,18 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu', 'mod
 
         submit: function () {
             if (this.newPage) {
-                this.model.parent.add(this.model);
-                this.model.set({
-                    'path': this.model.id,
-                    'index': this.model.parent.indexOf(this.model),
-                    'id': null
-                });
-                this.model.id = null;
-                this.model.save();
+                var parent = this.model.parent;
+                parent.add(this.model, {silent: true});
+                var data = this.model.toJSON();
+
+                data.id = null;
+                data.parent = parent;
+                data.path = this.model.getId();
+                data.index = parent.indexOf(this.model);
+
+                parent.remove(this.model);
+                parent.create(data);
             } else {
-                console.log(this.model);
                 this.model.save();
             }
         }
