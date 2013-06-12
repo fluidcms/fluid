@@ -69,6 +69,22 @@ class Structure extends Storage
     }
 
     /**
+     * Find a page in a localized structure.
+     *
+     * @param   string|array    $paths
+     * @param   array           $pages
+     * @return  array
+     */
+    public function findLocalizedPage($paths, $pages = null)
+    {
+        if (null === $pages) {
+            $pages = $this->getLocalized();
+        }
+
+        return $this->findPage($paths, $pages);
+    }
+
+    /**
      * Find a page in a structure.
      *
      * @param   string|array    $paths

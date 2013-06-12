@@ -12,6 +12,7 @@ use Exception, Fluid\Fluid, Fluid\Database\Storage;
 class Page extends Storage
 {
     public $page;
+    public $pages;
     public $parent;
     public $data;
     public $variables;
@@ -34,9 +35,38 @@ class Page extends Storage
             $this->parent = new Page($structure, $parent);
         }
 
+        // TODO this is HEAVY on the system, to optimize
+        // IDEA remove the data from the Page constructor, move it to a method (getData)
+        // TMPFIX we search the localized structure to AT LEAST get the pages names
+        $structurePage = $structure->findLocalizedPage($page);
+        if (isset($structurePage['pages']) && is_array($structurePage['pages'])) {
+            // TODO not working, too much looping. Ideally, we need to be able to access all
+            // the data of the site from twig. So what we need is a big data array containing
+            // everything. Of course this will need to be cached.
+//            foreach($structurePage['pages'] as $item) {
+//                if (is_string($parent)) {
+//                    $id = $parent . "/" . $page . "/" . $item['page'];
+//                } else {
+//                    $id = $page . "/" . $item['page'];
+//                }
+//                $this->pages[] = new Page($structure, $id);
+//            }
+            $this->pages = $structurePage['pages'];
+        }
+
         // Load page data
+        // TODO move to a getter
         try {
-            $this->data = self::load('pages/' . $page . '_' . Fluid::getLanguage() . '.json');
+            $this->data = array_merge(
+                [
+                    'page' => $this->page,
+                    'url' => $structurePage['url'],
+                    'layout' => $structurePage['layout'],
+                    'languages' => $structurePage['languages'],
+                    'pages' => $this->pages
+                ],
+                self::load('pages/' . $page . '_' . Fluid::getLanguage() . '.json')
+            );
         } catch (Exception $e) {
             null;
         }

@@ -56,7 +56,7 @@ class Data
             'path' => explode('/', $page->page),
             'parents' => $parents,
             'parent' => $parentTree,
-            'page' => array_merge((array) $page->data, self::$structure->findPage($page->page))
+            'page' => (array) $page->data
         );
     }
 
