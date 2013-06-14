@@ -10,7 +10,7 @@ define(['backbone', 'ejs', 'views/modal'], function (Backbone, EJS, Modal) {
         template: new EJS({url: 'javascripts/fluid/templates/version/version.ejs' + '?' + new Date().getTime()}),
 
         initialize: function (attrs) {
-            this.$el.appendTo($("#main"));
+            $("#content").before(this.$el);
             this.$el.hide();
         },
 

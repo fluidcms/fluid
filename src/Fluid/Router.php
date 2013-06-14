@@ -9,6 +9,8 @@ namespace Fluid;
  */
 class Router
 {
+    private static $request;
+
     /**
      * Route a request
      *
@@ -53,5 +55,22 @@ class Router
             }
         }
         return false;
+    }
+
+    /**
+     * Get the requested url
+     *
+     * @return  string
+     */
+    public static function getRequest()
+    {
+        // Determines if the connection with the client is secure.
+        if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) {
+            $secure = true;
+        } else {
+            $secure = false;
+        }
+
+        return ($secure ? 'https://' : 'http://') . "{$_SERVER['SERVER_NAME']}{$_SERVER['REQUEST_URI']}";
     }
 }

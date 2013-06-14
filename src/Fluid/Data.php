@@ -50,6 +50,7 @@ class Data
         }
 
         return array(
+            'url' => Router::getRequest(),
             'language' => substr(Fluid::getLanguage(), 0, 2),
             'site' => $site->data,
             'structure' => self::$structure->getLocalized(),

@@ -457,6 +457,9 @@ label.checkbox input:checked {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
+#main .version + #content {
+  padding-bottom: 160px;
+}
 
 /* #Navigation
 ================================================== */
@@ -1104,6 +1107,7 @@ body.blur #main, body.blur #toolbar, body.blur #target {
   display: block;
   float: left;
   margin-top: 4px;
+  margin-bottom: 20px;
 }
 #content div.structure div {
   margin-bottom: 24px;

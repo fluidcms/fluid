@@ -25,6 +25,9 @@
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
   }
+  .version + #content {
+    padding-bottom: 160px; // TODO this needs to be dynamically allowed
+  }
 }
 
 /* #Navigation

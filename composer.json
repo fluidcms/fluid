@@ -3,7 +3,7 @@
     "type": "library",
     "description": "CMS",
     "keywords": ["CMS"],
-    "homepage": "https://bitbucket.org/fluidcms/fluid",
+    "homepage": "https://github.com/fluidcms/fluid",
     "license": "none",
     "authors": [
         {
