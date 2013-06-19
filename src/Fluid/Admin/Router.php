@@ -66,20 +66,6 @@ class Router
     }
 
     /**
-     * Output a page token.
-     *
-     * @return  bool
-     */
-    private static function pageToken()
-    {
-        if (self::$request == 'pagetoken.json') {
-            echo json_encode(array('token' => Fluid\Models\PageToken::getToken()));
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Route public files.
      *
      * @return  bool
@@ -93,6 +79,20 @@ class Router
                 new Fluid\StaticFile($file);
                 return true;
             }
+        }
+        return false;
+    }
+
+    /**
+     * Output a page token.
+     *
+     * @return  bool
+     */
+    private static function pageToken()
+    {
+        if (self::$request == 'pagetoken.json') {
+            echo json_encode(array('token' => Fluid\Models\PageToken::getToken()));
+            return true;
         }
         return false;
     }

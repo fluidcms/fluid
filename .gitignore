@@ -18,3 +18,5 @@ Desktop.ini
 *.scssc
 .sass-cache
 compass_app_log.txt
+
+.idea

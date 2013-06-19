@@ -166,13 +166,7 @@ class StaticFile
     private function getFileContent()
     {
         if (empty($this->content)) {
-            // Compress the output to gzip if possible
-            if (preg_match('/(html|css|txt|xml|htc|js|json|xml|rss|atom|eot|svg|ttf|otf)/i', $this->fileType) && isset($_SERVER['HTTP_ACCEPT_ENCODING']) && preg_match('/(gzip|deflate).*(gzip|deflate)/i', $_SERVER['HTTP_ACCEPT_ENCODING'])) {
-                $this->content = gzencode(file_get_contents($this->file));
-                header('Content-Encoding: gzip');
-            } else {
-                $this->content = file_get_contents($this->file);
-            }
+            $this->content = file_get_contents($this->file);
         }
     }
 
