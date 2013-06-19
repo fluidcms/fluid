@@ -14,7 +14,7 @@ class Check
     /**
      * Check if we can run Fluid
      *
-     * @return  void
+     * @return  bool
      */
     public static function check()
     {
@@ -38,9 +38,10 @@ class Check
      */
     public static function checkStorage()
     {
+        $dir = Fluid::getConfig('storage');
         // Base dir
-        if (!is_dir(Fluid::getConfig('storage'))) {
-            if (mkdir(Fluid::getConfig('storage'))) {
+        if (!is_dir($dir)) {
+            if (mkdir($dir, 0777, true)) {
                 return true;
             }
         } else {
@@ -53,7 +54,7 @@ class Check
     /**
      * Check if git is initalized
      *
-     * @return  void
+     * @return  bool
      */
     public static function checkGit()
     {
@@ -66,7 +67,7 @@ class Check
     /**
      * Check if database connection is working
      *
-     * @return  void
+     * @return  bool
      */
     public static function checkDatabase()
     {

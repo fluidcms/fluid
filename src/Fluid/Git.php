@@ -9,6 +9,8 @@ namespace Fluid;
  */
 class Git
 {
+    private static $remoteUrlChecks = array();
+
     /**
      * Execute a command
      *
@@ -22,21 +24,65 @@ class Git
         $dir = preg_replace('!/{2,}!', '/', $dir);
         $dir = rtrim($dir, '/');
 
-        $returnPath = '';
-        $tmp = preg_replace('!^./!', '', trim($dir, '/'));
-        foreach(explode('/', $tmp) as $part) {
-            $returnPath .= '../';
+        if ($branch !== 'bare') {
+            $dir .= "/.git";
         }
 
-        chdir($dir);
+        $command = preg_replace("/^git/", "git --git-dir={$dir}", $command);
 
         ob_start();
         passthru($command);
         $retval = ob_get_contents();
         ob_end_clean();
 
-        chdir($returnPath);
+        return $retval;
+    }
 
+    /**
+     * Get remotes repositories
+     *
+     * @param   string $branch
+     * @return  array
+     */
+    public static function getRemotes($branch)
+    {
+        $retval = self::command($branch, "git remote -v");
+        $remotes = array();
+        foreach(explode(PHP_EOL, $retval) as $line) {
+            preg_match("/([^\\s]*)(.*) (\([a-z]*\))/i", $line, $match);
+            if (!empty($match[1]) && !empty($match[2])) {
+                $remotes[$match[1]] = trim($match[2]);
+            }
+        }
+
+        return $remotes;
+    }
+
+    /**
+     * Check if remote url is a valid repository
+     *
+     * @param   string $url
+     * @return  bool
+     */
+    public static function checkRemoteUrl($url)
+    {
+        if (isset(self::$remoteUrlChecks[$url])) {
+            return self::$remoteUrlChecks[$url];
+        }
+
+        $retval = false;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+
+        if (curl_exec($ch) === true) {
+            $retval = true;
+        }
+
+        curl_close($ch);
+
+        self::$remoteUrlChecks[$url] = $retval;
         return $retval;
     }
 
@@ -50,7 +96,16 @@ class Git
     {
         $retval = self::command($branch, 'git branch -r');
         $retval = preg_replace('/\s{2,}/', ' ', trim($retval));
-        return explode(' ', $retval);
+
+        $branches = array();
+
+        foreach(explode(' ', $retval) as $branch) {
+            if (!empty($branch)) {
+                $branches[] = $branch;
+            }
+        }
+
+        return $branches;
     }
 
     /**
@@ -70,11 +125,20 @@ class Git
      * Fetch all remote branches
      *
      * @param   string $branch
-     * @return  string
+     * @return  bool
      */
     public static function fetchAll($branch)
     {
-        return self::command($branch, 'git fetch --all');
+        $fetched = false;
+        $remotes = self::getRemotes($branch);
+        foreach($remotes as $remote => $url) {
+            if (self::checkRemoteUrl($url)) {
+                // Fetch remote
+                self::command($branch, "git fetch {$remote}");
+                $fetched = true;
+            }
+        }
+        return $fetched;
     }
 
     /**
@@ -86,18 +150,24 @@ class Git
      */
     public static function isTracking($localBranch, $remoteBranch)
     {
-        $retval = self::command($localBranch, 'git remote show origin');
+        $remotes = self::getRemotes($localBranch);
+        if (isset($remotes['origin']) && self::checkRemoteUrl($remotes['origin'])) {
 
-        if (
-            preg_match("/{$localBranch} merges with remote {$remoteBranch}/i", $retval) &&
-            preg_match("/{$localBranch} pushes to {$remoteBranch}/i", $retval)
-        ) {
-            $tracking = true;
-        } else {
-            $tracking = false;
+            $retval = self::command($localBranch, 'git remote show origin');
+
+            if (
+                preg_match("/{$localBranch} merges with remote {$remoteBranch}/i", $retval) &&
+                preg_match("/{$localBranch} pushes to {$remoteBranch}/i", $retval)
+            ) {
+                $tracking = true;
+            } else {
+                $tracking = false;
+            }
+
+            return $tracking;
         }
 
-        return $tracking;
+        return false;
     }
 
     /**
@@ -177,7 +247,7 @@ class Git
      * Pull
      *
      * @param   string $branch
-     * @param   string $tracking
+     * @param   string $remote
      * @return  string
      */
     public static function pull($branch, $remote = 'master')
