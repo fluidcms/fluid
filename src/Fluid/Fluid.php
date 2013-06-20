@@ -11,7 +11,6 @@ use Exception;
  */
 class Fluid
 {
-    private static $ready = false;
     private static $tables = array('fluid_api_consumers', 'fluid_api_nonce', 'fluid_api_tokens', 'fluid_page_tokens');
     private static $branch;
     private static $config;
@@ -26,7 +25,6 @@ class Fluid
      *
      * @param   array   $config     The configuration array
      * @param   string  $language   The language of the instance
-     * @return  void
      */
     public function __construct($config = null, $language = null)
     {
@@ -35,7 +33,7 @@ class Fluid
         self::$storage = $config['storage'];
 
         // Init Fluid
-        if (!Check::check() && php_sapi_name() !== 'cli') {
+        if (!VerifyFluid::check() && php_sapi_name() !== 'cli') {
             Admin\Init::init();
         }
 
@@ -51,11 +49,11 @@ class Fluid
             View::setTemplatesDir(self::getConfig('templates'));
         }
 
-        // Check if using branch
+        // Validate token and change branch
         if (isset($_SERVER['QUERY_STRING'])) {
             parse_str($_SERVER['QUERY_STRING']);
-            if (isset($fluidBranch) && isset($fluidBranchToken) && Models\PageToken::validateToken($fluidBranchToken)) {
-                self::switchBranch($fluidBranch, true);
+            if (isset($fluidBranch) && isset($fluidBranchToken) && Models\Token::validateToken($fluidBranchToken)) {
+                self::setBranch($fluidBranch, true);
             }
         }
     }
@@ -63,33 +61,12 @@ class Fluid
     /**
      * Get the language of the instance
      *
-     * @param   string  $branch
-     * @param   bool    $create Create the branch if it does not exists
-     * @throws  Exception   Branch does not exists
-     * @return  void
+     * @param   string  $value
+     * @return  string
      */
-    public static function switchBranch($branch, $create = false)
+    public static function setLanguage($value)
     {
-        if ($branch == self::$branch) {
-            return null;
-        } else if (is_dir(self::getConfig('storage') . $branch)) {
-            self::$branch = $branch;
-        } else if ($create) {
-            Tasks\Branch::execute($branch);
-            self::$branch = $branch;
-        } else {
-            throw new Exception("Branch does not exists.");
-        }
-    }
-
-    /**
-     * Returns the status of Fluid
-     *
-     * @return  bool
-     */
-    public static function isReady()
-    {
-        return self::$ready;
+        self::$language = $value;
     }
 
     /**
@@ -113,6 +90,24 @@ class Fluid
     }
 
     /**
+     * Set the branch
+     *
+     * @param   string  $branch
+     * @throws  Exception   Branch does not exists
+     * @return  void
+     */
+    public static function setBranch($branch)
+    {
+        if ($branch == self::$branch) {
+            return null;
+        } else if (is_dir(self::getConfig('storage') . $branch)) {
+            self::$branch = $branch;
+        } else {
+            throw new Exception("Branch does not exists.");
+        }
+    }
+
+    /**
      * Get the current branch
      *
      * @return  string
@@ -133,14 +128,24 @@ class Fluid
     }
 
     /**
-     * Get the language of the instance
+     * Set the request payload in case you use file_get_contents("php://input") before Fluid
      *
      * @param   string  $value
+     * @return  void
+     */
+    public static function setRequestPayload($value)
+    {
+        self::$requestPayload = $value;
+    }
+
+    /**
+     * Get request payload
+     *
      * @return  string
      */
-    public static function setLanguage($value)
+    public static function getRequestPayload()
     {
-        self::$language = $value;
+        return self::$requestPayload;
     }
 
     /**
@@ -197,27 +202,5 @@ class Fluid
                 }
                 break;
         }
-    }
-
-    /**
-     * Set the request payload in case you use file_get_contents("php://input") before Fluid
-     *
-     * @param   string  $value
-     * @return  void
-     */
-    public static function setRequestPayload($value)
-    {
-        self::$requestPayload = $value;
-    }
-
-    /**
-     * Get request payload
-     *
-     * @param   string  $value
-     * @return  string
-     */
-    public static function getRequestPayload()
-    {
-        return self::$requestPayload;
     }
 }

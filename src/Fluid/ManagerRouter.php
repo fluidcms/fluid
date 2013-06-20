@@ -1,15 +1,15 @@
 <?php
 
-namespace Fluid\Admin;
+namespace Fluid;
 
 use Fluid, Exception;
 
 /**
- * Route requests to admin interface.
+ * Route manager requests
  *
  * @package fluid
  */
-class Router
+class ManagerRouter
 {
     private static $request, $method, $input;
 

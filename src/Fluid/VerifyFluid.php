@@ -2,14 +2,14 @@
 
 namespace Fluid;
 
-use PDOException, Exception, PDO;
+use PDOException;
 
 /**
  * Init a new project
  *
  * @package fluid
  */
-class Check
+class VerifyFluid
 {
     /**
      * Check if we can run Fluid

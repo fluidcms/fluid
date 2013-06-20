@@ -1,6 +1,6 @@
 <?php
 
-namespace Fluid\Admin;
+namespace Fluid;
 
 use Fluid;
 

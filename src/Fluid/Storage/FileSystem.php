@@ -1,6 +1,6 @@
 <?php
 
-namespace Fluid\Database;
+namespace Fluid\Storage;
 
 use Exception, Fluid\Fluid;
 
@@ -9,27 +9,22 @@ use Exception, Fluid\Fluid;
  *
  * @package fluid
  */
-class Storage
+abstract class FileSystem extends Cache
 {
     protected static $dataFile;
 
     /**
-     * Get all data from storage
+     * Get data from storage
      *
-     * @return  array
-     */
-    public static function getAll()
-    {
-        return self::load(static::$dataFile);
-    }
-
-    /**
-     * Get all data from storage
-     *
+     * @param   string  $file
      * @return  array
      */
     public static function load($file = null)
     {
+        if (self::cacheExists()) {
+            return self::getCache();
+        }
+
         if (null === $file) {
             $file = static::$dataFile;
         }
@@ -38,9 +33,9 @@ class Storage
 
         if (file_exists($file)) {
             return json_decode(file_get_contents($file), true);
-        } else {
-            throw new Exception("Failed to load data: File {$file} does not exists", E_USER_WARNING);
         }
+
+        return [];
     }
 
     /**
@@ -64,6 +59,8 @@ class Storage
         $file = Fluid::getBranchStorage() . $file;
 
         file_put_contents($file, $content);
+
+        self::storeCache($content);
     }
 
     /**
@@ -74,7 +71,7 @@ class Storage
      */
     public static function setDataFile($file)
     {
-        self::$dataFile = $file;
+        static::$dataFile = $file;
     }
 
     /**
@@ -84,6 +81,6 @@ class Storage
      */
     public static function getDataFile()
     {
-        return self::$dataFile;
+        return static::$dataFile;
     }
 }

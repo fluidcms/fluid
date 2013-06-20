@@ -1,10 +1,8 @@
 <?php
 
-namespace Fluid\Models;
+namespace Fluid;
 
 use Fluid\Fluid,
-    Fluid\Database\Storage,
-    Fluid\Models\Structure\LocalizeStructure,
     Exception;
 
 /**
@@ -12,38 +10,31 @@ use Fluid\Fluid,
  *
  * @package fluid
  */
-class Structure extends Storage
+class Map extends Storage\FileSystem
 {
-    protected static $dataFile = 'structure/structure_master.json';
-    private $localized = array();
+    protected static $dataFile = 'map.json';
+    protected static $cacheKey = "map";
 
-    public $pages;
+    private $pages;
 
     /**
      * Init
      */
     public function __construct()
     {
-        $this->pages = self::getAll();
     }
 
     /**
-     * Localize the structure
+     * Get pages
      *
-     * @param   string  $language
      * @return  array
      */
-    public function getLocalized($language = null)
+    public function getPages()
     {
-        if (null === $language) {
-            $language = Fluid::getLanguage();
+        if (null === $this->pages) {
+            $this->pages = self::load();
         }
-
-        if (!isset($this->localized[$language])) {
-            return $this->localized[$language] = LocalizeStructure::localize($this->pages, $language);
-        } else {
-            return $this->localized[$language];
-        }
+        return $this->pages;
     }
 
     /**
@@ -53,7 +44,7 @@ class Structure extends Storage
      * @throws  Exception
      * @return  array
      */
-    public static function createPage($attrs)
+    public function createPage($attrs)
     {
         Page::create($attrs['path'], $attrs['languages'], array());
         $structure = Structure\Modify::addPage(new self, $attrs["path"], $attrs["index"], $attrs["page"], $attrs["url"], $attrs["layout"], $attrs["languages"]);
@@ -66,22 +57,6 @@ class Structure extends Storage
             "layout" => $attrs["layout"],
             "languages" => $attrs["languages"]
         );
-    }
-
-    /**
-     * Find a page in a localized structure.
-     *
-     * @param   string|array    $paths
-     * @param   array           $pages
-     * @return  array
-     */
-    public function findLocalizedPage($paths, $pages = null)
-    {
-        if (null === $pages) {
-            $pages = $this->getLocalized();
-        }
-
-        return $this->findPage($paths, $pages);
     }
 
     /**
@@ -124,7 +99,7 @@ class Structure extends Storage
      * @param   array   $attrs
      * @return  bool
      */
-    public static function editPage($attrs)
+    public function editPage($attrs)
     {
         list($structure, $id) = Structure\Modify::editPage(new self, $attrs["id"], $attrs["page"], $attrs["url"], $attrs["layout"], $attrs["languages"]);
         $structure->store();
@@ -146,7 +121,7 @@ class Structure extends Storage
      * @param   string   $id
      * @return  bool
      */
-    public static function deletePage($id)
+    public function deletePage($id)
     {
         Page::delete($id);
         $structure = Structure\Modify::deletePage(new self, $id);
@@ -163,7 +138,7 @@ class Structure extends Storage
      * @param   string   $index
      * @return  bool
      */
-    public static function sortPage($id, $to, $index)
+    public function sortPage($id, $to, $index)
     {
         Page::move($id, $to);
         $structure = Structure\Modify::sortPage(new self, $id, $to, $index);

@@ -7,7 +7,7 @@ namespace Fluid;
  *
  * @package fluid
  */
-class Router
+class PageRouter
 {
     private static $request;
 
@@ -19,19 +19,21 @@ class Router
      */
     public static function route($request = null)
     {
+        if (null === $request && isset($_SERVER['REQUEST_URI'])) {
+            $request = $_SERVER['REQUEST_URI'];
+        }
+
         $request = '/' . ltrim($request, '/');
 
-        if (!$structure = Data::getStructure()) {
-            Data::setStructure($structure = new Models\Structure());
-        }
-
-        $page = self::matchRequest($request, $structure->pages);
+        $map = new Map;
+        $page = self::matchRequest($request, $map->getPages());
 
         if (isset($page) && false !== $page) {
-            return Page::create($page['layout'], Data::get($page['page']));
-        } else {
-            return Fluid::NOT_FOUND;
+            Data::setMap($map);
+            return PageMaker::create(Data::get($page['id']));
         }
+
+        return Fluid::NOT_FOUND;
     }
 
     /**
@@ -39,6 +41,7 @@ class Router
      *
      * @param   string  $request
      * @param   array   $pages
+     * @param   string  $parent
      * @return  bool
      */
     private static function matchRequest($request, $pages, $parent = '')
@@ -55,22 +58,5 @@ class Router
             }
         }
         return false;
-    }
-
-    /**
-     * Get the requested url
-     *
-     * @return  string
-     */
-    public static function getRequest()
-    {
-        // Determines if the connection with the client is secure.
-        if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) {
-            $secure = true;
-        } else {
-            $secure = false;
-        }
-
-        return ($secure ? 'https://' : 'http://') . "{$_SERVER['SERVER_NAME']}{$_SERVER['REQUEST_URI']}";
     }
 }

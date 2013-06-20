@@ -1,11 +1,11 @@
-<?php namespace Fluid\Models;
+<?php namespace Fluid;
 
 use PDO, Fluid\Database\Connection;
 
-class PageToken
+class Token
 {
     /**
-     * Get a page token
+     * Get a token
      *
      * @return  string
      */
@@ -15,7 +15,7 @@ class PageToken
     }
 
     /**
-     * Create a page token
+     * Create a token
      *
      * @return  string
      */
@@ -34,7 +34,7 @@ class PageToken
     }
 
     /**
-     * Validate a page token and delete it
+     * Validate a token and delete it
      *
      * @param   string  $token
      * @return  bool

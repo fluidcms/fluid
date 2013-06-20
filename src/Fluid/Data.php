@@ -9,8 +9,7 @@ namespace Fluid;
  */
 class Data
 {
-    private static $structure;
-    private static $page;
+    private static $map;
 
     /**
      * Get data for a page
@@ -20,14 +19,12 @@ class Data
      */
     public static function get($page)
     {
-        if (!isset(self::$structure)) {
-            self::$structure = new Models\Structure();
+        if (!isset(self::$map)) {
+            self::$map = new Map();
         }
 
-        self::$page = $page;
-
-        $site = new Models\Site();
-        $page = new Models\Page(self::$structure, $page);
+        //$site = new Models\Site();
+        $page = new Page($page);
 
         // Make parents tree
         $parentTree = null;
@@ -62,33 +59,45 @@ class Data
     }
 
     /**
-     * Set the site structure
+     * Set the site map
      *
-     * @param   Models\Structure    $structure
+     * @param   Map $map
      * @return  void
      */
-    public static function setStructure(Models\Structure $structure)
+    public static function setMap(Map $map)
     {
-        self::$structure = $structure;
+        self::$map = $map;
     }
 
     /**
-     * Get the site structure
+     * Get the site map
      *
-     * @return  Models\Structure
+     * @return  Map
      */
-    public static function getStructure()
+    public static function getMap()
     {
-        return self::$structure;
+        return self::$map;
     }
 
     /**
-     * Get a list of the pages requested by the ::get() method
+     * Get the requested url
+     * TODO: this is private because we only use it here, if we need to make if public, we will have to move it elsewhere
      *
-     * @return  array
+     * @return  string
      */
-    public static function getPage()
+    public static function getRequest()
     {
-        return self::$page;
+        // Determines if the connection with the client is secure.
+        if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) {
+            $secure = true;
+        } else {
+            $secure = false;
+        }
+
+        if (isset($_SERVER['SERVER_NAME']) && isset($_SERVER['REQUEST_URI'])) {
+            return ($secure ? 'https://' : 'http://') . "{$_SERVER['SERVER_NAME']}{$_SERVER['REQUEST_URI']}";
+        }
+
+        return '';
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Fluid\Models;
+namespace Fluid;
 
 use Exception, Fluid\Fluid, Fluid\Models\File\FileInfo, Fluid\Models\File\FilePreview;
 
