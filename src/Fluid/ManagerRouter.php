@@ -2,7 +2,7 @@
 
 namespace Fluid;
 
-use Fluid, Exception;
+use Exception;
 
 /**
  * Route manager requests
@@ -21,8 +21,8 @@ class ManagerRouter
      */
     public static function route($request)
     {
-        Fluid\View::setTemplatesDir(__DIR__ . "/Templates/");
-        Fluid\View::setLoader(null);
+        View::setTemplatesDir(__DIR__ . "/Templates/");
+        View::setLoader(null);
 
         self::$request = $request;
 
@@ -35,7 +35,7 @@ class ManagerRouter
         if (isset($_REQUEST) && is_array($_REQUEST) && count($_REQUEST)) {
             self::$input = $_REQUEST;
         } else {
-            $fluidInput = Fluid\Fluid::getRequestPayload();
+            $fluidInput = Fluid::getRequestPayload();
             $input = file_get_contents("php://input");
             if (!empty($input)) {
                 self::$input = json_decode($input, true);
@@ -47,21 +47,22 @@ class ManagerRouter
         // Site
         if (!empty($request) && $request === 'site') {
             if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
-                Fluid\Models\Site::update(file_get_contents("php://input"));
+                Models\Site::update(file_get_contents("php://input"));
                 return json_encode(true);
             }
         }
 
         return (
             self::publicFiles() ||
-                self::htmlPages() ||
-                self::structure() ||
-                self::page() ||
-                self::languages() ||
-                self::layouts() ||
-                self::pageToken() ||
-                self::version() ||
-                self::file()
+            self::javascriptFiles() ||
+            self::htmlPages() ||
+            self::structure() ||
+            self::page() ||
+            self::languages() ||
+            self::layouts() ||
+            self::pageToken() ||
+            self::version() ||
+            self::file()
         );
     }
 
@@ -76,7 +77,26 @@ class ManagerRouter
             $file = __DIR__ . '/Public/' . trim(self::$request, ' ./');
             $file = str_replace('..', '', $file);
             if (file_exists($file)) {
-                new Fluid\StaticFile($file);
+                new StaticFile($file);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Route javascript files.
+     *
+     * @return  bool
+     */
+    private static function javascriptFiles()
+    {
+        if (!empty(self::$request)) {
+            $request = preg_replace('/javascripts/i', '', self::$request);
+            $file = __DIR__ . '/Javascripts/' . trim($request, ' ./');
+            $file = str_replace('..', '', $file);
+            if (file_exists($file)) {
+                new StaticFile($file);
                 return true;
             }
         }
@@ -91,7 +111,7 @@ class ManagerRouter
     private static function pageToken()
     {
         if (self::$request == 'pagetoken.json') {
-            echo json_encode(array('token' => Fluid\Models\PageToken::getToken()));
+            echo json_encode(array('token' => Models\PageToken::getToken()));
             return true;
         }
         return false;
@@ -114,13 +134,13 @@ class ManagerRouter
             $url .= "{$_SERVER['SERVER_NAME']}{$_SERVER['REQUEST_URI']}";
             $url = preg_replace("!/fluidcms/(.*)$!i", "/", $url);
 
-            echo Fluid\View::create(
+            echo View::create(
                 'master.twig',
                 array(
                     'websocket_url' => preg_replace('!^https?://([^/]*)!i', "ws://$1:8180", $url),
                     'user_id' => uniqid(),
                     'site_url' => $url,
-                    'token' => Fluid\Models\PageToken::getToken(),
+                    'token' => Models\PageToken::getToken(),
                     'branch' => 'develop'
                 )
             );
@@ -128,7 +148,7 @@ class ManagerRouter
         }
 
         if (self::$request == 'test') {
-            echo Fluid\View::create('test.twig');
+            echo View::create('test.twig');
             return true;
         }
 
@@ -144,10 +164,10 @@ class ManagerRouter
     {
         if (!empty(self::$request) && preg_match('{^([a-z0-9]*)/(languages)(/.*)?$}', self::$request, $match)) {
             $branch = $match[1];
-            Fluid\Fluid::switchBranch($branch);
+            Fluid::switchBranch($branch);
             switch (self::$method) {
                 case 'GET':
-                    echo json_encode(Fluid\Models\Language::getLanguages());
+                    echo json_encode(Models\Language::getLanguages());
                     return true;
             }
         }
@@ -163,10 +183,10 @@ class ManagerRouter
     {
         if (!empty(self::$request) && preg_match('{^([a-z0-9]*)/(layouts)(/.*)?$}', self::$request, $match)) {
             $branch = $match[1];
-            Fluid\Fluid::switchBranch($branch);
+            Fluid::switchBranch($branch);
             switch (self::$method) {
                 case 'GET':
-                    echo json_encode(Fluid\Models\Layout::getLayouts());
+                    echo json_encode(Models\Layout::getLayouts());
                     return true;
             }
         }
@@ -184,20 +204,20 @@ class ManagerRouter
         if (preg_match('{^([a-z0-9]*)/files/(.*)}', self::$request, $match)) {
             $file = $match[2];
             $branch = $match[1];
-            Fluid\Fluid::switchBranch($branch);
+            Fluid::switchBranch($branch);
             if (strpos($file, 'preview/') === 0) {
                 $preview = true;
                 $file = preg_replace('{^preview/}', '', $file);
             }
             $file = urldecode($file);
-            $file = Fluid\Fluid::getBranchStorage() . "files/" . substr($file, 0, 8) . '_' . substr($file, 9);
+            $file = Fluid::getBranchStorage() . "files/" . substr($file, 0, 8) . '_' . substr($file, 9);
             if (file_exists($file)) {
                 if (!isset($preview)) {
-                    new Fluid\StaticFile($file);
+                    new StaticFile($file);
                     return true;
                 } else {
-                    $content = Fluid\Models\File::makePreview($file);
-                    new Fluid\StaticFile($content, 'png', true);
+                    $content = Models\File::makePreview($file);
+                    new StaticFile($content, 'png', true);
                     return true;
                 }
             }
@@ -206,17 +226,17 @@ class ManagerRouter
         // File model
         if (preg_match('{^([a-z0-9]*)/file}', self::$request, $match)) {
             $branch = $match[1];
-            Fluid\Fluid::switchBranch($branch);
+            Fluid::switchBranch($branch);
             switch (self::$method) {
                 case 'GET':
-                    echo json_encode(Fluid\Models\File::getFiles());
+                    echo json_encode(Models\File::getFiles());
                     return true;
                 case 'POST':
-                    echo json_encode(Fluid\Models\File::save());
+                    echo json_encode(Models\File::save());
                     return true;
                 case 'DELETE':
                     // File
-                    echo json_encode(Fluid\Models\File::delete(basename(self::$request)));
+                    echo json_encode(Models\File::delete(basename(self::$request)));
                     return true;
             }
         }
@@ -236,11 +256,11 @@ class ManagerRouter
             Fluid\Fluid::switchBranch($branch);
             switch (self::$method) {
                 case 'GET':
-                    echo json_encode(Fluid\Models\Structure::getAll());
+                    echo json_encode(Models\Structure::getAll());
                     return true;
                 case 'POST':
                     try {
-                        echo json_encode(Fluid\Models\Structure::createPage(self::$input));
+                        echo json_encode(Models\Structure::createPage(self::$input));
                     } catch (Exception $e) {
                         header('X-Error-Message: ' . $e->getMessage(), true, 500);
                         exit;
@@ -251,7 +271,7 @@ class ManagerRouter
                     if (isset($match[3]) && strpos($match[3], '/sort') === 0) {
                         try {
                             $id = trim(urldecode(preg_replace('{/sort/}', '', $match[3])), '/');
-                            echo json_encode(Fluid\Models\Structure::sortPage($id, self::$input['page'], self::$input['index']));
+                            echo json_encode(Models\Structure::sortPage($id, self::$input['page'], self::$input['index']));
                         } catch(Exception $e) {
                             header('X-Error-Message: ' . $e->getMessage(), true, 500);
                             exit;
@@ -260,7 +280,7 @@ class ManagerRouter
                     // Edit
                     else {
                         try {
-                            echo json_encode(Fluid\Models\Structure::editPage(self::$input));
+                            echo json_encode(Models\Structure::editPage(self::$input));
                         } catch (Exception $e) {
                             header('X-Error-Message: ' . $e->getMessage(), true, 500);
                             exit;
@@ -270,7 +290,7 @@ class ManagerRouter
                     return true;
                 case 'DELETE':
                     try {
-                        echo json_encode(Fluid\Models\Structure::deletePage(trim(urldecode($match[3]), '/')));
+                        echo json_encode(Models\Structure::deletePage(trim(urldecode($match[3]), '/')));
                     } catch(Exception $e) {
                         header('X-Error-Message: ' . $e->getMessage(), true, 500);
                         exit;
@@ -295,9 +315,9 @@ class ManagerRouter
             switch (self::$method) {
                 case 'POST':
                     if (empty($match[3])) {
-                        $data = Fluid\Models\Page::mergeTemplateData(isset($_POST['content']) ? $_POST['content'] : '');
+                        $data = Models\Page::mergeTemplateData(isset($_POST['content']) ? $_POST['content'] : '');
                         echo json_encode(array(
-                            'language' => Fluid\Fluid::getLanguage(),
+                            'language' => Fluid::getLanguage(),
                             'page' => $data['page']->page,
                             'data' => $data['page']->data,
                             'variables' => $data['page']->variables,
@@ -311,7 +331,7 @@ class ManagerRouter
                     return true;
                 case 'PUT':
                     try {
-                        echo json_encode(Fluid\Models\Page::update(trim(urldecode($match[3]), '/'), self::$input));
+                        echo json_encode(Models\Page::update(trim(urldecode($match[3]), '/'), self::$input));
                     } catch(Exception $e) {
                         header('X-Error-Message: ' . $e->getMessage(), true, 500);
                         exit;
@@ -333,25 +353,25 @@ class ManagerRouter
     {
         // Update master
         if (self::$request == 'update') {
-            Fluid\Tasks\FetchPull::execute('master');
+            Tasks\FetchPull::execute('master');
         }
 
         // Other
         if (preg_match('{^([a-z0-9]*)/(commit\+push|pull)$}', self::$request, $match)) {
             $action = $match[2];
             $branch = $match[1];
-            Fluid\Fluid::switchBranch($branch);
+            Fluid::switchBranch($branch);
             switch (self::$method) {
                 case 'POST':
                     if ($action === 'commit+push') {
-                        Fluid\Tasks\CommitPush::execute($branch, self::$input["msg"]);
+                        Tasks\CommitPush::execute($branch, self::$input["msg"]);
                         // Fluid\Task::run("CommitPush", array($branch, self::$input["msg"])); TODO not working?
                         return true;
                     }
                     break;
                 case 'GET':
                     if ($action === 'pull') {
-                        Fluid\Git::pull($branch);
+                        Git::pull($branch);
                         return true;
                     }
                     break;

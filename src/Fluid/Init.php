@@ -2,8 +2,6 @@
 
 namespace Fluid;
 
-use Fluid;
-
 class Init {
     private static $allowed = array(
         '/fluidcms/stylesheets/init-1.0.css',
@@ -24,9 +22,9 @@ class Init {
                 return;
             }
 
-            Fluid\View::setTemplatesDir(__DIR__ . "/Templates/");
-            Fluid\View::setLoader(null);
-            echo Fluid\View::create('init.twig');
+            View::setTemplatesDir(__DIR__ . "/Templates/");
+            View::setLoader(null);
+            echo View::create('init.twig');
             exit;
         }
     }
@@ -37,7 +35,7 @@ class Init {
      * @return  string
      */
     public static function triggerInit() {
-        Fluid\Tasks\Init::execute();
+        Tasks\Init::execute();
         exit;
     }
 }

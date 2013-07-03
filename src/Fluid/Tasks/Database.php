@@ -9,6 +9,7 @@ class Database
     /**
      * Create Fluid database tables if they do not exists
      *
+     * @throws  Exception
      * @return  void
      */
     public static function execute()
@@ -20,7 +21,7 @@ class Database
         }
 
         $config = Fluid::getConfig('database')['config'];
-        $sth = $dbh->prepare("SELECT COUNT(*) FROM `information_schema`.`tables` WHERE `table_schema`=:database AND table_name=:table;");
+        $sth = $dbh->prepare("SELECT COUNT(*) FROM `information_schema`.`tables` WHERE `table_schema`=:database AND `table_name`=:table;");
 
         foreach (Fluid::getTables() as $table) {
             $sth->execute(array(':database' => $config["dbname"], ':table' => $table));
@@ -39,7 +40,7 @@ class Database
      * @return  void
      */
     public static function initDB(PDO $dbh) {
-        $query = file_get_contents(__DIR__ . "/../Database/Structure/Structure.sql");
+        $query = file_get_contents(__DIR__ . "/../Database/Structure.sql");
         $dbh->query($query);
     }
 }

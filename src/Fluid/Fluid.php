@@ -34,7 +34,7 @@ class Fluid
 
         // Init Fluid
         if (!VerifyFluid::check() && php_sapi_name() !== 'cli') {
-            Admin\Init::init();
+            Init::init();
         }
 
         // Set language

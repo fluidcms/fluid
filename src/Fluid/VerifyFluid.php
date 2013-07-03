@@ -78,7 +78,7 @@ class VerifyFluid
         }
 
         $config = Fluid::getConfig('database')['config'];
-        $sth = $dbh->prepare("SELECT COUNT(*) FROM `information_schema`.`tables` WHERE `table_schema`=:database AND table_name=:table;");
+        $sth = $dbh->prepare("SELECT COUNT(*) FROM `information_schema`.`tables` WHERE `table_schema`=:database AND `table_name`=:table;");
 
         foreach (Fluid::getTables() as $table) {
             $sth->execute(array(':database' => $config["dbname"], ':table' => $table));

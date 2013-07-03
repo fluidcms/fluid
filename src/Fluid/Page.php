@@ -2,14 +2,14 @@
 
 namespace Fluid;
 
-use Exception, Fluid\Fluid, Fluid\Database\Storage;
+use Exception, Fluid\Fluid;
 
 /**
  * Page model
  *
  * @package fluid
  */
-class Page extends Storage
+class Page extends Storage\FileSystem
 {
     public $page;
     public $pages;
@@ -20,11 +20,10 @@ class Page extends Storage
     /**
      * Init
      *
-     * @param   Structure   $structure  The site's structure
-     * @param   string      $page       The unique identifier of a page (i.e. contact/form)
-     * @return  void
+     * @param   Map     $map    The site's map
+     * @param   string  $page   The id of the page
      */
-    public function __construct(Structure $structure, $page)
+    public function __construct(Map $map, $page)
     {
         $this->page = $page;
 
@@ -32,13 +31,13 @@ class Page extends Storage
         $parent = explode('/', strrev($page), 2);
         if (isset($parent[1])) {
             $parent = strrev($parent[1]);
-            $this->parent = new Page($structure, $parent);
+            $this->parent = new Page($map, $parent);
         }
 
         // TODO this is HEAVY on the system, to optimize
         // IDEA remove the data from the Page constructor, move it to a method (getData)
         // TMPFIX we search the localized structure to AT LEAST get the pages names
-        $structurePage = $structure->findLocalizedPage($page);
+        $structurePage = $map->findLocalizedPage($page);
         if (isset($structurePage['pages']) && is_array($structurePage['pages'])) {
             // TODO not working, too much looping. Ideally, we need to be able to access all
             // the data of the site from twig. So what we need is a big data array containing
