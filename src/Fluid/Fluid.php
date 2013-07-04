@@ -15,7 +15,7 @@ class Fluid
     private static $branch;
     private static $config;
     private static $storage;
-    private static $language;
+    private static $language = 'en-US';
     private static $requestPayload;
 
     const NOT_FOUND = '404';
