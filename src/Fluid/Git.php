@@ -14,11 +14,12 @@ class Git
     /**
      * Execute a command
      *
-     * @param   string $branch
-     * @param   string $command
+     * @param   string  $branch
+     * @param   string  $command
+     * @param   bool    $check
      * @return  string
      */
-    private static function command($branch, $command)
+    private static function command($branch, $command, $check = true)
     {
         $dir = Fluid::getConfig("storage") . $branch;
         $dir = preg_replace('!/{2,}!', '/', $dir);
@@ -28,14 +29,18 @@ class Git
             $dir .= "/.git";
         }
 
-        $command = preg_replace("/^git/", "git --git-dir={$dir}", $command);
+        if (!$check || is_dir($dir)) {
+            $command = preg_replace("/^git/", "git --git-dir={$dir}", $command);
 
-        ob_start();
-        passthru($command);
-        $retval = ob_get_contents();
-        ob_end_clean();
+            ob_start();
+            passthru($command);
+            $retval = ob_get_contents();
+            ob_end_clean();
 
-        return $retval;
+            return $retval;
+        }
+
+        return false;
     }
 
     /**
@@ -205,7 +210,7 @@ class Git
      */
     public static function init($branch)
     {
-        $retval = self::command($branch, 'git init');
+        $retval = self::command($branch, 'git init', false);
         if (stristr($retval, 'Initialized') !== false) {
             return true;
         } else {

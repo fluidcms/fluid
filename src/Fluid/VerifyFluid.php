@@ -65,6 +65,21 @@ class VerifyFluid
     }
 
     /**
+     * Check if a git branch exsits
+     *
+     * @param   string  $branch
+     * @return  bool
+     */
+    public static function branchExists($branch = 'bare')
+    {
+        if ($branch === 'bare')  {
+            return is_dir(Fluid::getConfig('storage') . 'bare');
+        } else {
+            return is_dir(Fluid::getConfig('storage') . $branch . '/.git');
+        }
+    }
+
+    /**
      * Check if database connection is working
      *
      * @return  bool

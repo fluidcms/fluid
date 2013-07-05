@@ -31,7 +31,10 @@ class Branch
      */
     public static function createDir($branch)
     {
-        return mkdir(Fluid::getConfig("storage") . $branch);
+        if (!is_dir(Fluid::getConfig("storage") . $branch)) {
+            return mkdir(Fluid::getConfig("storage") . $branch);
+        }
+        return true;
     }
 
     /**

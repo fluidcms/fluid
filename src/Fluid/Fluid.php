@@ -29,8 +29,7 @@ class Fluid
     public function __construct($config = null, $language = null)
     {
         self::$branch = 'master';
-        self::$config = $config;
-        self::$storage = $config['storage'];
+        self::config($config);
 
         // Init Fluid
         if (!VerifyFluid::check() && php_sapi_name() !== 'cli') {
@@ -51,11 +50,23 @@ class Fluid
 
         // Validate token and change branch
         if (isset($_SERVER['QUERY_STRING'])) {
-            parse_str($_SERVER['QUERY_STRING']);
-            if (isset($fluidBranch) && isset($fluidBranchToken) && Models\Token::validateToken($fluidBranchToken)) {
-                self::setBranch($fluidBranch, true);
+            parse_str($_SERVER['QUERY_STRING'], $queryString);
+            if (isset($queryString['fluidBranch']) && isset($queryString['fluidToken']) && Token::validateToken($queryString['fluidToken'])) {
+                self::setBranch($queryString['fluidBranch'], true);
             }
         }
+    }
+
+    /**
+     * Configure Fluid
+     *
+     * @param   array   $config     The configuration array
+     * @return  void
+     */
+    public static function config($config = null)
+    {
+        self::$config = $config;
+        self::$storage = $config['storage'];
     }
 
     /**
@@ -93,11 +104,16 @@ class Fluid
      * Set the branch
      *
      * @param   string  $branch
+     * @param   bool    $create
      * @throws  Exception   Branch does not exists
      * @return  void
      */
-    public static function setBranch($branch)
+    public static function setBranch($branch, $create = false)
     {
+        if ($create && !VerifyFluid::branchExists($branch)) {
+            Tasks\Branch::execute($branch);
+        }
+
         if ($branch == self::$branch) {
             return null;
         } else if (is_dir(self::getConfig('storage') . $branch)) {
@@ -168,6 +184,7 @@ class Fluid
             case 'database':
             case 'languages':
             case 'git':
+            case 'ports':
                 if (isset(self::$config[$name])) {
                     return self::$config[$name];
                 }
@@ -193,6 +210,7 @@ class Fluid
             case 'database':
             case 'layouts':
             case 'git':
+            case 'ports':
                 self::$config[$name] = $value;
                 break;
             case 'languages':
