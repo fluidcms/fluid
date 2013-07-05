@@ -16,7 +16,7 @@ class MessageQueue
     {
         $context = new ZMQContext();
         $socket = $context->getSocket(ZMQ::SOCKET_PUSH);
-        $socket->connect("tcp://localhost:57586");
+        $socket->connect("tcp://localhost:" . Fluid::getConfig('ports')['zeromq']);
         $socket->send(json_encode($data));
     }
 }

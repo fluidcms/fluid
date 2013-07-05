@@ -33,21 +33,13 @@ class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
             $root->upTimeCallback();
         });
 
-        try {
-            $context = new React\ZMQ\Context($loop);
-            $pull = $context->getSocket(ZMQ::SOCKET_PULL);
-            $pull->bind('tcp://127.0.0.1:57586');
-            $pull->on('message', array($tasks, 'message'));
-        } catch (ZMQSocketException $e) {
-            return;
-        }
+        $context = new React\ZMQ\Context($loop);
+        $pull = $context->getSocket(ZMQ::SOCKET_PULL);
+        $pull->bind('tcp://127.0.0.1:' . Fluid\Fluid::getConfig('ports')['zeromq']);
+        $pull->on('message', array($tasks, 'message'));
 
-        try {
-            $socket = new React\Socket\Server($loop);
-            $socket->listen(8180, '0.0.0.0');
-        } catch(React\Socket\ConnectionException $e) {
-            return;
-        }
+        $socket = new React\Socket\Server($loop);
+        $socket->listen(Fluid\Fluid::getConfig('ports')['websockets'], '0.0.0.0');
 
         new Ratchet\Server\IoServer(
             new Ratchet\WebSocket\WsServer(

@@ -17,22 +17,27 @@ class ManagerRouter
      * Route an admin request
      *
      * @param   string  $request
+     * @param   string  $method
+     * @param   array   $input
      * @return  mixed
      */
-    public static function route($request)
+    public static function route($request, $method = null, $input = null)
     {
-        View::setTemplatesDir(__DIR__ . "/Templates/");
-        View::setLoader(null);
-
         self::$request = $request;
 
-        if (isset($_SERVER['REQUEST_METHOD'])) {
+        // Get request method
+        if (null !== $method) {
+            self::$method = $method;
+        } else if (isset($_SERVER['REQUEST_METHOD'])) {
             self::$method = $_SERVER['REQUEST_METHOD'];
         } else {
             self::$method = 'GET';
         }
 
-        if (isset($_REQUEST) && is_array($_REQUEST) && count($_REQUEST)) {
+        // Get request input
+        if (null !== $input) {
+            self::$input = $input;
+        } else if (isset($_REQUEST) && is_array($_REQUEST) && count($_REQUEST)) {
             self::$input = $_REQUEST;
         } else {
             $fluidInput = Fluid::getRequestPayload();
@@ -44,19 +49,11 @@ class ManagerRouter
             }
         }
 
-        // Site
-        if (!empty($request) && $request === 'site') {
-            if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
-                Models\Site::update(file_get_contents("php://input"));
-                return json_encode(true);
-            }
-        }
-
         return (
             self::publicFiles() ||
             self::javascriptFiles() ||
             self::htmlPages() ||
-            self::structure() ||
+            self::map() ||
             self::page() ||
             self::languages() ||
             self::layouts() ||
@@ -125,6 +122,9 @@ class ManagerRouter
     private static function htmlPages()
     {
         if (self::$request == '' || self::$request == 'files') {
+            View::setTemplatesDir(__DIR__ . "/Templates/");
+            View::setLoader(null);
+
             if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) {
                 $url = 'https://';
             } else {
@@ -137,17 +137,20 @@ class ManagerRouter
             echo View::create(
                 'master.twig',
                 array(
-                    'websocket_url' => preg_replace('!^https?://([^/]*)!i', "ws://$1:8180", $url),
+                    'websocket_url' => preg_replace('!^https?://([^/]*)!i', "ws://$1:" . Fluid::getConfig('ports')['websockets'], $url),
                     'user_id' => uniqid(),
                     'site_url' => $url,
-                    'token' => Models\PageToken::getToken(),
+                    'token' => Token::getToken(),
                     'branch' => 'develop'
                 )
             );
             return true;
         }
 
-        if (self::$request == 'test') {
+        else if (self::$request == 'test') {
+            View::setTemplatesDir(__DIR__ . "/Templates/");
+            View::setLoader(null);
+
             echo View::create('test.twig');
             return true;
         }
@@ -249,15 +252,17 @@ class ManagerRouter
      *
      * @return  bool
      */
-    private static function structure()
+    private static function map()
     {
-        if (!empty(self::$request) && preg_match('{^([a-z0-9]*)/(structure)(/.*)?$}', self::$request, $match)) {
+        if (!empty(self::$request) && preg_match('{^([a-z0-9]*)/(map)(/.*)?$}', self::$request, $match)) {
             $branch = $match[1];
-            Fluid\Fluid::switchBranch($branch);
+            Fluid::setBranch($branch, true);
             switch (self::$method) {
                 case 'GET':
-                    echo json_encode(Models\Structure::getAll());
+                    $map = new Map;
+                    echo json_encode($map->getPages());
                     return true;
+
                 case 'POST':
                     try {
                         echo json_encode(Models\Structure::createPage(self::$input));
