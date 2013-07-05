@@ -1,17 +1,17 @@
 define(['backbone', 'ejs'], function (Backbone, EJS) {
-    var View = Backbone.View.extend({
+    return Backbone.View.extend({
         id: "nav",
 
         template: new EJS({url: 'javascripts/fluid/templates/nav.ejs'}),
 
         initialize: function (attrs) {
             this.items = [
-                {name: 'Structure', className: 'structure'},
+                {name: 'Map', className: 'map'},
                 {name: 'Files', className: 'files'}
             ];
 
             this.router = attrs.router;
-            this.router.on("route", this.changeRoute, this);
+            this.router.on("change", this.changeRoute, this);
         },
 
         render: function () {
@@ -28,6 +28,4 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
             $("#main #nav a." + this.router.current).addClass('current');
         }
     });
-
-    return View;
 });

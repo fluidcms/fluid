@@ -81,11 +81,13 @@ define(['backbone'], function (Backbone) {
     var Pages = Backbone.Collection.extend({
             model: Page,
 
-            url: fluidBranch + '/structure',
+            url: fluidBranch + '/map',
 
             parent: null,
 
             initialize: function (items, attrs) {
+                this.socket = attrs.socket;
+
                 if (this.parent == null && (typeof attrs == 'undefined' || typeof attrs.parent == 'undefined')) {
                     this.fetch();
                 } else {
@@ -109,12 +111,20 @@ define(['backbone'], function (Backbone) {
                 });
             },
 
+            fetch: function () {
+                var root = this;
+                this.socket.fetch('GET', this.url, {}, function(response) {
+                    root.parse(response);
+                });
+            },
+
             parse: function (response) {
                 var parent = this;
                 $.each(response, function () {
                     this.parent = parent;
                     this.id = this.page;
                 });
+                this.reset(response);
                 return response;
             },
 

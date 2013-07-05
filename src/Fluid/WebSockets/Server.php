@@ -7,28 +7,14 @@ use Ratchet, Fluid;
 class Server implements Ratchet\Wamp\WampServerInterface
 {
     protected $connections = array();
-    private $tasks;
-
-    public function push($data)
-    {}
-
-
-    /*public function parse($data)
-    {
-        $data = json_decode($data, true);
-        switch($data['task']) {
-            case 'watchBranchStatus':
-                WatchBranchStatus::parse($data, $this->connections);
-                break;
-        }
-    }*/
 
     /**
      * Get active connections
      *
      * @return  array
      */
-    public function getConnections() {
+    public function getConnections()
+    {
         return $this->connections;
     }
 
@@ -64,12 +50,29 @@ class Server implements Ratchet\Wamp\WampServerInterface
 
     public function onCall(Ratchet\ConnectionInterface $conn, $id, $topic, array $params)
     {
-        $conn->callError($id, $topic, 'You cannot send messages to the server.')->close();
+        if (
+            isset($params['url']) &&
+            isset($params['method']) &&
+            isset($params['data']) &&
+            is_string($params['url']) &&
+            is_string($params['method']) &&
+            is_array($params['data'])
+        ) {
+            ob_start();
+            Fluid\ManagerRouter::route($params['url'], $params['method'], $params['data']);
+            $retval = ob_get_contents();
+            ob_end_clean();
+
+            $conn->send('[3,"' . $id . '",' . $retval . ']');
+        }
+
+        else {
+            $conn->callError($id, $topic, 'Invalid call')->close();
+        }
     }
 
     public function onPublish(Ratchet\ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible)
     {
-        $conn->close();
     }
 
     public function onError(Ratchet\ConnectionInterface $conn, \Exception $e)

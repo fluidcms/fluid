@@ -1,4 +1,4 @@
-define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu', 'models/structure'], function (Backbone, EJS, jUI, Modal, ContextMenu, Structure) {
+define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu'], function (Backbone, EJS, jUI, Modal, ContextMenu) {
     var View = Backbone.View.extend({
         events: {
             'click a[data-action=addPage]': 'addPage',
@@ -9,13 +9,13 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu', 'mod
 
         dropbox: {},
 
-        template: new EJS({url: 'javascripts/fluid/templates/structure/structure.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+        template: new EJS({url: 'javascripts/fluid/templates/map/map.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
             var root = this;
             this.render();
             this.collection.on('reset add remove update', this.render, this);
-            this.collection.on('saved', attrs.page.reload, this);
+//            this.collection.on('saved', attrs.page.reload, this); // TODO: uncomment
             this.languages = attrs.languages;
             this.layouts = attrs.layouts;
 
@@ -69,7 +69,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu', 'mod
 
         contextmenu: function (e) {
             e.preventDefault();
-            new ContextMenu({url: 'javascripts/fluid/templates/structure/contextmenu.ejs', parent: this, event: e}).render();
+            new ContextMenu({url: 'javascripts/fluid/templates/map/contextmenu.ejs', parent: this, event: e}).render();
         },
 
         addPage: function (e) {
@@ -91,7 +91,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu', 'mod
     });
 
     var Page = Backbone.View.extend($.extend({}, Modal, {
-        template: new EJS({url: 'javascripts/fluid/templates/structure/page.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+        template: new EJS({url: 'javascripts/fluid/templates/map/page.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
             this.languages = attrs.languages;
