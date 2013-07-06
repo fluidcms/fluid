@@ -23,16 +23,16 @@ class Data
             self::$map = new Map();
         }
 
-        $data = self::getData(self::$map);
+        $global = self::getData(self::$map);
 
-        $page = self::getPage($data, $page);
+        $page = self::getPage($global, $page);
 
         $page = self::makeParentTree($page);
 
         return array(
             'url' => self::getRequest(),
             'language' => substr(Fluid::getLanguage(), 0, 2),
-            'data' => $data,
+            'global' => $global,
             'parents' => $page['parents'],
             'parent' => isset($page['parent']) ? $page['parent'] : array(),
             'page' => $page

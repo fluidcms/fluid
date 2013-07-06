@@ -29,6 +29,14 @@ define(['backbone', 'views/loader', 'models/socket', 'views/nav'],
                         root.loader.remove();
                     });
                     this.socket.connection();
+
+                    // Control + Z or Command + Z events
+                    $(document).keydown(function (e) {
+                        if ((e.ctrlKey || e.metaKey) && e.keyCode == 90) {
+                            //root.cancelChange();
+                            console.log('Control Z');
+                        }
+                    });
                 },
 
                 routes: {
@@ -64,6 +72,10 @@ define(['backbone', 'views/loader', 'models/socket', 'views/nav'],
                     }
                 },
 
+                components: function () {
+                    var root = this;
+                },
+
                 files: function () {
                     /*var root = this;
                     if (typeof root.fileView === 'undefined') {
@@ -71,22 +83,36 @@ define(['backbone', 'views/loader', 'models/socket', 'views/nav'],
                             root.fileView = new FileView({collection: new File.Collection()});
                         });
                     }*/
+                },
+
+                history: function () {
+                    var root = this;
+                    /*if (this.current !== 'map') {
+                        require(['models/map', 'views/map'], function (Map, MapView) {
+                            var map = new Map.Pages(null, {socket: root.socket});
+                            new MapView({
+                                collection: map,
+                                page: root.page,
+                                languages: root.languages,
+                                layouts: root.layouts
+                            });
+                        });
+                    }*/
                 }
             });
 
             //boot up the app:
             var fluidRouter = new FluidRouter();
+            fluidRouter.make("");
 
             // Block default link behavior
-            Backbone.history.start({pushState: true, root: fluidRouter.root});
-
             $(document).on('click', "a[href]", function (e) {
                 var href = { prop: $(this).prop("href"), attr: $(this).attr("href") };
                 var root = location.protocol + "//" + location.host + fluidRouter.root;
 
                 if (href.prop && href.prop.slice(0, root.length) === root) {
                     e.preventDefault();
-                    //Backbone.history.navigate(href.attr, true);
+                    fluidRouter.make(href.attr);
                 }
             });
         }

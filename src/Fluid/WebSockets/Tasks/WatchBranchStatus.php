@@ -54,7 +54,7 @@ class WatchBranchStatus extends Fluid\WebSockets\Task implements Fluid\WebSocket
                 if ($subscriber['branch'] == $data['branch']) {
                     $msg = json_encode($data['message']);
                     if (!isset($this->lastMessageSent[$connection]) || $this->lastMessageSent[$connection] !== $msg) {
-                        $subscriber['user']->broadcast($msg);
+                        $subscriber['topic']->broadcast($msg);
                     }
                     $this->lastMessageSent[$connection] = $msg;
                 }

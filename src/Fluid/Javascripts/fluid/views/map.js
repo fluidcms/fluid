@@ -18,15 +18,6 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu'], fun
 //            this.collection.on('saved', attrs.page.reload, this); // TODO: uncomment
             this.languages = attrs.languages;
             this.layouts = attrs.layouts;
-
-            // Control + Z or Command + Z events
-            setTimeout(function () {
-                $(document).keydown(function (e) {
-                    if ((e.ctrlKey || e.metaKey) && e.keyCode == 90) {
-                        root.cancelChange();
-                    }
-                });
-            }, 1);
         },
 
         render: function () {
@@ -38,6 +29,13 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu'], fun
 
         sortable: function () {
             var root = this;
+
+            var cancelSort = function(e) {
+                if (e.keyCode == 27) {
+                    root.$el.find('ul.map, ul.pages').sortable("cancel");
+                }
+            };
+
             this.$el.find('ul.map, ul.pages').sortable({
                 over: function(event, ui) {
                     $(event.target).parents('li:eq(0)').find('>span>a').addClass('dragover');
@@ -47,16 +45,12 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu'], fun
                 },
                 start: function (event, ui) {
                     // Stop on escape
-                    $(document).on('keydown', function (e) {
-                        if (e.keyCode == 27) {
-                            root.$el.find('ul.map, ul.pages').sortable("cancel");
-                        }
-                    });
+                    $(document).on('keydown', cancelSort);
 
                     ui.item.addClass("highlight").find('a').addClass("highlight");
                 },
                 stop: function (event, ui) {
-                    $(document).off('keydown');
+                    $(document).off('keydown', cancelSort);
 
                     ui.item.removeClass("highlight").find('a').removeClass("highlight");
                 },

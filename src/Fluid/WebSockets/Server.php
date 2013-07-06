@@ -20,15 +20,15 @@ class Server implements Ratchet\Wamp\WampServerInterface
 
     public function onSubscribe(Ratchet\ConnectionInterface $conn, $topic)
     {
-        $topidId = explode('/', $topic->getId());
-        $branch = (isset($topidId[0]) ? $topidId[0] : null);
-        $subject = 'all'; // TODO implement different subscriptions subjects (isset($topidId[1]) ? $topidId[1] : 'all');
+        $topicId = json_decode($topic->getId(), true);
 
         if (!array_key_exists($topic->getId(), $this->connections[$conn->WAMP->sessionId])) {
             $this->connections[$conn->WAMP->sessionId][$topic->getId()] = array(
-                'user' => $topic,
-                'branch' => $branch,
-                'subject' => $subject
+                'branch' => $topicId['branch'],
+                'user_id' => $topicId['user_id'],
+                'user_name' => $topicId['user_name'],
+                'user_email' => $topicId['user_email'],
+                'topic' => $topic
             );
         }
     }

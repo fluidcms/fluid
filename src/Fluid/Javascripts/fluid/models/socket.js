@@ -2,9 +2,16 @@ define(['backbone', 'views/error'], function (Backbone, ErrorView) {
     return Backbone.Model.extend({
         conn: null,
         loader: null,
+        topic: "",
         views: {},
 
         initialize: function (attrs) {
+            this.topic = {
+                branch: fluidBranch,
+                user_id: fluidUserId,
+                user_name: fluidUserName,
+                user_email: fluidUserEmail
+            };
             this.loader = attrs.loader;
             //this.views.version = attrs.version;
         },
@@ -15,7 +22,7 @@ define(['backbone', 'views/error'], function (Backbone, ErrorView) {
                 fluidWebSocketUrl,
                 function() {
                     root.trigger('ready');
-                    root.conn.subscribe(fluidBranch + "/" + fluidUserId, function(topic, message) {
+                    root.conn.subscribe(JSON.stringify(root.topic), function(topic, message) {
                         root.parse(topic, message);
                     });
                 },
@@ -27,7 +34,7 @@ define(['backbone', 'views/error'], function (Backbone, ErrorView) {
         },
 
         parse: function(topic, message) {
-            var response = $.parseJSON(message);
+            var response = JSON.parse(message);
             switch(response.target) {
                 case 'version':
                     //this.views.version.change(response.data);
