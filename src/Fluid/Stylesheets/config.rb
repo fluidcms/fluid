@@ -1,13 +1,13 @@
 # Require any additional compass plugins here.
 
 # Set this to the root of your project when deployed:
-http_path = ""
+http_path = "/"
+http_fonts_path = ""
 css_dir = "../Public/stylesheets"
-sass_dir = "."
-images_dir = ""
-images_path = ""
-http_images_path = "."
+sass_dir = ""
+images_dir = "../Public/images"
 javascripts_dir = "../Public/javascripts"
+output_style = :compressed
 
 # You can select your preferred output style here (can be overridden via the command line):
 # output_style = :expanded or :nested or :compact or :compressed
@@ -16,7 +16,7 @@ javascripts_dir = "../Public/javascripts"
 # relative_assets = true
 
 # To disable debugging comments that display the original location of your selectors. Uncomment:
-line_comments = false
+# line_comments = false
 
 
 # If you prefer the indented syntax, you might want to regenerate this
@@ -24,4 +24,3 @@ line_comments = false
 # preferred_syntax = :sass
 # and then run:
 # sass-convert -R --from scss --to sass sass scss && rm -rf sass && mv scss sass
-preferred_syntax = :scss

@@ -2,10 +2,13 @@
 
 /* Table of Content
 ==================================================
-  #Font weight
-  #Margins and dimensions
-  #Colors definitions */
+  # Font families
+  # Font weight
+  # Margins and dimensions
+  # Colors definitions */
 
+/* #Font families
+================================================== */
 
 /* #Font weight
 ================================================== */
@@ -25,5 +28,33 @@ $main-margin-bottom: 16px;
 /* #Colors definitions
 ================================================== */
 $yellow: #ecc800;
+
 $green: #5ed754;
+
 $light-gray: #dcdcdc;
+
+$blue: #1b81c0;
+$light-blue: #3eb6ff;
+$dark-blue: #0f547e;
+
+/* #Sprites
+================================================== */
+$sprite-size: 137px 122px;
+
+@mixin sprite() {
+  background-image: url(../images/sprite.png);
+}
+
+@mixin sprite-position($position) {
+  @include sprite();
+  background-position: $position;
+}
+
+@mixin sprite-after($width, $height) {
+  content: "";
+  display: block;
+  @include sprite();
+  position: absolute;
+  width: $width;
+  height: $height;
+}

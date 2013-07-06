@@ -16,7 +16,7 @@
 #main {
   z-index: 3;
   position: fixed;
-  background: #4d4d4d;
+  background: #3b3b3b;
   float: left;
   height: 100%;
   width: 306px;
@@ -61,14 +61,9 @@
     height: 42px;
     cursor: default;
     &:after {
-      position: absolute;
       top: 13px;
       left: 8px;
-      content: "";
-      display: block;
-      width: 16px;
-      height: 16px;
-      background-image: url('../images/sprite.png');
+      @include sprite-after(16px, 16px);
     }
     &.structure:after {
       background-position-x: 0;
@@ -82,7 +77,7 @@
     &.intl:after {
       background-position-x: -48px;
     }
-    &.diff:after {
+    &.history:after {
       background-position-x: -64px;
     }
     &.current {

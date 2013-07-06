@@ -1,3 +1,7 @@
+/**
+ * EJS v1.0
+ * @source http://embeddedjs.com/
+ */
 (function(){
     
 

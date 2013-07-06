@@ -1,4 +1,4 @@
-define(['backbone', 'ejs'], function (Backbone, EJS) {
+define(['backbone', 'ejs', 'qtip'], function (Backbone, EJS, qTip) {
     return Backbone.View.extend({
         id: "nav",
 
@@ -7,7 +7,9 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
         initialize: function (attrs) {
             this.items = [
                 {name: 'Map', className: 'map'},
-                {name: 'Files', className: 'files'}
+                {name: 'Components', className: 'components'},
+                {name: 'Files', className: 'files'},
+                {name: 'History', className: 'history'}
             ];
 
             this.router = attrs.router;
@@ -18,6 +20,20 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
             this.$el.html(this.template.render({items: this.items, current: this.router.current}));
             $("#main #nav").remove();
             $('#main').prepend(this.$el);
+
+            $("#main #nav a").qtip({
+                style: {
+                    tip: false,
+                },
+                position: {
+                    my: 'top center',
+                    at: 'bottom center',
+                    adjust: {
+                        y: 10
+                    }
+                }
+            });
+
             return this;
         },
 

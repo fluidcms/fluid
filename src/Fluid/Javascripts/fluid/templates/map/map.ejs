@@ -1,16 +1,20 @@
-<ul class="structure structureSortable">
+<div class="header">
+ <a data-action="addPage" class="icon-button plus">Page</a>
+</div>
+
+<a class="global">Global</a>
+
+<ul class="map mapSortable">
     <% function PagesList(pages) { %>
     <% $.each(pages.models, function() { %>
     <li data-id="<%= this.get('id') %>" data-page="<%= this.get('page') %>">
-        <a>
-            <%= this.get('page') %>
-
-            <% if (this.get('url') !== '') { %>
-            <span><%= this.get('url') %></span>
-            <% } %>
-        </a>
-
-        <ul class="pages structureSortable">
+        <div></div>
+        <span>
+            <a>
+                <%= this.get('page') %>
+            </a>
+        </span>
+        <ul class="pages mapSortable">
             <% if (typeof this.get('pages') !== 'undefined') { %>
             <%= PagesList(this.get('pages')) %>
             <% } %>
@@ -21,5 +25,3 @@
 
     <%= PagesList(pages) %>
 </ul>
-
-<a data-action="addPage" class="icon-button plus">Page</a>

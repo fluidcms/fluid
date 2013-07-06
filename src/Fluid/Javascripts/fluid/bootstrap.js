@@ -7,15 +7,19 @@
         paths: {
             async: '../vendor/async',
             jquery: '../vendor/jquery',
-            'jquery-ui': '../vendor/jquery-ui',
+            "jquery-ui-origin": '../vendor/jquery-ui',
+            "jquery-ui": '../vendor/jquery-ui-custom',
             underscore: '../vendor/underscore',
             backbone: '../vendor/backbone',
-            ejs: '../vendor/ejs'
+            ejs: '../vendor/ejs',
+            qtip: '../vendor/jquery-qtip'
         },
         shim: {
             underscore: { exports: '_' },
             backbone: { deps: ['underscore', 'jquery'], exports: 'Backbone' },
-            ejs: { deps: ['backbone'], exports: 'EJS' }
+            ejs: { deps: ['backbone'], exports: 'EJS' },
+            "jquery-ui": { deps: ['jquery-ui-origin'], exports: 'jUI' },
+            qtip: { deps: ['jquery'] }
         }
     });
 

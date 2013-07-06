@@ -5,7 +5,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu'], fun
             'contextmenu li a': 'contextmenu'
         },
 
-        className: 'structure',
+        className: 'map',
 
         dropbox: {},
 
@@ -37,25 +37,46 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu'], fun
         },
 
         sortable: function () {
-            var obj = this;
-            this.$el.find('ul.structure, ul.pages').sortable({
+            var root = this;
+            this.$el.find('ul.map, ul.pages').sortable({
+                over: function(event, ui) {
+                    $(event.target).parents('li:eq(0)').find('>span>a').addClass('dragover');
+                },
+                out: function(event, ui) {
+                    $(event.target).parents('li:eq(0)').find('>span>a').removeClass('dragover');
+                },
+                start: function (event, ui) {
+                    // Stop on escape
+                    $(document).on('keydown', function (e) {
+                        if (e.keyCode == 27) {
+                            root.$el.find('ul.map, ul.pages').sortable("cancel");
+                        }
+                    });
+
+                    ui.item.addClass("highlight").find('a').addClass("highlight");
+                },
+                stop: function (event, ui) {
+                    $(document).off('keydown');
+
+                    ui.item.removeClass("highlight").find('a').removeClass("highlight");
+                },
                 update: function (event, ui) {
                     var item = ui.item.attr('data-id');
                     var receiver = $(event.target).parents('li').attr('data-id');
                     if (typeof receiver == 'undefined') {
                         receiver = '';
                     }
-                    obj.dropbox.position = ui.item.index();
-                    obj.dropbox.item = item;
-                    obj.dropbox.receiver = receiver;
-                    clearTimeout(obj.dropbox.timeout);
-                    obj.dropbox.timeout = setTimeout(function () {
-                        obj.sort()
+                    root.dropbox.position = ui.item.index();
+                    root.dropbox.item = item;
+                    root.dropbox.receiver = receiver;
+                    clearTimeout(root.dropbox.timeout);
+                    root.dropbox.timeout = setTimeout(function () {
+                        //root.sort()
                     }, 10);
                 },
                 axis: "y",
-                connectWith: ".structureSortable",
-                placeholder: "sortable-placeholder"
+                connectWith: ".mapSortable",
+                placeholder: false
             });
         },
 

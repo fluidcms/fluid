@@ -17,17 +17,18 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
         },
 
         render: function () {
+            $(this.event.target).addClass('active');
             this.$el.html(this.template.render());
             this.$el.css({left: this.event.pageX, top: this.event.pageY});
             $(document.body).append(this.$el);
 
-            var obj = this;
+            var root = this;
             setTimeout(function () {
-                $(document.body).bind('click contextmenu', function () {
-                    obj.remove();
+                $(document.body).on('click contextmenu', function () {
+                    root.close();
                 });
                 $(document).keyup(function (e) {
-                    if (e.keyCode == 27) obj.remove();
+                    if (e.keyCode == 27) root.remove();
                 });
 
             }, 1);
@@ -35,9 +36,15 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
         },
 
         click: function (e) {
-            this.remove();
+            this.close();
             var action = $(e.currentTarget).attr('data-action');
             this.parent[action](this.event.target);
+        },
+
+        close: function () {
+            $(document.body).off('click contextmenu');
+            $(this.event.target).removeClass('active');
+            this.remove();
         }
     });
 
