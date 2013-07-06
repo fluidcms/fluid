@@ -22,7 +22,7 @@ abstract class FileSystem extends Cache
     public static function load($file = null)
     {
         if (self::cacheExists()) {
-            return self::getCache();
+            //return self::getCache();
         }
 
         if (null === $file) {
@@ -35,7 +35,7 @@ abstract class FileSystem extends Cache
             return json_decode(file_get_contents($file), true);
         }
 
-        return [];
+        return array();
     }
 
     /**
@@ -60,7 +60,7 @@ abstract class FileSystem extends Cache
 
         file_put_contents($file, $content);
 
-        self::storeCache($content);
+        //self::storeCache($content);
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../src/Fluid/Autoloader.php';
+require_once __DIR__ . '/helper.php';
 Fluid\Autoloader::register();
 
 Fluid\Fluid::setConfig('languages', array('en-US', 'de-DE'));

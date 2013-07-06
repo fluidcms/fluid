@@ -134,10 +134,12 @@ class ManagerRouter
             $url .= "{$_SERVER['SERVER_NAME']}{$_SERVER['REQUEST_URI']}";
             $url = preg_replace("!/fluidcms/(.*)$!i", "/", $url);
 
+            $ports = Fluid::getConfig('ports');
+
             echo View::create(
                 'master.twig',
                 array(
-                    'websocket_url' => preg_replace('!^https?://([^/]*)!i', "ws://$1:" . Fluid::getConfig('ports')['websockets'], $url),
+                    'websocket_url' => preg_replace('!^https?://([^/]*)!i', "ws://$1:" . $ports['websockets'], $url),
                     'user_id' => uniqid(),
                     'site_url' => $url,
                     'branch' => 'develop'
@@ -275,8 +277,11 @@ class ManagerRouter
                     if (isset($match[3]) && strpos($match[3], '/sort') === 0) {
                         try {
                             $id = trim(urldecode(preg_replace('{/sort/}', '', $match[3])), '/');
-                            echo json_encode((new Map\Map)->sortPage($id, self::$input['page'], self::$input['index']));
+                            $map = new Map\Map;
+                            $retval = $map->sortPage($id, self::$input['page'], self::$input['index']);
+                            echo json_encode($retval);
                         } catch(Exception $e) {
+                            die($e->getMessage());
                             header('X-Error-Message: ' . $e->getMessage(), true, 500);
                             exit;
                         }

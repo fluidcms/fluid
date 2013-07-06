@@ -92,7 +92,8 @@ class VerifyFluid
             return false;
         }
 
-        $config = Fluid::getConfig('database')['config'];
+        $config = Fluid::getConfig('database');
+        $config = $config['config'];
         $sth = $dbh->prepare("SELECT COUNT(*) FROM `information_schema`.`tables` WHERE `table_schema`=:database AND `table_name`=:table;");
 
         foreach (Fluid::getTables() as $table) {

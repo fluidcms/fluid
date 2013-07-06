@@ -21,6 +21,7 @@ class Branch
         }
         self::fetchRemote($branch);
         self::checkout($branch, $tracking);
+        self::intialCommit($branch);
     }
 
     /**
@@ -83,5 +84,15 @@ class Branch
                 }
             }
         }
+    }
+
+    /**
+     * Initial commit
+     *
+     * @param   string  $branch
+     * @return  void
+     */
+    public static function intialCommit($branch) {
+        // TODO: check if branch has initial commit, otherwise, do the commit
     }
 }

@@ -2,17 +2,17 @@
 
 namespace Fluid\Map;
 
-use Fluid\Map, Exception;
+use Fluid\Map\Map, Exception;
 
 /**
- * Modify the structure.
+ * Modify the map.
  *
  * @package fluid
  */
 class Modify
 {
     /**
-     * Add a page to the structure.
+     * Add a page to the map.
      *
      * @param   Map         $map
      * @param   string      $id
@@ -51,47 +51,47 @@ class Modify
     }
 
     /**
-     * Edit a page in the structure.
+     * Edit a page in the map.
      *
-     * @param   Structure   $structure
+     * @param   Map   $map
      * @param   string      $id
      * @param   string      $page
      * @param   string      $url
      * @param   string      $layout
      * @param   array       $languages
      * @throws  Exception
-     * @return  array       [Structure, id]
+     * @return  array       [Map, id]
      */
-    public static function editPage(Structure $structure, $id, $page, $url, $layout, $languages)
+    public static function editPage(Map $map, $id, $page, $url, $layout, $languages)
     {
-        $structure->pages = self::findAndEditPage($structure->pages, explode("/", $id), array(
+        $map->setPages(self::findAndEditPage($map->getPages(), explode("/", $id), array(
             'page' => $page,
             'url' => $url,
             'layout' => $layout,
             'languages' => $languages
-        ));
+        )));
 
         $newId = dirname($id) . '/' . $page;
         $newId = trim($newId, './');
 
-        if (self::getPage($structure->pages, explode('/', $newId))) {
-            return array($structure, $newId);
+        if (self::getPage($map->getPages(), explode('/', $newId))) {
+            return array($map, $newId);
         } else {
             throw new Exception('Did not find the page to edit.');
         }
     }
 
     /**
-     * Delete a page from the structure.
+     * Delete a page from the map.
      *
-     * @param   Structure   $structure
+     * @param   Map   $map
      * @param   string      $id
-     * @return  Structure
+     * @return  Map
      */
-    public static function deletePage(Structure $structure, $id)
+    public static function deletePage(Map $map, $id)
     {
-        $structure->pages = self::removePageFromPages($structure->pages, explode("/", $id));
-        return $structure;
+        $map->setPages(self::removePageFromPages($map->getPages(), explode("/", $id)));
+        return $map;
     }
 
     /**
@@ -121,7 +121,7 @@ class Modify
                 }
             }
             if (!$matched) {
-                throw new Exception("Current structure does not match new structure");
+                throw new Exception("Current map does not match new map");
             }
         } else {
             $pages = array_merge(
@@ -163,23 +163,23 @@ class Modify
     }
 
     /**
-     * Delete a page from the structure.
+     * Delete a page from the map.
      *
-     * @param   Structure   $structure
+     * @param   Map   $map
      * @param   string      $id
      * @param   string      $to
      * @param   int         $index
-     * @return  Structure
+     * @return  Map
      */
-    public static function sortPage(Structure $structure, $id, $to, $index)
+    public static function sortPage(Map $map, $id, $to, $index)
     {
-        $page = self::getPage($structure->pages, explode("/", $id));
-        self::deletePage($structure, $id);
+        $page = self::getPage($map->getPages(), explode("/", $id));
+        self::deletePage($map, $id);
         $to = "$to/{$page['page']}";
         $pages = isset($page['pages']) ? $page['pages'] : null;
-        self::addPage($structure, $to, $index, $page['page'], $page['url'], $page['layout'], $page['languages'], $pages);
+        self::addPage($map, $to, $index, $page['page'], $page['url'], $page['layout'], $page['languages'], $pages);
 
-        return $structure;
+        return $map;
     }
 
     /**

@@ -1,15 +1,17 @@
 <?php
 
-namespace Fluid;
+namespace Fluid\Page;
 
-use Exception, Fluid\Fluid;
+use Exception,
+    Fluid\Fluid,
+    Fluid\Storage\FileSystem;
 
 /**
  * Page model
  *
  * @package fluid
  */
-class Page extends Storage\FileSystem
+class Page extends FileSystem
 {
     public $id;
     public $data;
@@ -183,38 +185,35 @@ class Page extends Storage\FileSystem
     /**
      * Move a page
      *
-     * @param   string      $from
      * @param   string      $to
      * @throws  Exception
      * @return  bool
      */
-    public static function move($from, $to)
+    public function move($to)
     {
-        $from = trim(str_replace('..', '', $from), '/.');
         $to = trim(str_replace('..', '', $to), '/.');
 
-        $fromDir = Fluid::getBranchStorage() . "pages/" . trim(dirname($from), '.');
+        $fromDir = Fluid::getBranchStorage() . "pages/" . trim(dirname($this->id), '.');
         $toDir = Fluid::getBranchStorage() . "pages/" . trim($to, '.');
 
-        $page = basename($from);
-
-        $found = false;
-
-        foreach (scandir($fromDir) as $file) {
-            if (preg_match("/^{$page}_[a-z]{2,2}\\-[A-Z]{2,2}\\.json$/", $file)) {
-                if (!is_dir($toDir)) {
-                    mkdir($toDir);
-                }
-                rename(
-                    $fromDir."/".$file,
-                    $toDir."/".$file
-                );
-                $found = true;
-            }
+        if (!is_dir($toDir)) {
+            mkdir($toDir, 0777, true);
         }
 
-        if (!$found) {
-            throw new Exception("The page does not exists");
+        $page = basename($this->id);
+
+        if (is_dir($fromDir)) {
+            foreach (scandir($fromDir) as $file) {
+                if (preg_match("/^{$page}_[a-z]{2,2}\\-[A-Z]{2,2}\\.json$/", $file)) {
+                    if (!is_dir($toDir)) {
+                        mkdir($toDir);
+                    }
+                    rename(
+                        $fromDir."/".$file,
+                        $toDir."/".$file
+                    );
+                }
+            }
         }
 
         return true;

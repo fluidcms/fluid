@@ -3,6 +3,7 @@
 namespace Fluid\Map;
 
 use Fluid\Fluid,
+    Fluid\Page\Page,
     Fluid\Storage\FileSystem,
     Exception;
 
@@ -72,34 +73,34 @@ class Map extends FileSystem
     }
 
     /**
-     * Find a page in a structure.
+     * Find a page in the map.
      *
-     * @param   string|array    $paths
-     * @param   array           $pages
+     * @param   string  $id
      * @return  array
      */
-    public function findPage($paths, $pages = null)
+    public function findPage($id)
     {
-        if (null === $pages) {
-            $pages = $this->pages;
-        }
-        if (!is_array($paths)) {
-            $paths = explode('/', $paths);
-        }
+        $find = function($paths, $pages) use (&$find) {
+            $needle = reset($paths);
+            $paths = array_slice($paths, 1);
 
-        $needle = reset($paths);
-        $paths = array_slice($paths, 1);
-
-        foreach($pages as $page) {
-            if ($page['page'] == $needle) {
-                if (isset($page['pages']) && count($paths)) {
-                    if ($match = $this->findPage($paths, $page['pages'])) {
-                        return $match;
+            foreach($pages as $page) {
+                if ($page['page'] == $needle) {
+                    if (isset($page['pages']) && count($paths)) {
+                        if ($match = $find($paths, $page['pages'])) {
+                            return $match;
+                        }
+                    } else if (!count($paths)) {
+                        return $page;
                     }
-                } else if (!count($paths)) {
-                    return $page;
                 }
             }
+
+            return false;
+        };
+
+        if ($match = $find(explode('/', $id), $this->getPages())) {
+            return $match;
         }
 
         return false;
@@ -148,24 +149,43 @@ class Map extends FileSystem
      * @param   string   $id
      * @param   string   $to
      * @param   string   $index
+     * @throws  \InvalidArgumentException
      * @return  bool
      */
     public function sortPage($id, $to, $index)
     {
-        Page::move($id, $to);
-        $structure = Map\Modify::sortPage(new self, $id, $to, $index);
-        $structure->store();
+        if ($page = $this->findPage($id)) {
+            $movePages = function($pages, $to, $parent = null) use (&$movePages) {
+                foreach($pages as $page) {
+                    $to = trim($to . '/' . $parent, '/');
+                    $parent = trim($parent . '/' . basename($page['id']), '/');
 
-        return true;
+                    if (isset($page['pages']) && is_array($page['pages']) && count($page['pages'])) {
+                        $movePages($page['pages'], $to, $parent);
+                    }
+
+                    Page::get($page['id'])->move($to);
+                }
+            };
+
+            $movePages(array($page), $to);
+
+            $map = Modify::sortPage($this, $id, $to, $index);
+            $map->store();
+
+            return true;
+        }
+
+        throw new \InvalidArgumentException();
     }
 
     /**
-     * Save structure.
-     *
+     * Save map.
+     *,
      * @return  void
      */
     public function store()
     {
-        self::save(json_encode($this->pages, JSON_PRETTY_PRINT), self::$dataFile);
+        self::save(json_encode($this->getPages(), JSON_PRETTY_PRINT), self::$dataFile);
     }
 }
