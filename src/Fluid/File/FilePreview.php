@@ -1,6 +1,6 @@
 <?php
 
-namespace Fluid\Models\File;
+namespace Fluid\File;
 
 use Fluid\Fluid, DomainException;
 

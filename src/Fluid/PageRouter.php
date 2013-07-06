@@ -25,7 +25,7 @@ class PageRouter
 
         $request = '/' . ltrim($request, '/');
 
-        $map = new Map;
+        $map = new Map\Map;
         $page = self::matchRequest($request, $map->getPages());
 
         if (isset($page) && false !== $page) {

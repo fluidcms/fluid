@@ -1,8 +1,8 @@
 <?php
 
-namespace Fluid\Models\Structure;
+namespace Fluid\Map;
 
-use Fluid\Models\Structure, Exception;
+use Fluid\Map, Exception;
 
 /**
  * Modify the structure.
@@ -14,7 +14,7 @@ class Modify
     /**
      * Add a page to the structure.
      *
-     * @param   Structure   $structure
+     * @param   Map         $map
      * @param   string      $id
      * @param   int         $index
      * @param   string      $page
@@ -23,9 +23,9 @@ class Modify
      * @param   array       $languages
      * @param   array       $pages
      * @throws  Exception
-     * @return  Structure
+     * @return  Map
      */
-    public static function addPage(Structure $structure, $id, $index, $page, $url, $layout, $languages, $pages = null)
+    public static function addPage(Map $map, $id, $index, $page, $url, $layout, $languages, $pages = null)
     {
         $paths = explode("/", preg_replace("/\\/?{$page}$/", '', $id));
 
@@ -40,14 +40,14 @@ class Modify
             $page['pages'] = $pages;
         }
 
-        $structure->pages = self::insertPageIntoPages(
-            $structure->pages,
+        $map->setpages(self::insertPageIntoPages(
+            $map->getPages(),
             $paths,
             $index,
             $page
-        );
+        ));
 
-        return $structure;
+        return $map;
     }
 
     /**

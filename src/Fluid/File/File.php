@@ -1,8 +1,10 @@
 <?php
 
-namespace Fluid;
+namespace Fluid\File;
 
-use Exception, Fluid\Fluid, Fluid\Models\File\FileInfo, Fluid\Models\File\FilePreview;
+use Fluid\Fluid,
+    Fluid\File\FileInfo,
+    Fluid\File\FilePreview;
 
 /**
  * File model

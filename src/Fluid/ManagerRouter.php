@@ -140,7 +140,6 @@ class ManagerRouter
                     'websocket_url' => preg_replace('!^https?://([^/]*)!i', "ws://$1:" . Fluid::getConfig('ports')['websockets'], $url),
                     'user_id' => uniqid(),
                     'site_url' => $url,
-                    'token' => Token::getToken(),
                     'branch' => 'develop'
                 )
             );
@@ -207,7 +206,7 @@ class ManagerRouter
         if (preg_match('{^([a-z0-9]*)/files/(.*)}', self::$request, $match)) {
             $file = $match[2];
             $branch = $match[1];
-            Fluid::switchBranch($branch);
+            Fluid::setBranch($branch, true);
             if (strpos($file, 'preview/') === 0) {
                 $preview = true;
                 $file = preg_replace('{^preview/}', '', $file);
@@ -219,7 +218,7 @@ class ManagerRouter
                     new StaticFile($file);
                     return true;
                 } else {
-                    $content = Models\File::makePreview($file);
+                    $content = File\File::makePreview($file);
                     new StaticFile($content, 'png', true);
                     return true;
                 }
@@ -229,17 +228,17 @@ class ManagerRouter
         // File model
         if (preg_match('{^([a-z0-9]*)/file}', self::$request, $match)) {
             $branch = $match[1];
-            Fluid::switchBranch($branch);
+            Fluid::setBranch($branch);
             switch (self::$method) {
                 case 'GET':
-                    echo json_encode(Models\File::getFiles());
+                    echo json_encode(File\File::getFiles());
                     return true;
                 case 'POST':
-                    echo json_encode(Models\File::save());
+                    echo json_encode(File\File::save());
                     return true;
                 case 'DELETE':
                     // File
-                    echo json_encode(Models\File::delete(basename(self::$request)));
+                    echo json_encode(File\File::delete(basename(self::$request)));
                     return true;
             }
         }
@@ -259,7 +258,7 @@ class ManagerRouter
             Fluid::setBranch($branch, true);
             switch (self::$method) {
                 case 'GET':
-                    $map = new Map;
+                    $map = new Map\Map;
                     echo json_encode($map->getPages());
                     return true;
 
@@ -276,7 +275,7 @@ class ManagerRouter
                     if (isset($match[3]) && strpos($match[3], '/sort') === 0) {
                         try {
                             $id = trim(urldecode(preg_replace('{/sort/}', '', $match[3])), '/');
-                            echo json_encode(Models\Structure::sortPage($id, self::$input['page'], self::$input['index']));
+                            echo json_encode((new Map\Map)->sortPage($id, self::$input['page'], self::$input['index']));
                         } catch(Exception $e) {
                             header('X-Error-Message: ' . $e->getMessage(), true, 500);
                             exit;

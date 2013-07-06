@@ -1,8 +1,9 @@
 <?php
 
-namespace Fluid;
+namespace Fluid\Map;
 
 use Fluid\Fluid,
+    Fluid\Storage\FileSystem,
     Exception;
 
 /**
@@ -10,7 +11,7 @@ use Fluid\Fluid,
  *
  * @package fluid
  */
-class Map extends Storage\FileSystem
+class Map extends FileSystem
 {
     protected static $dataFile = 'map.json';
     protected static $cacheKey = "map";
@@ -35,6 +36,17 @@ class Map extends Storage\FileSystem
             $this->pages = self::load();
         }
         return $this->pages;
+    }
+
+    /**
+     * Set pages
+     *
+     * @param   array   $value
+     * @return  void
+     */
+    public function setPages($value)
+    {
+        $this->pages = $value;
     }
 
     /**
@@ -141,7 +153,7 @@ class Map extends Storage\FileSystem
     public function sortPage($id, $to, $index)
     {
         Page::move($id, $to);
-        $structure = Structure\Modify::sortPage(new self, $id, $to, $index);
+        $structure = Map\Modify::sortPage(new self, $id, $to, $index);
         $structure->store();
 
         return true;

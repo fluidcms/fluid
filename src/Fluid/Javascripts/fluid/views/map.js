@@ -65,7 +65,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu'], fun
                     root.dropbox.receiver = receiver;
                     clearTimeout(root.dropbox.timeout);
                     root.dropbox.timeout = setTimeout(function () {
-                        //root.sort()
+                        root.sort()
                     }, 10);
                 },
                 axis: "y",

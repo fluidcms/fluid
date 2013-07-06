@@ -20,7 +20,7 @@ class Data
     public static function get($page = null)
     {
         if (!isset(self::$map)) {
-            self::$map = new Map();
+            self::$map = new Map\Map();
         }
 
         $global = self::getData(self::$map);
@@ -42,10 +42,10 @@ class Data
     /**
      * Set the site map
      *
-     * @param   Map $map
+     * @param   Map\Map $map
      * @return  void
      */
-    public static function setMap(Map $map)
+    public static function setMap(Map\Map $map)
     {
         self::$map = $map;
     }
@@ -53,7 +53,7 @@ class Data
     /**
      * Get the site map
      *
-     * @return  Map
+     * @return  Map\Map
      */
     public static function getMap()
     {
@@ -85,10 +85,10 @@ class Data
     /**
      * Get all data
      *
-     * @param   Map     $map
+     * @param   Map\Map     $map
      * @return  array
      */
-    private static function getData(Map $map)
+    private static function getData(Map\Map $map)
     {
         $data = Page::get()->getData();
         $data['pages'] = self::getPagesData($map->getPages());

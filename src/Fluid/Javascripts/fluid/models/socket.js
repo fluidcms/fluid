@@ -2,7 +2,7 @@ define(['backbone', 'views/error'], function (Backbone, ErrorView) {
     return Backbone.Model.extend({
         conn: null,
         loader: null,
-        topic: "",
+        topic: {},
         views: {},
 
         initialize: function (attrs) {
@@ -42,8 +42,8 @@ define(['backbone', 'views/error'], function (Backbone, ErrorView) {
             }
         },
 
-        fetch: function(method, url, data, callback) {
-            this.conn.call(fluidBranch + "/" + fluidUserId, {
+        send: function(method, url, data, callback) {
+            this.conn.call(JSON.stringify(this.topic), {
                 method: method,
                 url: url,
                 data: data

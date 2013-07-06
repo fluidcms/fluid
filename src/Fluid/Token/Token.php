@@ -1,4 +1,6 @@
-<?php namespace Fluid;
+<?php
+
+namespace Fluid\Token;
 
 use PDO, Fluid\Database\Connection;
 

@@ -113,7 +113,7 @@ define(['backbone'], function (Backbone) {
 
             fetch: function () {
                 var root = this;
-                this.socket.fetch('GET', this.url, {}, function(response) {
+                this.socket.send('GET', this.url, {}, function(response) {
                     root.parse(response);
                 });
             },
@@ -134,6 +134,20 @@ define(['backbone'], function (Backbone) {
                     receiver = '';
                 }
 
+                this.socket.send(
+                    'PUT',
+                    this.url + "/sort/" + encodeURIComponent(item),
+                    {
+                        page: receiver,
+                        index: position
+                    },
+                    function(response) {
+                        console.log(response);
+                        //root.parse(response);
+                    }
+                );
+
+                return;
                 $.ajax({
                     url: this.url + "/sort/" + encodeURIComponent(item),
                     dataType   : 'json',
