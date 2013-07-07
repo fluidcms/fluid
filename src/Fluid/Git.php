@@ -25,12 +25,14 @@ class Git
         $dir = preg_replace('!/{2,}!', '/', $dir);
         $dir = rtrim($dir, '/');
 
+        $workTree = $dir;
+
         if ($branch !== 'bare') {
-            $dir .= "/.git";
+            $dir = $dir . "/.git";
         }
 
         if (!$check || is_dir($dir)) {
-            $command = preg_replace("/^git/", "git --git-dir={$dir}", $command);
+            $command = preg_replace("/^git/", "git --git-dir={$dir} --work-tree={$workTree}", $command);
 
             ob_start();
             passthru($command);
@@ -238,14 +240,24 @@ class Git
      *
      * @param   string $branch
      * @param   string $msg    The commit message
+     * @param   string $name
+     * @param   string $email
      * @return  string
      */
-    public static function commit($branch, $msg)
+    public static function commit($branch, $msg, $name = null, $email = null)
     {
-        $msg = preg_replace('/[^\s\w]/', '', $msg);
+        $msg = preg_replace('/[^\s\w\-:]/', '', $msg);
 
-        self::command($branch, 'git add -A');
-        return self::command($branch, "git commit -m " . escapeshellarg($msg));
+        self::command($branch , 'git add -A');
+
+        $command = "git commit -m " . escapeshellarg($msg);
+
+        if (null !== $name && null !== $email) {
+            $author = "$name <$email>";
+            $command .= " --author=". escapeshellarg($author);
+        }
+
+        return self::command($branch, $command);
     }
 
     /**

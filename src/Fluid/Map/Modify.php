@@ -15,6 +15,31 @@ class Modify
      * Add a page to the map.
      *
      * @param   Map         $map
+     * @return  Map
+     */
+    public static function resetIds(Map $map)
+    {
+        $resetIds = function($pages, $parent = null) use (&$resetIds) {
+            $output = array();
+            foreach($pages as $page) {
+                $page['id'] = trim($parent . "/" . $page['page'], "/");
+                if (isset($page['pages']) && is_array($page['pages']) && count($page['pages']))  {
+                    $page['pages'] = $resetIds($page['pages'], $page['id']);
+                }
+                $output[] = $page;
+            }
+            return $output;
+        };
+
+        $map->setPages($resetIds($map->getPages()));
+
+        return $map;
+    }
+
+    /**
+     * Add a page to the map.
+     *
+     * @param   Map         $map
      * @param   string      $id
      * @param   int         $index
      * @param   string      $page
@@ -30,6 +55,7 @@ class Modify
         $paths = explode("/", preg_replace("/\\/?{$page}$/", '', $id));
 
         $page = array(
+            'id' => trim($id, '/'),
             'page' => $page,
             'url' => $url,
             'layout' => $layout,

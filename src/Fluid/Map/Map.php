@@ -171,6 +171,7 @@ class Map extends FileSystem
             $movePages(array($page), $to);
 
             $map = Modify::sortPage($this, $id, $to, $index);
+            $map = Modify::resetIds($map);
             $map->store();
 
             return true;

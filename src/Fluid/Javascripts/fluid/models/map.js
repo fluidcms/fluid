@@ -81,7 +81,7 @@ define(['backbone'], function (Backbone) {
     var Pages = Backbone.Collection.extend({
             model: Page,
 
-            url: fluidBranch + '/map',
+            url: 'map',
 
             parent: null,
 
@@ -142,53 +142,7 @@ define(['backbone'], function (Backbone) {
                         index: position
                     },
                     function(response) {
-                        console.log(response);
-                        //root.parse(response);
-                    }
-                );
-
-                return;
-                $.ajax({
-                    url: this.url + "/sort/" + encodeURIComponent(item),
-                    dataType   : 'json',
-                    contentType: 'application/json',
-                    type: "PUT",
-                    data: JSON.stringify({
-                        page: receiver,
-                        index: position
-                    })
-                }).done(
-                    function (response) {
-                        if (response == true) {
-                            item = root.findItem(item);
-                            receiver = root.findItem(receiver);
-                            if (typeof receiver == 'undefined') {
-                                receiver = root;
-                            } else {
-                                receiver = receiver.get('pages');
-                            }
-
-                            var data = item.toJSON();
-                            data.parent = receiver;
-
-                            item.parent.remove(item);
-                            receiver.add(data, {at: position});
-
-                            receiver.models[position].set('id', receiver.models[position].getId());
-                            receiver.models[position].attributes.id = receiver.models[position].get('id');
-                        }
-                        root.trigger('update');
-                    }
-                ).error(
-                    function (XMLHttpRequest) {
-                        root.trigger('update');
-                        var error = XMLHttpRequest.getResponseHeader('X-Error-Message');
-                        if (error !== null) {
-                            alert('An error as occured: ' + error);
-                        } else {
-                            alert('The connection has timed out.');
-                        }
-                        location.reload();
+                       root.parse(response);
                     }
                 );
             },

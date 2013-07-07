@@ -6,6 +6,15 @@ use ZipArchive;
 
 class Helper
 {
+    public static function getUser()
+    {
+        return array(
+            "id" => "xxxxxxxxxxxxx",
+            "name" => "PHPUnit",
+            "email" => "phpunit@localhost"
+        );
+    }
+
     public static function getStorage()
     {
         return __DIR__ . "/Fluid/Tests/Fixtures/storage/develop";

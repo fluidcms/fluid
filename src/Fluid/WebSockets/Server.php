@@ -58,8 +58,20 @@ class Server implements Ratchet\Wamp\WampServerInterface
             is_string($params['method']) &&
             is_array($params['data'])
         ) {
+            $topic = json_decode($topic, true);
+
             ob_start();
-            Fluid\ManagerRouter::route($params['url'], $params['method'], $params['data']);
+            new Requests(
+                $params['url'],
+                $params['method'],
+                $params['data'],
+                $topic['branch'],
+                array(
+                    'id' => $topic['user_id'],
+                    'name' => $topic['user_name'],
+                    'email' => $topic['user_email']
+                )
+            );
             $retval = ob_get_contents();
             ob_end_clean();
 

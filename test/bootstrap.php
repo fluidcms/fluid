@@ -1,5 +1,9 @@
 <?php
 
+date_default_timezone_set("America/Montreal");
+error_reporting(E_ALL);
+ini_set('display_errors', 'On');
+
 require_once __DIR__ . '/../src/Fluid/Autoloader.php';
 require_once __DIR__ . '/helper.php';
 Fluid\Autoloader::register();
