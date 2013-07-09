@@ -132,15 +132,22 @@ class Map extends FileSystem
      * Delete a page.
      *
      * @param   string   $id
+     * @throws  \InvalidArgumentException
      * @return  bool
      */
     public function deletePage($id)
     {
-        Page::delete($id);
-        $structure = Structure\Modify::deletePage(new self, $id);
-        $structure->store();
+        if ($page = $this->findPage($id)) {
+            Page::get($page['id'])->delete();
 
-        return true;
+            $map = Modify::deletePage($this, $id);
+            $map = Modify::resetIds($map);
+            $map->store();
+
+            return true;
+        }
+
+        throw new \InvalidArgumentException();
     }
 
     /**
@@ -155,6 +162,7 @@ class Map extends FileSystem
     public function sortPage($id, $to, $index)
     {
         if ($page = $this->findPage($id)) {
+            // TODO: move this part to the page model like in the delete method
             $movePages = function($pages, $to, $parent = null) use (&$movePages) {
                 foreach($pages as $page) {
                     $to = trim($to . '/' . $parent, '/');

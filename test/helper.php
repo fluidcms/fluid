@@ -43,6 +43,8 @@ class Helper
                 self::copyStorage($dir . "/" . $file, $dest . "/" . $file);
             }
         }
+
+        exec("git init ". __DIR__ . "/Fluid/Tests/Fixtures/storage/develop");
     }
 
     public static function deleteStorage($dir = null)

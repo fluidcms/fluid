@@ -195,12 +195,9 @@ class Requests
                     return true;
 
                 case 'DELETE':
-                    try {
-                        echo json_encode(Models\Structure::deletePage(trim(urldecode($match[2]), '/')));
-                    } catch(Exception $e) {
-                        header('X-Error-Message: ' . $e->getMessage(), true, 500);
-                        exit;
-                    }
+                    $map = new Map;
+                    $map->deletePage(trim(urldecode($match[2]), '/'));
+                    echo json_encode($map->getPages());
                     return true;
             }
         }

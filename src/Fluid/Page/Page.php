@@ -128,20 +128,35 @@ class Page extends FileSystem
     /**
      * Delete a page
      *
-     * @param   string      $page
      * @throws  Exception
      * @return  bool
      */
-    public static function delete($page)
+    public function delete()
     {
-        $page = trim(str_replace('..', '', $page), '/.');
-        $dir = Fluid::getBranchStorage() . "pages/" . dirname($page);
-        $page = basename($page);
-        foreach (scandir($dir) as $file) {
-            if (preg_match("/^{$page}_[a-z]{2,2}\\-[A-Z]{2,2}\\.json$/", $file)) {
-                unlink($dir."/".$file);
+        $deletePage = function($path, $name = false) use (&$deletePage) {
+            foreach(scandir($path) as $file) {
+                $link = $path . "/" . $file;
+                if ($file == '.' || $file == '..') {
+                    continue;
+                } else if (
+                    ($name === false && is_file($link)) ||
+                    ($name && (preg_match("/^{$name}_[a-z]{2,2}\\-[A-Z]{2,2}\\.json$/", $file)))
+                ) {
+                    unlink($link);
+                } else if (
+                    ($name === false && is_dir($link)) ||
+                    ($name && $file === $name)
+                ) {
+                    $deletePage($link);
+                    rmdir($link);
+                }
             }
-        }
+        };
+
+        $deletePage(
+            Fluid::getBranchStorage() . "pages/" . dirname($this->id),
+            basename($this->id)
+        );
 
         return true;
     }
