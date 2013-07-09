@@ -141,7 +141,7 @@ class Git
 
         $output = array();
         foreach($commits as $key => $commit) {
-            if (!$key%2) {
+            if ($key%2 === 0) {
                 $commitHash = preg_replace('/^commit ([a-zA-Z0-9]*)$/', '$1', $commit);
             } else if (isset($commitHash)) {
                 // Match author

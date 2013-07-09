@@ -13,9 +13,9 @@ class GetTest extends PHPUnit_Framework_TestCase
 
     public function testGet()
     {
-        // Add an item to history
-        $delete = new Fluid\Tests\Map\DeleteTest;
-        $delete->testDelete();
+        // Add items to history
+        $delete = new Fluid\Tests\Map\SortTest;
+        $delete->testSort();
 
         $request = array(
             "method" => "GET",
@@ -30,7 +30,8 @@ class GetTest extends PHPUnit_Framework_TestCase
 
         $history = json_decode($retval, true);
 
-        $this->assertEquals('map_delete', $history[0]['action']);
+        $this->assertEquals('map_sort', $history[0]['action']);
+        $this->assertEquals('map_sort', $history[2]['action']);
     }
 
     public function tearDown()
