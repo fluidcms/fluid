@@ -43,13 +43,19 @@ define(['backbone', 'views/error'], function (Backbone, ErrorView) {
         },
 
         send: function(method, url, data, callback) {
+            if (typeof data !== 'object' || data === null) {
+                data = {};
+            }
+
             this.conn.call(JSON.stringify(this.topic), {
                 method: method,
                 url: url,
                 data: data
             }).then(
                 function (result) {
-                    callback(result);
+                    if (typeof callback === 'function') {
+                        callback(result);
+                    }
                 }
             );
         }

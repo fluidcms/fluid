@@ -197,6 +197,11 @@ class Requests
                 case 'DELETE':
                     $map = new Map;
                     $map->deletePage(trim(urldecode($match[2]), '/'));
+                    History::add(
+                        'map_delete',
+                        $this->user['name'],
+                        $this->user['email']
+                    );
                     echo json_encode($map->getPages());
                     return true;
             }
