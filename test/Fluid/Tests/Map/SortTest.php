@@ -13,6 +13,7 @@ class SortTest extends PHPUnit_Framework_TestCase
 
     public function testSort()
     {
+        ob_start();
         // Test sub page to root
         $request = array(
             "method" => "PUT",
@@ -62,6 +63,8 @@ class SortTest extends PHPUnit_Framework_TestCase
         $map = new Fluid\Map\Map;
         $pages = $map->getPages();
         $this->assertEquals('home page', $pages[0]['pages'][0]['page']);
+
+        ob_end_clean();
     }
 
     public function tearDown()

@@ -1,6 +1,6 @@
 <?php
 
-namespace Fluid\Tests\Map;
+namespace Fluid\Tests\History;
 
 use Fluid, PHPUnit_Framework_TestCase, Fluid\Tests\Helper;
 
@@ -13,9 +13,13 @@ class GetTest extends PHPUnit_Framework_TestCase
 
     public function testGet()
     {
+        // Add an item to history
+        $delete = new Fluid\Tests\Map\DeleteTest;
+        $delete->testDelete();
+
         $request = array(
             "method" => "GET",
-            "url" => "map",
+            "url" => "history",
             "data" => array()
         );
 
@@ -24,9 +28,9 @@ class GetTest extends PHPUnit_Framework_TestCase
         $retval = ob_get_contents();
         ob_end_clean();
 
-        $map = json_decode($retval, true);
+        $history = json_decode($retval, true);
 
-        $this->assertEquals('contact', $map[0]['pages'][0]['page']);
+        $this->assertEquals('map_delete', $history[0]['action']);
     }
 
     public function tearDown()

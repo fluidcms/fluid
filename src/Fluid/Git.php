@@ -129,6 +129,56 @@ class Git
     }
 
     /**
+     * Get all commits for a branch
+     *
+     * @param   string $branch
+     * @return  array
+     */
+    public static function getCommits($branch)
+    {
+        $retval = self::command($branch, 'git log');
+        $commits = preg_split("/(commit [a-zA-Z0-9]*)/", $retval, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+
+        $output = array();
+        foreach($commits as $key => $commit) {
+            if (!$key%2) {
+                $commitHash = preg_replace('/^commit ([a-zA-Z0-9]*)$/', '$1', $commit);
+            } else if (isset($commitHash)) {
+                // Match author
+                preg_match("/Author: (.*)/i", $commit, $matches);
+                if (isset($matches[1])) {
+                    $author = trim($matches[1]);
+                } else {
+                    $author = '';
+                }
+
+                // Match date
+                preg_match("/Date: (.*)/i", $commit, $matches);
+                if (isset($matches[1])) {
+                    $date = date('Y-m-d H:i:s', strtotime(trim($matches[1])));
+                } else {
+                    $date = '';
+                }
+
+                // Get message
+                $lines = preg_split('/Date: (.*)'.PHP_EOL.'/', $commit);
+                $message = trim(end($lines));
+
+                $output[] = array(
+                    'commit' => $commitHash,
+                    'author' => $author,
+                    'date' => $date,
+                    'message' => $message
+                );
+
+                unset($commitHash);
+            }
+        }
+
+        return $output;
+    }
+
+    /**
      * Fetch all remote branches
      *
      * @param   string $branch

@@ -5,7 +5,7 @@ namespace Fluid\WebSockets;
 use Exception,
     Fluid\Fluid,
     Fluid\Map\Map,
-    Fluid\History;
+    Fluid\History\History;
 
 class Requests
 {
@@ -40,8 +40,9 @@ class Requests
         $this->layouts() ||
         $this->pageToken() ||
         $this->version() ||
-        $this->file();
-    }
+        $this->file() ||
+        $this->history();
+}
 
     /**
      * Output a page token.
@@ -147,7 +148,7 @@ class Requests
     }
 
     /**
-     * Route structure requests.
+     * Route map requests.
      *
      * @return  bool
      */
@@ -203,6 +204,25 @@ class Requests
                         $this->user['email']
                     );
                     echo json_encode($map->getPages());
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Route history requests.
+     *
+     * @return  bool
+     */
+    private function history()
+    {
+        if (!empty($this->request) && preg_match('{^(history)(/.*)?$}', $this->request, $match)) {
+            switch ($this->method) {
+                case 'GET':
+                    $history = new History;
+                    echo json_encode($history->getAll());
                     return true;
             }
         }

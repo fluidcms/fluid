@@ -20,7 +20,9 @@ class DeleteTest extends PHPUnit_Framework_TestCase
             "data" => array()
         );
 
+        ob_start();
         new Fluid\WebSockets\Requests($request['url'], $request['method'], $request['data'], 'develop', Helper::getUser());
+        ob_end_clean();
 
         $map = new Fluid\Map\Map;
         $pages = $map->getPages();
