@@ -9,7 +9,7 @@
         ],
         "pages": [
             {
-                "id": "home page\/contact2",
+                "id": "home page\/contact",
                 "page": "contact",
                 "url": "\/contact\/",
                 "layout": "contact",
