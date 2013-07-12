@@ -30,30 +30,15 @@ a.global {
   position: relative;
   display: inline-block;
   margin-left: $main-margin-left - 8;
-  color: white;
-  font-size: 12px;
-  font-weight: $light;
-  line-height: 14px;
-  cursor: default;
-  border-radius: 4px;
-  padding: 2px 8px;
-  padding-left: 30px;
+  @extend .list-link;
+  padding-left: $list-link-sprite-left;
 
-    &:before {
-      content: "";
-      display: block;
-      width: 16px;
-      height: 16px;
-      position: absolute;
-      left: 8px;
-      top: 1px;
-      background-image: url('../images/sprite.png');
-      background-position: -42px -48px;
-    }
-
-    &:hover {
-      background: $blue;
-    }
+  &:before {
+    @include sprite-after(16px, 16px);
+    @include sprite-position(-42px -48px);
+    left: 8px;
+    top: 1px;
+  }
 }
 
 ul.map {
@@ -73,7 +58,8 @@ ul.map {
   li {
     top: 0;
     left: 0;
-    margin: 6px 0 0 0;
+    margin: 0;
+    margin-top: $list-link-items-margin;
     padding: 0;
 
     div {
@@ -90,33 +76,18 @@ ul.map {
     a {
       z-index: 2;
       position: relative;
-      color: white;
-      font-size: 12px;
-      font-weight: $light;
-      line-height: 14px;
-      cursor: default;
-      border-radius: 4px;
-      padding: 2px 8px;
-      padding-left: 30px;
+      @extend .list-link;
+      padding-left: $list-link-sprite-left;
 
       &:before {
-        content: "";
-        display: block;
-        width: 16px;
-        height: 16px;
-        position: absolute;
+        @include sprite-after(16px, 16px);
+        @include sprite-position(-42px -32px);
         left: 8px;
         top: 1px;
-        background-image: url('../images/sprite.png');
-        background-position: -42px -32px;
       }
 
-      &:hover, &.highlight, &.active {
+      &.highlight, &.active {
         background: $blue;
-      }
-
-      &:active {
-        background: $dark-blue;
       }
 
       &.dragover {

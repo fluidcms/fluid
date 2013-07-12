@@ -1,0 +1,28 @@
+<div class="header">
+</div>
+
+<%
+var currentUser = null;
+var ulOpen = false;
+%>
+
+<% $.each(steps, function(key, step) { %>
+    <% if (step.get('user_email') !== currentUser) { %>
+        <% if (ulOpen) { %></ul><% } %>
+        <div class="user">
+            <img src="http://www.gravatar.com/avatar/<%= step.get('gravatar') %>?s=16" width="16" height="16" alt="">
+            <%= step.get('user_name') %>
+        </div>
+        <ul>
+
+        <%
+        ulOpen = true;
+        currentUser = step.get('user_email');
+        %>
+    <% } %>
+
+    <li>
+        <a data-id="<%= step.get('id') %>" class="<%= step.get('action') %>"><%= fluidLanguage['history']['steps'][step.get('action')] %></a>
+        <span><%= step.getReadableTime() %></span>
+    </li>
+<% }) %>

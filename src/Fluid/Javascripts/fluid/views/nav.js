@@ -39,8 +39,6 @@ define(['backbone', 'ejs', 'qtip'], function (Backbone, EJS, qTip) {
 
         changeRoute: function () {
             $("#main #nav a").removeClass('current');
-            $("#main #content>div").hide();
-            $("#main #content>div." + this.router.current).show();
             $("#main #nav a." + this.router.current).addClass('current');
         }
     });

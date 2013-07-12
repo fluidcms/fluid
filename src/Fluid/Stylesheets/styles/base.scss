@@ -10,7 +10,7 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   margin: 0;
   padding: 0;
   border: 0;
-  vertical-align: baseline;
+  vertical-align: middle;
 }
 
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
@@ -56,6 +56,24 @@ body {
   opacity: .3;
   &:active {
     background: none;
+  }
+}
+
+.list-link {
+  cursor: pointer;
+  color: white;
+  font-size: 12px;
+  font-weight: $light;
+  line-height: 14px;
+  border-radius: 4px;
+  padding: 2px 8px;
+
+  &:hover {
+    background: $blue;
+  }
+
+  &:active {
+    background: $dark-blue;
   }
 }
 

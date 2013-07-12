@@ -119,7 +119,8 @@ class ManagerRouter
                     'websocket_url' => preg_replace('!^https?://([^/]*)!i', "ws://$1:" . $ports['websockets'], $url),
                     'user_id' => uniqid(),
                     'site_url' => $url,
-                    'branch' => 'develop'
+                    'branch' => 'develop',
+                    'language' => require __DIR__ . "/Locale/en-US.php"
                 )
             );
             return true;

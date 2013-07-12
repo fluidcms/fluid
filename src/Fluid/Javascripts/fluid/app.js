@@ -4,6 +4,7 @@ define(['backbone', 'views/loader', 'models/socket', 'views/nav'],
             var FluidRouter = Backbone.Router.extend({
                 root: "/fluidcms/",
                 current: "",
+                main: null,
                 ready: false,
 
                 initialize: function () {
@@ -50,6 +51,9 @@ define(['backbone', 'views/loader', 'models/socket', 'views/nav'],
                         if (!this.ready) {
                             setTimeout(function() { root.make(method) }, 10);
                         } else {
+                            if (this.main !== null) {
+                                this.main.remove();
+                            }
                             this[method]();
                             this.current = method;
                             this.trigger('change');
@@ -62,7 +66,7 @@ define(['backbone', 'views/loader', 'models/socket', 'views/nav'],
                     if (this.current !== 'map') {
                         require(['models/map', 'views/map'], function (Map, MapView) {
                             var map = new Map.Pages(null, {socket: root.socket});
-                            new MapView({
+                            root.main = new MapView({
                                 collection: map,
                                 page: root.page,
                                 languages: root.languages,
@@ -87,17 +91,13 @@ define(['backbone', 'views/loader', 'models/socket', 'views/nav'],
 
                 history: function () {
                     var root = this;
-                    /*if (this.current !== 'map') {
-                        require(['models/map', 'views/map'], function (Map, MapView) {
-                            var map = new Map.Pages(null, {socket: root.socket});
-                            new MapView({
-                                collection: map,
-                                page: root.page,
-                                languages: root.languages,
-                                layouts: root.layouts
-                            });
+                    if (this.current !== 'history') {
+                        require(['models/history', 'views/history'], function (History, HistoryView) {
+                            var history = new History(null, {socket: root.socket});
+                            root.main = new HistoryView({collection: history});
+                            history.fetch();
                         });
-                    }*/
+                    }
                 }
             });
 
