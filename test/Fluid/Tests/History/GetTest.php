@@ -11,17 +11,17 @@ class GetTest extends PHPUnit_Framework_TestCase
         Helper::copyStorage();
     }
 
-    public function testGet()
+    public function testGetHistory()
     {
-        // Add items to history
-        $delete = new Fluid\Tests\Map\SortTest;
-        $delete->testSort();
-
         $request = array(
             "method" => "GET",
             "url" => "history",
             "data" => array()
         );
+
+        // Add items to history
+        $delete = new Fluid\Tests\Map\SortTest;
+        $delete->testSort();
 
         ob_start();
         new Fluid\WebSockets\Requests($request['url'], $request['method'], $request['data'], 'develop', Helper::getUser());

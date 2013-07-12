@@ -11,7 +11,7 @@ class SortTest extends PHPUnit_Framework_TestCase
         Helper::copyStorage();
     }
 
-    public function testSort()
+    public function testSortMap()
     {
         ob_start();
         // Test sub page to root

@@ -34,9 +34,20 @@ class Git
         if (!$check || is_dir($dir)) {
             $command = preg_replace("/^git/", "git --git-dir={$dir} --work-tree={$workTree}", $command);
 
+            $retval = '';
+
             ob_start();
-            passthru($command);
-            $retval = ob_get_contents();
+
+            $handle = popen($command, 'r');
+
+            while(!feof($handle)) {
+                $read = fgets ($handle);
+                echo $read;
+            }
+
+            pclose($handle);
+
+            $retval .= ob_get_contents();
             ob_end_clean();
 
             return $retval;
@@ -126,6 +137,24 @@ class Git
         $retval = self::command($branch, 'git branch');
         $retval = preg_replace('/\s{2,}/', ' ', trim($retval));
         return explode(' ', $retval);
+    }
+
+    /**
+     * Get local branch name
+     *
+     * @param   string $branch
+     * @return  string
+     */
+    public static function getHeadBranch($branch)
+    {
+        $retval = self::command($branch, 'git branch');
+        $branches = explode(PHP_EOL, $retval);
+        foreach($branches as $branch) {
+            if (strpos($branch, '*') === 0) {
+                return trim($branch, '* ');
+            }
+        }
+        return null;
     }
 
     /**
@@ -252,6 +281,43 @@ class Git
     public static function checkoutRemote($branch, $remoteBranch)
     {
         return self::command($branch, 'git checkout --track ' . $remoteBranch);
+    }
+
+    /**
+     * Checkout a branch
+     *
+     * @param   string $branch
+     * @param   string $head
+     * @return  string
+     */
+    public static function checkout($branch, $head)
+    {
+        return self::command($branch, 'git checkout ' . $head . ' -q', true);
+    }
+
+    /**
+     * Checkout a branch at specific commit
+     *
+     * @param   string $branch
+     * @param   string $head
+     * @param   string $commit
+     * @return  string
+     */
+    public static function checkoutCommit($branch, $head, $commit)
+    {
+        return self::command($branch, 'git checkout -b ' . $head . ' ' . $commit . ' -q', true);
+    }
+
+    /**
+     * Delete a local branch
+     *
+     * @param   string $branch
+     * @param   string $head
+     * @return  string
+     */
+    public static function removeBranch($branch, $head)
+    {
+        return self::command($branch, 'git branch -D ' . $head);
     }
 
     /**

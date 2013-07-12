@@ -9,10 +9,9 @@ class DeleteTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         Helper::copyStorage();
-        Fluid\Fluid::setBranch('develop');
     }
 
-    public function testDelete()
+    public function testDeleteMap()
     {
         $request = array(
             "method" => "DELETE",

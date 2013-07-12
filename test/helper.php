@@ -2,7 +2,7 @@
 
 namespace Fluid\Tests;
 
-use ZipArchive;
+use Fluid\Fluid;
 
 class Helper
 {
@@ -20,31 +20,39 @@ class Helper
         return __DIR__ . "/Fluid/Tests/Fixtures/storage/develop";
     }
 
-    public static function copyStorage($dir = null, $dest = null)
+    public static function copyStorage()
     {
-        if (null === $dir) {
-            $dir = __DIR__ . "/Fluid/Tests/Fixtures/storage/master";
-        }
-
-        if (null === $dest) {
-            $dest = __DIR__ . "/Fluid/Tests/Fixtures/storage/develop";
-        }
-
-        if (!is_dir($dest)) {
-            mkdir($dest);
-        }
-
-        foreach(scandir($dir) as $file) {
-            if ($file === '.' || $file === '..') {
-                continue;
-            } else if (is_file($dir . "/" . $file)) {
-                copy($dir . "/" . $file, $dest . "/" . $file);
-            } else if (is_dir($dir . "/" . $file)) {
-                self::copyStorage($dir . "/" . $file, $dest . "/" . $file);
+        $copy = function($dir = null, $dest = null) use (&$copy) {
+            if (null === $dir) {
+                $dir = __DIR__ . "/Fluid/Tests/Fixtures/storage/master";
             }
-        }
 
-        exec("git init ". __DIR__ . "/Fluid/Tests/Fixtures/storage/develop");
+            if (null === $dest) {
+                $dest = __DIR__ . "/Fluid/Tests/Fixtures/storage/develop";
+            }
+
+            if (!is_dir($dest)) {
+                mkdir($dest);
+            }
+
+            foreach(scandir($dir) as $file) {
+                if ($file === '.' || $file === '..') {
+                    continue;
+                } else if (is_file($dir . "/" . $file)) {
+                    copy($dir . "/" . $file, $dest . "/" . $file);
+                } else if (is_dir($dir . "/" . $file)) {
+                    $copy($dir . "/" . $file, $dest . "/" . $file);
+                }
+            }
+        };
+
+        $copy();
+
+        exec("git init ". self::getStorage());
+        exec("git --git-dir=".self::getStorage()."/.git --work-tree=".self::getStorage()." add ".self::getStorage()."/*");
+        exec("git --git-dir=".self::getStorage()."/.git --work-tree=".self::getStorage()." commit -m initial\\ commit");
+
+        Fluid::setBranch('develop');
     }
 
     public static function deleteStorage($dir = null)

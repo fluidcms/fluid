@@ -40,6 +40,26 @@ class History
         return $output;
     }
 
+    /**
+     * Roll back to a commit
+     *
+     * @param   string  $id
+     * @return  self
+     */
+    public static function rollBack($id)
+    {
+        $branch = Fluid::getBranch();
+        $head = Git::getHeadBranch($branch);
+
+        if ($head !== 'master') {
+            Git::checkout($branch, 'master');
+            Git::removeBranch($branch, 'history');
+        }
+
+        Git::checkoutCommit($branch, 'history', $id);
+
+        return new self;
+    }
 
     /**
      * Commit a step in history

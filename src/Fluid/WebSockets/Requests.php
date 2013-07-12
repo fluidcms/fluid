@@ -224,6 +224,14 @@ class Requests
                     $history = new History;
                     echo json_encode($history->getAll());
                     return true;
+
+                case 'PUT':
+                    if (isset($match[2])) {
+                        $id = trim($match[2], ' /.');
+                        $history = History::rollBack($id);
+                        echo json_encode($history->getAll());
+                    }
+                    return true;
             }
         }
 

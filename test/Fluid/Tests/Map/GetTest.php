@@ -11,7 +11,7 @@ class GetTest extends PHPUnit_Framework_TestCase
         Helper::copyStorage();
     }
 
-    public function testGet()
+    public function testGetMap()
     {
         $request = array(
             "method" => "GET",
