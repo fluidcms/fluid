@@ -4,6 +4,9 @@ namespace Fluid;
 
 /**
  * Version control for Fluid
+ * TODO: Due to the way this was developed in the begining, there is a huge confusion between the "branch" and "head"
+ * TODO: variables in this class. The branch variables are really the directory of the repo and the head variables
+ * TODO: are really the target branch in the repo. We will have to switch them to stop the confusion.
  *
  * @package fluid
  */
@@ -161,11 +164,18 @@ class Git
      * Get all commits for a branch
      *
      * @param   string $branch
+     * @param   string $head
      * @return  array
      */
-    public static function getCommits($branch)
+    public static function getCommits($branch, $head = null)
     {
-        $retval = self::command($branch, 'git log');
+        $command = "git log";
+
+        if (null !== $head) {
+            $command .= " {$head}";
+        }
+
+        $retval = self::command($branch, $command);
         $commits = preg_split("/(commit [a-zA-Z0-9]*)/", $retval, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
 
         $output = array();

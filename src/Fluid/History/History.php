@@ -25,19 +25,30 @@ class History
      */
     public function getAll()
     {
+        $ghostCommits = array();
+        $head = Git::getHeadBranch($this->branch);
+
+        // Get master branch commits
+        if ($head !== 'master') {
+            $ghostCommits = Git::getCommits($this->branch, 'master');
+            $ghostCommits = array_map(function($commit) { return array_merge($commit, array('ghost' => true)); }, $ghostCommits);
+        }
+
         $output = array();
-        foreach(Git::getCommits($this->branch) as $commit) {
+        foreach(array_merge($ghostCommits, Git::getCommits($this->branch)) as $commit) {
             if (strpos($commit['message'], 'history') === 0) {
-                $output[] = array(
+                $output[$commit['commit']] = array(
                     'id' => $commit['commit'],
                     'action' => preg_replace('/history \d{4,4}-\d{2,2}-\d{2,2} \d{2,2}:\d{2,2}:\d{2,2} (.*) [a-zA-Z0-9]{16,16}/', '$1', $commit['message']),
                     'user_name' => preg_replace('/(.*) <(.*)>$/', '$1', $commit['author']),
                     'user_email' => preg_replace('/(.*) <(.*)>$/', '$2', $commit['author']),
-                    'date' => $commit['date']
+                    'date' => $commit['date'],
+                    'ghost' => (isset($commit['ghost']) ? true : false)
                 );
             }
         }
-        return array_reverse($output);
+
+        return array_values(array_reverse($output));
     }
 
     /**
