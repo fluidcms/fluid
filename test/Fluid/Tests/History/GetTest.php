@@ -19,9 +19,15 @@ class GetTest extends PHPUnit_Framework_TestCase
             "data" => array()
         );
 
-        // Add items to history
-        $delete = new Fluid\Tests\Map\SortTest;
-        $delete->testSort();
+        // Add some history
+        file_put_contents(Helper::getStorage() . "/tmp", "test");
+        Fluid\History\History::add('test123', 'PHPUnit', 'phpunit@localhost');
+
+        unlink(Helper::getStorage() . "/tmp");
+        Fluid\History\History::add('test456', 'PHPUnit', 'phpunit@localhost');
+
+        file_put_contents(Helper::getStorage() . "/tmp", "test");
+        Fluid\History\History::add('test789', 'PHPUnit', 'phpunit@localhost');
 
         ob_start();
         new Fluid\WebSockets\Requests($request['url'], $request['method'], $request['data'], 'develop', Helper::getUser());
@@ -30,8 +36,8 @@ class GetTest extends PHPUnit_Framework_TestCase
 
         $history = json_decode($retval, true);
 
-        $this->assertEquals('map_sort', $history[0]['action']);
-        $this->assertEquals('map_sort', $history[2]['action']);
+        $this->assertEquals('test123', $history[0]['action']);
+        $this->assertEquals('test789', $history[2]['action']);
     }
 
     public function tearDown()

@@ -37,7 +37,7 @@ class History
                 );
             }
         }
-        return $output;
+        return array_reverse($output);
     }
 
     /**
