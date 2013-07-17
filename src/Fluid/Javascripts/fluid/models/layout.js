@@ -1,9 +1,27 @@
 define(['backbone'], function (Backbone) {
-    return Backbone.Model.extend({
-        url: fluidBranch + '/layouts',
+    var Layout = Backbone.Model.extend({
+    });
 
-        initialize: function () {
-            this.fetch();
+    var Layouts = Backbone.Collection.extend({
+        url: 'layout',
+
+        model: Layout,
+
+        initialize: function (items, attrs) {
+            this.socket = attrs.socket;
+        },
+
+        fetch: function () {
+            var root = this;
+            this.socket.send('GET', this.url, {}, function(response) {
+                root.reset(response);
+                console.log(root);
+            });
         }
     });
+
+    return {
+        Layout: Layout,
+        Layouts: Layouts
+    };
 });

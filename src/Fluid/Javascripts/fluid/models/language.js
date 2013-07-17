@@ -1,9 +1,26 @@
 define(['backbone'], function (Backbone) {
-    return Backbone.Model.extend({
-        url: fluidBranch + '/languages',
+    var Language = Backbone.Model.extend({
+    });
 
-        initialize: function () {
-            this.fetch();
+    var Languages = Backbone.Collection.extend({
+        url: 'language',
+
+        model: Language,
+
+        initialize: function (items, attrs) {
+            this.socket = attrs.socket;
+        },
+
+        fetch: function () {
+            var root = this;
+            this.socket.send('GET', this.url, {}, function(response) {
+                root.reset(response);
+            });
         }
     });
+
+    return {
+        Language: Language,
+        Languages: Languages
+    };
 });

@@ -15,9 +15,14 @@ class Helper
         );
     }
 
+    public static function getFixtureDir()
+    {
+        return __DIR__ . "/Fluid/Tests/Fixtures";
+    }
+
     public static function getStorage()
     {
-        return __DIR__ . "/Fluid/Tests/Fixtures/storage/develop";
+        return self::getFixtureDir() . "/storage/develop";
     }
 
     public static function copyStorage()

@@ -1,8 +1,8 @@
 <?php
 
-namespace Fluid\Models;
+namespace Fluid\Layout;
 
-use Exception, Fluid\Fluid;
+use Fluid\Fluid;
 
 /**
  * Layout model
@@ -23,7 +23,9 @@ class Layout
 
         foreach ($dir as $file) {
             if (strpos($file, '.twig') !== false) {
-                $layouts[] = str_replace('.twig', '', $file);
+                $layouts[] = array(
+                    'layout' => str_replace('.twig', '', $file)
+                );
             }
         }
 

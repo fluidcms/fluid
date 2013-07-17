@@ -92,7 +92,21 @@ class Branch
      * @param   string  $branch
      * @return  void
      */
-    public static function intialCommit($branch) {
-        // TODO: check if branch has initial commit, otherwise, do the commit
+    public static function intialCommit($branch)
+    {
+        if ($branch !== 'bare') {
+            $gitIgnoreFile = Fluid::getConfig("storage") . $branch . "/.gitignore";
+            $gitIgnoreContent = <<<TEXT
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+Desktop.ini
+/cache/*
+TEXT;
+            file_put_contents($gitIgnoreFile, $gitIgnoreContent);
+            Git::commit($branch, 'initial commit');
+        }
     }
 }

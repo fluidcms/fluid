@@ -75,7 +75,9 @@ class Server implements Ratchet\Wamp\WampServerInterface
             $retval = ob_get_contents();
             ob_end_clean();
 
-            $conn->send('[3,"' . $id . '",' . $retval . ']');
+            if (!empty($retval)) {
+                $conn->send('[3,"' . $id . '",' . $retval . ']');
+            }
         }
 
         else {

@@ -1,5 +1,5 @@
-define(['backbone', 'views/loader', 'models/socket', 'views/nav'],
-    function (Backbone, LoaderView, Socket, Nav) {
+define(['backbone', 'views/loader', 'models/socket', 'models/language', 'models/layout', 'views/nav'],
+    function (Backbone, LoaderView, Socket, Language, Layout, Nav) {
         var run = function () {
             var FluidRouter = Backbone.Router.extend({
                 root: "/fluidcms/",
@@ -14,8 +14,6 @@ define(['backbone', 'views/loader', 'models/socket', 'views/nav'],
 
                     //this.site = new Site.Model();
                     //this.page = new Page.Model({site: this.site});
-                    //this.languages = new Language;
-                    //this.layouts = new Layout;
 
                     this.nav = new Nav({router: this}).render();
                     //this.toolbar = new Toolbar({page: this.page, site: this.site}).render();
@@ -25,10 +23,17 @@ define(['backbone', 'views/loader', 'models/socket', 'views/nav'],
                         loader: this.loader,
                         //version: this.version
                     });
+
+                    this.languages = new Language.Languages(null, {socket: root.socket});
+                    this.layouts = new Layout.Layouts(null, {socket: root.socket});
+
                     this.socket.on('ready', function() {
                         root.ready = true;
                         root.loader.remove();
+                        root.languages.fetch();
+                        root.layouts.fetch();
                     });
+
                     this.socket.connection();
 
                     // Control + Z or Command + Z events

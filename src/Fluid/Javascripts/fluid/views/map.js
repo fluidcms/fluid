@@ -1,4 +1,4 @@
-define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu'], function (Backbone, EJS, jUI, Modal, ContextMenu) {
+define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu', 'models/map'], function (Backbone, EJS, jUI, Modal, ContextMenu, Map) {
     var View = Backbone.View.extend({
         events: {
             'click a[data-action=addPage]': 'addPage',
@@ -93,7 +93,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu'], fun
             } else {
                 var parent = this.collection;
             }
-            new Page({ model: new Structure.Page({ parent: parent }), languages: this.languages, layouts: this.layouts, newPage: true }).render();
+            new Page({ model: new Map.Page({ parent: parent }), languages: this.languages, layouts: this.layouts, newPage: true }).render();
         },
 
         editPage: function (page) {

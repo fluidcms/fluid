@@ -1,6 +1,6 @@
 <?php
 
-namespace Fluid\Models;
+namespace Fluid\Language;
 
 use Fluid, Exception;
 
@@ -18,7 +18,13 @@ class Language
      */
     public static function getLanguages()
     {
-        return Fluid\Fluid::getConfig('languages');
+        $output = array();
+        foreach(Fluid\Fluid::getConfig('languages') as $language) {
+            $output[] = array(
+                'language' => $language
+            );
+        }
+        return $output;
     }
 
     /**

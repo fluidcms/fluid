@@ -4,6 +4,8 @@ namespace Fluid\WebSockets;
 
 use Exception,
     Fluid\Fluid,
+    Fluid\Language\Language,
+    Fluid\Layout\Layout,
     Fluid\Map\Map,
     Fluid\History\History;
 
@@ -36,8 +38,8 @@ class Requests
 
         $this->map() ||
         $this->page() ||
-        $this->languages() ||
-        $this->layouts() ||
+        $this->language() ||
+        $this->layout() ||
         $this->pageToken() ||
         $this->version() ||
         $this->file() ||
@@ -63,14 +65,12 @@ class Requests
      *
      * @return  bool
      */
-    private function languages()
+    private function language()
     {
-        if (!empty($this->request) && preg_match('{^([a-z0-9]*)/(languages)(/.*)?$}', $this->request, $match)) {
-            $branch = $match[1];
-            Fluid::switchBranch($branch);
-            switch (self::$method) {
+        if (!empty($this->request) && preg_match('{^(language)(/.*)?$}', $this->request, $match)) {
+            switch ($this->method) {
                 case 'GET':
-                    echo json_encode(Models\Language::getLanguages());
+                    echo json_encode(Language::getLanguages());
                     return true;
             }
         }
@@ -82,14 +82,12 @@ class Requests
      *
      * @return  bool
      */
-    private function layouts()
+    private function layout()
     {
-        if (!empty($this->request) && preg_match('{^([a-z0-9]*)/(layouts)(/.*)?$}', $this->request, $match)) {
-            $branch = $match[1];
-            Fluid::switchBranch($branch);
-            switch (self::$method) {
+        if (!empty($this->request) && preg_match('{^(layout)(/.*)?$}', $this->request, $match)) {
+            switch ($this->method) {
                 case 'GET':
-                    echo json_encode(Models\Layout::getLayouts());
+                    echo json_encode(Layout::getLayouts());
                     return true;
             }
         }

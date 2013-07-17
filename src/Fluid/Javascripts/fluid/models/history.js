@@ -51,6 +51,7 @@ define(['backbone'], function (Backbone) {
         fetch: function () {
             var root = this;
             this.socket.send('GET', this.url, {}, function(response) {
+                console.log(response);
                 root.parse(response);
             });
         },
