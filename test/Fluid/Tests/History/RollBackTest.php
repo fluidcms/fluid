@@ -73,6 +73,38 @@ class RollBackTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($history[0]['ghost']);
         $this->assertEquals('test789', $history[2]['action']);
         $this->assertFalse($history[2]['ghost']);
+
+        // Overwrite forward changes
+        $request = array(
+            "method" => "PUT",
+            "url" => "history/".$history[1]['id'],
+            "data" => array()
+        );
+
+        ob_start();
+        new Fluid\WebSockets\Requests($request['url'], $request['method'], $request['data'], 'develop', Helper::getUser());
+        ob_end_clean();
+
+        file_put_contents(Helper::getStorage() . "/tmp", "test");
+        Fluid\History\History::add('test999', 'PHPUnit', 'phpunit@localhost');
+
+        $request = array(
+            "method" => "GET",
+            "url" => "history",
+            "data" => array()
+        );
+
+        ob_start();
+        new Fluid\WebSockets\Requests($request['url'], $request['method'], $request['data'], 'develop', Helper::getUser());
+        $retval = ob_get_contents();
+        ob_end_clean();
+
+        $history = json_decode($retval, true);
+
+        $this->assertEquals('test123', $history[0]['action']);
+        $this->assertFalse($history[0]['ghost']);
+        $this->assertEquals('test999', $history[2]['action']);
+        $this->assertFalse($history[2]['ghost']);
     }
 
     public function tearDown()

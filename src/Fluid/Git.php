@@ -331,6 +331,19 @@ class Git
     }
 
     /**
+     * Rename a local branch
+     *
+     * @param   string $branch
+     * @param   string $head
+     * @param   string $name
+     * @return  string
+     */
+    public static function renameBranch($branch, $head, $name)
+    {
+        return self::command($branch, 'git branch -m ' . $head . ' ' . $name);
+    }
+
+    /**
      * Initialize git repo
      *
      * @param   string $branch

@@ -82,8 +82,16 @@ class History
      */
     public static function add($msg, $name, $email)
     {
+        $branch = Fluid::getBranch();
+        $head = Git::getHeadBranch($branch);
+
+        if ($head !== 'master') {
+            Git::removeBranch($branch, 'master');
+            Git::renameBranch($branch, $head, 'master');
+        }
+
         Git::commit(
-            Fluid::getBranch(),
+            $branch,
             'history ' . date('Y-m-d H:i:s') . ' ' . $msg . ' ' . Token::generate(16),
             $name,
             $email
