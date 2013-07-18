@@ -44,6 +44,10 @@ div.history {
         float: right;
         color: #555;
       }
+
+      &.ghost {
+        opacity: .3;
+      }
     }
   }
 }

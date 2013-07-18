@@ -22,7 +22,7 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
 
         rollBack: function(e) {
             var id = $(e.target).attr('data-id');
-            console.log(id);
+            this.collection.rollBack(id);
         }
     });
 });

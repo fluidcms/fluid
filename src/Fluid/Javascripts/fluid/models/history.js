@@ -51,7 +51,6 @@ define(['backbone'], function (Backbone) {
         fetch: function () {
             var root = this;
             this.socket.send('GET', this.url, {}, function(response) {
-                console.log(response);
                 root.parse(response);
             });
         },
@@ -61,6 +60,13 @@ define(['backbone'], function (Backbone) {
                 this.gravatar = md5(this.user_email);
             });
             this.reset(response);
+        },
+
+        rollBack: function(id) {
+            var root = this;
+            this.socket.send('PUT', this.url + "/" + id, {}, function(response) {
+                root.parse(response);
+            });
         }
     });
 });

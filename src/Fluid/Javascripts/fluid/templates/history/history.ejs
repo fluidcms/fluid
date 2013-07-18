@@ -6,7 +6,7 @@ var currentUser = null;
 var ulOpen = false;
 %>
 
-<% $.each(steps, function(key, step) { %>
+<% $.each(steps.reverse(), function(key, step) { %>
     <% if (step.get('user_email') !== currentUser) { %>
         <% if (ulOpen) { %></ul><% } %>
         <div class="user">
@@ -21,7 +21,7 @@ var ulOpen = false;
         %>
     <% } %>
 
-    <li>
+    <li<% if (step.get('ghost') == true) { %> class="ghost"<% } %>>
         <a data-id="<%= step.get('id') %>" class="<%= step.get('action') %>"><%= fluidLanguage['history']['steps'][step.get('action')] %></a>
         <span><%= step.getReadableTime() %></span>
     </li>
