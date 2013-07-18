@@ -9,12 +9,13 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
         },
 
         render: function () {
-            var obj = this;
+            var root = this;
+            var data;
 
             if (typeof this.renderData == 'function') {
-                var data = _.extend({model: this.model}, this.renderData());
+                data = _.extend({model: this.model}, this.renderData());
             } else {
-                var data = {model: this.model};
+                data = {model: this.model};
             }
 
             this.$el.html('<div class="modal-window">' + this.template.render(data) + '</div>');
@@ -26,7 +27,7 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
             setTimeout(function () {
                 $(document).keyup(function (e) {
                     if (e.keyCode == 27) {
-                        obj.close();
+                        root.close();
                     }
                 });
             }, 1);

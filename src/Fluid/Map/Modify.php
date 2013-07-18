@@ -40,17 +40,17 @@ class Modify
      * Add a page to the map.
      *
      * @param   Map         $map
-     * @param   string      $id
      * @param   int         $index
+     * @param   string      $id
      * @param   string      $page
-     * @param   string      $url
-     * @param   string      $layout
      * @param   array       $languages
+     * @param   string      $layout
+     * @param   string      $url
      * @param   array       $pages
      * @throws  Exception
      * @return  Map
      */
-    public static function addPage(Map $map, $id, $index, $page, $url, $layout, $languages, $pages = null)
+    public static function addPage(Map $map, $index, $id, $page, $languages, $layout, $url, $pages = null)
     {
         $paths = explode("/", preg_replace("/\\/?{$page}$/", '', $id));
 
@@ -73,22 +73,22 @@ class Modify
             $page
         ));
 
-        return $map;
+        return self::resetIds($map);
     }
 
     /**
      * Edit a page in the map.
      *
-     * @param   Map   $map
-     * @param   string      $id
-     * @param   string      $page
-     * @param   string      $url
-     * @param   string      $layout
-     * @param   array       $languages
+     * @param   Map     $map
+     * @param   string  $id
+     * @param   string  $page
+     * @param   array   $languages
+     * @param   string  $layout
+     * @param   string  $url
      * @throws  Exception
-     * @return  array       [Map, id]
+     * @return  Map
      */
-    public static function editPage(Map $map, $id, $page, $url, $layout, $languages)
+    public static function editPage(Map $map, $id, $page, $languages, $layout, $url)
     {
         $map->setPages(self::findAndEditPage($map->getPages(), explode("/", $id), array(
             'page' => $page,
@@ -97,13 +97,14 @@ class Modify
             'languages' => $languages
         )));
 
-        $newId = dirname($id) . '/' . $page;
-        $newId = trim($newId, './');
+        $map = self::resetIds($map);
+
+        $newId = trim(dirname($id) . '/' . $page, '/. ');
 
         if (self::getPage($map->getPages(), explode('/', $newId))) {
-            return array($map, $newId);
+            return $map;
         } else {
-            throw new Exception('Did not find the page to edit.');
+            throw new Exception('Did not find the page to edit');
         }
     }
 
@@ -117,7 +118,7 @@ class Modify
     public static function deletePage(Map $map, $id)
     {
         $map->setPages(self::removePageFromPages($map->getPages(), explode("/", $id)));
-        return $map;
+        return self::resetIds($map);
     }
 
     /**
@@ -203,9 +204,10 @@ class Modify
         self::deletePage($map, $id);
         $to = "$to/{$page['page']}";
         $pages = isset($page['pages']) ? $page['pages'] : null;
-        self::addPage($map, $to, $index, $page['page'], $page['url'], $page['layout'], $page['languages'], $pages);
 
-        return $map;
+        self::addPage($map, $index, $to, $page['page'], $page['languages'], $page['layout'], $page['url'], $pages);
+
+        return self::resetIds($map);
     }
 
     /**

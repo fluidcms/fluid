@@ -6,13 +6,13 @@
     <label>Languages</label>
 
     <div class="input-margin">
-        <% $.each(languages.attributes, function(key, item) { %>
+        <% languages.each(function(item, key) { %>
         <label for="pageLanguageCheckbox<%= key %>" class="checkbox no-text-transform">
-            <input type="checkbox" id="pageLanguageCheckbox<%= key %>" name="languages[]" value="<%= item %>"
+            <input type="checkbox" id="pageLanguageCheckbox<%= key %>" name="languages[]" value="<%= item.get('language') %>"
                    tabindex="2"
-            <% if(typeof model.get("languages") == 'undefined' || $.inArray(item, model.get("languages")) !== -1) {
+            <% if(typeof model.get("languages") == 'undefined' || $.inArray(item.get('language'), model.get("languages")) !== -1) {
             %>checked<% } %>>
-            <%= item %>
+            <%= item.get('language') %>
         </label>
         <%}) %>
     </div>
@@ -23,10 +23,10 @@
 
     <label for="pageLayoutSelect">Layout</label>
     <select name="layout" id="pageLayoutSelect" tabindex="4">
-        <% $.each(layouts.attributes, function(key, item) { %>
-        <option value="<%= item %>"
-        <% if(model.get("layout") == item) { %>selected<% } %>>
-        <%= item %>
+        <% layouts.each(function(item, key) { %>
+        <option value="<%= item.get('layout') %>"
+        <% if(model.get("layout") == item.get('layout')) { %>selected<% } %>>
+        <%= item.get('layout') %>
         </option>
         <%}) %>
     </select>

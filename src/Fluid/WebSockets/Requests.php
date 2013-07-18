@@ -160,12 +160,14 @@ class Requests
                     return true;
 
                 case 'POST':
-                    try {
-                        echo json_encode(Models\Structure::createPage(self::$input));
-                    } catch (Exception $e) {
-                        header('X-Error-Message: ' . $e->getMessage(), true, 500);
-                        exit;
-                    }
+                    $map = new Map;
+                    $map->createPage($this->input);
+                    History::add(
+                        'map_add',
+                        $this->user['name'],
+                        $this->user['email']
+                    );
+                    echo json_encode($map->getPages());
                     return true;
 
                 case 'PUT':
@@ -183,12 +185,14 @@ class Requests
                     }
                     // Edit
                     else {
-                        try {
-                            echo json_encode(Models\Structure::editPage(self::$input));
-                        } catch (Exception $e) {
-                            header('X-Error-Message: ' . $e->getMessage(), true, 500);
-                            exit;
-                        }
+                        $map = new Map;
+                        $map->editPage($this->input);
+                        History::add(
+                            'map_edit',
+                            $this->user['name'],
+                            $this->user['email']
+                        );
+                        echo json_encode($map->getPages());
                         return true;
                     }
                     return true;

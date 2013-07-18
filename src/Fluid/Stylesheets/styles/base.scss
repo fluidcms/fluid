@@ -245,7 +245,7 @@ select {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  @include background(image-url("../images/sprite.png"), linear-gradient(top, #ffffff 0%, #f7f7f7 100%));
+  @include background(url("../images/sprite.png"), linear-gradient(top, #ffffff 0%, #f7f7f7 100%));
   background-position: right -86px, 0 0;
   background-repeat: no-repeat, repeat;
 }

@@ -51,6 +51,10 @@ class Helper
             }
         };
 
+        if (is_dir(__DIR__ . "/Fluid/Tests/Fixtures/storage/develop")) {
+            self::deleteStorage();
+        }
+
         $copy();
 
         exec("git init ". self::getStorage());

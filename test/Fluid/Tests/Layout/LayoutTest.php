@@ -9,8 +9,6 @@ class LayoutTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         Helper::copyStorage();
-        Fluid\Fluid::setConfig('templates', Helper::getFixtureDir() . '/templates');
-        Fluid\Fluid::setConfig('layouts', 'layouts');
     }
 
     public function testGetLayouts()

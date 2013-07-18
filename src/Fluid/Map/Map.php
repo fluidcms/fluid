@@ -59,17 +59,16 @@ class Map extends FileSystem
      */
     public function createPage($attrs)
     {
-        Page::create($attrs['path'], $attrs['languages'], array());
-        $structure = Structure\Modify::addPage(new self, $attrs["path"], $attrs["index"], $attrs["page"], $attrs["url"], $attrs["layout"], $attrs["languages"]);
-        $structure->store();
+        if (!is_int($attrs['index'])) {
+            throw new \InvalidArgumentException;
+        }
 
-        return array(
-            "id" => $attrs["path"],
-            "page" => $attrs["page"],
-            "url" => $attrs["url"],
-            "layout" => $attrs["layout"],
-            "languages" => $attrs["languages"]
-        );
+        $page = Page::create($attrs['page'], $attrs['parent'], $attrs['languages'], $attrs['layout'], $attrs['url']);
+
+        $map = Modify::addPage($this, $attrs['index'], $page['id'], $page['page'], $page['languages'], $page['layout'], $page['url']);
+        $map->store();
+
+        return true;
     }
 
     /**
@@ -114,18 +113,12 @@ class Map extends FileSystem
      */
     public function editPage($attrs)
     {
-        list($structure, $id) = Structure\Modify::editPage(new self, $attrs["id"], $attrs["page"], $attrs["url"], $attrs["layout"], $attrs["languages"]);
-        $structure->store();
+        $page = Page::config($attrs['id'], $attrs['page'], $attrs['languages'], $attrs['layout'], $attrs['url']);
 
-        Page::rename($attrs["id"], $id);
+        $map = Modify::editPage($this, $attrs["id"], $attrs["page"], $attrs["languages"], $attrs["layout"], $attrs["url"]);
+        $map->store();
 
-        return array(
-            "id" => $id,
-            "page" => $attrs["page"],
-            "url" => $attrs["url"],
-            "layout" => $attrs["layout"],
-            "languages" => $attrs["languages"]
-        );
+        return true;
     }
 
     /**
@@ -141,7 +134,6 @@ class Map extends FileSystem
             Page::get($page['id'])->delete();
 
             $map = Modify::deletePage($this, $id);
-            $map = Modify::resetIds($map);
             $map->store();
 
             return true;
@@ -179,7 +171,6 @@ class Map extends FileSystem
             $movePages(array($page), $to);
 
             $map = Modify::sortPage($this, $id, $to, $index);
-            $map = Modify::resetIds($map);
             $map->store();
 
             return true;

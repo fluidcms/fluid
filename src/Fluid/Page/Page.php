@@ -4,6 +4,8 @@ namespace Fluid\Page;
 
 use Exception,
     Fluid\Fluid,
+    Fluid\Language\Language,
+    Fluid\Layout\Layout,
     Fluid\Storage\FileSystem;
 
 /**
@@ -96,33 +98,32 @@ class Page extends FileSystem
     /**
      * Create a page
      *
-     * @param   string      $page
-     * @param   array       $languages
-     * @param   array       $content
+     * @param   string  $page
+     * @param   string  $parent
+     * @param   array   $languages
+     * @param   string  $layout
+     * @param   string  $url
      * @throws  Exception
-     * @return  void
+     * @return  array
      */
-    public static function create($page, $languages, $content = array())
+    public static function create($page, $parent, $languages, $layout, $url)
     {
-        if (!is_array($languages)) {
-            $languages = array($languages);
-        }
+        Validator::newPageValidator($page, $parent, $languages, $layout, $url);
 
-        try {
-            Language::validateLanguages($languages);
-            $path = explode('/', $page);
-            array_walk($path, array("Fluid\\Models\\Page\\Validator", "name"));
-            Page\Validator::content($content);
-        } catch (Exception $e) {
-            throw new Exception("Cannot create page: " . $e->getMessage());
-        }
-
-        $page = trim($page, "/");
+        $id = trim($parent . "/" . $page, "/");
 
         foreach ($languages as $language) {
-            $file = 'pages/' . $page . '_' . $language . '.json';
-            self::save(json_encode($content, JSON_PRETTY_PRINT), $file);
+            $file = 'pages/' . $id . '_' . $language . '.json';
+            self::save(json_encode(array(), JSON_PRETTY_PRINT), $file);
         }
+
+        return array(
+            'id' => $id,
+            'page' => $page,
+            'languages' => $languages,
+            'layout' => $layout,
+            'url' => $url
+        );
     }
 
     /**
@@ -162,36 +163,66 @@ class Page extends FileSystem
     }
 
     /**
-     * Rename a page
+     * Edit a page's configuration
      *
-     * @param   string      $oldId
-     * @param   string      $newId
+     * @param   string  $id
+     * @param   string  $page
+     * @param   array   $languages
+     * @param   string  $layout
+     * @param   string  $url
      * @throws  Exception
      * @return  bool
      */
-    public static function rename($oldId, $newId)
+    public static function config($id, $page, $languages, $layout, $url)
     {
-        $dir = trim(str_replace('..', '', $oldId), '/.');
+        Validator::pageValidator($page, $languages, $layout, $url);
 
-        $dir = Fluid::getBranchStorage() . "pages/" . trim(dirname($dir), '.');
+        $oldName = basename($id);
 
-        $oldName = basename($oldId);
-        $newName = basename($newId);
+        $dir = preg_replace('!/\.*/!', '/', dirname($id));
+        $dir = Fluid::getBranchStorage() . "pages/" . trim($dir, '/ ');
 
-        $found = false;
+        $existingFiles = array();
+        if (is_dir($dir)) {
+            foreach (scandir($dir) as $file) {
+                if ($file === '.' || $file === '..') {
+                    continue;
+                } else if (preg_match("/^{$oldName}(_[a-z]{2,2}\\-[A-Z]{2,2})\\.json$/", $file, $match)) {
+                    // Delete files for removed languages
+                    $language = substr($match[1], 1);
+                    if (!in_array($language, $languages)) {
+                        unlink("{$dir}/{$file}");
+                    }
 
-        foreach (scandir($dir) as $file) {
-            if (preg_match("/^{$oldName}(_[a-z]{2,2}\\-[A-Z]{2,2})\\.json$/", $file, $match)) {
-                rename(
-                    $dir."/".$file,
-                    $dir."/".$newName . $match[1] . ".json"
-                );
-                $found = true;
+                    // Rename file
+                    else {
+                        $existingFiles[] = $language;
+                        rename(
+                            "{$dir}/{$file}",
+                            "{$dir}/{$page}_{$language}.json"
+                        );
+                    }
+                } else if ($file === $oldName && is_dir("{$dir}/{$file}")) {
+                    rename(
+                        "{$dir}/{$file}",
+                        "{$dir}/{$page}"
+                    );
+                }
             }
+
+            // Move files
+        } else {
+            throw new Exception('Unknown directory');
         }
 
-        if (!$found) {
-            throw new Exception("The page does not exists");
+        // Create new language files
+        foreach($languages as $language) {
+            if (!in_array($language, $existingFiles)) {
+                file_put_contents(
+                    "{$dir}/{$page}_{$language}.json",
+                    json_encode(array(), JSON_PRETTY_PRINT)
+                );
+            }
         }
 
         return true;

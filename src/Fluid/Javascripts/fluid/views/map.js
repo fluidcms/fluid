@@ -93,11 +93,22 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu', 'mod
             } else {
                 var parent = this.collection;
             }
-            new Page({ model: new Map.Page({ parent: parent }), languages: this.languages, layouts: this.layouts, newPage: true }).render();
+
+            var page = new Map.Page({
+                base: this.collection,
+                parent: parent
+            });
+            var pageView = new PageView({
+                model: page,
+                languages: this.languages,
+                layouts: this.layouts,
+                newPage: true
+            });
+            pageView.render();
         },
 
-        editPage: function (page) {
-            new Page({ model: this.collection.findItem($(page).parents('li').attr('data-id')), languages: this.languages, layouts: this.layouts }).render();
+        configPage: function (page) {
+            new PageView({ model: this.collection.findItem($(page).parents('li').attr('data-id')), languages: this.languages, layouts: this.layouts }).render();
         },
 
         deletePage: function (page) {
@@ -105,17 +116,13 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu', 'mod
         }
     });
 
-    var Page = Backbone.View.extend($.extend({}, Modal, {
+    var PageView = Backbone.View.extend($.extend({}, Modal, {
         template: new EJS({url: 'javascripts/fluid/templates/map/page.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
             this.languages = attrs.languages;
             this.layouts = attrs.layouts;
-            if (typeof attrs.newPage !== 'undefined') {
-                this.newPage = true;
-            } else {
-                this.newPage = false;
-            }
+            this.newPage = (typeof attrs.newPage !== 'undefined');
         },
 
         renderData: function () {
@@ -129,14 +136,14 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu', 'mod
             if (this.newPage) {
                 var parent = this.model.parent;
                 parent.add(this.model, {silent: true});
-                var data = this.model.toJSON();
 
-                data.id = null;
+                var data = this.model.toJSON();
+                data.base = this.model.base;
                 data.parent = parent;
-                data.path = this.model.getId();
                 data.index = parent.indexOf(this.model);
 
                 parent.remove(this.model);
+
                 parent.create(data);
             } else {
                 this.model.save();

@@ -18,6 +18,18 @@ define(['backbone'], function (Backbone) {
             });
         },
 
+        save: function() {
+            var root = this;
+            this.base.socket.send(
+                'PUT',
+                this.urlRoot + "/" + encodeURIComponent(this.id),
+                this.toJSON(),
+                function(response) {
+                    root.base.parse(response);
+                }
+            );
+        },
+
         destroy: function() {
             var root = this;
             this.base.socket.send(
@@ -48,9 +60,10 @@ define(['backbone'], function (Backbone) {
                 this.validationErrorAttr = 'page';
                 return 'You must enter a page.';
             }
-            if (!attrs.page.match(/^[a-z0-9_]*$/i)) {
+            // Make sure this matches the PHP validation
+            if (!attrs.page.match(/^[a-z0-9\u00C0-\u017F_ \.\-'"]*$/i)) {
                 this.validationErrorAttr = 'page';
-                return 'The page must contain only letters, numbers and underscores.';
+                return 'The page must contain only letters and numbers.';
             }
             return '';
         }
@@ -91,6 +104,28 @@ define(['backbone'], function (Backbone) {
             var root = this;
             this.socket.send('GET', this.url, {}, function(response) {
                 root.parse(response);
+            });
+        },
+
+        create: function (attrs) {
+            console.log(attrs);
+            var parent = '';
+            if (typeof attrs.parent !== 'undefined' && attrs.parent !== null && typeof attrs.parent.parent !== 'undefined' && attrs.parent.parent !== null) {
+                console.log('has parent yo');
+                parent = attrs.parent.parent.get('id');
+            }
+
+            var data = {
+                index: attrs.index,
+                languages: attrs.languages,
+                layout: attrs.layout,
+                page: attrs.page,
+                url: attrs.url,
+                parent: parent
+            };
+            var root = this;
+            this.base.socket.send('POST', this.url, data, function(response) {
+                root.base.parse(response);
             });
         },
 

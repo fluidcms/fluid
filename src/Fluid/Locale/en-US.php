@@ -16,8 +16,10 @@ return array(
     // History
     'history' => array(
         'steps' => array(
+            'map_add' => 'Added a page',
             'map_sort' => 'Moved a page',
-            'map_delete' => 'Deleted a page'
+            'map_delete' => 'Deleted a page',
+            'map_edit' => 'Edited a page configuration'
         )
     )
 );

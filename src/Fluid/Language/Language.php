@@ -30,16 +30,27 @@ class Language
     /**
      * Validate languages
      *
-     * @param   array       $input
-     * @throws  Exception   Invalid language
+     * @param   array       $value
+     * @throws  Exception
      * @return  bool
      */
-    public static function validateLanguages($input)
+    public static function validateLanguages($value)
     {
+        if (!is_array($value)) {
+            throw new Exception("Invalid languages");
+        }
+
         $valid = self::getLanguages();
-        foreach($input as $language) {
-            if (!in_array($language, $valid)) {
-                throw new Exception("Invalid language.");
+        foreach($value as $needle) {
+            $found = false;
+            foreach($valid as $haystack) {
+                if ($haystack['language'] === $needle) {
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                throw new Exception("Invalid languages");
             }
         }
         return true;
