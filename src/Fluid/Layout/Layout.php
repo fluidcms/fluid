@@ -20,12 +20,14 @@ class Layout
     public static function getLayouts()
     {
         $layouts = array();
-        $dir = scandir(Fluid::getConfig('templates') . Fluid::getConfig('layouts'));
+        $dir = Fluid::getConfig('templates') . Fluid::getConfig('layouts');
 
-        foreach ($dir as $file) {
-            if (strpos($file, '.twig') !== false) {
+        foreach (scandir($dir) as $file) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            } else if (is_dir($dir.$file) && file_exists("{$dir}{$file}/layout.xml")) {
                 $layouts[] = array(
-                    'layout' => str_replace('.twig', '', $file)
+                    'layout' => $file
                 );
             }
         }

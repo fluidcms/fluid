@@ -1,0 +1,28 @@
+<layout xmlns="https://fluidcms.net/schemas/template" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://fluidcms.net/schemas/template https://fluidcms.net/schemas/template.xsd">
+
+    <config>
+        <setting name="template" value="home.twig"/>
+    </config>
+
+    <extend file="../master.xml"/>
+
+    <group name="Content">
+        <variable name="Title" type="string"/>
+        <variable name="Content" type="content"/>
+
+        <variable name="Status" type="option">
+            <option value="Open"/>
+            <option value="Closed"/>
+        </variable>
+
+        <array name="Sections">
+            <variable name="Name" type="string"/>
+            <image name="Image" width="64" height="64"/>
+        </array>
+    </group>
+
+    <group name="Sidebar">
+        <variable name="Sidebar" type="components"/>
+    </group>
+</layout>

@@ -1,0 +1,20 @@
+<fluid-template xmlns="https://fluidcms.net/schemas/template" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="https://fluidcms.net/schemas/template https://fluidcms.net/schemas/template.xsd">
+
+    <config>
+        <setting name="template" value="entry.xml" />
+    </config>
+
+    <group name="Article">
+        <variable name="Title" type="string" />
+        <variable name="Content" type="content" />
+        <variable name="Author" type="string" />
+        <variable name="Date" type="date" />
+        <variable name="Comments" type="bool" />
+        <image name="Icon">
+            <format name="Thumb" width="64" height="64" type="png" quality="60" />
+            <format name="Thumb Retina" width="128" height="128" type="png" quality="60" />
+            <format name="Full" />
+        </image>
+    </group>
+</fluid-template>
