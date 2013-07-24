@@ -2,7 +2,7 @@
         xsi:schemaLocation="https://fluidcms.net/schemas/template https://fluidcms.net/schemas/template.xsd">
 
     <config>
-        <setting name="template" value="home.twig"/>
+        <setting name="file" value="home.twig"/>
     </config>
 
     <extend file="../master.xml"/>

@@ -12,8 +12,86 @@ use Exception,
  */
 class Layout
 {
+    private $xmlFile;
+    private $file;
+    private $variables;
+
     /**
-     * Get languages
+     * Layout
+     *
+     * @param   string  $layout
+     * @throws  Exception
+     */
+    public function __construct($layout)
+    {
+        $dir = Fluid::getConfig('templates') . Fluid::getConfig('layouts');
+        $file = "{$dir}{$layout}/layout.xml";
+
+        if (!is_file($file)) {
+            throw new Exception("Invalid layout");
+        }
+
+        $this->xmlFile = $file;
+
+        $xml = Parser::parse($this);
+    }
+
+    /**
+     * Get a layout
+     *
+     * @param   string  $layout
+     * @throws  Exception
+     * @return  self
+     */
+    public static function get($layout)
+    {
+        return new self($layout);
+    }
+
+    /**
+     * Get XML file
+     *
+     * @return  string
+     */
+    public function getXMLFile()
+    {
+        return $this->xmlFile;
+    }
+
+    /**
+     * Set file
+     *
+     * @param   string  $value
+     * @return  void
+     */
+    public function setFile($value)
+    {
+        $this->file = $value;
+    }
+
+    /**
+     * Set Variables
+     *
+     * @param   string  $value
+     * @return  void
+     */
+    public function setVariables($value)
+    {
+        $this->variables = $value;
+    }
+
+    /**
+     * Set Variables
+     *
+     * @return  array
+     */
+    public function getVariables()
+    {
+        return $this->variables;
+    }
+
+    /**
+     * Get layouts
      *
      * @return  array
      */

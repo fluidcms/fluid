@@ -87,8 +87,18 @@ class Requests
         if (!empty($this->request) && preg_match('{^(layout)(/.*)?$}', $this->request, $match)) {
             switch ($this->method) {
                 case 'GET':
-                    echo json_encode(Layout::getLayouts());
-                    return true;
+                    // Get all
+                    if (empty($match[2])) {
+                        echo json_encode(Layout::getLayouts());
+                        return true;
+                    }
+                    // Get specific layout
+                    else {
+                        $layout = trim($match[2], '/ ');
+                        $layout = Layout::get($layout);
+                        echo json_encode($layout->getVariables());
+                        return true;
+                    }
             }
         }
         return false;
