@@ -1,0 +1,9 @@
+<component xmlns="https://fluidcms.net/schemas/template" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://fluidcms.net/schemas/template https://fluidcms.net/schemas/template.xsd">
+
+    <config>
+        <setting name="file" value="table.twig"/>
+    </config>
+
+    <table name="Table" header="true" footer="true" columns="3" rows="4"/>
+</component>

@@ -25,7 +25,12 @@ class Layout
     public function __construct($layout)
     {
         $dir = Fluid::getConfig('templates') . Fluid::getConfig('layouts');
-        $file = "{$dir}{$layout}/layout.xml";
+
+        if ($layout !== 'global') {
+            $file = "{$dir}{$layout}/layout.xml";
+        } else {
+            $file = "{$dir}/global.xml";
+        }
 
         if (!is_file($file)) {
             throw new Exception("Invalid layout");
@@ -33,7 +38,7 @@ class Layout
 
         $this->xmlFile = $file;
 
-        $xml = Parser::parse($this);
+        Parser::parse($this);
     }
 
     /**

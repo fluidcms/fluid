@@ -2,7 +2,8 @@
                 xsi:schemaLocation="https://fluidcms.net/schemas/template https://fluidcms.net/schemas/template.xsd">
 
     <group name="Site">
-        <variable name="Name" type="string" />
-        <variable name="Description" type="content" />
+        <variable name="Name" type="string"/>
+        <variable name="Description" type="content"/>
+        <image name="Logo" width="180" height="100" format="png"/>
     </group>
 </fluid-template>

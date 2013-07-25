@@ -1,3 +1,12 @@
 {
-    "name": "Sievering"
+    "Site": {
+        "Name": "My Website",
+        "Description": "content",
+        "Logo": {
+            "src": "\/fluidcms\/images\/y3gsv57j\/My Logo.png",
+            "alt": "",
+            "width": "180",
+            "height": "100"
+        }
+    }
 }

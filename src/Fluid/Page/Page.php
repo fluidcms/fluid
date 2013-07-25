@@ -15,63 +15,95 @@ use Exception,
  */
 class Page extends FileSystem
 {
-    public $id;
-    public $data;
-    public $variables;
+    private $id;
+    private $page;
+    private $languages;
+    private $layout;
+    private $url;
+    private $pages;
 
     /**
      * Init
      *
      * @param   string  $id
+     * @param   string  $page
+     * @param   array   $languages
+     * @param   string  $layout
+     * @param   string  $url
+     * @param   array   $pages
      */
-    public function __construct($id = null)
+    public function __construct($id = null, $page = null, $languages = null, $layout = null, $url = null, $pages = null)
     {
-        if (null !== $id) {
-            $this->id = $id;
-        }
+        $this->id = $id;
+        $this->page = $page;
+        $this->languages = $languages;
+        $this->layout = $layout;
+        $this->url = $url;
+        $this->pages = $pages;
     }
 
     /**
      * Get a page
      *
-     * @param   string  $id
+     * @param   mixed  $id
      * @return  self
      */
     public static function get($id = null)
     {
+        if (is_array($id)) {
+            return new self($id['id'], $id['page'], $id['languages'], $id['layout'], $id['url'], (isset($id['pages']) ? $id['pages'] : null));
+        }
+
         return new self($id);
     }
 
     /**
-     * Get the page data
+     * Get the processed page data
      *
      * @return  array
      */
     public function getData()
     {
-        try {
-            if (!empty($this->id)) {
-                $file = 'pages/' . $this->id . '_' . Fluid::getLanguage() . '.json';
-            } else {
-                $file = 'base_' . Fluid::getLanguage() . '.json';
-            }
-            $data = self::load($file);
-            return $data;
-        } catch (Exception $e) {
-            null;
-        }
-        return array();
+        return ParseData::parse($this, Layout::get($this->layout));
     }
 
     /**
-     * Check if page has parent page
+     * Get the raw page data
      *
-     * @return  bool
+     * @return  array
      */
-#    public function hasParent()
-#    {
-#        return (isset($this->parent) ? true : false);
-#    }
+    public function getRawData()
+    {
+        $id = $this->getId();
+
+        if (!empty($id)) {
+            $file = 'pages/' . $id . '_' . Fluid::getLanguage() . '.json';
+        } else {
+            $file = 'global_' . Fluid::getLanguage() . '.json';
+        }
+
+        return self::load($file);
+    }
+
+    /**
+     * Get the page id
+     *
+     * @return  string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Get the page layout
+     *
+     * @return  string
+     */
+    public function getLayout()
+    {
+        return $this->layout;
+    }
 
     /**
      * Update a page
@@ -82,7 +114,7 @@ class Page extends FileSystem
      */
     public static function update($page, $request)
     {
-        $file = 'pages/' . $page . '_' . $request['language'] . '.json';
+        /*$file = 'pages/' . $page . '_' . $request['language'] . '.json';
 
         unset($request['data']['pages']); // TODO first, don't send these, then find a better way to sanitize inputs
         unset($request['data']['url']); //  !! SAME
@@ -92,7 +124,7 @@ class Page extends FileSystem
 
         self::save(json_encode($request['data'], JSON_PRETTY_PRINT), $file);
 
-        return true;
+        return true;*/
     }
 
     /**
@@ -264,28 +296,4 @@ class Page extends FileSystem
 
         return true;
     }
-
-    /**
-     * Merge template data with the page data
-     *
-     * @param   string  $content    The page content with the template data
-     * @return  array
-     */
-#    public static function mergeTemplateData($content)
-#    {
-#        list($language, $page, $variables, $data) = Page\MergeTemplateData::getTemplateData($content);
-#        Fluid::setLanguage($language);
-#
-#        $site = new Site();
-#        $structure = new Structure();
-#        $page = new Page($structure, $page);
-#
-#        Page\MergeTemplateData::merge($site, $page, $variables, $data);
-#
-#        return array(
-#            'page' => $page,
-#            'site' => $site,
-#            'structure' => $structure
-#        );
-#    }
 }

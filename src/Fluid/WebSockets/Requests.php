@@ -7,6 +7,7 @@ use Exception,
     Fluid\Language\Language,
     Fluid\Layout\Layout,
     Fluid\Map\Map,
+    Fluid\Page\Page,
     Fluid\History\History;
 
 class Requests
@@ -257,10 +258,27 @@ class Requests
      */
     private function page()
     {
-        if (!empty($this->request) && preg_match('{^([a-z0-9]*)/(page)(/.*)?$}', $this->request, $match)) {
-            $branch = $match[1];
-            Fluid\Fluid::switchBranch($branch);
-            switch (self::$method) {
+        if (!empty($this->request) && preg_match('{^(page)(/.*)?$}', $this->request, $match)) {
+            switch ($this->method) {
+                case 'GET':
+                    $page = trim($match[2], '/ ');
+                    if ($page === 'global') {
+                        $page = null;
+                    }
+                    $map = new Map;
+                    $mapPage = $map->findPage($page);
+                    $page = Page::get($mapPage);
+
+                    $output = array_merge(
+                        $mapPage,
+                        array(
+                            'data' => $page->getRawData(),
+                            'layoutDefinition' => Layout::get($page->getLayout())->getVariables()
+                        )
+                    );
+
+                    echo json_encode($output);
+                    return true;
                 case 'POST':
                     if (empty($match[3])) {
                         $data = Models\Page::mergeTemplateData(isset($_POST['content']) ? $_POST['content'] : '');
