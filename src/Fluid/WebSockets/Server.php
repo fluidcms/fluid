@@ -24,6 +24,7 @@ class Server implements Ratchet\Wamp\WampServerInterface
 
         if (!array_key_exists($topic->getId(), $this->connections[$conn->WAMP->sessionId])) {
             $this->connections[$conn->WAMP->sessionId][$topic->getId()] = array(
+                'session' => $topicId['session'],
                 'branch' => $topicId['branch'],
                 'user_id' => $topicId['user_id'],
                 'user_name' => $topicId['user_name'],

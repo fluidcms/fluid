@@ -7,6 +7,7 @@ define(['backbone', 'views/error'], function (Backbone, ErrorView) {
 
         initialize: function (attrs) {
             this.topic = {
+                session: fluidSession,
                 branch: fluidBranch,
                 user_id: fluidUserId,
                 user_name: fluidUserName,

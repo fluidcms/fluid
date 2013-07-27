@@ -1,6 +1,7 @@
 <?php
 
 namespace Fluid;
+use Fluid\Token\Token;
 
 /**
  * Route manager requests
@@ -120,6 +121,7 @@ class ManagerRouter
                     'user_id' => uniqid(),
                     'site_url' => $url,
                     'branch' => 'develop',
+                    'session' => Token::getToken(),
                     'language' => require __DIR__ . "/Locale/en-US.php"
                 )
             );
