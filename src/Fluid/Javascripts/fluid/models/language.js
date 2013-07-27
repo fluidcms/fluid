@@ -7,6 +7,8 @@ define(['backbone'], function (Backbone) {
 
         model: Language,
 
+        current: null,
+
         initialize: function (items, attrs) {
             this.socket = attrs.socket;
         },
@@ -15,6 +17,8 @@ define(['backbone'], function (Backbone) {
             var root = this;
             this.socket.send('GET', this.url, {}, function(response) {
                 root.reset(response);
+                root.current = root.at(0);
+                root.trigger('change');
             });
         }
     });

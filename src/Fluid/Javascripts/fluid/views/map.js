@@ -1,155 +1,168 @@
-define(['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu', 'models/map'], function (Backbone, EJS, jUI, Modal, ContextMenu, Map) {
-    var View = Backbone.View.extend({
-        events: {
-            'click a[data-action=addPage]': 'addPage',
-            'contextmenu li a': 'contextmenu'
-        },
+define(
+    ['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu', 'models/map', 'models/page', 'views/pageeditor'],
+    function (Backbone, EJS, jUI, Modal, ContextMenu, Map, Page, PageEditorView) {
+        var View = Backbone.View.extend({
+            events: {
+                'click a[data-action=addPage]': 'addPage',
+                'contextmenu li a': 'contextmenu',
+                'click a.global': 'editPage',
+                'click ul.map a': 'editPage'
+            },
 
-        className: 'map',
+            className: 'map',
 
-        dropbox: {},
+            dropbox: {},
 
-        template: new EJS({url: 'javascripts/fluid/templates/map/map.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+            template: new EJS({url: 'javascripts/fluid/templates/map/map.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
-        initialize: function (attrs) {
-            var root = this;
-            this.render();
-            this.collection.on('reset add remove update', this.render, this);
-//            this.collection.on('saved', attrs.page.reload, this); // TODO: uncomment
-            this.languages = attrs.languages;
-            this.layouts = attrs.layouts;
-        },
+            initialize: function (attrs) {
+                var root = this;
+                this.render();
+                this.collection.on('reset add remove update', this.render, this);
+    //            this.collection.on('saved', attrs.page.reload, this); // TODO: uncomment
+                this.languages = attrs.languages;
+                this.layouts = attrs.layouts;
+                this.socket = attrs.socket;
+            },
 
-        render: function () {
-            this.$el.html(this.template.render({pages: this.collection}));
-            $("#main #content").append(this.$el);
-            this.sortable();
-            return this;
-        },
+            render: function () {
+                this.$el.html(this.template.render({pages: this.collection}));
+                $("#main #content").append(this.$el);
+                this.sortable();
+                return this;
+            },
 
-        sortable: function () {
-            var root = this;
+            sortable: function () {
+                var root = this;
 
-            var cancelSort = function(e) {
-                if (e.keyCode == 27) {
-                    root.$el.find('ul.map, ul.pages').sortable("cancel");
-                }
-            };
-
-            this.$el.find('ul.map, ul.pages').sortable({
-                over: function(event, ui) {
-                    $(event.target).parents('li:eq(0)').find('>span>a').addClass('dragover');
-                },
-                out: function(event, ui) {
-                    $(event.target).parents('li:eq(0)').find('>span>a').removeClass('dragover');
-                },
-                start: function (event, ui) {
-                    // Stop on escape
-                    $(document).on('keydown', cancelSort);
-
-                    ui.item.addClass("highlight").find('a').addClass("highlight");
-                },
-                stop: function (event, ui) {
-                    $(document).off('keydown', cancelSort);
-
-                    ui.item.removeClass("highlight").find('a').removeClass("highlight");
-                },
-                update: function (event, ui) {
-                    var item = ui.item.attr('data-id');
-                    var receiver = $(event.target).parents('li').attr('data-id');
-                    if (typeof receiver == 'undefined') {
-                        receiver = '';
+                var cancelSort = function(e) {
+                    if (e.keyCode == 27) {
+                        root.$el.find('ul.map, ul.pages').sortable("cancel");
                     }
-                    root.dropbox.position = ui.item.index();
-                    root.dropbox.item = item;
-                    root.dropbox.receiver = receiver;
-                    clearTimeout(root.dropbox.timeout);
-                    root.dropbox.timeout = setTimeout(function () {
-                        root.sort()
-                    }, 10);
-                },
-                axis: "y",
-                connectWith: ".mapSortable",
-                placeholder: false
-            });
-        },
+                };
 
-        sort: function () {
-            this.collection.sort(this.dropbox.item, this.dropbox.receiver, this.dropbox.position);
-        },
+                this.$el.find('ul.map, ul.pages').sortable({
+                    over: function(event, ui) {
+                        $(event.target).parents('li:eq(0)').find('>span>a').addClass('dragover');
+                    },
+                    out: function(event, ui) {
+                        $(event.target).parents('li:eq(0)').find('>span>a').removeClass('dragover');
+                    },
+                    start: function (event, ui) {
+                        // Stop on escape
+                        $(document).on('keydown', cancelSort);
 
-        cancelChange: function() {
-            console.log('cancel change');
-        },
+                        ui.item.addClass("highlight").find('a').addClass("highlight");
+                    },
+                    stop: function (event, ui) {
+                        $(document).off('keydown', cancelSort);
 
-        contextmenu: function (e) {
-            e.preventDefault();
-            new ContextMenu({url: 'javascripts/fluid/templates/map/contextmenu.ejs', parent: this, event: e}).render();
-        },
+                        ui.item.removeClass("highlight").find('a').removeClass("highlight");
+                    },
+                    update: function (event, ui) {
+                        var item = ui.item.attr('data-id');
+                        var receiver = $(event.target).parents('li').attr('data-id');
+                        if (typeof receiver == 'undefined') {
+                            receiver = '';
+                        }
+                        root.dropbox.position = ui.item.index();
+                        root.dropbox.item = item;
+                        root.dropbox.receiver = receiver;
+                        clearTimeout(root.dropbox.timeout);
+                        root.dropbox.timeout = setTimeout(function () {
+                            root.sort()
+                        }, 10);
+                    },
+                    axis: "y",
+                    connectWith: ".mapSortable",
+                    placeholder: false
+                });
+            },
 
-        addPage: function (e) {
-            if ($(e).parents('li').length > 0) {
-                var parent = this.collection.findItem($(e).parents('li').attr('data-id')).get('pages');
-            } else {
-                var parent = this.collection;
+            sort: function () {
+                this.collection.sort(this.dropbox.item, this.dropbox.receiver, this.dropbox.position);
+            },
+
+            contextmenu: function (e) {
+                e.preventDefault();
+                new ContextMenu({url: 'javascripts/fluid/templates/map/contextmenu.ejs', parent: this, event: e}).render();
+            },
+
+            addPage: function (e) {
+                if ($(e).parents('li').length > 0) {
+                    var parent = this.collection.findItem($(e).parents('li').attr('data-id')).get('pages');
+                } else {
+                    var parent = this.collection;
+                }
+
+                var page = new Map.Page({
+                    base: this.collection,
+                    parent: parent
+                });
+                var pageView = new PageView({
+                    model: page,
+                    languages: this.languages,
+                    layouts: this.layouts,
+                    newPage: true
+                });
+                pageView.render();
+            },
+
+            configPage: function (page) {
+                new PageView({ model: this.collection.findItem($(page).parents('li').attr('data-id')), languages: this.languages, layouts: this.layouts }).render();
+            },
+
+            deletePage: function (page) {
+                this.collection.removeItem($(page).parents('li').attr('data-id'));
+            },
+
+            editPage: function(page) {
+                if (typeof page.target === 'object') {
+                    page = page.target;
+                }
+
+                page = new Page({id: $(page).attr('data-id'), language: this.languages.current.get('language')});
+                page.setSocket(this.socket);
+                new PageEditorView({model: page});
+                page.fetch();
             }
+        });
 
-            var page = new Map.Page({
-                base: this.collection,
-                parent: parent
-            });
-            var pageView = new PageView({
-                model: page,
-                languages: this.languages,
-                layouts: this.layouts,
-                newPage: true
-            });
-            pageView.render();
-        },
+        var PageView = Backbone.View.extend($.extend({}, Modal, {
+            template: new EJS({url: 'javascripts/fluid/templates/map/page.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
-        configPage: function (page) {
-            new PageView({ model: this.collection.findItem($(page).parents('li').attr('data-id')), languages: this.languages, layouts: this.layouts }).render();
-        },
+            initialize: function (attrs) {
+                this.languages = attrs.languages;
+                this.layouts = attrs.layouts;
+                this.newPage = (typeof attrs.newPage !== 'undefined');
+            },
 
-        deletePage: function (page) {
-            this.collection.removeItem($(page).parents('li').attr('data-id'));
-        }
-    });
+            renderData: function () {
+                return {
+                    languages: this.languages,
+                    layouts: this.layouts
+                };
+            },
 
-    var PageView = Backbone.View.extend($.extend({}, Modal, {
-        template: new EJS({url: 'javascripts/fluid/templates/map/page.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+            submit: function () {
+                if (this.newPage) {
+                    var parent = this.model.parent;
+                    parent.add(this.model, {silent: true});
 
-        initialize: function (attrs) {
-            this.languages = attrs.languages;
-            this.layouts = attrs.layouts;
-            this.newPage = (typeof attrs.newPage !== 'undefined');
-        },
+                    var data = this.model.toJSON();
+                    data.base = this.model.base;
+                    data.parent = parent;
+                    data.index = parent.indexOf(this.model);
 
-        renderData: function () {
-            return {
-                languages: this.languages,
-                layouts: this.layouts
-            };
-        },
+                    parent.remove(this.model);
 
-        submit: function () {
-            if (this.newPage) {
-                var parent = this.model.parent;
-                parent.add(this.model, {silent: true});
-
-                var data = this.model.toJSON();
-                data.base = this.model.base;
-                data.parent = parent;
-                data.index = parent.indexOf(this.model);
-
-                parent.remove(this.model);
-
-                parent.create(data);
-            } else {
-                this.model.save();
+                    parent.create(data);
+                } else {
+                    this.model.save();
+                }
             }
-        }
-    }));
+        }));
 
-    return View;
-});
+        return View;
+    }
+);

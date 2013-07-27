@@ -1,11 +1,12 @@
 define(['backbone'], function (Backbone) {
-    var Model = Backbone.Model.extend({
-        urlRoot: fluidBranch + '/page',
-
+    return Backbone.Model.extend({
         initialize: function (attrs) {
             var root = this;
 
-            this.site = attrs.site;
+            this.socket = attrs.socket;
+            this.languages = attrs.languages;
+
+            /*this.site = attrs.site;
 
             this.bind('newtoken', this.fetchPage);
 
@@ -18,11 +19,37 @@ define(['backbone'], function (Backbone) {
             $("#website").bind('load', function () {
                 root.set('url', $("#website").get(0).contentWindow.location.toString());
                 root.fetchToken();
+            });*/
+        },
+
+        loadPage: function(url) {
+            var root = this;
+
+            if (typeof url === 'undefined' || url === null) {
+                url = "/";
+            }
+
+            this.getToken(function(response) {
+                url = updateQueryStringParameter(url, 'fluidtoken', response.token);
+                $("#website")[0].contentWindow.location = url;
+
             });
         },
 
+        getToken: function(callback) {
+            var root = this;
+            this.socket.send('GET', 'token', {}, function(response) {
+                callback(response);
+            });
+        },
+
+
+
+
+
+
         reload: function () {
-            $("#website")[0].contentWindow.location.reload(true);
+            //$("#website")[0].contentWindow.location.reload(true);
 
         },
 
@@ -72,8 +99,4 @@ define(['backbone'], function (Backbone) {
             }});
         }
     });
-
-    return {
-        Model: Model
-    };
 });

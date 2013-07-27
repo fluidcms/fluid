@@ -12,7 +12,8 @@
             underscore: '../vendor/underscore',
             backbone: '../vendor/backbone',
             ejs: '../vendor/ejs',
-            qtip: '../vendor/jquery-qtip'
+            qtip: '../vendor/jquery-qtip',
+            sanitize: '../vendor/sanitize'
         },
         shim: {
             underscore: { exports: '_' },

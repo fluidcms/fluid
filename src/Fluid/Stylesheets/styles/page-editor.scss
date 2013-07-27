@@ -1,6 +1,7 @@
 @import "lib";
 @import "../mixins";
 @import "compass/css3/box";
+@import "compass/css3/box-shadow";
 
 /* #Page Editor
 ================================================== */
@@ -17,83 +18,87 @@ div.page-editor {
   box-sizing: border-box;
   overflow: auto;
   background: white;
+
   &>div {
     width: 100%;
     height: 100%;
     background: white;
+  }
 
-    form {
-      width: 660px;
-      margin: 0 auto;
-      padding: 40px 0;
+  div.main {
+    padding-left: 214px;
+    padding-top: $big-margin-top - $big-margin-top/2;
 
-      nav {
-        margin-bottom: 40px;
-        ul {
-          @include display-box;
-          li {
-            padding: 0 14px;
-            a {
-              cursor: default;
-              text-transform: capitalize;
-              font-size: 12px;
-              font-weight: $light;
-              padding-bottom: 4px;
-            }
-            &.current a {
-              border-bottom: 2px solid #1b81c0;
-            }
-          }
-          li:first-child {
-            padding-left: 0px;
-          }
+    a {
+      display: block;
+      padding-top: $big-margin-top/2;
+      padding-bottom: $big-margin-bottom/2;
+      clear: both;
+      cursor: pointer;
+
+      &:after {
+        content: "\0020";
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+      }
+
+      div.label {
+        width: 90px;
+        float: left;
+        margin-left: $big-margin-left;
+        color: #989898;
+        font-size: 13px;
+        font-weight: $bold;
+      }
+      div.data {
+        margin-left: 90px+$big-margin-left;
+        margin-right: $big-margin-right;
+        min-height: 1em;
+      }
+
+      div.content {
+        img {
+          max-width: 100%;
         }
       }
 
-      textarea {
-        width: 100%;
-        resize: vertical;
-        height: 36px;
+      &:hover div.label {
+        color: $blue;
       }
+      &:active div.label {
+        color: $dark-blue;
+      }
+    }
+  }
 
-      ul.array {
-        margin-bottom: 36px;
-        li {
-          border-left: 6px solid #e5e5e5;
-          padding-left: 24px;
-          margin-bottom: 24px;
-
-          label {
-            float: left;
-            width: 120px;
-            line-height: 36px;
-          }
-
-          textarea {
-            width: 510px;
-            margin-bottom: 24px;
-          }
-
-          textarea:last-child {
-            margin-bottom: 0;
-          }
+  nav {
+    position: fixed;
+    background-color: #dcdcdc;
+    width: 214px;
+    height: 100%;
+    @include box-shadow(inset -2px 0px 5px rgba(black, .07));
+    ul {
+      padding-top: 18px;
+      li {
+        a {
+          display: block;
+          padding: 0 $big-margin-left;
+          cursor: pointer;
+          text-transform: capitalize;
+          font-size: 13px;
+          line-height: $big-list-item-line-height;
         }
-
-        li.sortable-placeholder {
-          height: 60px;
-          background: #f1f1f1;
+        &:hover {
+          background-color: #c9c9c9;
+        }
+        &.current a {
+          background-color: $gray-blue;
+          @include current-item-shadow;
+          color: white;
         }
       }
-
-      div.buttons {
-        @include display-box;
-        @include box-pack(end);
-      }
-
-      button, .button {
-        @extend .button-big;
-      }
-
     }
   }
 }

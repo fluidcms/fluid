@@ -17,6 +17,7 @@ class Page extends FileSystem
 {
     private $id;
     private $page;
+    private $language;
     private $languages;
     private $layout;
     private $url;
@@ -46,15 +47,40 @@ class Page extends FileSystem
      * Get a page
      *
      * @param   mixed  $id
+     * @param   string  $language
      * @return  self
      */
-    public static function get($id = null)
+    public static function get($id = null, $language = null)
     {
         if (is_array($id)) {
-            return new self($id['id'], $id['page'], $id['languages'], $id['layout'], $id['url'], (isset($id['pages']) ? $id['pages'] : null));
+            $obj = new self($id['id'], $id['page'], $id['languages'], $id['layout'], $id['url'], (isset($id['pages']) ? $id['pages'] : null));
+        } else {
+            $obj = new self($id);
         }
 
-        return new self($id);
+        if (null !== $language) {
+            $obj->setLanguage($language);
+        }
+
+        return $obj;
+    }
+
+    /**
+     * Set the language to get the data
+     *
+     * @param   string  $value
+     * @throws  Exception
+     * @return  void
+     */
+    public function setLanguage($value)
+    {
+        $languages = Fluid::getConfig("languages");
+        if (in_array($value, $languages)) {
+            $this->language = $value;
+            return;
+        }
+
+        throw new Exception("Language is not valid");
     }
 
     /**
@@ -77,9 +103,9 @@ class Page extends FileSystem
         $id = $this->getId();
 
         if (!empty($id)) {
-            $file = 'pages/' . $id . '_' . Fluid::getLanguage() . '.json';
+            $file = 'pages/' . $id . '_' . $this->language . '.json';
         } else {
-            $file = 'global_' . Fluid::getLanguage() . '.json';
+            $file = 'global_' . $this->language . '.json';
         }
 
         return self::load($file);
@@ -106,25 +132,22 @@ class Page extends FileSystem
     }
 
     /**
-     * Update a page
+     * Update a page's data
      *
-     * @param   string  $page
-     * @param   string  $request
+     * @param   array   $data
      * @return  bool
      */
-    public static function update($page, $request)
+    public function update($data)
     {
-        /*$file = 'pages/' . $page . '_' . $request['language'] . '.json';
+        $id = $this->getId();
 
-        unset($request['data']['pages']); // TODO first, don't send these, then find a better way to sanitize inputs
-        unset($request['data']['url']); //  !! SAME
-        unset($request['data']['page']); // !! SAME
-        unset($request['data']['layout']); //  !! SAME
-        unset($request['data']['languages']); // !! SAME
+        if (!empty($id)) {
+            $file = 'pages/' . $id . '_' . $this->language . '.json';
+        } else {
+            $file = 'global_' . $this->language . '.json';
+        }
 
-        self::save(json_encode($request['data'], JSON_PRETTY_PRINT), $file);
-
-        return true;*/
+        self::save(json_encode($data, JSON_PRETTY_PRINT), $file);
     }
 
     /**

@@ -27,7 +27,8 @@ class Connection
      */
     private static function connect()
     {
-        $config = Fluid\Fluid::getConfig('database')['config'];
+        $config = Fluid\Fluid::getConfig('database');
+        $config = $config['config'];
 
         $dsn = 'mysql:dbname=' . $config['dbname'] . ';host=' . $config['host'];
         $dbh = new PDO($dsn, $config['user'], $config['password']);

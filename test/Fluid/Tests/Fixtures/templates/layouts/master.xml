@@ -4,6 +4,6 @@
     <group name="Header">
         <variable name="Title" type="string" />
         <variable name="Description" type="string" />
-        <variable name="Logo" type="image" />
+        <image name="Logo"/>
     </group>
 </layout>

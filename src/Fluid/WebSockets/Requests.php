@@ -8,6 +8,7 @@ use Exception,
     Fluid\Layout\Layout,
     Fluid\Map\Map,
     Fluid\Page\Page,
+    Fluid\Token\Token,
     Fluid\History\History;
 
 class Requests
@@ -41,21 +42,22 @@ class Requests
         $this->page() ||
         $this->language() ||
         $this->layout() ||
-        $this->pageToken() ||
+        $this->token() ||
         $this->version() ||
         $this->file() ||
         $this->history();
-}
+    }
 
     /**
      * Output a page token.
      *
      * @return  bool
      */
-    private function pageToken()
+    private function token()
     {
-        if ($this->request == 'pagetoken.json') {
-            echo json_encode(array('token' => Models\PageToken::getToken()));
+        if ($this->request === 'token' && $this->method === 'GET') {
+            $token = Token::getToken();
+            echo json_encode(array('token' => $token));
             return true;
         }
         return false;
@@ -258,52 +260,61 @@ class Requests
      */
     private function page()
     {
-        if (!empty($this->request) && preg_match('{^(page)(/.*)?$}', $this->request, $match)) {
+        if (!empty($this->request) && preg_match('{^(page)(/[a-z]{2,2}\-[A-Z]{2,2})(/.*)?$}', $this->request, $match)) {
+            $page = null;
+            if (isset($match[3])) {
+                $page = trim($match[3], '/ ');
+                if ($page === 'global') {
+                    $page = null;
+                }
+            }
+            $language = null;
+            if (isset($match[2])) {
+                $language = trim($match[2], '/ ');
+            }
+
             switch ($this->method) {
                 case 'GET':
-                    $page = trim($match[2], '/ ');
-                    if ($page === 'global') {
-                        $page = null;
-                    }
+                    $output = array();
                     $map = new Map;
-                    $mapPage = $map->findPage($page);
-                    $page = Page::get($mapPage);
+                    if ($mapPage = $map->findPage($page)) {
+                        $page = Page::get($mapPage, $language);
 
-                    $output = array_merge(
-                        $mapPage,
-                        array(
-                            'data' => $page->getRawData(),
-                            'layoutDefinition' => Layout::get($page->getLayout())->getVariables()
-                        )
-                    );
+                        $output = array_merge(
+                            $mapPage,
+                            array(
+                                'data' => $page->getRawData(),
+                                'layoutDefinition' => Layout::get($page->getLayout())->getVariables()
+                            )
+                        );
+                    }
 
                     echo json_encode($output);
                     return true;
-                case 'POST':
-                    if (empty($match[3])) {
-                        $data = Models\Page::mergeTemplateData(isset($_POST['content']) ? $_POST['content'] : '');
-                        echo json_encode(array(
-                            'language' => Fluid::getLanguage(),
-                            'page' => $data['page']->page,
-                            'data' => $data['page']->data,
-                            'variables' => $data['page']->variables,
-                            'site' => array(
-                                'data' => $data['site']->data,
-                                'variables' => $data['site']->variables
-                            )
-                        ));
 
-                    }
-                    return true;
                 case 'PUT':
-                    try {
-                        echo json_encode(Models\Page::update(trim(urldecode($match[3]), '/'), self::$input));
-                    } catch(Exception $e) {
-                        header('X-Error-Message: ' . $e->getMessage(), true, 500);
-                        exit;
+                    $output = array();
+                    $map = new Map;
+                    if ($mapPage = $map->findPage($page)) {
+                        $page = Page::get($mapPage, $language);
+                        $page->update($this->input);
+
+                        History::add(
+                            'page_edit',
+                            $this->user['name'],
+                            $this->user['email']
+                        );
+
+                        $output = array_merge(
+                            $mapPage,
+                            array(
+                                'data' => $page->getRawData(),
+                                'layoutDefinition' => Layout::get($page->getLayout())->getVariables()
+                            )
+                        );
                     }
-                    return true;
-                case 'DELETE':
+
+                    echo json_encode($output);
                     return true;
             }
         }

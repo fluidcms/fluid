@@ -27,6 +27,17 @@ class Helper
 
     public static function copyStorage()
     {
+        Fluid::setConfig('database', array(
+                'config'	=> array(
+                    'driver'     => 'mysql',
+                    'host'       => $GLOBALS['DB_HOST'],
+                    'dbname'     => $GLOBALS['DB_DBNAME'],
+                    'user'       => $GLOBALS['DB_USER'],
+                    'password'   => $GLOBALS['DB_PASSWD']
+                )
+            )
+        );
+
         $copy = function($dir = null, $dest = null) use (&$copy) {
             if (null === $dir) {
                 $dir = __DIR__ . "/Fluid/Tests/Fixtures/storage/master";

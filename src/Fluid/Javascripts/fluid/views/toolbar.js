@@ -11,13 +11,21 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
         template: new EJS({url: 'javascripts/fluid/templates/toolbar.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
-            this.site = attrs.site;
-            this.page = attrs.page;
-            this.page.on('change:language', this.changeLanguage, this);
+            this.languages = attrs.languages;
+
+            this.languages.on('change', this.render, this);
         },
 
         render: function () {
-            this.$el.html(this.template.render({language: this.language}));
+            var language;
+            if (typeof this.languages !== 'undefined' && this.languages.current !== null) {
+                language = this.languages.current.get('language');
+            }
+
+            this.$el.html(this.template.render({
+                languages: this.languages,
+                language: language
+            }));
             $('#toolbar').append(this.$el);
             return this;
         },

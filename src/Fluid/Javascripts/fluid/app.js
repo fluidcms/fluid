@@ -1,5 +1,5 @@
-define(['backbone', 'views/loader', 'models/socket', 'models/language', 'models/layout', 'views/nav'],
-    function (Backbone, LoaderView, Socket, Language, Layout, Nav) {
+define(['backbone', 'views/loader', 'models/socket', 'models/map', 'models/language', 'models/layout', 'models/preview', 'views/nav', 'views/toolbar'],
+    function (Backbone, LoaderView, Socket, Map, Language, Layout, Preview, Nav, Toolbar) {
         var run = function () {
             var FluidRouter = Backbone.Router.extend({
                 root: "/fluidcms/",
@@ -10,28 +10,35 @@ define(['backbone', 'views/loader', 'models/socket', 'models/language', 'models/
                 initialize: function () {
                     var root = this;
 
+                    this.models = {};
+                    this.views = {};
                     this.loader = new LoaderView();
-
-                    //this.site = new Site.Model();
-                    //this.page = new Page.Model({site: this.site});
-
-                    this.nav = new Nav({router: this}).render();
-                    //this.toolbar = new Toolbar({page: this.page, site: this.site}).render();
-                    //this.version = new Version();
 
                     this.socket = new Socket({
                         loader: this.loader,
                         //version: this.version
                     });
 
-                    this.languages = new Language.Languages(null, {socket: root.socket});
+                    this.nav = new Nav({router: this}).render();
+                    //this.version = new Version();
+
+                    this.languages = new Language.Languages(null, {socket: this.socket});
+
+                    this.models.preview = new Preview({socket: this.socket, languages: this.languages});
+
                     this.layouts = new Layout.Layouts(null, {socket: root.socket});
+
+                    this.toolbar = new Toolbar({languages: this.languages}).render();
+
+                    this.models.map = new Map.Pages(null, {socket: this.socket});
 
                     this.socket.on('ready', function() {
                         root.ready = true;
                         root.loader.remove();
                         root.languages.fetch();
                         root.layouts.fetch();
+                        root.models.preview.loadPage();
+                        root.models.map.fetch();
                     });
 
                     this.socket.connection();
@@ -42,6 +49,19 @@ define(['backbone', 'views/loader', 'models/socket', 'models/language', 'models/
                             //root.cancelChange();
                             console.log('Control Z');
                         }
+                    });
+
+                    // Control + S or Command + S events
+                    $(document).keydown(function (e) {
+                        return !((e.ctrlKey || e.metaKey) && e.keyCode === 83);
+                    });
+
+                    // Control + R or Command + R events
+                    $(document).keydown(function (e) {
+                        if ((e.ctrlKey || e.metaKey) && e.keyCode == 82) {
+                            console.log('Block refresh');
+                        }
+                        return true;
                     });
                 },
 
@@ -69,10 +89,10 @@ define(['backbone', 'views/loader', 'models/socket', 'models/language', 'models/
                 map: function () {
                     var root = this;
                     if (this.current !== 'map') {
-                        require(['models/map', 'views/map'], function (Map, MapView) {
-                            var map = new Map.Pages(null, {socket: root.socket});
+                        require(['views/map'], function (MapView) {
                             root.main = new MapView({
-                                collection: map,
+                                socket: root.socket,
+                                collection: root.models.map,
                                 page: root.page,
                                 languages: root.languages,
                                 layouts: root.layouts
@@ -120,7 +140,20 @@ define(['backbone', 'views/loader', 'models/socket', 'models/language', 'models/
                     fluidRouter.make(href.attr);
                 }
             });
-        }
+
+            // Block delete button from navigating
+            $(document).keydown(function (e) {
+                if (e.keyCode == 8) {
+                    if (
+                        (document.activeElement.getAttribute('contenteditable') !== "true") &&
+                            (document.activeElement.tagName !== "INPUT")
+                        ) {
+                        return false;
+                    }
+                }
+                return true;
+            });
+        };
 
         return {
             run: run

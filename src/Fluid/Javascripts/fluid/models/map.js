@@ -84,7 +84,6 @@ define(['backbone'], function (Backbone) {
             this.base = attrs.base;
 
             if (this.parent == null && (typeof attrs == 'undefined' || typeof attrs.parent == 'undefined')) {
-                this.fetch();
             } else {
                 this.parent = attrs.parent;
                 $.each(items, function () {
@@ -108,7 +107,6 @@ define(['backbone'], function (Backbone) {
         },
 
         create: function (attrs) {
-            console.log(attrs);
             var parent = '';
             if (typeof attrs.parent !== 'undefined' && attrs.parent !== null && typeof attrs.parent.parent !== 'undefined' && attrs.parent.parent !== null) {
                 console.log('has parent yo');

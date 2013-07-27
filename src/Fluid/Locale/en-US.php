@@ -1,6 +1,13 @@
 <?php
 
 return array(
+    // Languages
+    'languages' => array(
+        'en' => 'English',
+        'de' => 'German',
+        'fr' => 'French'
+    ),
+
     // Time
     'time' => array(
         'second' => '%s second',

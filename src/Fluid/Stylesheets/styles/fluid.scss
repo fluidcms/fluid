@@ -19,7 +19,7 @@
   background: #3b3b3b;
   float: left;
   height: 100%;
-  width: 306px;
+  width: $main-width;
   @include box-shadow(0 0 5px rgba(0, 0, 0, .75));
 }
 
@@ -82,7 +82,7 @@
     }
     &.current {
       background: rgba(0, 0, 0, .14);
-      @include box-shadow(inset 0 2px 3px rgba(0, 0, 0, .43));
+      @include current-item-shadow;
       &:after {
         background-position-y: -16px;
       }

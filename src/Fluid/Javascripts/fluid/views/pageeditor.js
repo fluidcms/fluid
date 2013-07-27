@@ -1,12 +1,14 @@
-define(['backbone', 'ejs', 'jquery-ui', 'views/contextmenu'], function (Backbone, EJS, jUI, ContextMenu) {
+define(['backbone', 'ejs', 'jquery-ui', 'views/contextmenu', 'views/editor/content'], function (Backbone, EJS, jUI, ContextMenu, ContentEditor) {
     var View = Backbone.View.extend({
         events: {
-            'change form': 'change',
-            'submit form': 'submit',
-            'click [data-action="cancel"]': 'cancel',
-            'click nav a': 'tab',
-            'contextmenu label[data-action="array"]': "arrayContextmenu",
-            'contextmenu ul.array li': "arrayItemContextmenu"
+//            'change form': 'change',
+//            'submit form': 'submit',
+//            'click [data-action="cancel"]': 'cancel',
+//            'click nav a': 'tab',
+//            'contextmenu label[data-action="array"]': "arrayContextmenu",
+//            'contextmenu ul.array li': "arrayItemContextmenu"
+
+            "click div.content": "editContent"
         },
 
         className: 'page-editor',
@@ -14,20 +16,50 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/contextmenu'], function (Backbone
         template: new EJS({url: 'javascripts/fluid/templates/pageeditor/editor.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
-            this.model = attrs.page;
-            this.toolbar = attrs.toolbar;
-            this.tree = {
-                site: attrs.site,
-                page: attrs.page
-            };
-            this.current = 'page';
+//            this.model = attrs.page;
+//            this.toolbar = attrs.toolbar;
+//            this.tree = {
+//                site: attrs.site,
+//                page: attrs.page
+//            };
+//            this.current = 'page';
+            this.model.on('change', this.render, this);
+
         },
 
         render: function () {
-            this.$el.html(this.template.render({tree: this.tree, current: this.current, page: this.model}));
+            this.$el.html(this.template.render({
+                layoutDefinition: this.model.get('layoutDefinition'),
+                data: this.model.get('data'),
+                render: this.model.get('render')
+            }));
             $("#website").after(this.$el);
-            this.sortable();
+            this.changeGroup();
+//            this.sortable();
             return this;
+        },
+
+        editContent: function(e) {
+            var group = $(e.target).parents('a').attr('data-group');
+            var item = $(e.target).parents('a').attr('data-item');
+
+            new ContentEditor({group: group, item: item, model: this.model});
+        },
+
+
+
+
+
+
+
+
+
+
+
+
+
+        changeGroup: function() {
+            this.$el.find('nav li:first').addClass('current');
         },
 
         sortable: function () {

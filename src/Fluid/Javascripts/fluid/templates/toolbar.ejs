@@ -1,11 +1,13 @@
 <div>
-    <a data-action="preview" class="toolbar-button preview current">Page</a>
-    <a data-action="edit" class="toolbar-button edit">Page Editor</a>
+    <a data-action="preview" class="toolbar-button preview current">Preview</a>
+    <a data-action="edit" class="toolbar-button edit">Edit</a>
 </div>
 
 <div>
     <a data-action="reload" class="reload">Reload</a>
-    <div class="select">
-        Language: <%= language %>
-    </div>
+    <select>
+        <% languages.each(function(item, key) { %>
+        <option value="<%= item.get('language') %>"><%= fluidLanguage['languages'][item.get('language').substring(0,2)] %></option>
+        <% }); %>
+    </select>
 </div>
