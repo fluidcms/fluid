@@ -17,6 +17,7 @@ class Tasks
         $this->server = $server;
         $this->register(new Fluid\WebSockets\Tasks\WatchBranchStatus($server));
         $this->register(new Fluid\WebSockets\Tasks\WatchRemote($server));
+        $this->register(new Fluid\WebSockets\Tasks\RequestedData($server));
     }
 
     /**
@@ -27,7 +28,7 @@ class Tasks
      */
     public function register(TaskInterface $task)
     {
-        $this->tasks[$task->getKey()] = [$task, $task->getInterval()];
+        $this->tasks[$task->getKey()] = array($task, $task->getInterval());
     }
 
     /**

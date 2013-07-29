@@ -27,15 +27,25 @@ class Data
             self::$map = new Map();
         }
 
-        // If a valid token is provided, function will output the page Fluid data with the page content
+        // If rendering page for CMS, we change the current branch to the CMS branch and send a signal to the CMS
         if (isset($_SERVER['QUERY_STRING'])) {
             parse_str($_SERVER['QUERY_STRING']);
-            if (isset($fluidtoken) && Token::validateToken($fluidtoken)) {
+            if (isset($fluidtoken) && isset($fluidbranch) && isset($fluidsession) && Token::validateToken($fluidtoken)) {
                 Fluid::setBranch($fluidbranch);
-                
-                //var_dump($fluidbranch, $fluidtoken, $fluidsession);
-                //die();
-                //return self::renderWithFields($file, $data);
+
+                MessageQueue::send(array(
+                    'task' => 'RequestedData',
+                    'data' => array(
+                        'session' => $fluidsession,
+                        'message' => array(
+                            'target' => 'map',
+                            'data' => array(
+                                'language' => Fluid::getLanguage(),
+                                'page' => $page
+                            )
+                        )
+                    )
+                ));
             }
         }
 
