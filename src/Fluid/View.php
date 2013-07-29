@@ -2,7 +2,9 @@
 
 namespace Fluid;
 
-use Twig_Loader_Filesystem, Twig_Environment;
+use Twig_Loader_Filesystem,
+    Twig_Environment,
+    Fluid\Token\Token;
 
 /**
  * View class
@@ -23,14 +25,6 @@ class View
      */
     public static function create($file, $data = array())
     {
-        // If a valid token is provided, function will output the page Fluid data with the page content
-        if (isset($_SERVER['QUERY_STRING'])) {
-            parse_str($_SERVER['QUERY_STRING']);
-            if (isset($fluidtoken) && Models\PageToken::validateToken($fluidtoken)) {
-                return self::renderWithFields($file, $data);
-            }
-        }
-
         return self::render($file, $data);
     }
 
@@ -80,34 +74,6 @@ class View
 
         $template = $twig->loadTemplate($file);
         return $template->render($data);
-    }
-
-    /**
-     * Render a view and output fields and data
-     *
-     * @param   string   $file
-     * @param   array    $data
-     * @return  string
-     */
-    protected static function renderWithFields($file, $data = array())
-    {
-        list($loader, $twig) = static::initTwig();
-
-        $twig->addNodeVisitor(new Twig\FieldNodeVisitor);
-
-        $template = $twig->loadTemplate($file);
-        $render = $template->render($data);
-
-        $render =
-            '<script data-type="fluid-language">' . json_encode(Fluid::getLanguage()) . '</script>' .
-                PHP_EOL .
-                '<script data-type="fluid-page">' . json_encode(Data::getPage()) . '</script>' .
-                PHP_EOL .
-                '<script data-type="fluid-data">' . json_encode(Twig\Field\FieldOutput::returnFields()) . '</script>' .
-                PHP_EOL .
-                $render;
-
-        return $render;
     }
 
     /**

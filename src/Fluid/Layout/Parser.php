@@ -190,30 +190,30 @@ class Parser
                     $formats = array();
                     foreach($item->children() as $format) {
                         if ($format->getName() === 'format') {
-                            $format = array();
+                            $thisFormat = array();
                             foreach($format->attributes() as $key => $value) {
                                 switch($key) {
                                     case 'name': $formatName = (string)$value; break;
-                                    case 'width': $format['width'] = (string)$value; break;
-                                    case 'height': $format['height'] = (string)$value; break;
-                                    case 'format': $format['format'] = (string)$value; break;
-                                    case 'quality': $format['quality'] = (string)$value; break;
+                                    case 'width': $thisFormat['width'] = (string)$value; break;
+                                    case 'height': $thisFormat['height'] = (string)$value; break;
+                                    case 'format': $thisFormat['format'] = (string)$value; break;
+                                    case 'quality': $thisFormat['quality'] = (string)$value; break;
                                 }
                             }
-                            if (empty($format['width']) && !empty($image['width'])) {
-                                $format['width'] = $image['width'];
+                            if (empty($thisFormat['width']) && !empty($image['width'])) {
+                                $thisFormat['width'] = $image['width'];
                             }
-                            if (empty($format['height']) && !empty($image['height'])) {
-                                $format['height'] = $image['height'];
+                            if (empty($thisFormat['height']) && !empty($image['height'])) {
+                                $thisFormat['height'] = $image['height'];
                             }
-                            if (empty($format['quality']) && !empty($image['quality'])) {
-                                $format['quality'] = $image['quality'];
+                            if (empty($thisFormat['quality']) && !empty($image['quality'])) {
+                                $thisFormat['quality'] = $image['quality'];
                             }
-                            if (empty($format['format']) && !empty($image['format'])) {
-                                $format['format'] = $image['format'];
+                            if (empty($thisFormat['format']) && !empty($image['format'])) {
+                                $thisFormat['format'] = $image['format'];
                             }
                             if (!empty($formatName)) {
-                                $formats[$formatName] = $format;
+                                $formats[$formatName] = $thisFormat;
                             }
                         }
                     }

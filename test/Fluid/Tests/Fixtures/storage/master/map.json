@@ -12,7 +12,7 @@
                 "id": "home page\/contact",
                 "page": "contact",
                 "url": "\/contact\/",
-                "layout": "contact",
+                "layout": "default",
                 "languages": [
                     "en-US"
                 ]
@@ -21,7 +21,7 @@
                 "id": "home page\/services",
                 "page": "services",
                 "url": "\/services\/",
-                "layout": "services",
+                "layout": "default",
                 "languages": [
                     "en-US"
                 ]
@@ -30,7 +30,7 @@
                 "id": "home page\/products",
                 "page": "products",
                 "url": "\/products\/",
-                "layout": "products",
+                "layout": "default",
                 "languages": [
                     "en-US"
                 ],
@@ -39,7 +39,7 @@
                         "id": "home page\/products\/awesome",
                         "page": "awesome",
                         "url": "\/products\/awesome\/",
-                        "layout": "product",
+                        "layout": "default",
                         "languages": [
                             "en-US"
                         ]

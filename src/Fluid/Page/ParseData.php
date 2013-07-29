@@ -21,7 +21,7 @@ class ParseData
         $data = $page->getRawData();
         $data = self::merge($layout->getVariables(), $data);
 
-        return;
+        return $data;
     }
 
     /**
@@ -39,8 +39,7 @@ class ParseData
             $output[$group] = self::parseVariables($vars, (!isset($data[$group]) ? array() : $data[$group]));
         }
 
-        // TODO: finish this
-        return 'yo';
+        return $output;
     }
 
     /**
@@ -63,10 +62,49 @@ class ParseData
                         $output[$name] = '';
                     }
                     break;
-                case '':
-                    // TODO: other types
+                case 'content':
+                    if (isset($data[$name])) {
+                        $output[$name] = self::renderContent($data[$name]);
+                    } else {
+                       $output[$name] = '';
+                    }
                     break;
             }
+        }
+
+        return $output;
+    }
+
+    /**
+     * Render a content variable
+     *
+     * @param   array   $content
+     * @return  string
+     */
+    private static function renderContent($content)
+    {
+        $output = $content['source'];
+
+        // Components
+        foreach($content['components'] as $id => $component) {
+
+        }
+
+        // Images
+        foreach($content['images'] as $id => $image) {
+            $html = '<img src="'.$image['src'].'"';
+            if (!empty($image['width'])) {
+                $html .= ' width="'.$image['width'].'"';
+            }
+            if (!empty($image['height'])) {
+                $html .= ' height="'.$image['height'].'"';
+            }
+            if (!empty($image['alt'])) {
+                $html .= ' alt="'.$image['alt'].'"';
+            }
+            $html .= '>';
+
+            $output = str_replace('{'.$id.'}', $html, $output);
         }
 
         return $output;

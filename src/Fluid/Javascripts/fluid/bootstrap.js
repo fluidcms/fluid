@@ -30,6 +30,13 @@
 
 })();
 
+function getParameterByName(url, name) {
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(url);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
 function updateQueryStringParameter(uri, key, value) {
     var re = new RegExp("([?|&])" + key + "=.*?(&|$)", "i");
     separator = uri.indexOf('?') !== -1 ? "&" : "?";

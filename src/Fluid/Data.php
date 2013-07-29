@@ -2,6 +2,10 @@
 
 namespace Fluid;
 
+use Fluid\Token\Token,
+    Fluid\Page\Page,
+    Fluid\Map\Map;
+
 /**
  * Data class
  *
@@ -20,7 +24,19 @@ class Data
     public static function get($page = null)
     {
         if (!isset(self::$map)) {
-            self::$map = new Map\Map();
+            self::$map = new Map();
+        }
+
+        // If a valid token is provided, function will output the page Fluid data with the page content
+        if (isset($_SERVER['QUERY_STRING'])) {
+            parse_str($_SERVER['QUERY_STRING']);
+            if (isset($fluidtoken) && Token::validateToken($fluidtoken)) {
+                Fluid::setBranch($fluidbranch);
+                
+                //var_dump($fluidbranch, $fluidtoken, $fluidsession);
+                //die();
+                //return self::renderWithFields($file, $data);
+            }
         }
 
         $global = self::getData(self::$map);
@@ -42,10 +58,10 @@ class Data
     /**
      * Set the site map
      *
-     * @param   Map\Map $map
+     * @param   Map $map
      * @return  void
      */
-    public static function setMap(Map\Map $map)
+    public static function setMap(Map $map)
     {
         self::$map = $map;
     }
@@ -53,7 +69,7 @@ class Data
     /**
      * Get the site map
      *
-     * @return  Map\Map
+     * @return  Map
      */
     public static function getMap()
     {
@@ -85,10 +101,10 @@ class Data
     /**
      * Get all data
      *
-     * @param   Map\Map     $map
+     * @param   Map     $map
      * @return  array
      */
-    private static function getData(Map\Map $map)
+    private static function getData(Map $map)
     {
         $data = Page::get()->getData();
         $data['pages'] = self::getPagesData($map->getPages());
@@ -106,7 +122,7 @@ class Data
         $data = array();
         foreach($pages as $page) {
             // Get the page data
-            $pageData = Page::get($page['id'])->getData();
+            $pageData = Page::get($page)->getData();
             $pageData = array_merge($page, $pageData);
 
             // Get the page pages
@@ -133,7 +149,11 @@ class Data
     {
         if (!empty($page)) {
             $page = self::findPage($page, $data['pages']);
-            $page['parents'] = array_reverse($page['parents']);
+            if (is_array($page['parents'])) {
+                $page['parents'] = array_reverse($page['parents']);
+            } else {
+                $page['parents'] = array();
+            }
             return $page;
         }
         return array();

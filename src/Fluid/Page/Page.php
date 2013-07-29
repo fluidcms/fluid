@@ -90,6 +90,10 @@ class Page extends FileSystem
      */
     public function getData()
     {
+        if (empty($this->layout)) {
+            $this->layout = 'global';
+        }
+
         return ParseData::parse($this, Layout::get($this->layout));
     }
 
@@ -101,11 +105,12 @@ class Page extends FileSystem
     public function getRawData()
     {
         $id = $this->getId();
+        $language = empty($this->language) ? Fluid::getLanguage() : $this->language;
 
         if (!empty($id)) {
-            $file = 'pages/' . $id . '_' . $this->language . '.json';
+            $file = 'pages/' . $id . '_' . $language . '.json';
         } else {
-            $file = 'global_' . $this->language . '.json';
+            $file = 'global_' . $language . '.json';
         }
 
         return self::load($file);

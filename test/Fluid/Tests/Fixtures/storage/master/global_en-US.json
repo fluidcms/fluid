@@ -1,7 +1,18 @@
 {
     "Site": {
         "Name": "My Website",
-        "Description": "content",
+        "Description": {
+            "source": "Hello World {PkPUah3bme2qvkTK}",
+            "components": {},
+            "images": {
+                "PkPUah3bme2qvkTK": {
+                    "src": "\/fluidcms\/images\/y3gsv57j\/My Logo.png",
+                    "alt": "",
+                    "width": "64",
+                    "height": "64"
+                }
+            }
+        },
         "Logo": {
             "src": "\/fluidcms\/images\/y3gsv57j\/My Logo.png",
             "alt": "",

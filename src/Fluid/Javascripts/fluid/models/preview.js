@@ -13,13 +13,29 @@ define(['backbone'], function (Backbone) {
             $("#website").ready(function () {
                 root.set('url', $("#website").get(0).contentWindow.location.toString());
                 root.fetchToken();
-            });
+            });*/
 
             // Track iframe location change
-            $("#website").bind('load', function () {
-                root.set('url', $("#website").get(0).contentWindow.location.toString());
-                root.fetchToken();
+            $("#website").on('load', function(e) { root.verifyFrameStatus(e) });
+
+            /*    function () {
+                console.log($("#website").get(0).contentWindow.location.toString());
+                //root.set('url', $("#website").get(0).contentWindow.location.toString());
+                //root.fetchToken();
             });*/
+        },
+
+        verifyFrameStatus: function(e) {
+            var url = $(e.target).get(0).contentWindow.location.toString();
+            var session = getParameterByName(url, 'fluidsession');
+            var token = getParameterByName(url, 'fluidtoken');
+            var branch = getParameterByName(url, 'fluidbranch');
+
+            if (session === '' || token === '' || branch === '') {
+                this.loadPage(url);
+            } else {
+                console.log(url);
+            }
         },
 
         loadPage: function(url) {
@@ -30,9 +46,10 @@ define(['backbone'], function (Backbone) {
             }
 
             this.getToken(function(response) {
+                url = updateQueryStringParameter(url, 'fluidbranch', fluidBranch);
                 url = updateQueryStringParameter(url, 'fluidtoken', response.token);
+                url = updateQueryStringParameter(url, 'fluidsession', fluidSession);
                 $("#website")[0].contentWindow.location = url;
-
             });
         },
 
