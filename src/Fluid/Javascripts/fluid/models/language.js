@@ -13,6 +13,11 @@ define(['backbone'], function (Backbone) {
             this.socket = attrs.socket;
         },
 
+        changeCurrent: function(item) {
+            this.current = this.where({language: item})[0];
+            this.trigger('change');
+        },
+
         fetch: function () {
             var root = this;
             this.socket.send('GET', this.url, {}, function(response) {

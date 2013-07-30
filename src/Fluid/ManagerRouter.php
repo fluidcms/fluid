@@ -1,6 +1,7 @@
 <?php
 
 namespace Fluid;
+
 use Fluid\Token\Token;
 
 /**
@@ -51,6 +52,7 @@ class ManagerRouter
         return (
             self::publicFiles() ||
             self::javascriptFiles() ||
+            self::changeLanguage() ||
             self::htmlPages()
         );
     }
@@ -88,6 +90,27 @@ class ManagerRouter
                 new StaticFile($file);
                 return true;
             }
+        }
+        return false;
+    }
+
+    /**
+     * Change language script.
+     *
+     * @return  bool
+     */
+    private static function changeLanguage()
+    {
+        if (!empty(self::$request) && self::$request === 'changelanguage.json') {
+            $url = isset($_GET['url']) ? filter_var($_GET['url'], FILTER_SANITIZE_STRING) : '';
+            $language = isset($_GET['language']) ? filter_var($_GET['language'], FILTER_SANITIZE_STRING) : 'en-US';
+
+            foreach(Events::trigger('changeLanguage', array($url, $language)) as $retval) {
+                $url = $retval;
+            }
+
+            echo json_encode($url);
+            return true;
         }
         return false;
     }

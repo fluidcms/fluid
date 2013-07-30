@@ -26,7 +26,16 @@ define(
             },
 
             render: function () {
-                this.$el.html(this.template.render({pages: this.collection}));
+                var current;
+                if (typeof this.collection.current === 'undefined') {
+                    current = "";
+                } else {
+                    current = this.collection.current;
+                }
+                this.$el.html(this.template.render({
+                    pages: this.collection,
+                    current: current
+                }));
                 $("#main #content").append(this.$el);
                 this.sortable();
                 return this;

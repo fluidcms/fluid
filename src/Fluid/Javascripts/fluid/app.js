@@ -14,23 +14,22 @@ define(['backbone', 'views/loader', 'models/socket', 'models/map', 'models/langu
                     this.views = {};
                     this.loader = new LoaderView();
 
-                    this.socket = new Socket({
-                        loader: this.loader,
-                        //version: this.version
-                    });
+                    this.socket = new Socket({loader: this.loader});
 
                     this.nav = new Nav({router: this}).render();
                     //this.version = new Version();
 
                     this.languages = new Language.Languages(null, {socket: this.socket});
+                    this.socket.models['language'] = this.languages;
 
                     this.models.preview = new Preview({socket: this.socket, languages: this.languages});
 
                     this.layouts = new Layout.Layouts(null, {socket: root.socket});
 
-                    this.toolbar = new Toolbar({languages: this.languages}).render();
+                    this.toolbar = new Toolbar({languages: this.languages, preview: this.models.preview}).render();
 
                     this.models.map = new Map.Pages(null, {socket: this.socket});
+                    this.socket.models['map'] = this.models.map;
 
                     this.socket.on('ready', function() {
                         root.ready = true;

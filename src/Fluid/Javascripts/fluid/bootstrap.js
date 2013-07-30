@@ -30,6 +30,118 @@
 
 })();
 
+/**
+ * @return string
+ */
+function RemoveUrlParameter(url, name) {
+    var c = "";
+    var d = false;
+    var e = false;
+    if (url.indexOf("?") == -1) {
+        return url;
+    }
+    var f = url.split("?");
+    if (f.length >= 2) {
+        c = c + f[0] + "?";
+        var g = f[1].split(/[&;]/g);
+        for (var h = 0; h < g.length; h++) {
+            var i = g[h];
+            var j = i.split("=");
+            if (j.length >= 2) {
+                if (j[0] != name) {
+                    c = c + i + "&";
+                    d = true;
+                } else {
+                    e = true;
+                }
+            }
+        }
+        if (e == false) {
+            return url;
+        }
+        var k = c.split("?");
+        if (k.length >= 2) {
+            if (k[1].trim() == "") {
+                return k[0];
+            }
+        }
+        if (d == true) {
+            c = c.slice(0, c.length - 1);
+        }
+        return c;
+    }
+}
+
+/**
+ * @return string
+ */
+function UpdateUrlParameter(url, name, value) {
+    if (name.trim() == "" || value.trim() == "") {
+        return url;
+    }
+    var d = "";
+    var e = false;
+    var f = false;
+    if (url.indexOf("?") == -1) {
+        return url;
+    }
+    var g = url.split("?");
+    if (g.length >= 2) {
+        d = d + g[0] + "?";
+        var h = g[1].split(/[&;]/g);
+        for (var i = 0; i < h.length; i++) {
+            var j = h[i];
+            var k = j.split("=");
+            if (k.length >= 2) {
+                if (k[0] == name) {
+                    f = true;
+                    k[1] = value;
+                    d = d + name + "=" + value + "&";
+                } else {
+                    d = d + j + "&";
+                }
+                e = true;
+            }
+        }
+        if (f == false) {
+            return url;
+        }
+        if (e == true) {
+            d = d.slice(0, d.length - 1);
+        }
+        return d;
+    }
+}
+
+/**
+ * @return string
+ */
+function AddUrlParameter(url, name, value) {
+    if (name.trim() == "" || value.trim() == "") {
+        return url;
+    } else if (url.indexOf("?") == -1) {
+        return url + "?" + name + "=" + value;
+    }
+
+    var d = url.split("?");
+    if (d.length >= 2) {
+        if (d[1].trim() == "") {
+            return d[0] + "?" + name + "=" + value;
+        }
+        var e = d[1].split(/[&;]/g);
+        for (var f = 0; f < e.length; f++) {
+            var g = e[f];
+            var h = g.split("=");
+            if (h.length >= 2) {
+                if (h[0] == name) {
+                    return url;
+                }
+            }
+        }
+        return url + "&" + name + "=" + value;
+    }
+}
+
 function getParameterByName(url, name) {
     name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),

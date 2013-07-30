@@ -7,7 +7,9 @@
     <a data-action="reload" class="reload">Reload</a>
     <select>
         <% languages.each(function(item, key) { %>
-        <option value="<%= item.get('language') %>"><%= fluidLanguage['languages'][item.get('language').substring(0,2)] %></option>
+        <option value="<%= item.get('language') %>" <% if(item.get('language') === language) { %>selected<% } %>>
+            <%= fluidLanguage['languages'][item.get('language').substring(0,2)] %>
+        </option>
         <% }); %>
     </select>
 </div>

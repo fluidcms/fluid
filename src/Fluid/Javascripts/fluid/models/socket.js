@@ -3,7 +3,7 @@ define(['backbone', 'views/error'], function (Backbone, ErrorView) {
         conn: null,
         loader: null,
         topic: {},
-        views: {},
+        models: {},
 
         initialize: function (attrs) {
             this.topic = {
@@ -14,7 +14,6 @@ define(['backbone', 'views/error'], function (Backbone, ErrorView) {
                 user_email: fluidUserEmail
             };
             this.loader = attrs.loader;
-            //this.views.version = attrs.version;
         },
 
         connection: function() {
@@ -39,6 +38,11 @@ define(['backbone', 'views/error'], function (Backbone, ErrorView) {
             switch(response.target) {
                 case 'version':
                     //this.views.version.change(response.data);
+                    // TODO: change the model and trigger a re-render of the view
+                    break;
+                case 'map':
+                    this.models.map.changeCurrent(response.data['page']);
+                    this.models.language.changeCurrent(response.data['language']);
                     break;
             }
         },

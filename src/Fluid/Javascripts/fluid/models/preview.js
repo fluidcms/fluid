@@ -25,6 +25,15 @@ define(['backbone'], function (Backbone) {
             });*/
         },
 
+        getUrl: function() {
+            var url = $("#website")[0].contentWindow.location.toString();
+            url = RemoveUrlParameter(url, 'fluidbranch');
+            url = RemoveUrlParameter(url, 'fluidtoken');
+            url = RemoveUrlParameter(url, 'fluidsession');
+
+            return url;
+        },
+
         verifyFrameStatus: function(e) {
             var url = $(e.target).get(0).contentWindow.location.toString();
             var session = getParameterByName(url, 'fluidsession');
@@ -33,8 +42,6 @@ define(['backbone'], function (Backbone) {
 
             if (session === '' || token === '' || branch === '') {
                 this.loadPage(url);
-            } else {
-                console.log(url);
             }
         },
 

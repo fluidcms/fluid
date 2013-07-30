@@ -76,6 +76,8 @@ define(['backbone'], function (Backbone) {
 
         url: 'map',
 
+        curent: null,
+
         parent: null,
 
         initialize: function (items, attrs) {
@@ -154,6 +156,11 @@ define(['backbone'], function (Backbone) {
                    root.parse(response);
                 }
             );
+        },
+
+        changeCurrent: function(item) {
+            this.current = item;
+            this.trigger('update');
         },
 
         removeItem: function (item) {

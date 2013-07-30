@@ -5,13 +5,15 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
         events: {
             'click a[data-action=preview]': 'previewPage',
             'click a[data-action=edit]': 'editPage',
-            'click a[data-action=reload]': 'reloadPage'
+            'click a[data-action=reload]': 'reloadPage',
+            'change select': 'changeLanguage'
         },
 
         template: new EJS({url: 'javascripts/fluid/templates/toolbar.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
             this.languages = attrs.languages;
+            this.preview = attrs.preview;
 
             this.languages.on('change', this.render, this);
         },
@@ -55,7 +57,19 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
         },
 
         changeLanguage: function (model) {
-            if (model.get('language') !== undefined && model.get('language') !== this.language) {
+            if (model.target) {
+                var root = this;
+                var language = $(model.target).val();
+
+                $.ajax({url: "changelanguage.json", dataType: 'JSON', type: "GET", data: {
+                    url: this.preview.getUrl(),
+                    language: language
+                }}).done(function(response) {
+                        root.preview.loadPage(response)
+                });
+            }
+
+            else if (model.get('language') !== undefined && model.get('language') !== this.language) {
                 this.language = model.get('language');
                 this.render();
             }
