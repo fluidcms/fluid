@@ -20,6 +20,14 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
             return this;
         },
 
+        hide: function() {
+            this.$el.hide();
+        },
+
+        show: function() {
+            this.$el.show();
+        },
+
         rollBack: function(e) {
             var id = $(e.target).attr('data-id');
             this.collection.rollBack(id);

@@ -4,6 +4,8 @@ namespace Fluid\WebSockets;
 
 use Exception,
     Fluid\Fluid,
+    Fluid\Events as FluidEvents,
+    Fluid\WebSockets\Events as ServerEvents,
     Fluid\Language\Language,
     Fluid\Layout\Layout,
     Fluid\Map\Map,
@@ -28,7 +30,7 @@ class Requests
      * @param   string  $branch
      * @param   array   $user
      */
-    public function __construct($request, $method, $input, $branch, $user)
+    public function __construct($request, $method, $input = array(), $branch = null, $user = null)
     {
         $this->user = $user;
         $this->branch = $branch;
@@ -166,6 +168,8 @@ class Requests
     private function map()
     {
         if (!empty($this->request) && preg_match('{^(map)(/.*)?$}', $this->request, $match)) {
+            ServerEvents::register($this->user['id'], 'map');
+
             switch ($this->method) {
                 case 'GET':
                     $map = new Map;
@@ -180,6 +184,7 @@ class Requests
                         $this->user['name'],
                         $this->user['email']
                     );
+                    FluidEvents::trigger('mapChange', array('branch' => $this->branch));
                     echo json_encode($map->getPages());
                     return true;
 
@@ -206,8 +211,8 @@ class Requests
                             $this->user['email']
                         );
                         echo json_encode($map->getPages());
-                        return true;
                     }
+                    FluidEvents::trigger('mapChange', array('branch' => $this->branch));
                     return true;
 
                 case 'DELETE':
@@ -219,6 +224,7 @@ class Requests
                         $this->user['email']
                     );
                     echo json_encode($map->getPages());
+                    FluidEvents::trigger('mapChange', array('branch' => $this->branch));
                     return true;
             }
         }
@@ -244,6 +250,7 @@ class Requests
                     if (isset($match[2])) {
                         $id = trim($match[2], ' /.');
                         $history = History::rollBack($id);
+                        FluidEvents::trigger('historyChange', array('branch' => $this->branch));
                         echo json_encode($history->getAll());
                     }
                     return true;
@@ -276,17 +283,25 @@ class Requests
             switch ($this->method) {
                 case 'GET':
                     $output = array();
-                    $map = new Map;
-                    if ($mapPage = $map->findPage($page)) {
-                        $page = Page::get($mapPage, $language);
-
-                        $output = array_merge(
-                            $mapPage,
-                            array(
-                                'data' => $page->getRawData(),
-                                'layoutDefinition' => Layout::get($page->getLayout())->getVariables()
-                            )
+                    if ($page === null) {
+                        $page = Page::get(null, $language);
+                        $output = array(
+                            'data' => $page->getRawData(),
+                            'layoutDefinition' => Layout::get('global')->getVariables()
                         );
+                    } else {
+                        $map = new Map;
+                        if ($mapPage = $map->findPage($page)) {
+                            $page = Page::get($mapPage, $language);
+
+                            $output = array_merge(
+                                $mapPage,
+                                array(
+                                    'data' => $page->getRawData(),
+                                    'layoutDefinition' => Layout::get($page->getLayout())->getVariables()
+                                )
+                            );
+                        }
                     }
 
                     echo json_encode($output);

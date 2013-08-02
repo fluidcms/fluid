@@ -2,7 +2,11 @@
 
 namespace Fluid\Daemons;
 
-use Fluid, React, Ratchet, ZMQ, ZMQSocketException;
+use Fluid,
+    React,
+    Ratchet,
+    ZMQ,
+    ZMQSocketException;
 
 class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
 {
@@ -21,6 +25,8 @@ class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
         $server = new Fluid\WebSockets\Server;
         $tasks = new Fluid\WebSockets\Tasks($server);
         $tasks->execute();
+
+        new Fluid\WebSockets\Events($server);
 
         $loop = React\EventLoop\Factory::create();
 

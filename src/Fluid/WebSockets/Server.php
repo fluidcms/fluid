@@ -2,7 +2,9 @@
 
 namespace Fluid\WebSockets;
 
-use Ratchet, Fluid;
+use Ratchet,
+    Fluid,
+    Fluid\WebSockets\Events as ServerEvents;
 
 class Server implements Ratchet\Wamp\WampServerInterface
 {
@@ -46,6 +48,8 @@ class Server implements Ratchet\Wamp\WampServerInterface
 
     public function onClose(Ratchet\ConnectionInterface $conn)
     {
+        $topic = key($this->connections[$conn->WAMP->sessionId]);
+        ServerEvents::unregister($this->connections[$conn->WAMP->sessionId][$topic]['user_id']);
         unset($this->connections[$conn->WAMP->sessionId]);
     }
 
@@ -92,6 +96,8 @@ class Server implements Ratchet\Wamp\WampServerInterface
 
     public function onError(Ratchet\ConnectionInterface $conn, \Exception $e)
     {
+        $topic = key($this->connections[$conn->WAMP->sessionId]);
+        ServerEvents::unregister($this->connections[$conn->WAMP->sessionId][$topic]['user_id']);
         unset($this->connections[$conn->WAMP->sessionId]);
     }
 }

@@ -1,5 +1,5 @@
-define(['backbone', 'views/loader', 'models/socket', 'models/map', 'models/language', 'models/layout', 'models/preview', 'views/nav', 'views/toolbar'],
-    function (Backbone, LoaderView, Socket, Map, Language, Layout, Preview, Nav, Toolbar) {
+define(['backbone', 'views/loader', 'models/socket', 'models/map', 'models/language', 'models/layout', 'models/preview', 'models/history', 'views/nav', 'views/toolbar'],
+    function (Backbone, LoaderView, Socket, Map, Language, Layout, Preview, History, Nav, Toolbar) {
         var run = function () {
             var FluidRouter = Backbone.Router.extend({
                 root: "/fluidcms/",
@@ -19,17 +19,23 @@ define(['backbone', 'views/loader', 'models/socket', 'models/map', 'models/langu
                     this.nav = new Nav({router: this}).render();
                     //this.version = new Version();
 
-                    this.languages = new Language.Languages(null, {socket: this.socket});
-                    this.socket.models['language'] = this.languages;
+                    this.models.languages = this.languages = new Language.Languages(null, {socket: this.socket});
+                    this.socket.models['language'] = this.models.languages;
 
                     this.models.preview = new Preview({socket: this.socket, languages: this.languages});
 
-                    this.layouts = new Layout.Layouts(null, {socket: root.socket});
+                    this.models.layouts = this.layouts = new Layout.Layouts(null, {socket: this.socket});
 
-                    this.toolbar = new Toolbar({languages: this.languages, preview: this.models.preview}).render();
-
-                    this.models.map = new Map.Pages(null, {socket: this.socket});
+                    this.models.map = new Map.Pages(null, {socket: this.socket, languages: this.models.languages, preview: this.models.preview});
                     this.socket.models['map'] = this.models.map;
+
+                    this.models.history = new History(null, {socket: this.socket});
+
+                    this.views.toolbar = this.toolbar = new Toolbar({
+                        languages: this.languages,
+                        preview: this.models.preview,
+                        map: this.models.map
+                    }).render();
 
                     this.socket.on('ready', function() {
                         root.ready = true;
@@ -76,7 +82,7 @@ define(['backbone', 'views/loader', 'models/socket', 'models/map', 'models/langu
                             setTimeout(function() { root.make(method) }, 10);
                         } else {
                             if (this.main !== null) {
-                                this.main.remove();
+                                this.main.hide();
                             }
                             this[method]();
                             this.current = method;
@@ -87,16 +93,18 @@ define(['backbone', 'views/loader', 'models/socket', 'models/map', 'models/langu
 
                 map: function () {
                     var root = this;
-                    if (this.current !== 'map') {
+                    if (this.current !== 'map' && typeof this.views.map === 'undefined') {
                         require(['views/map'], function (MapView) {
-                            root.main = new MapView({
-                                socket: root.socket,
+                            root.views.map = root.main = new MapView({
                                 collection: root.models.map,
                                 page: root.page,
                                 languages: root.languages,
                                 layouts: root.layouts
                             });
                         });
+                    } else if (this.current !== 'map') {
+                        this.views.map.show();
+                        this.main = this.views.map;
                     }
                 },
 
@@ -115,12 +123,14 @@ define(['backbone', 'views/loader', 'models/socket', 'models/map', 'models/langu
 
                 history: function () {
                     var root = this;
-                    if (this.current !== 'history') {
-                        require(['models/history', 'views/history'], function (History, HistoryView) {
-                            var history = new History(null, {socket: root.socket});
-                            root.main = new HistoryView({collection: history});
-                            history.fetch();
+                    if (this.current !== 'history' && typeof this.views.history === 'undefined') {
+                        require(['views/history'], function (HistoryView) {
+                            root.views.history = root.main = new HistoryView({collection: root.models.history});
+                            root.models.history.fetch();
                         });
+                    } else if (this.current !== 'history') {
+                        this.views.history.show();
+                        this.main = this.views.history;
                     }
                 }
             });

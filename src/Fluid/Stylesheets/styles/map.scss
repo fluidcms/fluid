@@ -33,6 +33,10 @@ a.global {
   @extend .list-link;
   padding-left: $list-link-sprite-left;
 
+  &.highlight, &.current, &.active {
+    background: $blue;
+  }
+
   &:before {
     @include sprite-after(16px, 16px);
     @include sprite-position(-42px -48px);
@@ -86,7 +90,7 @@ ul.map {
         top: 1px;
       }
 
-      &.highlight, &.current {
+      &.highlight, &.current, &.active {
         background: $blue;
       }
 

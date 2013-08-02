@@ -12,6 +12,7 @@ define(['backbone', 'ejs', 'editor/editor'], function (Backbone, EJS, Editor) {
         initialize: function (attrs) {
             var root = this;
 
+            this.type = attrs.type;
             this.model = attrs.model;
             this.group = attrs.group;
             this.item = attrs.item;
@@ -39,13 +40,23 @@ define(['backbone', 'ejs', 'editor/editor'], function (Backbone, EJS, Editor) {
 
         render: function () {
             var render = this.model.get('render');
+            var content;
+
+            if (typeof render[this.group] === 'undefined' || typeof render[this.group][this.item] === 'undefined') {
+                content = "";
+            } else {
+                content = render[this.group][this.item];
+            }
 
             this.$el.html(this.template.render({
-                content: render[this.group][this.item]
+                type: this.type,
+                content: content
             }));
             $(".page-editor").after(this.$el);
 
             Editor(this.$el.find('div.content'));
+
+            this.$el.find("div[contenteditable]").focus();
 
             return this;
         },

@@ -40,9 +40,12 @@ define(['backbone', 'views/error'], function (Backbone, ErrorView) {
                     //this.views.version.change(response.data);
                     // TODO: change the model and trigger a re-render of the view
                     break;
-                case 'map':
+                case 'data_request':
                     this.models.map.changeCurrent(response.data['page']);
                     this.models.language.changeCurrent(response.data['language']);
+                    break;
+                case 'map':
+                    this.models.map.parse(response.data);
                     break;
             }
         },

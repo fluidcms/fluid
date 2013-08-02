@@ -4,8 +4,15 @@ define(['backbone'], function (Backbone) {
 
         socket: null,
 
-        setSocket: function(socket) {
-            this.socket = socket;
+        initialize: function (attrs, options) {
+            this.socket = options.socket;
+            this.languages = options.languages;
+            this.languages.on('change', this.changeLanguage, this);
+        },
+
+        changeLanguage: function() {
+            this.set('language', this.languages.current.get('language'));
+            this.fetch();
         },
 
         fetch: function() {
@@ -44,6 +51,11 @@ define(['backbone'], function (Backbone) {
         parse: function(response) {
             response.render = this.render(response.layoutDefinition, response.data);
             return response;
+        },
+
+        destroy: function() {
+            this.unbind();
+            this.trigger('destroy', this);
         },
 
         render: function(layoutDefinition, data) {

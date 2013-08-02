@@ -1,6 +1,8 @@
 <div>
-    <a data-action="preview" class="toolbar-button preview current">Preview</a>
-    <a data-action="edit" class="toolbar-button edit">Edit</a>
+    <a data-action="preview" class="toolbar-button preview <% if (editing === false) { %>current<% } %>">Preview</a>
+    <% if (currentPage !== null) { %>
+        <a data-action="edit" class="toolbar-button edit <% if (editing === true) { %>current<% } %>">Edit</a>
+    <% } %>
 </div>
 
 <div>

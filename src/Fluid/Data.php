@@ -38,7 +38,7 @@ class Data
                     'data' => array(
                         'session' => $fluidsession,
                         'message' => array(
-                            'target' => 'map',
+                            'target' => 'data_request',
                             'data' => array(
                                 'language' => Fluid::getLanguage(),
                                 'page' => $page

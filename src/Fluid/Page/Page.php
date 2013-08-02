@@ -113,6 +113,10 @@ class Page extends FileSystem
             $file = 'global_' . $language . '.json';
         }
 
+        // TODO: variables in the definition that have not been saved will not appear here, variables that have been deleted will stil appear here
+        // TODO: this is not a big problem when using templates engines that will not report an error when using unset variables but will become
+        // TODO: a big problem when using the variables in a PHP template. Like the getData method, this method should parse the variables with the
+        // TODO: definition to make sure we return all existing variables even those that have not been saved yet.
         return self::load($file);
     }
 

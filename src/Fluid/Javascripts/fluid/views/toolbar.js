@@ -1,7 +1,5 @@
 define(['backbone', 'ejs'], function (Backbone, EJS) {
     var View = Backbone.View.extend({
-        language: '',
-
         events: {
             'click a[data-action=preview]': 'previewPage',
             'click a[data-action=edit]': 'editPage',
@@ -14,8 +12,10 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
         initialize: function (attrs) {
             this.languages = attrs.languages;
             this.preview = attrs.preview;
+            this.map = attrs.map;
 
             this.languages.on('change', this.render, this);
+            this.map.on('editing', this.render, this);
         },
 
         render: function () {
@@ -24,9 +24,18 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                 language = this.languages.current.get('language');
             }
 
+            var currentPage;
+            if (typeof this.map.current === 'undefined') {
+                currentPage = null;
+            } else {
+                currentPage = this.map.current;
+            }
+
             this.$el.html(this.template.render({
                 languages: this.languages,
-                language: language
+                language: language,
+                currentPage: currentPage,
+                editing: this.map.editing
             }));
             $('#toolbar').append(this.$el);
             return this;
@@ -36,24 +45,15 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
             this.$el.find('.toolbar-button').removeClass('current');
             $("a[data-action=preview]", this.$el).addClass('current');
 
-            if (typeof this.pageEditor !== 'undefined') {
-                this.pageEditor.remove();
-            }
+            this.map.stopEditing();
         },
 
         editPage: function (e) {
-            var root = this;
-
-            $(e.target).parent().find('.toolbar-button').removeClass('current');
-            $(e.target).addClass('current');
-
-            require(['views/pageeditor'], function (PageEditorView) {
-                root.pageEditor = new PageEditorView({page: root.page, site: root.site, toolbar: root}).render();
-            });
+            this.map.startEditing(this.map.current);
         },
 
         reloadPage: function(e) {
-            this.page.reload();
+            //this.page.reload();
         },
 
         changeLanguage: function (model) {

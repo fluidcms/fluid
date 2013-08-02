@@ -1,5 +1,5 @@
-define(['backbone'], function (Backbone) {
-    var Page = Backbone.Model.extend({
+define(['backbone', 'models/page', 'views/pageeditor'], function (Backbone, Page, PageEditorView) {
+    var Item = Backbone.Model.extend({
         base: null,
         parent: null,
         urlRoot: 'map',
@@ -8,9 +8,9 @@ define(['backbone'], function (Backbone) {
             this.base = attrs.base;
             this.parent = attrs.parent;
             if (typeof attrs.pages != 'undefined') {
-                this.set('pages', new Pages(attrs.pages, {parent: this, base: this.base}))
+                this.set('pages', new Map(attrs.pages, {parent: this, base: this.base}))
             } else {
-                this.set('pages', new Pages([], {parent: this, base: this.base}))
+                this.set('pages', new Map([], {parent: this, base: this.base}))
             }
 
             this.on('sync', function (e) {
@@ -69,8 +69,8 @@ define(['backbone'], function (Backbone) {
         }
     });
 
-    var Pages = Backbone.Collection.extend({
-        model: Page,
+    var Map = Backbone.Collection.extend({
+        model: Item,
 
         base : null,
 
@@ -80,10 +80,16 @@ define(['backbone'], function (Backbone) {
 
         parent: null,
 
+        editing: false,
+
+        editor: {},
+
         initialize: function (items, attrs) {
             var root = this;
             this.socket = attrs.socket;
             this.base = attrs.base;
+            this.languages = attrs.languages;
+            this.preview = attrs.preview;
 
             if (this.parent == null && (typeof attrs == 'undefined' || typeof attrs.parent == 'undefined')) {
             } else {
@@ -163,6 +169,51 @@ define(['backbone'], function (Backbone) {
             this.trigger('update');
         },
 
+        startEditing: function(item) {
+            var root = this;
+
+            if (typeof this.editor.page !== 'undefined') {
+                var oldPage = this.editor.page;
+            }
+            if (typeof this.editor.view !== 'undefined') {
+                var oldView = this.editor.view;
+            }
+
+            this.editor.page = new Page({id: item, language: this.languages.current.get('language')}, {socket: this.socket, languages: this.languages});
+            this.editor.view = new PageEditorView({model: this.editor.page});
+
+            this.editor.page.on('change', function() {
+                if (typeof oldPage !== 'undefined') {
+                    oldPage.destroy();
+                }
+                if (typeof oldView !== 'undefined') {
+                    oldView.remove();
+                }
+                // Change preview page if this page is not the current page
+                if (this.id !== root.current && this.get('url') !== '') {
+                    root.preview.loadPage(this.get('url'));
+                }
+            });
+
+            this.editor.page.fetch();
+            this.editing = true;
+
+            this.trigger('editing');
+        },
+
+        stopEditing: function() {
+            this.preview.reload();
+            if (typeof this.editor.page !== 'undefined') {
+                this.editor.page.destroy();
+                delete this.editor.page;
+            }
+            if (typeof this.editor.view !== 'undefined') {
+                this.editor.view.remove();
+                delete this.editor.view;
+            }
+            this.editing = false;
+        },
+
         removeItem: function (item) {
             item = this.findItem(item);
             item.parent.remove(item);
@@ -191,8 +242,10 @@ define(['backbone'], function (Backbone) {
     });
 
     return {
-        Page: Page,
-        Pages: Pages
+        Item: Item,
+        Map: Map,
+        Page: Item, // Deprecated
+        Pages: Map // Deprecated
     };
 })
 ;

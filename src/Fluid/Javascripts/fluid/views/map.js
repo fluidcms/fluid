@@ -1,6 +1,6 @@
 define(
-    ['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu', 'models/map', 'models/page', 'views/pageeditor'],
-    function (Backbone, EJS, jUI, Modal, ContextMenu, Map, Page, PageEditorView) {
+    ['backbone', 'ejs', 'jquery-ui', 'views/modal', 'views/contextmenu', 'models/map'],
+    function (Backbone, EJS, jUI, Modal, ContextMenu, Map) {
         var View = Backbone.View.extend({
             events: {
                 'click a[data-action=addPage]': 'addPage',
@@ -18,20 +18,24 @@ define(
             initialize: function (attrs) {
                 var root = this;
                 this.render();
-                this.collection.on('reset add remove update', this.render, this);
-    //            this.collection.on('saved', attrs.page.reload, this); // TODO: uncomment
+                this.collection.on('reset add remove update editing', this.render, this);
                 this.languages = attrs.languages;
                 this.layouts = attrs.layouts;
-                this.socket = attrs.socket;
             },
 
             render: function () {
                 var current;
-                if (typeof this.collection.current === 'undefined') {
+                if (typeof this.collection.editor.page !== 'undefined') {
+                    current = this.collection.editor.page.get('id');
+                    if (typeof current === 'undefined') {
+                        current = 'global';
+                    }
+                } else if (typeof this.collection.current === 'undefined') {
                     current = "";
                 } else {
                     current = this.collection.current;
                 }
+
                 this.$el.html(this.template.render({
                     pages: this.collection,
                     current: current
@@ -39,6 +43,14 @@ define(
                 $("#main #content").append(this.$el);
                 this.sortable();
                 return this;
+            },
+
+            hide: function() {
+                this.$el.hide();
+            },
+
+            show: function() {
+                this.$el.show();
             },
 
             sortable: function () {
@@ -130,10 +142,7 @@ define(
                     page = page.target;
                 }
 
-                page = new Page({id: $(page).attr('data-id'), language: this.languages.current.get('language')});
-                page.setSocket(this.socket);
-                new PageEditorView({model: page});
-                page.fetch();
+                this.collection.startEditing($(page).attr('data-id'));
             }
         });
 
