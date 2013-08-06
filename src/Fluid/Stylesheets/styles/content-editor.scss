@@ -5,7 +5,7 @@
 
 /* #Page Editor
 ================================================== */
-div.content-editor {
+div.editor {
   z-index: 20;
   position: absolute;
   top: 0;
@@ -20,15 +20,28 @@ div.content-editor {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    div.content {
+
+    &.string {
+      @include display-flex;
+      @include align-content(center);
+      @include align-items(center);
+    }
+
+    div.content-editor, div.string-editor {
       padding: $big-margin-top 0;
       margin: 0 auto;
       width: 800px;
-      height: 100%;
       outline: none;
       font-size: 14px;
       font-weight: $light;
+    }
+
+    div.content-editor {
+      height: 100%;
       overflow: auto;
+    }
+
+    div.string-editor {
     }
 
     div.controls {

@@ -17,6 +17,29 @@ class EditPageTest extends PHPUnit_Framework_TestCase
 
     public function testEditPage()
     {
+        // Global data
+        $page = Page::get(null, 'en-US');
+
+        $data = $page->getRawData();
+
+        $data['Site']['Name'] = 'My Awesome Website';
+
+        $request = array(
+            "method" => "PUT",
+            "url" => "page/en-US/global",
+            "data" => $data
+        );
+
+        ob_start();
+        new Fluid\WebSockets\Requests($request['url'], $request['method'], $request['data'], 'develop', Helper::getUser());
+        $retval = ob_get_contents();
+        ob_end_clean();
+
+        $retval = json_decode($retval, true);
+
+        $this->assertEquals($data['Site']['Name'], $retval['data']['Site']['Name']);
+
+        // Home page
         $map = new Map;
         $mapPage = $map->findPage('home page');
         $page = Page::get($mapPage, 'en-US');

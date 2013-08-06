@@ -34,10 +34,18 @@ div.history {
         padding-left: $list-link-sprite-left;
         &:before {
           @include sprite-after(16px, 16px);
-          @include sprite-position(0 0);
           position: absolute;
           top: 1px;
           left: 8px;
+        }
+        &.map_add:before,
+        &.map_sort:before,
+        &.map_delete:before,
+        &.map_edit:before {
+          @include sprite-position(-58px -32px);
+        }
+        &.page_edit:before {
+          @include sprite-position(-42px -32px);
         }
       }
       span {

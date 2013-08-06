@@ -26,7 +26,8 @@ return array(
             'map_add' => 'Added a page',
             'map_sort' => 'Moved a page',
             'map_delete' => 'Deleted a page',
-            'map_edit' => 'Edited a page configuration'
+            'map_edit' => 'Edited a page configuration',
+            'page_edit' => 'Edited a page'
         )
     )
 );

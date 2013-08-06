@@ -33,7 +33,9 @@ class Events
      */
     public static function register($user, $topic)
     {
-        self::$self->registerUser($user, $topic);
+        if (self::$self instanceof Events) {
+            self::$self->registerUser($user, $topic);
+        }
     }
 
     /**
@@ -44,7 +46,9 @@ class Events
      */
     public static function unregister($user)
     {
-        self::$self->unregisterUser($user);
+        if (self::$self instanceof Events) {
+            self::$self->unregisterUser($user);
+        }
     }
 
     /**

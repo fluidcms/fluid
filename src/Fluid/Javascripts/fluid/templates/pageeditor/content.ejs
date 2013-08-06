@@ -1,7 +1,13 @@
-<div>
-    <div class="content" contenteditable="true">
-        <%= content %>
-    </div>
+<div class="<%= type %>">
+    <% if (type === 'content') { %>
+        <div class="content-editor" contenteditable="true">
+            <%= content %>
+        </div>
+    <% } else if (type === 'string') { %>
+        <div class="string-editor" contenteditable="true">
+            <%= content %>
+        </div>
+    <% } %>
     <div class="controls">
         <div>
             <a data-action="cancel" class="button">Cancel</a>

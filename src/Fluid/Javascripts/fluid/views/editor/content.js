@@ -5,7 +5,7 @@ define(['backbone', 'ejs', 'editor/editor'], function (Backbone, EJS, Editor) {
             "click [data-action=save]": "save"
         },
 
-        className: 'content-editor',
+        className: 'editor',
 
         template: new EJS({url: 'javascripts/fluid/templates/pageeditor/content.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
@@ -54,7 +54,7 @@ define(['backbone', 'ejs', 'editor/editor'], function (Backbone, EJS, Editor) {
             }));
             $(".page-editor").after(this.$el);
 
-            Editor(this.$el.find('div.content'));
+            Editor(this.$el.find('div[contenteditable]'), this.type);
 
             this.$el.find("div[contenteditable]").focus();
 
@@ -62,7 +62,7 @@ define(['backbone', 'ejs', 'editor/editor'], function (Backbone, EJS, Editor) {
         },
 
         save: function() {
-            this.model.saveData(this.group, this.item, this.$el.find('div.content').html());
+            this.model.saveData(this.group, this.item, this.$el.find('div[contenteditable]').html());
             this.close();
         },
 

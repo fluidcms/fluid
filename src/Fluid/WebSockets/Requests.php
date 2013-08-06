@@ -309,9 +309,17 @@ class Requests
 
                 case 'PUT':
                     $output = array();
-                    $map = new Map;
-                    if ($mapPage = $map->findPage($page)) {
-                        $page = Page::get($mapPage, $language);
+
+                    if ($page === null) {
+                        $page = Page::get(null, $language);
+                    } else {
+                        $map = new Map;
+                        if ($mapPage = $map->findPage($page)) {
+                            $page = Page::get($mapPage, $language);
+                        }
+                    }
+
+                    if ($page instanceof Page) {
                         $page->update($this->input);
 
                         History::add(
@@ -319,13 +327,20 @@ class Requests
                             $this->user['name'],
                             $this->user['email']
                         );
+                    }
 
+                    if (isset($mapPage) && $mapPage) {
                         $output = array_merge(
                             $mapPage,
                             array(
                                 'data' => $page->getRawData(),
                                 'layoutDefinition' => Layout::get($page->getLayout())->getVariables()
                             )
+                        );
+                    } else {
+                        $output = array(
+                            'data' => $page->getRawData(),
+                            'layoutDefinition' => Layout::get('global')->getVariables()
                         );
                     }
 

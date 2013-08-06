@@ -36,15 +36,22 @@ define(['backbone'], function (Backbone) {
             var url = this.url;
 
             if (typeof this.id !== 'undefined') {
-                url = url + "/" + this.id;
+                url = url + "/" + this.languages.current.get('language') + "/" + this.id;
             } else {
-                url = url + "/global";
+                url = url + "/" + this.languages.current.get('language') + "/global";
             }
 
-            this.socket.send('PUT', url, this.get('data'), function(response) {
-                console.log(response);
-//                response = root.parse(response);
-//                root.set(response);
+            var data = this.toJSON();
+
+            if (typeof data['data'] !== 'object') {
+                data = {};
+            } else {
+                data = data['data'];
+            }
+
+            this.socket.send('PUT', url, data, function(response) {
+                response = root.parse(response);
+                root.set(response);
             });
         },
 
@@ -72,7 +79,19 @@ define(['backbone'], function (Backbone) {
 
         saveData: function(group, item, data) {
             data = UnRender(this.get('layoutDefinition')[group][item], data);
-            this.get('data')[group][item] = data;
+
+            var modelData = this.get('data');
+            if (modelData.length === 0) {
+                modelData = {};
+            }
+
+            if (typeof modelData[group] === 'undefined') {
+                modelData[group] = {};
+            }
+
+            modelData[group][item] = data;
+
+            this.set('data', modelData);
             this.set('render', this.render(this.get('layoutDefinition'), this.get('data')));
             this.trigger('change');
             this.save();
