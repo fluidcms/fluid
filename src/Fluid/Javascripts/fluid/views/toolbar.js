@@ -53,7 +53,7 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
         },
 
         reloadPage: function(e) {
-            //this.page.reload();
+            this.preview.reload();
         },
 
         changeLanguage: function (model) {
