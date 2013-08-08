@@ -117,7 +117,6 @@ define(['backbone', 'models/page', 'views/pageeditor'], function (Backbone, Page
         create: function (attrs) {
             var parent = '';
             if (typeof attrs.parent !== 'undefined' && attrs.parent !== null && typeof attrs.parent.parent !== 'undefined' && attrs.parent.parent !== null) {
-                console.log('has parent yo');
                 parent = attrs.parent.parent.get('id');
             }
 
@@ -130,7 +129,15 @@ define(['backbone', 'models/page', 'views/pageeditor'], function (Backbone, Page
                 parent: parent
             };
             var root = this;
-            this.base.socket.send('POST', this.url, data, function(response) {
+
+            var socket;
+            if (typeof this.base === 'undefined' || this.base === null) {
+                socket = this.socket;
+            } else {
+                socket = this.base.socket;
+            }
+
+            socket.send('POST', this.url, data, function(response) {
                 root.base.parse(response);
             });
         },
