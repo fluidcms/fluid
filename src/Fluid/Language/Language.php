@@ -28,6 +28,35 @@ class Language
     }
 
     /**
+     * Validate language
+     *
+     * @param   string       $value
+     * @throws  Exception
+     * @return  bool
+     */
+    public static function validateLanguage($value)
+    {
+        if (!is_string($value)) {
+            throw new Exception("Invalid language");
+        }
+
+        $valid = self::getLanguages();
+        $found = false;
+        foreach($valid as $haystack) {
+            if ($haystack['language'] === $value) {
+                $found = true;
+                break;
+            }
+        }
+
+        if (!$found) {
+            throw new Exception("Invalid language");
+        }
+
+        return true;
+    }
+
+    /**
      * Validate languages
      *
      * @param   array       $value

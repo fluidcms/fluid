@@ -4,6 +4,7 @@ namespace Fluid\Page;
 
 use Exception,
     Fluid\Fluid,
+    Fluid\Map\Map,
     Fluid\Language\Language,
     Fluid\Layout\Layout,
     Fluid\Storage\FileSystem;
@@ -144,6 +145,7 @@ class Page extends FileSystem
      * Update a page's data
      *
      * @param   array   $data
+     * @throws  Exception
      * @return  bool
      */
     public function update($data)
@@ -151,12 +153,29 @@ class Page extends FileSystem
         $id = $this->getId();
 
         if (!empty($id)) {
-            $file = 'pages/' . $id . '_' . $this->language . '.json';
+            $map = new Map();
+            if ($page = $map->findPage($id)) {
+                Language::validateLanguage($this->language);
+                $layout = new Layout($page['layout']);
+
+                if (in_array($this->language, $page['languages']))  {
+                    $file = 'pages/' . $id . '_' . $this->language . '.json';
+                }
+            }
         } else {
+            Language::validateLanguage($this->language);
+            $layout = new Layout('global');
+
             $file = 'global_' . $this->language . '.json';
         }
 
-        self::save(json_encode($data, JSON_PRETTY_PRINT), $file);
+        if (isset($file) && isset($layout) && $layout instanceof Layout) {
+            $data = SanitizeData::sanitize($data, $layout);
+            self::save(json_encode($data, JSON_PRETTY_PRINT), $file);
+            return true;
+        }
+
+        throw new Exception('Invalid page');
     }
 
     /**
