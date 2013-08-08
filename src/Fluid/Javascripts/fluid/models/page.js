@@ -120,7 +120,7 @@ define(['backbone'], function (Backbone) {
         };
 
         $.each(definitions, function(key, item) {
-            if (typeof data[key] !== 'undefined') {
+            if (typeof data[key] !== 'undefined' && data[key] !== null) {
                 switch(item.type) {
                     case 'string':
                         output[key] = data[key];
