@@ -48,8 +48,10 @@ class Server implements Ratchet\Wamp\WampServerInterface
 
     public function onClose(Ratchet\ConnectionInterface $conn)
     {
-        $topic = key($this->connections[$conn->WAMP->sessionId]);
-        ServerEvents::unregister($this->connections[$conn->WAMP->sessionId][$topic]['user_id']);
+        if (is_array($this->connections[$conn->WAMP->sessionId])) {
+            $topic = key($this->connections[$conn->WAMP->sessionId]);
+            ServerEvents::unregister($this->connections[$conn->WAMP->sessionId][$topic]['user_id']);
+        }
         unset($this->connections[$conn->WAMP->sessionId]);
     }
 
@@ -96,8 +98,10 @@ class Server implements Ratchet\Wamp\WampServerInterface
 
     public function onError(Ratchet\ConnectionInterface $conn, \Exception $e)
     {
-        $topic = key($this->connections[$conn->WAMP->sessionId]);
-        ServerEvents::unregister($this->connections[$conn->WAMP->sessionId][$topic]['user_id']);
+        if (is_array($this->connections[$conn->WAMP->sessionId])) {
+            $topic = key($this->connections[$conn->WAMP->sessionId]);
+            ServerEvents::unregister($this->connections[$conn->WAMP->sessionId][$topic]['user_id']);
+        }
         unset($this->connections[$conn->WAMP->sessionId]);
     }
 }

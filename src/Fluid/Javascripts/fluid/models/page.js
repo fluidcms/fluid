@@ -98,6 +98,8 @@ define(['backbone'], function (Backbone) {
         }
     });
 
+    // Format for display
+    // TODO: rename
     var Render = function(definitions, data) {
         var root = this;
         var output = {};
@@ -135,6 +137,8 @@ define(['backbone'], function (Backbone) {
         return output;
     };
 
+    // Format for saving and sanitize data
+    // TODO: rename
     var UnRender = function(definition, data) {
         var root = this;
         var output;
@@ -170,6 +174,9 @@ define(['backbone'], function (Backbone) {
 
         switch(definition.type) {
             case 'string':
+                // Trim and remove trailing <br> added by the editor
+                data = data.replace(/^\s+|\s+$/g, '');
+                data = data.replace(/^<br>+|<br>+$/g, '');
                 output = data;
                 break;
             case 'content':
