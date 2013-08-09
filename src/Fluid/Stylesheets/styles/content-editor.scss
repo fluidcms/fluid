@@ -40,6 +40,10 @@ div.editor {
     div.content-editor {
       height: 100%;
       overflow: auto;
+      vertical-align: baseline;
+      * {
+        vertical-align: baseline;
+      }
 
       h1 {
         font-weight: $black;

@@ -1,5 +1,5 @@
-define(['backbone', 'views/loader', 'models/socket', 'models/map', 'models/language', 'models/layout', 'models/preview', 'models/history', 'views/nav', 'views/toolbar'],
-    function (Backbone, LoaderView, Socket, Map, Language, Layout, Preview, History, Nav, Toolbar) {
+define(['backbone', 'views/loader', 'models/socket', 'models/map', 'models/language', 'models/layout', 'models/preview', 'models/history', 'views/nav', 'views/toolbar', 'views/tools/tools'],
+    function (Backbone, LoaderView, Socket, Map, Language, Layout, Preview, History, Nav, Toolbar, ToolsView) {
         var run = function () {
             var FluidRouter = Backbone.Router.extend({
                 root: "/fluidcms/",
@@ -26,7 +26,12 @@ define(['backbone', 'views/loader', 'models/socket', 'models/map', 'models/langu
 
                     this.models.layouts = this.layouts = new Layout.Layouts(null, {socket: this.socket});
 
-                    this.models.map = new Map.Pages(null, {socket: this.socket, languages: this.models.languages, preview: this.models.preview});
+                    this.models.map = new Map.Pages(null, {
+                        socket: this.socket,
+                        languages: this.models.languages,
+                        preview: this.models.preview,
+                        app: this
+                    });
                     this.socket.models['map'] = this.models.map;
 
                     this.models.history = new History(null, {socket: this.socket});
@@ -36,6 +41,10 @@ define(['backbone', 'views/loader', 'models/socket', 'models/map', 'models/langu
                         preview: this.models.preview,
                         map: this.models.map
                     }).render();
+
+                    this.views.tools = new ToolsView({
+                        map: this.models.map
+                    });
 
                     this.socket.on('ready', function() {
                         root.ready = true;
@@ -123,13 +132,7 @@ define(['backbone', 'views/loader', 'models/socket', 'models/map', 'models/langu
 
                 tools: function() {
                     var root = this;
-                    if (this.current !== 'tools' && typeof this.views.tools === 'undefined') {
-                        require(['views/tools/tools'], function (ToolsView) {
-                            root.views.tools = root.main = new ToolsView({
-                                map: root.models.map
-                            });
-                        });
-                    } else if (this.current !== 'tools') {
+                    if (this.current !== 'tools') {
                         this.views.tools.show();
                         this.main = this.views.tools;
                     }

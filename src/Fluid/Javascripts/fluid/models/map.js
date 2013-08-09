@@ -86,6 +86,7 @@ define(['backbone', 'models/page', 'views/pageeditor'], function (Backbone, Page
 
         initialize: function (items, attrs) {
             var root = this;
+            this.app = attrs.app;
             this.socket = attrs.socket;
             this.base = attrs.base;
             this.languages = attrs.languages;
@@ -187,7 +188,7 @@ define(['backbone', 'models/page', 'views/pageeditor'], function (Backbone, Page
             }
 
             this.editor.page = new Page({id: item, language: this.languages.current.get('language')}, {socket: this.socket, languages: this.languages});
-            this.editor.view = new PageEditorView({model: this.editor.page});
+            this.editor.view = new PageEditorView({model: this.editor.page, app: this.app});
 
             this.editor.page.on('change', function() {
                 if (typeof oldPage !== 'undefined') {

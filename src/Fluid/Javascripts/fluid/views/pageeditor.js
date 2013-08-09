@@ -7,13 +7,20 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/contextmenu', 'views/editor/conte
 
         current: null,
 
+        previousAppNav: null,
+
+        contentEditor: null,
+
         className: 'page-editor',
 
         template: new EJS({url: 'javascripts/fluid/templates/pageeditor/editor.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
+            var root = this;
+            this.app = attrs.app;
             this.languages = attrs.languages;
             this.model.on('change', this.render, this);
+            this.app.on('change', function() { root.previousAppNav = null; });
         },
 
         render: function () {
@@ -54,9 +61,24 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/contextmenu', 'views/editor/conte
             var data = target.find('div.data');
 
             if (data.hasClass("string")) {
-                new ContentEditor({type: 'string', group: group, item: item, model: this.model});
+                this.contentEditor = new ContentEditor({type: 'string', group: group, item: item, model: this.model});
             } else if (data.hasClass("content")) {
-                new ContentEditor({type: 'content', group: group, item: item, model: this.model});
+                var previousAppNav = this.app.current;
+                this.app.make('tools');
+                this.previousAppNav = previousAppNav;
+                this.contentEditor = new ContentEditor({type: 'content', group: group, item: item, model: this.model});
+                this.contentEditor.on('close', this.toggleAppNav, this);
+            } else {
+                this.contentEditor = null;
+            }
+
+            this.trigger('editing');
+        },
+
+        toggleAppNav: function() {
+            this.trigger('stopEditing');
+            if (typeof this.previousAppNav !== 'undefined' && this.previousAppNav !== null) {
+                this.app.make(this.previousAppNav);
             }
         }
     });

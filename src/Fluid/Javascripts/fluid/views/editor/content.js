@@ -5,6 +5,8 @@ define(['backbone', 'ejs', 'editor/editor'], function (Backbone, EJS, Editor) {
             "click [data-action=save]": "save"
         },
 
+        type: null,
+
         className: 'editor',
 
         template: new EJS({url: 'javascripts/fluid/templates/pageeditor/content.ejs?' + (new Date()).getTime()}),  // !! Remove for production
@@ -62,11 +64,13 @@ define(['backbone', 'ejs', 'editor/editor'], function (Backbone, EJS, Editor) {
         },
 
         save: function() {
+            this.trigger('save');
             this.model.saveData(this.group, this.item, this.$el.find('div[contenteditable]').html());
             this.close();
         },
 
         close: function() {
+            this.trigger('close');
             $(document).off('keydown', this.keyEvents.save);
             $(document).off('keyup', this.keyEvents.escape);
             this.remove();
