@@ -2,38 +2,61 @@ define(['sanitize'], function (Sanitize) {
     return function (element, type) {
         $(element)
 
-            // Return key
+            // Override return key
             .on("keypress", function (e) {
                 if (e.which == 13) {
-                    // Use br instead of div in content
+                    // Use p instead of div in content, use br if shift is used
                     if (type === 'content') {
-                        var selection = window.getSelection(),
-                            range = selection.getRangeAt(0),
-                            br = document.createElement("br");
+                        // Insert br if user is pressing shift and enter
+                        if (e.shiftKey) {
+                            var selection = window.getSelection(),
+                                range = selection.getRangeAt(0),
+                                br = document.createElement("br");
 
-                        // Allow <li>
-                        var parent = range.startContainer;
-                        while (parent && typeof parent.parentNode !== 'undefined') {
-                            if (parent.nodeName.toLowerCase() == 'li') {
-                                return true;
-                            }
-
-                            if (parent.nodeName.toLowerCase() == 'div') {
-                                parent = false;
-                            } else {
-                                parent = parent.parentNode;
-                            }
+                            // Insert br
+                            range.deleteContents();
+                            range.insertNode(br);
+                            range.setStartAfter(br);
+                            range.setEndAfter(br);
+                            selection.removeAllRanges();
+                            selection.addRange(range);
+                            return false;
                         }
+                        // Insert p element instead of divs
+                        else {
+                            var selection = window.getSelection(),
+                                range = selection.getRangeAt(0),
+                                element = document.createElement("p");
 
-                        // Otherwise append <br> and block normal behavior
-                        range.deleteContents();
-                        range.insertNode(br);
-                        range.setStartAfter(br);
-                        range.setEndAfter(br);
-                        selection.removeAllRanges();
-                        selection.addRange(range);
-                        return false;
-                    } else {
+                            element.innerHTML = "&nbsp;"; // Tricky, chrome does not like empty nodes
+
+                            // Allow normal behavior for li and p
+                            var moveOutside = false;
+                            var parent = range.startContainer;
+                            while (parent && typeof parent.parentNode !== 'undefined') {
+                                // Allow normal behavior on li and p
+                                if (parent.nodeName.toLowerCase() == 'li' || parent.nodeName.toLowerCase() == 'p') {
+                                    return true;
+                                } else if (parent.nodeName.toLowerCase() == 'div') {
+                                    parent = false;
+                                } else {
+                                    parent = parent.parentNode;
+                                }
+                            }
+
+                            // Otherwise append p and block normal behavior
+                            range.deleteContents();
+                            range.insertNode(element);
+                            range.selectNodeContents(element);
+                            range.collapse(true);
+                            selection.removeAllRanges();
+                            selection.addRange(range);
+                            return false;
+                        }
+                    }
+
+                    // Block line return on strings
+                    else {
                         return false;
                     }
                 }
@@ -44,7 +67,7 @@ define(['sanitize'], function (Sanitize) {
                 setTimeout(function () {
                     if (type === 'content') {
                         var s = new Sanitize({
-                            elements: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'font', 'br', 'b', 'strong', 'u', 'i', 'a', 'ul', 'ol', 'li', 'img'],
+                            elements: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'p', 'font', 'br', 'b', 'strong', 'u', 'i', 'a', 'ul', 'ol', 'li', 'img'],
                             attributes: {
                                 a: ['href', 'title'],
                                 div: ['style'],

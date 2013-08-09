@@ -45,11 +45,53 @@ div.editor {
         vertical-align: baseline;
       }
 
+      p {
+        margin-bottom: 20px;
+      }
       h1 {
         font-weight: $black;
         font-size: 30px;
         line-height: 40px;
         margin-bottom: 20px;
+      }
+      h2 {
+        font-weight: $black;
+        font-size: 27px;
+        line-height: 34px;
+        margin-bottom: 16px;
+      }
+      h3 {
+        font-weight: $black;
+        font-size: 23px;
+        line-height: 30px;
+        margin-bottom: 13px;
+      }
+      h4 {
+        font-weight: $black;
+        font-size: 20px;
+        line-height: 26px;
+        margin-bottom: 10px;
+      }
+      h5 {
+        font-weight: $black;
+        font-size: 16px;
+        line-height: 22px;
+        margin-bottom: 4px;
+      }
+      h6 {
+        font-weight: $black;
+        font-size: 14px;
+        line-height: 20px;
+      }
+      ul, ol {
+        margin-bottom: 20px;
+        margin-left: 30px;
+      }
+      ol {
+        list-style: decimal;
+      }
+      ul {
+        list-style: disc outside;
       }
     }
 

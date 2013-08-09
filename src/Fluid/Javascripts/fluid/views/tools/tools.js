@@ -51,6 +51,7 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                 $(document).on('keypress keyup click mouseup', null, {root: this}, this.analyzeText);
 
                 $(this.$el).find('div.text a[data-role]').on('mousedown', this.formatText).on('mousedown', function() { root.analyzeText({data: {root: root}}); });
+                $(this.$el).find('div.text select').on('change', this.formatText).on('change', function() { root.analyzeText({data: {root: root}}); });
 
                 this.analyzeText({data: {root: this}});
             }
@@ -68,11 +69,12 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
             this.textEnabled = false;
 
             if (this.rendered) {
-                this.$el.find('div.text select').attr('disabled', 'true');
-                this.$el.find('div.text a').attr('data-disabled', "true");
+                this.$el.find('div.text select').attr('disabled', 'true').val('p');
+                this.$el.find('div.text a').attr('data-disabled', "true").removeClass('active');
             }
 
             $(this.$el).find('div.text a[data-role]').off('mousedown');
+            $(this.$el).find('div.text select').off('change');
             $(document).off('keypress keyup click mouseup', this.analyzeText);
         },
 
@@ -82,6 +84,7 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
             var fontStyles = ['bold', 'italic', 'underline', 'strikeThrough'];
 
             if (root.contentEditor.is(':focus')) {
+                // Check font styles
                 $.each(fontStyles, function(key, value) {
                     if (document.queryCommandValue(value) === 'true') {
                         root.$el.find('[data-role="'+value+'"]').addClass('active');
@@ -89,15 +92,77 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                         root.$el.find('[data-role="'+value+'"]').removeClass('active');
                     }
                 });
+
+                // Check element type
+                var tag = root.checkCursorInElement();
+                switch(tag) {
+                    case 'H1':
+                    case 'H2':
+                    case 'H3':
+                    case 'H4':
+                    case 'H5':
+                    case 'H6':
+                    case 'UL':
+                    case 'OL':
+                        root.$el.find('[data-role="tag"]').val(tag.toLowerCase());
+                        break;
+                    default:
+                        root.$el.find('[data-role="tag"]').val('p');
+                        break;
+                }
             }
+        },
+
+        checkCursorInElement: function() {
+            var sel, containerNode, parentNode;
+            if (window.getSelection) {
+                sel = window.getSelection();
+                if (sel.rangeCount > 0) {
+                    containerNode = sel.getRangeAt(0).commonAncestorContainer;
+                }
+            } else if ( (sel = document.selection) && sel.type != "Control" ) {
+                containerNode = sel.createRange().parentElement();
+            }
+            while (containerNode) {
+                if (containerNode.nodeType == 1 && containerNode.tagName == 'DIV' && containerNode.getAttribute('contenteditable')) {
+                    break;
+                }
+                parentNode = containerNode;
+                containerNode = containerNode.parentNode;
+            }
+
+            if (typeof parentNode !== 'undefined' && parentNode.nodeType == 1) {
+                return parentNode.tagName;
+            }
+            return false;
         },
 
         formatText: function(e) {
             e.preventDefault();
 
             var role = $(e.currentTarget).attr('data-role');
+            if (role === 'tag') {
+                role = $(e.currentTarget).val();
+            }
 
             switch(role) {
+                case 'h1':
+                case 'h2':
+                case 'h3':
+                case 'h4':
+                case 'h5':
+                case 'h6':
+                    document.execCommand('formatBlock', false, '<'+role+'>');
+                    break;
+                case 'ul':
+                    document.execCommand('insertUnorderedList', false, null);
+                    break;
+                case 'ol':
+                    document.execCommand('insertOrderedList', false, null);
+                    break;
+                case 'p':
+                    document.execCommand('formatBlock', false, '<p>');
+                    break;
                 case 'bold':
                 case 'italic':
                 case 'underline':
