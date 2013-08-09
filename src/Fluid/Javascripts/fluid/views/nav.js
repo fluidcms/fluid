@@ -9,6 +9,7 @@ define(['backbone', 'ejs', 'qtip'], function (Backbone, EJS, qTip) {
                 {name: 'Map', className: 'map'},
                 {name: 'Components', className: 'components'},
                 {name: 'Files', className: 'files'},
+                {name: 'Tools', className: 'tools'},
                 {name: 'History', className: 'history'}
             ];
 

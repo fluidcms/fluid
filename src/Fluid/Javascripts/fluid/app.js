@@ -81,7 +81,7 @@ define(['backbone', 'views/loader', 'models/socket', 'models/map', 'models/langu
                         if (!this.ready) {
                             setTimeout(function() { root.make(method) }, 10);
                         } else {
-                            if (this.main !== null) {
+                            if (this.main !== null && this.current !== method) {
                                 this.main.hide();
                             }
                             this[method]();
@@ -119,6 +119,20 @@ define(['backbone', 'views/loader', 'models/socket', 'models/map', 'models/langu
                             root.fileView = new FileView({collection: new File.Collection()});
                         });
                     }*/
+                },
+
+                tools: function() {
+                    var root = this;
+                    if (this.current !== 'tools' && typeof this.views.tools === 'undefined') {
+                        require(['views/tools/tools'], function (ToolsView) {
+                            root.views.tools = root.main = new ToolsView({
+                                map: root.models.map
+                            });
+                        });
+                    } else if (this.current !== 'tools') {
+                        this.views.tools.show();
+                        this.main = this.views.tools;
+                    }
                 },
 
                 history: function () {

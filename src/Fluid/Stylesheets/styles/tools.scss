@@ -1,0 +1,113 @@
+@import "lib";
+@import "mixins";
+@import "compass/css3/images";
+
+/* Table of Content
+==================================================
+  # Layout
+  # Text Tools￼ */
+
+/* # Layout
+================================================== */
+div.tools>div.text {
+  margin: $main-margin-top $main-margin-left;
+  select {
+    @extend select.small-dark;
+  }
+}
+
+/* # Text Tools
+================================================== */
+div.tools>div.text {
+  div.row {
+    // TODO: damnn
+    @include display-flex; // Support Flexbox and Flexbox Legacy
+
+    @include align-content(stretch); // flex-start | flex-end | center | space-between | space-around | stretch (aligns a flex container's lines within the flex container when there is extra space in the cross-axis)
+    @include align-items(stretch); // flex-start | flex-end | center | baseline | stretch (sets the default alignment for all of the flex container's items)
+    @include flex-direction(row); // row | column | row-reverse | column-reverse | inherit (specifies how flex items are placed in the flex container)
+    @include flex-wrap(nowrap); // nowrap | wrap | wrap-reverse (controls whether the flex container is single-line or multi-line, and the direction of the cross-axis, which determines the direction new lines are stacked in)
+    @include flex-flow(row nowrap); // (flex-direction | flex-wrap shortand)
+    @include justify-content(flex-start); // flex-start | flex-end | center | space-between | space-around (aligns flex items along the main axis of the current line of the flex container)
+
+    margin-bottom: $main-margin-bottom;
+  }
+
+  div.group {
+    @include display-flex;
+
+    a {
+      position: relative;
+      cursor: pointer;
+      display: block;
+      min-width: 21px;
+      padding: 0 6px;
+      line-height: 21px;
+      height: 21px;
+      color: white;
+      font-size: 11px;
+      font-weight: $normal;
+      margin-right: 1px;
+      border-radius: $item-border;
+      border: 1px solid transparent;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+
+      &[data-disabled] {
+        opacity: .5;
+        cursor: default;
+      }
+
+      &:not([data-disabled]):hover {
+        border: 1px solid #141414;
+        @include background(linear-gradient(top, #616161, #616161 1px, #4c4c4c 1px, #3c3c3c 100%));
+      }
+
+      &:not([data-disabled]):active, &.active:not([data-disabled]):hover, &.active:not([data-disabled]) {
+        border: 1px solid #1d1d1d;
+        @include background(linear-gradient(top, #242424, #242424 1px, #292929 1px, #2c2c2c 100%));
+      }
+
+      &:after {
+        @include sprite-after(12px, 12px);
+        top: 3px;
+        left: 3px;
+      }
+      &[data-role="alignLeft"]:after {
+        @include sprite-position(-90px -32px);
+      }
+      &[data-role="alignCenter"]:after {
+        @include sprite-position(-102px -32px);
+      }
+      &[data-role="alignRight"]:after {
+        @include sprite-position(-114px -32px);
+      }
+      &[data-role="justifyLeft"]:after {
+        @include sprite-position(-90px -44px);
+      }
+      &[data-role="bold"]:after {
+        @include sprite-position(-102px -44px);
+      }
+      &[data-role="italic"]:after {
+        @include sprite-position(-114px -44px);
+      }
+      &[data-role="underline"]:after {
+        @include sprite-position(-90px -56px);
+      }
+      &[data-role="strikeThrough"]:after {
+        @include sprite-position(-102px -56px);
+      }
+      &[data-role="anchor"] {
+        padding-left: 22px;
+        &:after {
+          @include sprite-position(-114px -56px);
+        }
+      }
+    }
+  }
+
+  select + div.group, div.group + div.group {
+    margin-left: $main-margin-left;
+  }
+}

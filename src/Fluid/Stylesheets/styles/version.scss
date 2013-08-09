@@ -9,9 +9,7 @@
 /* #Version
 ================================================== */
 div.version {
-  position: fixed;
-  bottom: 0;
-  left: 0;
+  @include flex-shrink(0);
   padding: 22px 0;
   width: 306px;
   text-align: center;

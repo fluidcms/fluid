@@ -8,6 +8,7 @@
 ==================================================
   # Container
   # Navigation
+  # Tabs
   # Target
   # Loader & Error  */
 
@@ -19,28 +20,30 @@
   background: #3b3b3b;
   float: left;
   height: 100%;
+  max-height: 100%;
   width: $main-width;
   @include box-shadow(0 0 5px rgba(0, 0, 0, .75));
+  @include display-flex;
+  @include flex-flow(column nowrap);
 }
 
 #main {
   #content {
-    height: 100%;
-    padding-top: 42px;
-    max-width: 306px;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+    width: 306px;
+    @include flex-grow(1);
+    @include display-flex;
+    @include flex-flow(column nowrap);
   }
-  .version + #content {
-    padding-bottom: 160px; // TODO this needs to be dynamically allowed
+  #nav {
+    width: 306px;
+    height: 42px;
+    @include flex-shrink(0);
   }
 }
 
 /* # Navigation
 ================================================== */
-#main nav {
-  position: fixed;
+#main #nav nav {
   width: 306px;
   height: 42px;
   @include background(linear-gradient(top, #292e34 0%, #373d44 75%, #2a2f35 100%));
@@ -77,6 +80,9 @@
     &.intl:after {
       background-position-x: -48px;
     }
+    &.tools:after {
+      @include sprite-position(-74px -32px);
+    }
     &.history:after {
       background-position-x: -64px;
     }
@@ -86,6 +92,38 @@
       &:after {
         background-position-y: -16px;
       }
+    }
+    &.current.tools:after {
+      @include sprite-position(-74px -48px);
+    }
+  }
+}
+
+/* # Tabs
+================================================== */
+#main ul.tabs {
+  height: 22px;
+  margin: 0;
+  padding: 0;
+  margin-bottom: $main-margin-bottom;
+  @include background(linear-gradient(top, #444444 0px, #444444 1px, #2f2f2f 1px));
+  overflow: hidden;
+
+  li {
+    height: 22px;
+    margin: 0;
+    padding: 0;
+    float: left;
+    a {
+      display: block;
+      line-height: 22px;
+      padding: 0 $main-margin-left;
+      font-weight: $light;
+      font-size: 12px;
+      color: white;
+      cursor: pointer;
+      @include background(linear-gradient(top, #4f4f4f 0px, #4f4f4f 1px, #3b3b3b 1px));
+      @include box-shadow(0px 0px 4px rgba(black, .75));
     }
   }
 }

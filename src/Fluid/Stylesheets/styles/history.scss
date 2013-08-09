@@ -5,10 +5,24 @@
 ==================================================
   # History￼ */
 
+#content>div.history {
+  @include display-flex;
+  @include flex-flow(column nowrap);
+  @include flex-grow(1);
+
+  ul.tabs {
+    margin-bottom: 0;
+    @include flex-shrink(0);
+  }
+}
+
 /* # History
 ================================================== */
-div.history {
-  margin-top: $main-margin-top;
+#main div.history>div.history {
+  overflow-y: auto;
+  padding: $main-margin-top 0;
+  @include flex-grow(1);
+
   div.user {
     color: white;
     line-height: 18px;
@@ -26,7 +40,7 @@ div.history {
 
   ul {
     li {
-      margin: $list-link-items-margin $main-margin-left $list-link-items-margin $main-margin-left - 8;
+      margin: $list-link-items-margin $main-margin-left $list-link-items-margin $main-margin-left;
       a {
         position: relative;
         display: inline-block;

@@ -65,7 +65,7 @@ body {
   font-size: 12px;
   font-weight: $light;
   line-height: 14px;
-  border-radius: 4px;
+  border-radius: $item-border;
   padding: 2px 8px;
 
   &:hover {
@@ -192,6 +192,7 @@ input::-moz-focus-inner {
   }
 }
 
+
 /* #Forms
 ================================================== */
 
@@ -233,8 +234,8 @@ div.input-margin {
 
 select {
   -webkit-appearance: none;
-  margin: 0 0 36px 0;
-  border-radius: 3px;
+  margin: 0;
+  border-radius: $item-border;
   height: 34px;
   font-family: "Roboto", sans-serif;
   font-size: 14px;
@@ -248,6 +249,30 @@ select {
   @include background(url("../images/sprite.png"), linear-gradient(top, #ffffff 0%, #f7f7f7 100%));
   background-position: right -86px, 0 0;
   background-repeat: no-repeat, repeat;
+  outline: none;
+  &:focus {
+    border: 1px solid $blue;
+  }}
+
+select.small-dark {
+  border-radius: $item-border;
+  height: 21px;
+  font-size: 11px;
+  font-weight: $normal;
+  line-height: 21px;
+  color: white;
+  padding: 0 39px 0 14px;
+  border: 1px solid #1d1d1d;
+  @include background(url("../images/sprite.png"), linear-gradient(top, #242424, #242424 1px, #292929 1px, #2c2c2c 100%));
+  background-position: right -124px, 0 0;
+  background-repeat: no-repeat, repeat;
+  outline: none;
+  &:focus {
+    border: 1px solid $blue;
+  }
+  &:disabled {
+    opacity: .5;
+  }
 }
 
 label {

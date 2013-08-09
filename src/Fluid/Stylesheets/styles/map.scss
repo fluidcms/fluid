@@ -5,9 +5,11 @@
 
 /* #Structure container
 ================================================== */
-#content div.map {
-  height: 100%;
-  overflow: auto;
+#content>div.map {
+  @include flex-grow(1);
+  overflow-y: auto;
+  margin-bottom: $main-margin-bottom;
+
   div.header {
     a.icon-button {
       margin-top: $main-margin-top;
@@ -20,7 +22,7 @@
         left: 10px;
       }
     }
-    margin-bottom: 20px;
+    margin-bottom: $main-margin-bottom;
   }
 }
 
@@ -29,7 +31,7 @@
 a.global {
   position: relative;
   display: inline-block;
-  margin-left: $main-margin-left - 8;
+  margin-left: $main-margin-left;
   @extend .list-link;
   padding-left: $list-link-sprite-left;
 
@@ -46,7 +48,7 @@ a.global {
 }
 
 ul.map {
-  margin-left: $main-margin-left - 8;
+  margin-left: $main-margin-left;
   padding: 10px 0 40px 0;
   -webkit-user-select: none;
 
