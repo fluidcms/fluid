@@ -12,6 +12,7 @@ Fluid\Fluid::setConfig('languages', array('en-US', 'de-DE'));
 Fluid\Fluid::setConfig('storage', __DIR__ . '/Fluid/Tests/Fixtures/storage/');
 Fluid\Fluid::setConfig('templates', __DIR__ . '/Fluid/Tests/Fixtures/templates');
 Fluid\Fluid::setConfig('layouts', 'layouts');
+Fluid\Fluid::setConfig('components', 'components');
 
 require_once __DIR__ . '/../../../twig/twig/lib/Twig/Autoloader.php';
 Twig_autoloader::register();

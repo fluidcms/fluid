@@ -1,0 +1,12 @@
+<fluid-component xmlns="https://fluidcms.net/schemas/template" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="https://fluidcms.net/schemas/template https://fluidcms.net/schemas/template.xsd">
+
+    <config>
+        <setting name="name" value="Accordion" />
+        <setting name="icon" value="icon.png" />
+        <setting name="file" value="accordion.twig" />
+    </config>
+
+    <variable name="Name" type="string" />
+    <variable name="Content" type="content" />
+</fluid-component>

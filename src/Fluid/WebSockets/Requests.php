@@ -11,6 +11,7 @@ use Exception,
     Fluid\Map\Map,
     Fluid\Page\Page,
     Fluid\Token\Token,
+    Fluid\Component\Component,
     Fluid\History\History;
 
 class Requests
@@ -44,6 +45,7 @@ class Requests
         $this->page() ||
         $this->language() ||
         $this->layout() ||
+        $this->component() ||
         $this->token() ||
         $this->version() ||
         $this->file() ||
@@ -103,6 +105,35 @@ class Requests
                         $layout = Layout::get($layout);
                         echo json_encode($layout->getVariables());
                         return true;
+                    }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Route layouts requests.
+     *
+     * @return  bool
+     */
+    private function component()
+    {
+        if (!empty($this->request) && preg_match('{^(component)(/.*)?$}', $this->request, $match)) {
+            switch ($this->method) {
+                case 'GET':
+                    // Get all
+                    if (empty($match[2])) {
+                        $components = Component::getComponents();
+                        echo json_encode($components);
+                        return true;
+                    }
+                    // Get specific component
+                    else {
+                        /*$layout = trim($match[2], '/ ');
+                        $layout = Layout::get($layout);
+                        echo json_encode($layout->getVariables());
+                        return true;*/
+                        die('howdy');
                     }
             }
         }

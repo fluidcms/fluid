@@ -176,6 +176,7 @@ class Fluid
             case 'storage':
             case 'templates':
             case 'layouts':
+            case 'components':
                 if (isset(self::$config[$name])) {
                     return (substr(self::$config[$name], -1) === '/' ? self::$config[$name] : self::$config[$name] . '/');
                 }
@@ -209,6 +210,7 @@ class Fluid
             case 'templates':
             case 'database':
             case 'layouts':
+            case 'components':
             case 'git':
             case 'ports':
                 self::$config[$name] = $value;
