@@ -1,5 +1,32 @@
-define(['backbone', 'views/loader', 'models/socket', 'models/map', 'models/language', 'models/layout', 'models/preview', 'models/history', 'views/nav', 'views/toolbar', 'views/tools/tools'],
-    function (Backbone, LoaderView, Socket, Map, Language, Layout, Preview, History, Nav, Toolbar, ToolsView) {
+define(
+    [
+        'backbone',
+        'views/loader',
+        'models/socket',
+        'models/map',
+        'models/language',
+        'models/layout',
+        'models/preview',
+        'models/history',
+        'models/component/component',
+        'views/nav',
+        'views/toolbar',
+        'views/tools/tools'
+    ],
+    function (
+        Backbone,
+        LoaderView,
+        Socket,
+        Map,
+        Language,
+        Layout,
+        Preview,
+        History,
+        Component,
+        Nav,
+        Toolbar,
+        ToolsView
+        ) {
         var run = function () {
             var FluidRouter = Backbone.Router.extend({
                 root: "/fluidcms/",
@@ -35,6 +62,8 @@ define(['backbone', 'views/loader', 'models/socket', 'models/map', 'models/langu
                     this.socket.models['map'] = this.models.map;
 
                     this.models.history = new History(null, {socket: this.socket});
+
+                    this.models.component = new Component(null, {socket: this.socket});
 
                     this.views.toolbar = this.toolbar = new Toolbar({
                         languages: this.languages,
@@ -119,15 +148,24 @@ define(['backbone', 'views/loader', 'models/socket', 'models/map', 'models/langu
 
                 components: function () {
                     var root = this;
+                    if (this.current !== 'components' && typeof this.views.component === 'undefined') {
+                        require(['views/component/component'], function (ComponentView) {
+                            root.views.component = root.main = new ComponentView({collection: root.models.component});
+                            root.models.component.fetch();
+                        });
+                    } else if (this.current !== 'components') {
+                        this.views.component.show();
+                        this.main = this.views.component;
+                    }
                 },
 
                 files: function () {
                     /*var root = this;
-                    if (typeof root.fileView === 'undefined') {
-                        require(['models/file', 'views/file'], function (File, FileView) {
-                            root.fileView = new FileView({collection: new File.Collection()});
-                        });
-                    }*/
+                     if (typeof root.fileView === 'undefined') {
+                     require(['models/file', 'views/file'], function (File, FileView) {
+                     root.fileView = new FileView({collection: new File.Collection()});
+                     });
+                     }*/
                 },
 
                 tools: function() {

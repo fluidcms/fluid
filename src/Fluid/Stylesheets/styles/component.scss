@@ -1,0 +1,46 @@
+@import "lib";
+@import "mixins";
+
+/* Table of Content
+==================================================
+  # Layout
+  # Components￼ */
+
+/* # Layout
+================================================== */
+#content>div.component {
+  @include flex-grow(1);
+}
+
+/* # Components
+================================================== */
+#content>div.component {
+  overflow-y: auto;
+  padding: $main-margin-top 0;
+
+  ul.components {
+    margin: 0;
+    padding: 0 0 0 $main-margin-left;
+    li {
+      float: left;
+      margin: 0;
+      padding: 0 $big-margin-right $main-margin-bottom 0;
+      a {
+        cursor: move;
+        display: block;
+        width: 54px;
+        text-align: center;
+        font-size: 12px;
+        line-height: 20px;
+        color: white;
+        img {
+          display: block;
+          margin-bottom: 8px;
+        }
+        &:hover {
+          color: $blue;
+        }
+      }
+    }
+  }
+}

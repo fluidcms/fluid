@@ -1,4 +1,4 @@
-define(['backbone', 'ejs', 'editor/editor'], function (Backbone, EJS, Editor) {
+define(['backbone', 'ejs', 'jquery-ui', 'editor/editor'], function (Backbone, EJS, jUI, Editor) {
     return Backbone.View.extend({
         events: {
             "click [data-action=cancel]": "close",
@@ -58,6 +58,8 @@ define(['backbone', 'ejs', 'editor/editor'], function (Backbone, EJS, Editor) {
 
             Editor(this.$el.find('div[contenteditable]'), this.type);
 
+            this.droppable();
+
             this.$el.find("div[contenteditable]").focus();
 
             return this;
@@ -74,6 +76,18 @@ define(['backbone', 'ejs', 'editor/editor'], function (Backbone, EJS, Editor) {
             $(document).off('keydown', this.keyEvents.save);
             $(document).off('keyup', this.keyEvents.escape);
             this.remove();
+        },
+
+        droppable: function() {
+            this.$el.find('div[contenteditable]').sortable({
+                cancel: "p,h1,h2,h3,h4,h5,h6,ul,li,a:not(.component)",
+                activeClass: "",
+                receive: function( event, ui ) {
+                    var item = $(this).find('>a.component');
+                    item.attr('contenteditable', 'false');
+                    item.wrap('<div id="'+randomString(8)+'"></div>');
+                }
+            });
         }
     });
 });

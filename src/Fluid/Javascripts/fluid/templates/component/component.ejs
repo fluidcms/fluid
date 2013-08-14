@@ -1,0 +1,10 @@
+<ul class="components">
+    <% components.each(function(item, key) { %>
+    <li>
+        <a class="component">
+            <img src="data:image/jpg;base64,<%= item.get('icon') %>" width="54" height="32" alt="">
+            <%= item.get('name') %>
+        </a>
+    </li>
+    <% }); %>
+</ul>
