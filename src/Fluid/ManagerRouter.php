@@ -50,11 +50,32 @@ class ManagerRouter
         }
 
         return (
+            self::tmpImages() ||
             self::publicFiles() ||
             self::javascriptFiles() ||
             self::changeLanguage() ||
             self::htmlPages()
         );
+    }
+
+    /**
+     * Create tmp images with provided dimensions, required for fluid (not the cms) layout
+     *
+     * @return  bool
+     */
+    private static function tmpImages()
+    {
+        if (!empty(self::$request) && strpos(self::$request, 'images/imgtmp-') === 0) {
+            if (preg_match('!images/imgtmp-(\d*)px-(\d*)px\.gif!', self::$request, $matches)) {
+                $im = imagecreatetruecolor($matches[1], $matches[2]);
+                imagefilledrectangle($im, 0, 0, $matches[1], $matches[2], 0xe5e5e5);
+                header('Content-Type: image/gif');
+                imagegif($im);
+                imagedestroy($im);
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
