@@ -36,13 +36,19 @@ class File
     {
         self::checkDir();
         $output = array();
-        $dir = scandir(Fluid::getBranchStorage() . 'files/');
-        foreach ($dir as $file) {
-            $id = substr($file, 0, 8);
-            if (strlen($id) === 8 && ctype_alnum($id)) {
-                if ($file = FileInfo::getImageInfo(Fluid::getBranchStorage() . 'files/' . $file)) {
-                    $file["name"] = substr($file["name"], 9);
-                    $output[] = array_merge(array("id" => $id, 'src' => "/fluidcms/".Fluid::getBranch()."/files/preview/{$id}/{$file['name']}"), $file);
+        foreach (scandir(Fluid::getBranchStorage() . 'files') as $id) {
+            if ($id !== '.' && $id !== '..' && strlen($id) === 8 && ctype_alnum($id)) {
+                $dir = Fluid::getBranchStorage() . "files/{$id}";
+                foreach(scandir($dir) as $file) {
+                    if ($file !== '.' && $file !== '..' && is_file("{$dir}/{$file}")) {
+                        if ($file = FileInfo::getImageInfo("{$dir}/{$file}")) {
+                            $output[] = array_merge(
+                                array("id" => $id, 'src' => "/fluidcms/files/{$id}/{$file['name']}"),
+                                $file
+                            );
+                            break;
+                        }
+                    }
                 }
             }
         }

@@ -10,6 +10,7 @@ use Exception,
     Fluid\Layout\Layout,
     Fluid\Map\Map,
     Fluid\Page\Page,
+    Fluid\File\File,
     Fluid\Token\Token,
     Fluid\Component\Component,
     Fluid\History\History;
@@ -141,49 +142,23 @@ class Requests
     }
 
     /**
-     * Route file requests.
+     * Route file requests
      *
      * @return  bool
      */
     private function file()
     {
-        // Files and files preview
-        if (preg_match('{^([a-z0-9]*)/files/(.*)}', $this->request, $match)) {
-            $file = $match[2];
-            $branch = $match[1];
-            Fluid::setBranch($branch, true);
-            if (strpos($file, 'preview/') === 0) {
-                $preview = true;
-                $file = preg_replace('{^preview/}', '', $file);
-            }
-            $file = urldecode($file);
-            $file = Fluid::getBranchStorage() . "files/" . substr($file, 0, 8) . '_' . substr($file, 9);
-            if (file_exists($file)) {
-                if (!isset($preview)) {
-                    new StaticFile($file);
-                    return true;
-                } else {
-                    $content = File\File::makePreview($file);
-                    new StaticFile($content, 'png', true);
-                    return true;
-                }
-            }
-        }
-
-        // File model
-        if (preg_match('{^([a-z0-9]*)/file}', $this->request, $match)) {
-            $branch = $match[1];
-            Fluid::setBranch($branch);
-            switch (self::$method) {
+        if (!empty($this->request) && preg_match('{^(files)(/.*)?$}', $this->request, $match)) {
+            switch ($this->method) {
                 case 'GET':
-                    echo json_encode(File\File::getFiles());
+                    echo json_encode(File::getFiles());
                     return true;
                 case 'POST':
-                    echo json_encode(File\File::save());
+//                    echo json_encode(File\File::save());
                     return true;
                 case 'DELETE':
                     // File
-                    echo json_encode(File\File::delete(basename($this->request)));
+//                    echo json_encode(File\File::delete(basename($this->request)));
                     return true;
             }
         }

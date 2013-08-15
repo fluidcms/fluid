@@ -1,10 +1,10 @@
 <?php
 
-namespace Fluid\Tests\Components;
+namespace Fluid\Tests\Files;
 
 use Fluid, PHPUnit_Framework_TestCase, Fluid\Tests\Helper;
 
-class GetComponentTest extends PHPUnit_Framework_TestCase
+class GetFilesTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -16,7 +16,7 @@ class GetComponentTest extends PHPUnit_Framework_TestCase
         // Test get components
         $request = array(
             "method" => "GET",
-            "url" => "component",
+            "url" => "files",
             "data" => array()
         );
 
@@ -27,9 +27,9 @@ class GetComponentTest extends PHPUnit_Framework_TestCase
 
         $retval = json_decode($retval, true);
 
-        $this->assertEquals('Accordion', $retval[0]['name']);
-        $this->assertEquals('table', $retval[1]['component']);
-        $this->assertGreaterThan(5, strlen($retval[0]['icon']));
+        $this->assertEquals('7tIrGTOd', $retval[0]['id']);
+        $this->assertEquals(2000, $retval[2]['width']);
+        $this->assertEquals('image/jpeg', $retval[3]['type']);
     }
 
     public function tearDown()
