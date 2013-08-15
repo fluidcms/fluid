@@ -22,7 +22,7 @@ define(
         Layout,
         Preview,
         History,
-        Component,
+        Components,
         Nav,
         Toolbar,
         ToolsView
@@ -37,6 +37,7 @@ define(
                 initialize: function () {
                     var root = this;
 
+                    this.collections = {};
                     this.models = {};
                     this.views = {};
                     this.loader = new LoaderView();
@@ -53,17 +54,18 @@ define(
 
                     this.models.layouts = this.layouts = new Layout.Layouts(null, {socket: this.socket});
 
+                    this.collections.components = new Components(null, {socket: this.socket});
+
                     this.models.map = new Map.Pages(null, {
+                        app: this,
                         socket: this.socket,
                         languages: this.models.languages,
                         preview: this.models.preview,
-                        app: this
+                        components: this.collections.components
                     });
                     this.socket.models['map'] = this.models.map;
 
                     this.models.history = new History(null, {socket: this.socket});
-
-                    this.models.component = new Component(null, {socket: this.socket});
 
                     this.views.toolbar = this.toolbar = new Toolbar({
                         languages: this.languages,
@@ -148,14 +150,14 @@ define(
 
                 components: function () {
                     var root = this;
-                    if (this.current !== 'components' && typeof this.views.component === 'undefined') {
-                        require(['views/component/component'], function (ComponentView) {
-                            root.views.component = root.main = new ComponentView({collection: root.models.component});
-                            root.models.component.fetch();
+                    if (this.current !== 'components' && typeof this.views.components === 'undefined') {
+                        require(['views/components/components'], function (ComponentsView) {
+                            root.views.components = root.main = new ComponentsView({collection: root.collections.components});
+                            root.collections.components.fetch();
                         });
                     } else if (this.current !== 'components') {
-                        this.views.component.show();
-                        this.main = this.views.component;
+                        this.views.components.show();
+                        this.main = this.views.components;
                     }
                 },
 

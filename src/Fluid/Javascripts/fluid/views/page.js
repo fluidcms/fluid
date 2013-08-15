@@ -1,4 +1,4 @@
-define(['backbone', 'ejs', 'jquery-ui', 'views/contextmenu', 'views/editor/content'], function (Backbone, EJS, jUI, ContextMenu, ContentEditor) {
+define(['backbone', 'ejs', 'jquery-ui', 'views/contextmenu', 'views/editor/editor'], function (Backbone, EJS, jUI, ContextMenu, Editor) {
     return Backbone.View.extend({
         events: {
             "click a[data-item]": "edit",
@@ -19,6 +19,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/contextmenu', 'views/editor/conte
             var root = this;
             this.app = attrs.app;
             this.languages = attrs.languages;
+            this.components = attrs.components;
             this.model.on('change', this.render, this);
             this.app.on('change', function() { root.previousAppNav = null; });
         },
@@ -61,12 +62,14 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/contextmenu', 'views/editor/conte
             var data = target.find('div.data');
 
             if (data.hasClass("string")) {
-                this.contentEditor = new ContentEditor({type: 'string', group: group, item: item, model: this.model});
+                this.contentEditor = new Editor({type: 'string', group: group, item: item, model: this.model, components: this.components});
             } else if (data.hasClass("content")) {
                 var previousAppNav = this.app.current;
-                this.app.make('tools');
-                this.previousAppNav = previousAppNav;
-                this.contentEditor = new ContentEditor({type: 'content', group: group, item: item, model: this.model});
+                if (previousAppNav !== 'components' && previousAppNav !== 'files') {
+                    this.app.make('tools');
+                    this.previousAppNav = previousAppNav;
+                }
+                this.contentEditor = new Editor({type: 'content', group: group, item: item, model: this.model, components: this.components});
                 this.contentEditor.on('close', this.toggleAppNav, this);
             } else {
                 this.contentEditor = null;

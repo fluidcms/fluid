@@ -146,6 +146,7 @@ define(
             }
         });
 
+        // TODO: rename to page config
         var PageView = Backbone.View.extend($.extend({}, Modal, {
             template: new EJS({url: 'javascripts/fluid/templates/map/page.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 

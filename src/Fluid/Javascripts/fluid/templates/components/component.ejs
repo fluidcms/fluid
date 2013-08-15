@@ -1,0 +1,28 @@
+<div>
+    <div class="main">
+        <div>
+            <% $.each(definition, function(key, item) { console.log(key, item); %>
+                <a data-item="<%= key %>">
+                    <div class="label"><%= key %></div>
+
+                    <% if (item.type == 'string') { %>
+                    <div class="data string"><% if (typeof data[key] !== 'undefined' && typeof data[key][name] !== 'undefined') { %><%= data[key][name] %><% } %></div>
+                    <% } else if (item.type == 'content') { %>
+                    <div class="data content"><% if (typeof render[key] !== 'undefined' && typeof render[key][name] !== 'undefined') { %><%= render[key][name] %><% } %></div>
+                    <% } else if (item.type == 'image') { %>
+                    <div class="data image">
+                        <img src="images/img-tmp.gif" width="650" height="200" alt="">
+                    </div>
+                    <% } else { %>
+                    <div class="data image"></div>
+                    <% } %>
+                </a>
+            <% }); %>
+        </div>
+    </div>
+    <div class="commands">
+        <div>
+            <a data-action="close" class="button">OK</a>
+        </div>
+    </div>
+</div>

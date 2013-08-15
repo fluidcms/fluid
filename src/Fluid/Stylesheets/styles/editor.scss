@@ -6,7 +6,7 @@
 /* #Page Editor
 ================================================== */
 div.editor {
-  z-index: 20;
+  z-index: 10;
   position: absolute;
   top: 0;
   left: 0;
@@ -108,26 +108,12 @@ div.editor {
           color: $blue;
         }
       }
+      div[data-component] {
+        -webkit-user-select: none;
+      }
     }
 
     div.string-editor {
-    }
-
-    div.commands {
-      position: fixed;
-      bottom: 0;
-      right: 0;
-      width: 100%;
-      z-index: 0;
-      div {
-        background: rgba(black, .05);
-        @include box-shadow(inset 0px 2px 5px rgba(black, .07));
-        z-index: 100;
-        margin-left: $main-width;
-        padding: $main-margin-top $main-margin-left;
-        @include display-box;
-        @include box-pack(center);
-      }
     }
   }
 }

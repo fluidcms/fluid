@@ -1,11 +1,12 @@
 @import "styles/base";
 @import "styles/fluid";
+@import "styles/main";
 @import "styles/context-menu";
 @import "styles/toolbar";
 @import "styles/modal-window";
 @import "styles/map";
-@import "styles/page-editor";
-@import "styles/content-editor";
+@import "styles/variables";
+@import "styles/editor";
 @import "styles/file";
 @import "styles/version";
 @import "styles/tooltip";

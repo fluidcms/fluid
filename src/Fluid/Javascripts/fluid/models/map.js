@@ -1,4 +1,4 @@
-define(['backbone', 'models/page', 'views/pageeditor'], function (Backbone, Page, PageEditorView) {
+define(['backbone', 'models/page', 'views/page'], function (Backbone, Page, PageView) {
     var Item = Backbone.Model.extend({
         base: null,
         parent: null,
@@ -91,6 +91,7 @@ define(['backbone', 'models/page', 'views/pageeditor'], function (Backbone, Page
             this.base = attrs.base;
             this.languages = attrs.languages;
             this.preview = attrs.preview;
+            this.components = attrs.components;
 
             if (this.parent == null && (typeof attrs == 'undefined' || typeof attrs.parent == 'undefined')) {
             } else {
@@ -188,7 +189,7 @@ define(['backbone', 'models/page', 'views/pageeditor'], function (Backbone, Page
             }
 
             this.editor.page = new Page({id: item, language: this.languages.current.get('language')}, {socket: this.socket, languages: this.languages});
-            this.editor.view = new PageEditorView({model: this.editor.page, app: this.app});
+            this.editor.view = new PageView({model: this.editor.page, app: this.app, components: this.components});
 
             this.editor.page.on('change', function() {
                 if (typeof oldPage !== 'undefined') {

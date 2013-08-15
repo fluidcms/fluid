@@ -3,9 +3,9 @@ define(['backbone', 'ejs', 'jquery-ui'], function (Backbone, EJS, jUI) {
         events: {
         },
 
-        className: 'component',
+        className: 'components',
 
-        template: new EJS({url: 'javascripts/fluid/templates/component/component.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+        template: new EJS({url: 'javascripts/fluid/templates/components/components.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
             this.collection.on('reset', this.render, this);
@@ -31,7 +31,8 @@ define(['backbone', 'ejs', 'jquery-ui'], function (Backbone, EJS, jUI) {
                 connectToSortable: "div[contenteditable]",
                 helper: "clone",
                 containment: "document",
-                revert: "invalid"
+                revert: "invalid",
+                iframeFix: true
             });
         }
     });
