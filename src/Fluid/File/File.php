@@ -2,7 +2,8 @@
 
 namespace Fluid\File;
 
-use Fluid\Fluid,
+use Exception,
+    Fluid\Fluid,
     Fluid\File\FileInfo,
     Fluid\File\FilePreview;
 
@@ -13,6 +14,19 @@ use Fluid\Fluid,
  */
 class File
 {
+    private $id;
+    private $filePath;
+
+    /**
+     * Init
+     *
+     * @param   string  $id
+     */
+    public function __construct($id = null)
+    {
+        $this->id = $id;
+    }
+
     /**
      * Check if dir exists or create it
      *
@@ -28,6 +42,42 @@ class File
     }
 
     /**
+     * Get a file by id
+     *
+     * @param   string  $id
+     * @return  self
+     */
+    public static function get($id)
+    {
+        return new self($id);
+    }
+
+    /**
+     * Get a file path
+     *
+     * @throws  Exception
+     * @return  string
+     */
+    public function getPath()
+    {
+        if (isset($this->filePath)) {
+            return $this->filePath;
+        }
+
+        self::checkDir();
+        $dir = Fluid::getBranchStorage() . "files/{$this->id}";
+        foreach(scandir($dir) as $file) {
+            if ($file !== '.' && $file !== '..' && is_file("{$dir}/{$file}")) {
+                $this->filePath = "{$dir}/{$file}";
+                return $this->filePath;
+                break;
+            }
+        }
+
+        throw new Exception('File does not exists');
+    }
+
+    /**
      * Get all files
      *
      * @return  array
@@ -36,6 +86,7 @@ class File
     {
         self::checkDir();
         $output = array();
+        $sort = array();
         foreach (scandir(Fluid::getBranchStorage() . 'files') as $id) {
             if ($id !== '.' && $id !== '..' && strlen($id) === 8 && ctype_alnum($id)) {
                 $dir = Fluid::getBranchStorage() . "files/{$id}";
@@ -46,13 +97,22 @@ class File
                                 array("id" => $id, 'src' => "/fluidcms/files/{$id}/{$file['name']}"),
                                 $file
                             );
+                            $sort[] = $file['creation'];
                             break;
                         }
                     }
                 }
             }
         }
-        return $output;
+
+        // Sort by creation date
+        $retval = array();
+        arsort($sort);
+        foreach($sort as $key => $value) {
+            $retval[] = $output[$key];
+        }
+
+        return $retval;
     }
 
     /**
@@ -93,13 +153,14 @@ class File
     /**
      * Make an image preview
      *
-     * @param   string  $file
-     * @return  string
+     * @return  array
      */
-    public static function makePreview($file)
+    public function getPreview()
     {
         self::checkDir();
-        return FilePreview::make($file);
+        return array(
+            'image' => base64_encode(FilePreview::make($this))
+        );
     }
 
     /**

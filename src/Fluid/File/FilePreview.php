@@ -16,11 +16,23 @@ class FilePreview
     /**
      * Make the preview
      *
+     * @param   File  $file
+     * @throws  DomainException
+     * @return  string
+     */
+    public static function make(File $file)
+    {
+        return self::makePreview($file->getPath());
+    }
+
+    /**
+     * Make the preview
+     *
      * @param   string  $file
      * @throws  DomainException
      * @return  string
      */
-    public static function make($file)
+    private static function makePreview($file)
     {
         $max = self::$maxSize;
         $size = getimagesize($file);
@@ -60,10 +72,10 @@ class FilePreview
         imagecopyresampled($newImg, $img, 0, 0, 0, 0, $width, $height, $size[0], $size[1]);
         imagedestroy($img);
 
-        ob_start();
-        imagepng($newImg, null, 9);
-        $out = ob_get_clean();
-        ob_end_clean();
+        $tmp = Fluid::getConfig('storage') . uniqid();
+        imagepng($newImg, $tmp, 9);
+        $out = file_get_contents($tmp);
+        unlink($tmp);
 
         imagedestroy($newImg);
 

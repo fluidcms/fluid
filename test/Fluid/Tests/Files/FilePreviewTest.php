@@ -4,7 +4,7 @@ namespace Fluid\Tests\Files;
 
 use Fluid, PHPUnit_Framework_TestCase, Fluid\Tests\Helper;
 
-class GetFilesTest extends PHPUnit_Framework_TestCase
+class FilePreviewTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -16,7 +16,7 @@ class GetFilesTest extends PHPUnit_Framework_TestCase
         // Test get components
         $request = array(
             "method" => "GET",
-            "url" => "files",
+            "url" => "file/preview/l6K6DMQg",
             "data" => array()
         );
 
@@ -27,9 +27,7 @@ class GetFilesTest extends PHPUnit_Framework_TestCase
 
         $retval = json_decode($retval, true);
 
-        $this->assertEquals('l6K6DMQg', $retval[0]['id']);
-        $this->assertEquals(1680, $retval[2]['width']);
-        $this->assertEquals('image/jpeg', $retval[3]['type']);
+        $this->assertGreaterThan(5, strlen($retval['image']));
     }
 
     public function tearDown()

@@ -1,12 +1,22 @@
-@import "lib";
-@import "../mixins";
+@import "../lib";
+@import "../../mixins";
 @import "compass/css3/box";
 
-/* #File container
+/* Table of Content
+==================================================
+  # Layout
+  # Files￼ */
+
+/* # Layout
 ================================================== */
-#content .files {
-  height: 100%;
-  overflow: auto;
+#content>div.files {
+  @include flex-grow(1);
+}
+
+/* # Files
+================================================== */
+#content>div.files {
+  overflow-y: auto;
 
   input[type="file"] {
     position: absolute;

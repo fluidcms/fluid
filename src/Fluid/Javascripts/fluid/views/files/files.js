@@ -8,21 +8,45 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/contextmenu', 'views/modal'], fun
 
         className: 'files',
 
-        template: new EJS({url: 'javascripts/fluid/templates/file/file.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+        template: new EJS({url: 'javascripts/fluid/templates/files/files.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+        fileTemplate: new EJS({url: 'javascripts/fluid/templates/files/file.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
-            this.render();
             this.collection = attrs.collection;
-            this.collection.on("reset add remove", this.render, this);
-            this.collection.on("progress", this.progress, this);
-            this.collection.on("display", this.display, this);
-            this.collection.on("complete", this.complete, this);
+            this.collection.on("reset", this.render, this);
+//            this.collection.on("progress", this.progress, this);
+//            this.collection.on("display", this.display, this);
+//            this.collection.on("complete", this.complete, this);
         },
 
         render: function () {
-            this.$el.html(this.template.render({collection: this.collection}));
+            var root = this;
+            this.$el.html(this.template.render({files: this.collection}));
             $("#main #content").append(this.$el);
+            this.collection.each(function(item, key) {
+                root.addFile(item, key);
+            });
             return this;
+        },
+
+        addFile: function(item, key) {
+            var root = this;
+            if (typeof item.get('preview') !== 'undefined' && typeof item.get('preview').image !== 'undefined' && item.get('preview').image !== null) {
+                this.$el.find('li[data-id="'+item.id+'"]').html(this.fileTemplate.render({preview: item.get('preview')}));
+            } else {
+                item.on('preview', function() {
+                    root.$el.find('li[data-id="'+this.id+'"]').html(root.fileTemplate.render({preview: this.get('preview')}));
+                });
+                item.getPreview();
+            }
+        },
+
+        hide: function() {
+            this.$el.hide();
+        },
+
+        show: function() {
+            this.$el.show();
         },
 
         uploader: function (e) {
@@ -38,7 +62,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/contextmenu', 'views/modal'], fun
         contextmenu: function (e) {
             e.preventDefault();
             if ($(e.currentTarget).attr('data-block') !== 'true') {
-                var contextMenu = new ContextMenu({url: 'javascripts/fluid/templates/file/contextmenu.ejs', parent: this, event: e}).render();
+                var contextMenu = new ContextMenu({url: 'javascripts/fluid/templates/files/filecm.ejs', parent: this, event: e}).render();
             }
         },
 
@@ -82,12 +106,13 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/contextmenu', 'views/modal'], fun
             element.find('img').removeClass('dark');
         }
     });
+
     var Copy = Backbone.View.extend($.extend({}, Modal, {
         events: _.extend({
             "copy :input": "copied"
         }, Modal.events),
 
-        template: new EJS({url: 'javascripts/fluid/templates/file/copy-modal.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+        template: new EJS({url: 'javascripts/fluid/templates/files/copymodal.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
             this.content = attrs.content;

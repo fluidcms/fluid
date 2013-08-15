@@ -1,22 +1,37 @@
 define(['backbone'], function (Backbone) {
     var File = Backbone.Model.extend({
-        urlRoot: fluidBranch + "/file",
+        urlRoot: "file",
 
         initialize: function (attrs, options) {
             var root = this;
 
-            if (typeof options.file !== "undefined") {
-                setTimeout(function () {
-                    root.setPreview(options.file);
-                    root.upload(options.file);
-                }, 100);
-            } else {
+            this.socket = attrs.socket;
+            this.set('preview', {});
+
+            if (typeof attrs.width !== 'undefined' && attrs.width !== null) {
                 this.setPreviewSize(attrs.width, attrs.height);
             }
+
+//            if (typeof options.file !== "undefined") {
+//                setTimeout(function () {
+//                    root.setPreview(options.file);
+//                    root.upload(options.file);
+//                }, 100);
+//            }
+        },
+
+        getPreview: function() {
+            var root = this;
+            this.socket.send('GET', this.urlRoot + "/preview/" + this.id, {}, function(response) {
+                var preview = root.get('preview');
+                preview.image = response.image;
+                root.set('preview', preview);
+                root.trigger('preview');
+            });
         },
 
         setPreview: function (file) {
-            var root = this;
+            /*var root = this;
             if (file.size > 2097152) {
                 return;
             }
@@ -38,7 +53,7 @@ define(['backbone'], function (Backbone) {
                     };
                 };
             }(root, reader));
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(file);*/
         },
 
         setPreviewSize: function (width, height) {
@@ -54,7 +69,11 @@ define(['backbone'], function (Backbone) {
                     height = max;
                 }
             }
-            this.set({'previewWidth': width, 'previewHeight': height});
+            var preview = this.get('preview');
+            preview.width = width;
+            preview.height = height;
+
+            this.set('preview', preview);
         },
 
         upload: function (file) {
@@ -109,15 +128,28 @@ define(['backbone'], function (Backbone) {
         }
     });
 
-    var Collection = Backbone.Collection.extend({
+    return Backbone.Collection.extend({
         model: File,
 
-        url: fluidBranch + '/file',
+        url: 'files',
 
-        initialize: function () {
-            this.fetch({success: function (collection, response) {
-                collection.reset(response);
-            }, silent: true});
+        initialize: function (items, attrs) {
+            this.socket = attrs.socket;
+        },
+
+        fetch: function () {
+            var root = this;
+            this.socket.send('GET', this.url, {}, function(response) {
+                root.parse(response);
+            });
+        },
+
+        parse: function(response) {
+            var root = this;
+            $.each(response, function() {
+                this.socket = root.socket;
+            });
+            this.reset(response);
         },
 
         comparator: function (file) {
@@ -136,9 +168,4 @@ define(['backbone'], function (Backbone) {
             this.add(model);
         }
     });
-
-    return {
-        Model: File,
-        Collection: Collection
-    };
 });

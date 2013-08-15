@@ -4,7 +4,7 @@
         <li>
             <a
                     href="<% if(this.className!=='structure') { %><%= this.className %><% } %>"
-                    title="<%= this.name %>"
+                    title="<% if (this.name == 'Files') { %>Images<% } else { %><%= this.name %><% } %>"
                     class="<%= this.className %> <% if (current==this.className) { %>current<% } %>"
                     ></a>
         </li>

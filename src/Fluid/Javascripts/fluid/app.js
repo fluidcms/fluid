@@ -9,6 +9,7 @@ define(
         'models/preview',
         'models/history',
         'models/component/component',
+        'models/file/file',
         'views/nav',
         'views/toolbar',
         'views/tools/tools'
@@ -23,6 +24,7 @@ define(
         Preview,
         History,
         Components,
+        Files,
         Nav,
         Toolbar,
         ToolsView
@@ -37,35 +39,39 @@ define(
                 initialize: function () {
                     var root = this;
 
-                    this.collections = {};
                     this.models = {};
                     this.views = {};
                     this.loader = new LoaderView();
 
+                    // Socket
                     this.socket = new Socket({loader: this.loader});
 
-                    this.nav = new Nav({router: this}).render();
-                    //this.version = new Version();
-
-                    this.models.languages = this.languages = new Language.Languages(null, {socket: this.socket});
+                    // Models
+                    this.models.languages = this.languages = new Language.Languages(null, {socket: this.socket}); // TODO: remove this.languages var
                     this.socket.models['language'] = this.models.languages;
 
                     this.models.preview = new Preview({socket: this.socket, languages: this.languages});
 
-                    this.models.layouts = this.layouts = new Layout.Layouts(null, {socket: this.socket});
+                    this.models.layouts = this.layouts = new Layout.Layouts(null, {socket: this.socket}); // TODO: remove this.layouts var
 
-                    this.collections.components = new Components(null, {socket: this.socket});
+                    this.models.components = new Components(null, {socket: this.socket});
 
                     this.models.map = new Map.Pages(null, {
                         app: this,
                         socket: this.socket,
                         languages: this.models.languages,
                         preview: this.models.preview,
-                        components: this.collections.components
+                        components: this.models.components
                     });
                     this.socket.models['map'] = this.models.map;
 
                     this.models.history = new History(null, {socket: this.socket});
+
+                    this.models.files = new Files(null, {socket: this.socket});
+
+                    // Views
+                    this.nav = new Nav({router: this}).render();
+                    //this.version = new Version();
 
                     this.views.toolbar = this.toolbar = new Toolbar({
                         languages: this.languages,
@@ -77,11 +83,12 @@ define(
                         map: this.models.map
                     });
 
+                    // Socket event
                     this.socket.on('ready', function() {
                         root.ready = true;
                         root.loader.remove();
-                        root.languages.fetch();
-                        root.layouts.fetch();
+                        root.models.languages.fetch();
+                        root.models.layouts.fetch();
                         root.models.preview.loadPage();
                         root.models.map.fetch();
                     });
@@ -152,8 +159,8 @@ define(
                     var root = this;
                     if (this.current !== 'components' && typeof this.views.components === 'undefined') {
                         require(['views/components/components'], function (ComponentsView) {
-                            root.views.components = root.main = new ComponentsView({collection: root.collections.components});
-                            root.collections.components.fetch();
+                            root.views.components = root.main = new ComponentsView({collection: root.models.components});
+                            root.models.components.fetch();
                         });
                     } else if (this.current !== 'components') {
                         this.views.components.show();
@@ -162,12 +169,16 @@ define(
                 },
 
                 files: function () {
-                    /*var root = this;
-                     if (typeof root.fileView === 'undefined') {
-                     require(['models/file', 'views/file'], function (File, FileView) {
-                     root.fileView = new FileView({collection: new File.Collection()});
-                     });
-                     }*/
+                    var root = this;
+                    if (this.current !== 'files' && typeof this.views.files === 'undefined') {
+                        require(['views/files/files'], function (FilesView) {
+                            root.views.files = root.main = new FilesView({collection: root.models.files});
+                            root.models.files.fetch();
+                        });
+                    } else if (this.current !== 'files') {
+                        this.views.files.show();
+                        this.main = this.views.files;
+                    }
                 },
 
                 tools: function() {

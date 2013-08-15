@@ -1,5 +1,5 @@
-@import "lib";
-@import "../mixins";
+@import "../lib";
+@import "../../mixins";
 @import "compass/css3/text-shadow";
 @import "compass/css3/images";
 
@@ -9,21 +9,6 @@
   @include flex-grow(1);
   overflow-y: auto;
   margin-bottom: $main-margin-bottom;
-
-  div.header {
-    a.icon-button {
-      margin-top: $main-margin-top;
-      @extend .button;
-      @extend .blue;
-      margin-left: $main-margin-left;
-      padding-left: 26px;
-      &:before {
-        top: 6px;
-        left: 10px;
-      }
-    }
-    margin-bottom: $main-margin-bottom;
-  }
 }
 
 /* #Structure list

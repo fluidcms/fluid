@@ -2,8 +2,7 @@
 
 namespace Fluid\WebSockets;
 
-use Exception,
-    Fluid\Fluid,
+use Fluid\Fluid,
     Fluid\Events as FluidEvents,
     Fluid\WebSockets\Events as ServerEvents,
     Fluid\Language\Language,
@@ -148,10 +147,26 @@ class Requests
      */
     private function file()
     {
+        // Collection methods
         if (!empty($this->request) && preg_match('{^(files)(/.*)?$}', $this->request, $match)) {
             switch ($this->method) {
                 case 'GET':
                     echo json_encode(File::getFiles());
+                    return true;
+            }
+        }
+
+        // Model methods
+        if (!empty($this->request) && preg_match('{^(file)(/.*)?$}', $this->request, $match)) {
+            switch ($this->method) {
+                case 'GET':
+                    // Get file preview
+                    if (isset($match[2]) && strpos($match[2], '/preview/') === 0) {
+                        $id = substr($match[2], 9);
+
+                        $file = File::get($id);
+                        echo json_encode($file->getPreview());
+                    }
                     return true;
                 case 'POST':
 //                    echo json_encode(File\File::save());
