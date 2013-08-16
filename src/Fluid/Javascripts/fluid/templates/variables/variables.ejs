@@ -20,12 +20,16 @@
                     }
                 });
             }
-
         %>
+
+        <% if (typeof data[key] !== 'undefined') { %>
+        <%= data[key] %>
+        <% } else { %>
         <img src="images/imgtmp-<%= width === 0 ? 1 : width %>px-<%= height === 0 ? 1 : height %>px.gif"
             width="<%= width === 0 ? 3000 : "" %>"
             height="<%= height === 0 ? 200 : "" %>"
             alt="">
+        <% } %>
     </div>
     <% } else { %>
     <div class="data"></div>

@@ -49,8 +49,6 @@ define(['backbone'], function (Backbone) {
                 data = data['data'];
             }
 
-            console.log(url, data);
-            return;
             this.socket.send('PUT', url, data, function(response) {
                 response = root.parse(response);
                 root.set(response);
@@ -107,6 +105,24 @@ define(['backbone'], function (Backbone) {
         var output = {};
         var image = '<img src="%src" alt="" id="%id">';
 
+        // Render Image
+        this.renderImage = function(content) {
+            var width = parseInt(typeof content.width !== 'undefined' ? content.width : 0);
+            var height = parseInt(typeof content.height !== 'undefined' ? content.height : 0);
+            var src = content.src;
+
+            $.each(content, function(formatkey, format) {
+                if (typeof format.width !== 'undefined' && parseInt(format.width) > width) {
+                    width = parseInt(format.width);
+                    height = parseInt(typeof format.height !== 'undefined' ? format.height : "");
+                    src = format.src;
+                }
+            });
+
+            return '<img src="'+src+'" width="" height="" alt="">';
+        };
+
+        // Render Content
         this.renderContent = function(content) {
             var output = content.source;
 
@@ -131,6 +147,9 @@ define(['backbone'], function (Backbone) {
                         break;
                     case 'content':
                         output[key] = root.renderContent(data[key]);
+                        break;
+                    case 'image':
+                        output[key] = root.renderImage(data[key]);
                         break;
                 }
             }
