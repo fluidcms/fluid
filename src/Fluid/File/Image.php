@@ -139,7 +139,7 @@ class Image
         switch($type) {
             case 'jpg':
             case 'jpeg':
-                imagejpeg($newImg, $newPath, 60);
+                imagejpeg($newImg, $newPath, 80);
                 break;
             case 'png':
                 imagepng($newImg, $newPath, 9);
