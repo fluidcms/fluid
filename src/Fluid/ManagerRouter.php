@@ -51,6 +51,7 @@ class ManagerRouter
 
         return (
             self::tmpImages() ||
+            self::files() ||
             self::publicFiles() ||
             self::javascriptFiles() ||
             self::changeLanguage() ||
@@ -73,6 +74,30 @@ class ManagerRouter
                 imagegif($im);
                 imagedestroy($im);
                 return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Route cms files
+     *
+     * @return  bool
+     */
+    private static function files()
+    {
+        if (!empty(self::$request) && strpos(self::$request, 'images/') === 0) {
+            $found = null;
+            $dir = Fluid::getConfig('storage');
+            $file = preg_replace('!images/!', 'files/', urldecode(self::$request));
+
+            foreach(scandir($dir) as $branch) {
+                if ($branch !== '.' && $branch !== '..') {
+                    if (file_exists("{$dir}{$branch}/{$file}")) {
+                        new StaticFile("{$dir}{$branch}/{$file}");
+                        return true;
+                    }
+                }
             }
         }
         return false;
