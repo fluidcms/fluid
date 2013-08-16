@@ -1,4 +1,4 @@
-@import "../lib";
+@import "../globals/lib";
 @import "../../mixins";
 @import "compass/css3/box";
 
@@ -16,7 +16,6 @@
 /* # Files
 ================================================== */
 #content>div.files {
-  overflow-y: auto;
 
   input[type="file"] {
     position: absolute;
@@ -37,16 +36,20 @@
       position: relative;
       float: left;
       display: block;
-      width: 82px;
-      height: 82px;
-      overflow: hidden;
+      width: 84px;
+      height: 84px;
       padding: 0;
       margin: 0 6px 6px 0;
       @include display-box;
       @include box-align(center);
 
       img {
+        cursor: move;
         display: block;
+        border: 1px solid transparent;
+        &:hover {
+          border-color: $blue;
+        }
       }
 
       img.dark {

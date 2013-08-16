@@ -1,0 +1,82 @@
+@import "../../mixins";
+
+/* Table of Content
+==================================================
+  # Font families
+  # Font weight
+  # Margins and dimensions
+  # Colors definitions */
+
+/* #Font families
+================================================== */
+
+/* #Font weight
+================================================== */
+$light: 300;
+$normal: 400;
+$medium: 500;
+$bold: 700;
+$black: 900;
+
+/* #Margins and dimensions
+================================================== */
+$main-margin-top: 16px;
+$main-margin-left: 16px;
+$main-margin-right: 16px;
+$main-margin-bottom: 16px;
+
+$big-margin-top: 38px;
+$big-margin-left: 38px;
+$big-margin-right: 38px;
+$big-margin-bottom: 38px;
+
+$list-link-sprite-left: 30px;
+$list-link-items-margin: 6px;
+
+$big-list-item-line-height: 36px;
+
+$main-width: 306px;
+
+$item-border: 3px;
+
+/* #Colors definitions
+================================================== */
+$yellow: #ecc800;
+
+$green: #5ed754;
+
+$light-gray: #dcdcdc;
+
+$blue: #1b81c0;
+$light-blue: #3eb6ff;
+$dark-blue: #0f547e;
+
+$gray-blue: #528fb5;
+
+/* #Shadows
+================================================== */
+@mixin current-item-shadow() {
+  @include box-shadow(inset 0 2px 3px rgba(0, 0, 0, .43));
+}
+
+/* #Sprites
+================================================== */
+$sprite-size: 137px 122px;
+
+@mixin sprite() {
+  background-image: url(../images/sprite.png);
+}
+
+@mixin sprite-position($position) {
+  @include sprite();
+  background-position: $position;
+}
+
+@mixin sprite-after($width, $height) {
+  content: "";
+  display: block;
+  @include sprite();
+  position: absolute;
+  width: $width;
+  height: $height;
+}

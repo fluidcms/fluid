@@ -1,8 +1,8 @@
 define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/editor/editor'], function (Backbone, EJS, jUI, ContextMenu, Editor) {
     return Backbone.View.extend({
         events: {
-            "click a[data-action='close']": "close",
-            "click a[data-item]": "edit"
+            "click a[data-item]": "edit",
+            "click nav a": "changeGroup"
         },
 
         current: null,
@@ -11,35 +11,48 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/edit
 
         contentEditor: null,
 
-        className: 'variables',
+        className: 'page-editor',
 
-        template: new EJS({url: 'javascripts/fluid/templates/components/component.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+        template: new EJS({url: 'javascripts/fluid/templates/page/page.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
-            /*var root = this;
+            var root = this;
             this.app = attrs.app;
             this.languages = attrs.languages;
             this.components = attrs.components;
             this.model.on('change', this.render, this);
-            this.app.on('change', function() { root.previousAppNav = null; });*/
-
-            this.definition = attrs.definition;
-            this.data = attrs.data;
-            this.render();
+            this.app.on('change', function() { root.previousAppNav = null; });
         },
 
         render: function () {
             this.$el.html(this.template.render({
-                definition: this.definition.get('variables'),
-                data: this.data
+                layoutDefinition: this.model.get('layoutDefinition'),
+                data: this.model.get('data'),
+                render: this.model.get('render')
             }));
 
-            $("#target").append(this.$el);
+            $("#website").after(this.$el);
+            this.changeGroup(this.current);
             return this;
         },
 
-        close: function() {
-            this.remove();
+        changeGroup: function(e) {
+            this.$el.find('nav li').removeClass('current');
+            this.$el.find('div.main>div').css("display", "none");
+
+            if (typeof e === 'undefined' || e === null) {
+                this.$el.find('nav li:first').addClass('current');
+                this.$el.find('div.main div:first').css("display", "block");
+            } else {
+                if (typeof e === 'object') {
+                    this.current = $(e.currentTarget).attr("data-group");
+                } else {
+                    this.current = e;
+                }
+
+                this.$el.find('nav li a[data-group="'+this.current+'"]').parents('li').addClass('current');
+                this.$el.find('div.main>div[data-group="'+this.current+'"]').css("display", "block");
+            }
         },
 
         edit: function(e) {

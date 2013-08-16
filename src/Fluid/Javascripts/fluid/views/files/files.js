@@ -1,9 +1,9 @@
-define(['backbone', 'ejs', 'jquery-ui', 'views/contextmenu', 'views/modal'], function (Backbone, EJS, jUI, ContextMenu, Modal) {
+define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/helpers/modal'], function (Backbone, EJS, jUI, ContextMenu, Modal) {
     var View = Backbone.View.extend({
         events: {
             'click a[data-action="addFile"]': "selectFile",
             "change #fileUploader": "uploader",
-            "contextmenu li": "contextmenu"
+            "contextmenu li img": "contextmenu"
         },
 
         className: 'files',
@@ -33,12 +33,24 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/contextmenu', 'views/modal'], fun
             var root = this;
             if (typeof item.get('preview') !== 'undefined' && typeof item.get('preview').image !== 'undefined' && item.get('preview').image !== null) {
                 this.$el.find('li[data-id="'+item.id+'"]').html(this.fileTemplate.render({preview: item.get('preview')}));
+                this.draggable(this.$el.find('li[data-id="'+this.id+'"] img'));
             } else {
                 item.on('preview', function() {
                     root.$el.find('li[data-id="'+this.id+'"]').html(root.fileTemplate.render({preview: this.get('preview')}));
+                    root.draggable(root.$el.find('li[data-id="'+this.id+'"] img'));
                 });
                 item.getPreview();
             }
+        },
+
+        draggable: function(item) {
+            item.draggable({
+                connectToSortable: "div[contenteditable]",
+                helper: "clone",
+                containment: "document",
+                revert: "invalid",
+                iframeFix: true
+            });
         },
 
         hide: function() {
@@ -68,9 +80,9 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/contextmenu', 'views/modal'], fun
 
         copyLink: function (element) {
             var target = $(element).parent('li');
-            var path = "/fluidcms/"+fluidBranch+"/files/" + target.attr('data-id') + "/" + target.attr('data-name');
+            var model = this.collection.get(target.attr('data-id'));
 
-            new Copy({content: path}).render();
+            new Copy({content: model.get('src')}).render();
         },
 
         deleteImage: function (element) {

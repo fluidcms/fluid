@@ -1,17 +1,17 @@
 define(
     [
         'backbone',
-        'views/loader',
-        'models/socket',
-        'models/map',
-        'models/language',
-        'models/layout',
-        'models/preview',
-        'models/history',
+        'views/helpers/loader',
+        'models/socket/socket',
+        'models/map/map',
+        'models/language/language',
+        'models/layout/layout',
+        'models/preview/preview',
+        'models/history/history',
         'models/component/component',
         'models/file/file',
-        'views/nav',
-        'views/toolbar',
+        'views/nav/nav',
+        'views/toolbar/toolbar',
         'views/tools/tools'
     ],
     function (
@@ -141,7 +141,7 @@ define(
                 map: function () {
                     var root = this;
                     if (this.current !== 'map' && typeof this.views.map === 'undefined') {
-                        require(['views/map'], function (MapView) {
+                        require(['views/map/map'], function (MapView) {
                             root.views.map = root.main = new MapView({
                                 collection: root.models.map,
                                 page: root.page,
@@ -192,7 +192,7 @@ define(
                 history: function () {
                     var root = this;
                     if (this.current !== 'history' && typeof this.views.history === 'undefined') {
-                        require(['views/history'], function (HistoryView) {
+                        require(['views/history/history'], function (HistoryView) {
                             root.views.history = root.main = new HistoryView({collection: root.models.history});
                             root.models.history.fetch();
                         });

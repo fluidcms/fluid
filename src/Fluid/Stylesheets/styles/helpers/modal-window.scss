@@ -1,0 +1,76 @@
+@import "../globals/lib";
+@import "../../mixins";
+@import "compass/css3/box-shadow";
+@import "compass/css3/box";
+
+/* #Modal Window
+================================================== */
+div.modal-container {
+  z-index: 100;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, .3);
+  @include display-box;
+  @include box-orient(horizontal);
+  @include box-align(center);
+  @include box-pack(center);
+
+  @include animation-fix(modal-opacity, .4s, 1, forwards);
+
+  div.modal-window {
+    width: 524px;
+    padding: 30px 30px 50px 30px;
+    background: white;
+    margin-bottom: 200px;
+    @include box-shadow(0 5px 5px rgba(0, 0, 0, .75));
+    div.buttons {
+      @include display-box;
+      @include box-pack(end);
+    }
+    input[type="text"] {
+      width: 524px;
+    }
+  }
+
+  button, .button {
+    @extend .button-big;
+  }
+
+  input:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* #Blur
+================================================== */
+body.blur #main, body.blur #toolbar, body.blur #target {
+  @include animation-fix(modal-blur, .4s, 1, both);
+
+}
+
+@include keyframes-fix(modal-blur) {
+  0% {
+    -webkit-filter: blur(0);
+    -moz-filter: blur(0);
+    -o-filter: blur(0);
+    filter: blur(0);
+  }
+  100% {
+    -webkit-filter: blur(3px);
+    -moz-filter: blur(3px);
+    -o-filter: blur(3px);
+    filter: blur(3px);
+  }
+}
+
+@include keyframes-fix(modal-opacity) {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

@@ -1,4 +1,4 @@
-define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/contextmenu', 'views/components/component'], function (Backbone, EJS, jUI, Editor, ContextMenu, ComponentView) {
+define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/contextmenu', 'views/components/component'], function (Backbone, EJS, jUI, Editor, ContextMenu, ComponentView) {
     return Backbone.View.extend({
         events: {
             "click [data-action=cancel]": "close",
