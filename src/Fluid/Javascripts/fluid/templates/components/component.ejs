@@ -1,23 +1,7 @@
 <div>
     <div class="main">
         <div>
-            <% $.each(definition, function(key, item) { console.log(key, item); %>
-                <a data-item="<%= key %>">
-                    <div class="label"><%= key %></div>
-
-                    <% if (item.type == 'string') { %>
-                    <div class="data string"><% if (typeof data[key] !== 'undefined' && typeof data[key][name] !== 'undefined') { %><%= data[key][name] %><% } %></div>
-                    <% } else if (item.type == 'content') { %>
-                    <div class="data content"><% if (typeof render[key] !== 'undefined' && typeof render[key][name] !== 'undefined') { %><%= render[key][name] %><% } %></div>
-                    <% } else if (item.type == 'image') { %>
-                    <div class="data image">
-                        <img src="images/imgtmp-1232px-522px.gif" width="" height="" alt="">
-                    </div>
-                    <% } else { %>
-                    <div class="data image"></div>
-                    <% } %>
-                </a>
-            <% }); %>
+            <%= variables.render({definition: definition, data: data}) %>
         </div>
     </div>
     <div class="commands">

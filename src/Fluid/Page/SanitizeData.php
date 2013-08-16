@@ -2,7 +2,9 @@
 
 namespace Fluid\Page;
 
-use Fluid\Layout\Layout;
+use Fluid\Fluid,
+    Fluid\Layout\Layout,
+    Fluid\File\Image;
 
 class SanitizeData
 {
@@ -36,6 +38,14 @@ class SanitizeData
                     case 'content':
                         $output[$group][$name] = self::content($data[$group][$name]);
                         break;
+                    case 'image':
+                        if (is_string($data[$group][$name]) && strlen($data[$group][$name]) === 8) {
+                            $image = Image::format($data[$group][$name], $info);
+                            $output[$group][$name] = self::newImage($image);
+                        } else {
+                            $output[$group][$name] = $data[$group][$name]; // TODO: sanitize maybe?
+                        }
+                        break;
                 }
             }
 
@@ -66,6 +76,34 @@ class SanitizeData
      */
     private static function content($value)
     {
-        return $value;
+        return $value; // TODO: sanitize maybe?
+    }
+
+    /**
+     * Sanitize new image data
+     *
+     * @param   array   $value
+     * @return  array
+     */
+    private static function newImage($value)
+    {
+        $retval = array();
+        $dir = Fluid::getBranchStorage() . "files";
+
+        foreach($value as $name => $format) {
+            $image = array(
+                "src" => preg_replace("!^{$dir}!", '/fluidcms/images', $format['path']),
+                "alt" => "",
+                "width" => $format["width"],
+                "height" => $format["height"]
+            );
+            if (empty($name)) {
+                $retval = $image;
+            } else {
+                $retval[$name] = $image;
+            }
+        }
+
+        return $retval;
     }
 }

@@ -1,5 +1,32 @@
 define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/helpers/modal'], function (Backbone, EJS, jUI, ContextMenu, Modal) {
-    var View = Backbone.View.extend({
+    // Copy file link modals
+    var Copy = Backbone.View.extend($.extend({}, Modal, {
+        events: _.extend({
+            "copy :input": "copied"
+        }, Modal.events),
+
+        template: new EJS({url: 'javascripts/fluid/templates/files/copymodal.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+
+        initialize: function (attrs) {
+            this.content = attrs.content;
+        },
+
+        renderData: function () {
+            return {
+                content: this.content
+            };
+        },
+
+        copied: function (e) {
+            var root = this;
+            setTimeout(function () {
+                root.close()
+            }, 100);
+        }
+    }));
+
+    // Files view
+    return Backbone.View.extend({
         events: {
             'click a[data-action="addFile"]': "selectFile",
             "change #fileUploader": "uploader",
@@ -118,31 +145,4 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/help
             element.find('img').removeClass('dark');
         }
     });
-
-    var Copy = Backbone.View.extend($.extend({}, Modal, {
-        events: _.extend({
-            "copy :input": "copied"
-        }, Modal.events),
-
-        template: new EJS({url: 'javascripts/fluid/templates/files/copymodal.ejs?' + (new Date()).getTime()}),  // !! Remove for production
-
-        initialize: function (attrs) {
-            this.content = attrs.content;
-        },
-
-        renderData: function () {
-            return {
-                content: this.content
-            };
-        },
-
-        copied: function (e) {
-            var root = this;
-            setTimeout(function () {
-                root.close()
-            }, 100);
-        }
-    }));
-
-    return View;
 });

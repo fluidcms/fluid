@@ -20,20 +20,51 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/edit
             this.app = attrs.app;
             this.languages = attrs.languages;
             this.components = attrs.components;
+            this.files = attrs.files;
             this.model.on('change', this.render, this);
             this.app.on('change', function() { root.previousAppNav = null; });
         },
 
         render: function () {
+            var variables = new EJS({url: 'javascripts/fluid/templates/variables/variables.ejs?' + (new Date()).getTime()});  // !! Remove for production
+
             this.$el.html(this.template.render({
-                layoutDefinition: this.model.get('layoutDefinition'),
+                definition: this.model.get('layoutDefinition'),
                 data: this.model.get('data'),
-                render: this.model.get('render')
+                render: this.model.get('render'),
+                variables: variables
             }));
 
+            this.droppable();
+
             $("#website").after(this.$el);
+
             this.changeGroup(this.current);
             return this;
+        },
+
+        droppable: function() {
+            var root = this;
+
+            // Images
+            this.$el.find("a[data-item] div.data.image img").droppable({
+                hoverClass: "active",
+                drop: function( event, ui ) {
+                    var source = ui.draggable[0];
+                    var target = event.target;
+
+                    if (source.tagName === 'IMG') {
+                        var id = $(source).parents('li').attr('data-id');
+                        var file = root.files.get(id);
+
+                        if (typeof file !== 'undefined') {
+                            var group = $(target).parents('[data-group]').attr('data-group');
+                            var item = $(target).parents('[data-item]').attr('data-item');
+                            root.model.saveData(group, item, file.id);
+                        }
+                    }
+                }
+            });
         },
 
         changeGroup: function(e) {
@@ -57,7 +88,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/edit
 
         edit: function(e) {
             var target = $(e.currentTarget);
-            var group = target.attr('data-group');
+            var group = target.parents('div[data-group]').attr('data-group');
             var item = target.attr('data-item');
             var data = target.find('div.data');
 

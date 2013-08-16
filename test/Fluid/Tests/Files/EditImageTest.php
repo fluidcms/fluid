@@ -1,0 +1,51 @@
+<?php
+
+namespace Fluid\Tests\Files;
+
+use Fluid,
+    PHPUnit_Framework_TestCase,
+    Fluid\Tests\Helper,
+    Fluid\Page\Page,
+    Fluid\Map\Map;
+
+class EditImageTest extends PHPUnit_Framework_TestCase
+{
+    public function setUp()
+    {
+        Helper::copyStorage();
+    }
+
+    public function testEditGlobalPage()
+    {
+        $page = Page::get(null, 'en-US');
+
+        $data = $page->getRawData();
+
+        $data['Site']['Logo'] = '0i7ygv3r';
+
+        $request = array(
+            "method" => "PUT",
+            "url" => "page/en-US/global",
+            "data" => $data
+        );
+
+        ob_start();
+        new Fluid\WebSockets\Requests($request['url'], $request['method'], $request['data'], 'develop', Helper::getUser());
+        $retval = ob_get_contents();
+        ob_end_clean();
+
+        $retval = json_decode($retval, true);
+
+        $this->assertEquals(180, $retval['data']['Site']['Logo']['width']);
+        $this->assertEquals(360, $retval['data']['Site']['Logo']['Retina']['width']);
+
+        $dir = Fluid\Fluid::getBranchStorage() . "files";
+        $this->assertFileExists(preg_replace('!^/fluidcms/images!', $dir, $retval['data']['Site']['Logo']['src']));
+        $this->assertFileExists(preg_replace('!^/fluidcms/images!', $dir, $retval['data']['Site']['Logo']['Retina']['src']));
+    }
+
+    public function tearDown()
+    {
+        Helper::deleteStorage();
+    }
+}

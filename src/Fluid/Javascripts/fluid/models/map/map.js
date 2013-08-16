@@ -92,6 +92,7 @@ define(['backbone', 'models/page/page', 'views/page/page'], function (Backbone, 
             this.languages = attrs.languages;
             this.preview = attrs.preview;
             this.components = attrs.components;
+            this.files = attrs.files;
 
             if (this.parent == null && (typeof attrs == 'undefined' || typeof attrs.parent == 'undefined')) {
             } else {
@@ -189,7 +190,7 @@ define(['backbone', 'models/page/page', 'views/page/page'], function (Backbone, 
             }
 
             this.editor.page = new Page({id: item, language: this.languages.current.get('language')}, {socket: this.socket, languages: this.languages});
-            this.editor.view = new PageView({model: this.editor.page, app: this.app, components: this.components});
+            this.editor.view = new PageView({model: this.editor.page, app: this.app, components: this.components, files: this.files});
 
             this.editor.page.on('change', function() {
                 if (typeof oldPage !== 'undefined') {

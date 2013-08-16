@@ -1,0 +1,34 @@
+<% $.each(definition, function(key, item) { %>
+<a data-item="<%= key %>">
+    <div class="label"><%= key %></div>
+
+    <% if (item.type == 'string') { %>
+    <div class="data string"><% if (typeof data[key] !== 'undefined') { %><%= data[key] %><% } %></div>
+    <% } else if (item.type == 'content') { %>
+    <div class="data content"><% if (typeof data[key] !== 'undefined') { %><%= data[key] %><% } %></div>
+    <% } else if (item.type == 'image') { %>
+    <div class="data image">
+        <%
+            var width = parseInt(typeof item.width !== 'undefined' ? item.width : 0);
+            var height = parseInt(typeof item.height !== 'undefined' ? item.height : 0);
+
+            if (typeof item.formats !== 'undefined') {
+                $.each(item.formats, function(formatkey, format) {
+                    if (typeof format.width !== 'undefined' && parseInt(format.width) > width) {
+                        width = parseInt(format.width);
+                        height = parseInt(typeof format.height !== 'undefined' ? format.height : "");
+                    }
+                });
+            }
+
+        %>
+        <img src="images/imgtmp-<%= width === 0 ? 1 : width %>px-<%= height === 0 ? 1 : height %>px.gif"
+            width="<%= width === 0 ? 3000 : "" %>"
+            height="<%= height === 0 ? 200 : "" %>"
+            alt="">
+    </div>
+    <% } else { %>
+    <div class="data"></div>
+    <% } %>
+</a>
+<% }); %>

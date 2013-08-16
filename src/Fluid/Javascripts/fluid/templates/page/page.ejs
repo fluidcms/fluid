@@ -1,28 +1,17 @@
 <div>
     <nav>
         <ul>
-            <% $.each(layoutDefinition, function(key, item) { %>
+            <% $.each(definition, function(key, item) { %>
             <li><a data-group="<%= key %>"><%= key %></a></li>
             <% }); %>
         </ul>
     </nav>
 
     <div class="main">
-        <% $.each(layoutDefinition, function(key, item) { %>
+        <% $.each(definition, function(key, group) { %>
         <div data-group="<%= key %>" style="display: none;">
-            <% $.each(item, function(name, options) { %>
-                <a data-group="<%= key %>" data-item="<%= name %>">
-                    <div class="label"><%= name %></div>
-
-                    <% if (options.type == 'string') { %>
-                        <div class="data string"><% if (typeof data[key] !== 'undefined' && typeof data[key][name] !== 'undefined') { %><%= data[key][name] %><% } %></div>
-                    <% } else if (options.type == 'content') { %>
-                        <div class="data content"><% if (typeof render[key] !== 'undefined' && typeof render[key][name] !== 'undefined') { %><%= render[key][name] %><% } %></div>
-                    <% } else { %>
-                        <div class="data image"></div>
-                    <% } %>
-                </a>
-            <% }); %>
+            <% if (typeof render[key] !== 'unedfined') { var data = render[key]; } else { var data = {}; } %>
+            <%= variables.render({definition: group, data: data}) %>
         </div>
         <% }); %>
     </div>

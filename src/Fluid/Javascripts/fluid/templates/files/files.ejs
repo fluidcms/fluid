@@ -10,6 +10,7 @@
     <% files.each(function(file, key) { %>
 
     <li data-id="<%= file.get('id') %>" data-name="<%= file.get('name') %>">
+        <img src="data:image/gif;base64,R0lGODdhAQABAIAAAOTm5AAAACwAAAAAAQABAAACAkQBADs=" width="<%= file.get('preview').width %>" height="<%= file.get('preview').height %>" alt="" style="opacity: .1;">
     </li>
 
     <% }); %>

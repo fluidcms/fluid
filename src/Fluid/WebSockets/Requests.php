@@ -340,6 +340,7 @@ class Requests
                         }
                     }
 
+                    // Update page
                     if ($page instanceof Page) {
                         $page->update($this->input);
 
@@ -350,6 +351,7 @@ class Requests
                         );
                     }
 
+                    // Get page new data
                     if (isset($mapPage) && $mapPage) {
                         $output = array_merge(
                             $mapPage,

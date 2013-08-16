@@ -56,18 +56,19 @@ define(
 
                     this.models.components = new Components(null, {socket: this.socket});
 
+                    this.models.files = new Files(null, {socket: this.socket});
+
                     this.models.map = new Map.Pages(null, {
                         app: this,
                         socket: this.socket,
                         languages: this.models.languages,
                         preview: this.models.preview,
-                        components: this.models.components
+                        components: this.models.components,
+                        files: this.models.files
                     });
                     this.socket.models['map'] = this.models.map;
 
                     this.models.history = new History(null, {socket: this.socket});
-
-                    this.models.files = new Files(null, {socket: this.socket});
 
                     // Views
                     this.nav = new Nav({router: this}).render();

@@ -49,6 +49,8 @@ define(['backbone'], function (Backbone) {
                 data = data['data'];
             }
 
+            console.log(url, data);
+            return;
             this.socket.send('PUT', url, data, function(response) {
                 response = root.parse(response);
                 root.set(response);
@@ -99,7 +101,7 @@ define(['backbone'], function (Backbone) {
     });
 
     // Format for display
-    // TODO: rename
+    // TODO: rename, and maybe move elsewhere
     var Render = function(definitions, data) {
         var root = this;
         var output = {};
@@ -138,7 +140,7 @@ define(['backbone'], function (Backbone) {
     };
 
     // Format for saving and sanitize data
-    // TODO: rename
+    // TODO: rename, and maybe move elsewhere
     var UnRender = function(definition, data) {
         var root = this;
         var output;
@@ -181,6 +183,9 @@ define(['backbone'], function (Backbone) {
                 break;
             case 'content':
                 output = root.unRenderContent(data);
+                break;
+            case 'image':
+                output = data;
                 break;
         }
 

@@ -29,9 +29,12 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/edit
         },
 
         render: function () {
+            var variables = new EJS({url: 'javascripts/fluid/templates/variables/variables.ejs?' + (new Date()).getTime()});  // !! Remove for production
+
             this.$el.html(this.template.render({
                 definition: this.definition.get('variables'),
-                data: this.data
+                data: this.data,
+                variables: variables
             }));
 
             $("#target").append(this.$el);
