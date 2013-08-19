@@ -52,6 +52,7 @@ define(['backbone'], function (Backbone) {
             this.socket.send('PUT', url, data, function(response) {
                 response = root.parse(response);
                 root.set(response);
+                root.trigger('change');
             });
         },
 
@@ -92,8 +93,6 @@ define(['backbone'], function (Backbone) {
             modelData[group][item] = data;
 
             this.set('data', modelData);
-            this.set('render', this.render(this.get('layoutDefinition'), this.get('data')));
-            this.trigger('change');
             this.save();
         }
     });

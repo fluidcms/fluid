@@ -60,6 +60,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/edit
                         if (typeof file !== 'undefined') {
                             var group = $(target).parents('[data-group]').attr('data-group');
                             var item = $(target).parents('[data-item]').attr('data-item');
+                            $(target).css('opacity',.5);
                             root.model.saveData(group, item, file.id);
                         }
                     }
