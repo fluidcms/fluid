@@ -105,13 +105,15 @@ class Layout
         $layouts = array();
         $dir = Fluid::getConfig('templates') . Fluid::getConfig('layouts');
 
-        foreach (scandir($dir) as $file) {
-            if ($file === '.' || $file === '..') {
-                continue;
-            } else if (is_dir($dir.$file) && file_exists("{$dir}{$file}/layout.xml")) {
-                $layouts[] = array(
-                    'layout' => $file
-                );
+        if (is_dir($dir)) {
+            foreach (scandir($dir) as $file) {
+                if ($file === '.' || $file === '..') {
+                    continue;
+                } else if (is_dir($dir.$file) && file_exists("{$dir}{$file}/layout.xml")) {
+                    $layouts[] = array(
+                        'layout' => $file
+                    );
+                }
             }
         }
 

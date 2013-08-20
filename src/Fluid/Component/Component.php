@@ -136,11 +136,13 @@ class Component
         $components = array();
         $dir = Fluid::getConfig('templates') . Fluid::getConfig('components');
 
-        foreach (scandir($dir) as $file) {
-            if ($file === '.' || $file === '..') {
-                continue;
-            } else if (is_dir($dir.$file) && file_exists("{$dir}{$file}/component.xml")) {
-                $components[] = new self($file);
+        if (is_dir($dir)) {
+            foreach (scandir($dir) as $file) {
+                if ($file === '.' || $file === '..') {
+                    continue;
+                } else if (is_dir($dir.$file) && file_exists("{$dir}{$file}/component.xml")) {
+                    $components[] = new self($file);
+                }
             }
         }
 

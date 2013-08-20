@@ -48,7 +48,7 @@ class Server implements Ratchet\Wamp\WampServerInterface
 
     public function onClose(Ratchet\ConnectionInterface $conn)
     {
-        if (is_array($this->connections[$conn->WAMP->sessionId])) {
+        if (isset($this->connections[$conn->WAMP->sessionId]) && is_array($this->connections[$conn->WAMP->sessionId])) {
             $topic = key($this->connections[$conn->WAMP->sessionId]);
             ServerEvents::unregister($this->connections[$conn->WAMP->sessionId][$topic]['user_id']);
         }

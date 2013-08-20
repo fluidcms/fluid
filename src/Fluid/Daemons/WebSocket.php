@@ -3,15 +3,21 @@
 namespace Fluid\Daemons;
 
 use Fluid,
+    Fluid\WebSockets\Tasks,
+    Fluid\WebSockets\Server,
+    Fluid\WebSockets\Events as ServerEvents,
+    Exception,
     React,
     Ratchet,
     ZMQ,
-    ZMQSocketException;
+    ZMQSocketException,
+    React\EventLoop\LibEventLoop;
 
 class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
 {
     private $instanceId;
     private $lock;
+    private $zmqPort = 57600;
     protected $statusFile = 'WebSocketStatus.txt';
 
     /**
@@ -19,7 +25,7 @@ class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
      *
      * @return  mixed
      */
-    public function lock()
+    private function lock()
     {
         $dir = Fluid\Fluid::getConfig('storage') . ".data/";
         if (!is_dir($dir)) {
@@ -40,7 +46,7 @@ class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
      *
      * @return  mixed
      */
-    public function release()
+    private function release()
     {
         flock($this->lock, LOCK_UN);
         fclose($this->lock);
@@ -60,13 +66,11 @@ class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
         $this->instanceId = uniqid();
         $this->upTimeCallback();
 
-        $ports = Fluid\Fluid::getConfig('ports');
-
-        $server = new Fluid\WebSockets\Server;
-        $tasks = new Fluid\WebSockets\Tasks($server);
+        $server = new Server;
+        $tasks = new Tasks($server);
         $tasks->execute();
 
-        new Fluid\WebSockets\Events($server);
+        new ServerEvents($server);
 
         $loop = React\EventLoop\Factory::create();
 
@@ -80,10 +84,71 @@ class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
             $root->upTimeCallback();
         });
 
+        $this->zmqServer($loop, $tasks);
+
+        $this->websocketServer($loop, $server);
+
+        $this->renderStatus($server);
+
+        $loop->run();
+
+        $this->release();
+    }
+
+    /**
+     * Get an avalaible port for ZeroMQ
+     *
+     * @param   int $port
+     * @param   int $loop
+     * @throws  Exception
+     * @return  int
+     */
+    private function getPort($port, $loop = 0)
+    {
+        if ($loop >= 100) {
+            throw new Exception('Could not find a port to open ZeroMQ server');
+        }
+
+        $connection = @fsockopen('127.0.0.1', $port);
+
+        if (is_resource($connection)) {
+            fclose($connection);
+            return $this->getPort(($port+1), ($loop+1));
+        }
+
+        return $port;
+    }
+
+    /**
+     * Create the ZeroMQ server
+     *
+     * @param   LibEventLoop    $loop
+     * @param   Tasks   $tasks
+     * @return  void
+     */
+    private function zmqServer(LibEventLoop $loop, Tasks $tasks)
+    {
+        // Get a port
+        $port = $this->getPort($this->zmqPort);
+
         $context = new React\ZMQ\Context($loop);
         $pull = $context->getSocket(ZMQ::SOCKET_PULL);
-        $pull->bind('tcp://127.0.0.1:' . $ports['zeromq']);
+        $pull->bind("tcp://127.0.0.1:{$port}");
         $pull->on('message', array($tasks, 'message'));
+
+        file_put_contents(Fluid\Fluid::getConfig('storage') . ".data/zmqport", json_encode(array("id" => $this->instanceId, "port" => $port)));
+    }
+
+    /**
+     * Create the WebSocket server
+     *
+     * @param   LibEventLoop    $loop
+     * @param   Server  $server
+     * @return  void
+     */
+    private function websocketServer(LibEventLoop $loop, Server $server)
+    {
+        $ports = Fluid\Fluid::getConfig('ports');
 
         $socket = new React\Socket\Server($loop);
         $socket->listen($ports['websockets'], '0.0.0.0');
@@ -96,21 +161,15 @@ class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
             ),
             $socket
         );
-
-        $this->renderStatus($server);
-
-        $loop->run();
-
-        $this->release();
     }
 
     /**
      * Display daemon status
      *
-     * @param   Fluid\WebSockets\Server $server
+     * @param   Server $server
      * @return  void
      */
-    private function renderStatus(Fluid\WebSockets\Server $server)
+    private function renderStatus(Server $server)
     {
         if ($this->displayStatus) {
             $status = $this->status;
