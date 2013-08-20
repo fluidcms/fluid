@@ -25,8 +25,9 @@ class Fluid
      *
      * @param   array   $config     The configuration array
      * @param   string  $language   The language of the instance
+     * @return  void
      */
-    public function __construct($config = null, $language = null)
+    public static function init($config = null, $language = null)
     {
         self::$branch = 'master';
         self::config($config);

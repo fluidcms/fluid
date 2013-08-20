@@ -2,6 +2,8 @@
 
 namespace Fluid\Tasks;
 
+use Fluid\Fluid;
+
 class Init {
     /*
      * Create git repository and default branches
@@ -9,8 +11,12 @@ class Init {
      * @return  void
      */
     public static function execute() {
-        Bare::execute();
         Branch::execute('master');
         Database::execute();
+
+        $dir = Fluid::getConfig('storage') . ".data/";
+        if (!is_dir($dir)) {
+            mkdir($dir);
+        }
     }
 }

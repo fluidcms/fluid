@@ -10,7 +10,41 @@ use Fluid,
 
 class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
 {
+    private $instanceId;
+    private $lock;
     protected $statusFile = 'WebSocketStatus.txt';
+
+    /**
+     * Create and lock the lock file
+     *
+     * @return  mixed
+     */
+    public function lock()
+    {
+        $dir = Fluid\Fluid::getConfig('storage') . ".data/";
+        if (!is_dir($dir)) {
+            mkdir($dir);
+        }
+
+        $this->lock = fopen($dir."server.lock", "w+");
+
+        if (flock($this->lock, LOCK_EX | LOCK_NB)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Release the lock file
+     *
+     * @return  mixed
+     */
+    public function release()
+    {
+        flock($this->lock, LOCK_UN);
+        fclose($this->lock);
+    }
 
     /*
      * Run the web socket server
@@ -19,8 +53,14 @@ class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
      */
     public function run()
     {
-        $ports = Fluid\Fluid::getConfig('ports');
+        if (!$this->lock()) {
+            return;
+        }
+
+        $this->instanceId = uniqid();
         $this->upTimeCallback();
+
+        $ports = Fluid\Fluid::getConfig('ports');
 
         $server = new Fluid\WebSockets\Server;
         $tasks = new Fluid\WebSockets\Tasks($server);
@@ -60,6 +100,8 @@ class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
         $this->renderStatus($server);
 
         $loop->run();
+
+        $this->release();
     }
 
     /**

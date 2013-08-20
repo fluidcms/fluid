@@ -59,7 +59,6 @@ class VerifyFluid
     public static function checkGit()
     {
         return (
-            is_dir(Fluid::getConfig('storage') . 'bare') ||
             is_dir(Fluid::getConfig('storage') . 'master/.git')
         );
     }
