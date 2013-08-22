@@ -163,13 +163,13 @@ class Requests
                     // Get file preview
                     if (isset($match[2]) && strpos($match[2], '/preview/') === 0) {
                         $id = substr($match[2], 9);
-
-                        $file = File::get($id);
-                        echo json_encode($file->getPreview());
+                        echo json_encode(File::get($id)->getPreview());
                     }
                     return true;
                 case 'POST':
-//                    echo json_encode(File\File::save());
+                    if (File::upload($this->input["id"], $this->input["file"])) {
+                        echo json_encode(File::get($this->input["id"])->getInfo());
+                    }
                     return true;
                 case 'DELETE':
                     // File

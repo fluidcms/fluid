@@ -39,11 +39,11 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/help
         fileTemplate: new EJS({url: 'javascripts/fluid/templates/files/file.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
+            var root = this;
             this.collection = attrs.collection;
-            this.collection.on("reset", this.render, this);
-//            this.collection.on("progress", this.progress, this);
-//            this.collection.on("display", this.display, this);
-//            this.collection.on("complete", this.complete, this);
+            this.collection.on("reset add remove", this.render, this);
+            this.collection.on("progress", this.progress, this);
+            this.collection.on("complete", this.complete, this);
         },
 
         render: function () {
@@ -60,7 +60,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/help
             var root = this;
             if (typeof item.get('preview') !== 'undefined' && typeof item.get('preview').image !== 'undefined' && item.get('preview').image !== null) {
                 this.$el.find('li[data-id="'+item.id+'"]').html(this.fileTemplate.render({preview: item.get('preview')}));
-                this.draggable(this.$el.find('li[data-id="'+this.id+'"] img'));
+                this.draggable(this.$el.find('li[data-id="'+item.id+'"] img'));
             } else {
                 item.on('preview', function() {
                     root.$el.find('li[data-id="'+this.id+'"]').html(root.fileTemplate.render({preview: this.get('preview')}));
@@ -131,12 +131,6 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/help
                     element.find('.progress div').css('width', progress + '%');
                 }
             }
-        },
-
-        display: function (model) {
-            this.$el.find('li[data-id=' + model.get('id') + '] img')
-                .css('display', 'block')
-                .attr({src: model.get('previewSrc'), width: model.get('previewWidth'), height: model.get('previewHeight')});
         },
 
         complete: function (model) {

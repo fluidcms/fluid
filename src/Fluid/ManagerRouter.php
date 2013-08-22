@@ -52,6 +52,7 @@ class ManagerRouter
         return (
             self::tmpImages() ||
             self::files() ||
+            self::upload() ||
             self::publicFiles() ||
             self::javascriptFiles() ||
             self::changeLanguage() ||
@@ -97,6 +98,50 @@ class ManagerRouter
                         new StaticFile("{$dir}{$branch}/{$file}");
                         return true;
                     }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Upload file to CMS
+     *
+     * @return  bool
+     */
+    private static function upload()
+    {
+        if (
+            !empty(self::$request) &&
+            strpos(self::$request, 'file') === 0 &&
+            self::$method === 'POST' &&
+            count($_FILES) &&
+            isset(self::$input['topic']) &&
+            isset(self::$input['id'])
+        ) {
+            $topic = json_decode(self::$input['topic'], true);
+            if (isset($topic['branch']) && isset($topic['user_id']) && isset($topic['user_name']) && isset($topic['user_email'])) {
+                foreach ($_FILES as $file) {
+                    if (!$file['error']) {
+                        break;
+                    }
+                }
+                if (isset($file)) {
+                    new WebSockets\Requests(
+                        self::$request,
+                        self::$method,
+                        array(
+                            'id' => self::$input['id'],
+                            'file' => $file
+                        ),
+                        $topic['branch'],
+                        array(
+                            'id' => $topic['user_id'],
+                            'name' => $topic['user_name'],
+                            'email' => $topic['user_email']
+                        )
+                    );
+                    return true;
                 }
             }
         }

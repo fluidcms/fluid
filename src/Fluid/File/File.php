@@ -14,8 +14,16 @@ use Exception,
  */
 class File
 {
-    private $id;
     private $filePath;
+
+    private $id;
+    private $src;
+    private $name;
+    private $width;
+    private $height;
+    private $type;
+    private $size;
+    private $creation;
 
     /**
      * Init
@@ -25,6 +33,16 @@ class File
     public function __construct($id = null)
     {
         $this->id = $id;
+
+        if ($file = self::getFileInfo($id)) {
+            $this->src = $file['src'];
+            $this->name = $file['name'];
+            $this->width = $file['width'];
+            $this->height = $file['height'];
+            $this->type = $file['type'];
+            $this->size = $file['size'];
+            $this->creation = $file['creation'];
+        }
     }
 
     /**
@@ -36,9 +54,8 @@ class File
     {
         if (!is_dir(Fluid::getBranchStorage() . 'files/')) {
             return mkdir(Fluid::getBranchStorage() . 'files/');
-        } else {
-            return true;
         }
+        return true;
     }
 
     /**
@@ -53,7 +70,7 @@ class File
     }
 
     /**
-     * Get a file path
+     * Get a file's path
      *
      * @throws  Exception
      * @return  string
@@ -78,6 +95,25 @@ class File
     }
 
     /**
+     * Get a file's info
+     *
+     * @return  array
+     */
+    public function getInfo()
+    {
+        return array(
+            'id' => $this->id,
+            'src' => $this->src,
+            'name' => $this->name,
+            'width' => $this->width,
+            'height' => $this->height,
+            'type' => $this->type,
+            'size' => $this->size,
+            'creation' => $this->creation
+        );
+    }
+
+    /**
      * Get all files
      *
      * @return  array
@@ -89,18 +125,9 @@ class File
         $sort = array();
         foreach (scandir(Fluid::getBranchStorage() . 'files') as $id) {
             if ($id !== '.' && $id !== '..' && strlen($id) === 8 && ctype_alnum($id)) {
-                $dir = Fluid::getBranchStorage() . "files/{$id}";
-                foreach(scandir($dir) as $file) {
-                    if ($file !== '.' && $file !== '..' && is_file("{$dir}/{$file}")) {
-                        if ($file = FileInfo::getImageInfo("{$dir}/{$file}")) {
-                            $output[] = array_merge(
-                                array("id" => $id, 'src' => "/fluidcms/files/{$id}/{$file['name']}"),
-                                $file
-                            );
-                            $sort[] = $file['creation'];
-                            break;
-                        }
-                    }
+                if ($file = self::getFileInfo($id)) {
+                    $output[] = $file;
+                    $sort[] = $file['creation'];
                 }
             }
         }
@@ -116,15 +143,24 @@ class File
     }
 
     /**
-     * Save file
+     * Scan a file directory for the file and get the file's info
      *
+     * @param   string  $id
      * @return  array
      */
-    public static function save()
+    private static function getFileInfo($id)
     {
-        self::checkDir();
-        if ($file = self::upload()) {
-            return $file;
+        $dir = Fluid::getBranchStorage() . "files/{$id}";
+
+        foreach(scandir($dir) as $file) {
+            if ($file !== '.' && $file !== '..' && is_file("{$dir}/{$file}")) {
+                if ($file = FileInfo::getImageInfo("{$dir}/{$file}")) {
+                    return array_merge(
+                        array("id" => $id, 'src' => "/fluidcms/files/{$id}/{$file['name']}"),
+                        $file
+                    );
+                }
+            }
         }
         return null;
     }
@@ -166,19 +202,26 @@ class File
     /**
      * Upload file
      *
+     * @param   string  $id
+     * @param   array   $file
      * @return  array
      */
-    public static function upload()
+    public static function upload($id, $file)
     {
         self::checkDir();
-        foreach ($_FILES as $file) {
-            if (!$file['error'] && isset($_POST['id']) && strlen($_POST['id']) === 8 && self::idIsUnique($_POST['id'])) {
-                $file = FileInfo::getTmpFileInfo($file);
-                if ($file['size'] <= 2097152) {
-                    rename($file["tmp_name"], Fluid::getBranchStorage() . 'files/' . $_POST['id'] . '_' . $file['name']);
-                    unset($file["tmp_name"]);
-                    return array_merge(array('id' => $_POST['id'], 'src' => "/fluidcms/files/preview/{$_POST['id']}/{$file['name']}"), $file);
+        if (!$file['error'] && strlen($id) === 8 && self::idIsUnique($id)) {
+            $file = FileInfo::getTmpFileInfo($file);
+            if ($file['size'] <= 2097152) {
+                if (!is_dir(Fluid::getBranchStorage() . "files")) {
+                    mkdir(Fluid::getBranchStorage() . "files");
                 }
+                if (!is_dir(Fluid::getBranchStorage() . "files/{$id}")) {
+                    mkdir(Fluid::getBranchStorage() . "files/{$id}");
+                }
+
+                rename($file["tmp_name"], Fluid::getBranchStorage() . "files/{$id}/{$file['name']}");
+                unset($file["tmp_name"]);
+                return $id;
             }
         }
         return null;

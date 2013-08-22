@@ -2,6 +2,8 @@ define(['backbone'], function (Backbone) {
     var File = Backbone.Model.extend({
         urlRoot: "file",
 
+        new: false,
+
         initialize: function (attrs, options) {
             var root = this;
 
@@ -12,48 +14,40 @@ define(['backbone'], function (Backbone) {
                 this.setPreviewSize(attrs.width, attrs.height);
             }
 
-//            if (typeof options.file !== "undefined") {
-//                setTimeout(function () {
-//                    root.setPreview(options.file);
-//                    root.upload(options.file);
-//                }, 100);
-//            }
+            if (typeof options.file !== "undefined") {
+                this.new = options.file;
+                // Start uploading the file
+                setTimeout(function () { root.upload(options.file); }, 100);
+            }
         },
 
         getPreview: function() {
             var root = this;
-            this.socket.send('GET', this.urlRoot + "/preview/" + this.id, {}, function(response) {
-                var preview = root.get('preview');
-                preview.image = response.image;
-                root.set('preview', preview);
-                root.trigger('preview');
-            });
-        },
 
-        setPreview: function (file) {
-            /*var root = this;
-            if (file.size > 2097152) {
-                return;
-            }
-
-            var reader = new FileReader();
-            reader.onload = (function (model, reader) {
-                return function (e) {
-
-                    var tmpImg = new Image();
-                    tmpImg.src = reader.result;
-                    tmpImg.onload = function () {
-                        model.set({
-                            'width': tmpImg.width,
-                            'height': tmpImg.height,
-                            'previewSrc': reader.result
-                        });
-                        model.setPreviewSize(tmpImg.width, tmpImg.height);
-                        model.collection.trigger('display', model);
+            if (typeof this.new === 'undefined' || !this.new) {
+                this.socket.send('GET', this.urlRoot + "/preview/" + this.id, {}, function(response) {
+                    var preview = root.get('preview');
+                    preview.image = 'data:image/jpg;base64,'+response.image;
+                    root.set('preview', preview);
+                    root.trigger('preview');
+                });
+            } else {
+                var reader = new FileReader();
+                reader.onload = (function (model, reader) {
+                    return function (e) {
+                        var tmpImg = new Image();
+                        tmpImg.src = reader.result;
+                        tmpImg.onload = function () {
+                            model.setPreviewSize(tmpImg.width, tmpImg.height);
+                            var preview = model.get('preview');
+                            preview.image = reader.result;
+                            model.set('preview', preview);
+                            model.trigger('preview');
+                        };
                     };
-                };
-            }(root, reader));
-            reader.readAsDataURL(file);*/
+                }(root, reader));
+                reader.readAsDataURL(this.new);
+            }
         },
 
         setPreviewSize: function (width, height) {
@@ -101,15 +95,14 @@ define(['backbone'], function (Backbone) {
                     if (typeof response.id !== 'undefined') {
 
                         root.set({
-                            'id': response.id,
+                            'src': response.src,
                             'name': response.name,
                             'width': response.width,
                             'height': response.height,
                             'type': response.type,
-                            'src': response.src
+                            'size': response.size,
+                            'creation': response.creation
                         });
-
-                        root.unset('previewSrc', {silent: true});
 
                         root.collection.trigger('complete', root);
                         return;
@@ -121,6 +114,7 @@ define(['backbone'], function (Backbone) {
 
             var data = new FormData();
             data.append('id', this.get('id'));
+            data.append('topic', JSON.stringify(root.collection.socket.topic));
             data.append('file', file);
 
             xhr.open("POST", root.urlRoot, true);
