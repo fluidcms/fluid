@@ -1,4 +1,4 @@
-<layout xmlns="https://fluidcms.net/schemas/template" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<fluid-layout xmlns="https://fluidcms.net/schemas/template" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="https://fluidcms.net/schemas/template https://fluidcms.net/schemas/template.xsd">
 
     <config>
@@ -25,4 +25,4 @@
     <group name="Sidebar">
         <variable name="Sidebar" type="components"/>
     </group>
-</layout>
+</fluid-layout>
