@@ -10,7 +10,7 @@
     <div class="main">
         <% $.each(definition, function(key, group) { %>
         <div data-group="<%= key %>" style="display: none;">
-            <% if (typeof render[key] !== 'unedfined') { var data = render[key]; } else { var data = {}; } %>
+            <% if (typeof render[key] !== 'undefined') { var data = render[key]; } else { var data = {}; } %>
             <%= variables.render({definition: group, data: data}) %>
         </div>
         <% }); %>
