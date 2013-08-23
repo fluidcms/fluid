@@ -68,7 +68,13 @@ class ManagerRouter
     private static function tmpImages()
     {
         if (!empty(self::$request) && strpos(self::$request, 'images/imgtmp-') === 0) {
-            if (preg_match('!images/imgtmp-(\d+)px-(\d+)px\.gif!', self::$request, $matches)) {
+            if (preg_match('!images/imgtmp-(\d+|NaN)px-(\d+|NaN)px\.gif!', self::$request, $matches)) {
+                if ($matches[1] === 'NaN') {
+                    $matches[1] = 1;
+                }
+                if ($matches[2] === 'NaN') {
+                    $matches[2] = 1;
+                }
                 $im = imagecreatetruecolor($matches[1], $matches[2]);
                 imagefilledrectangle($im, 0, 0, $matches[1], $matches[2], 0xe5e5e5);
                 header('Content-Type: image/gif');

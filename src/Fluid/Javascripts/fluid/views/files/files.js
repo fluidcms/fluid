@@ -88,16 +88,6 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/help
             this.$el.show();
         },
 
-        uploader: function (e) {
-            var root = this;
-            var files = e.target.files;
-            if (typeof files !== 'undefined') {
-                $.each(files, function (key, file) {
-                    root.collection.addFile(file);
-                });
-            }
-        },
-
         contextmenu: function (e) {
             e.preventDefault();
             if ($(e.currentTarget).attr('data-block') !== 'true') {
@@ -117,6 +107,17 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/help
             var model = this.collection.get(id);
             if (confirm('Are you sur you want to delete ' + model.get("name") + '?')) {
                 model.destroy();
+            }
+        },
+
+        // File upload methods
+        uploader: function (e) {
+            var root = this;
+            var files = e.target.files;
+            if (typeof files !== 'undefined') {
+                $.each(files, function (key, file) {
+                    root.collection.addFile(file);
+                });
             }
         },
 

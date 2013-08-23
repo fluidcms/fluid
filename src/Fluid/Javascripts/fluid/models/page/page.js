@@ -110,13 +110,18 @@ define(['backbone'], function (Backbone) {
             var height = parseInt(typeof content.height !== 'undefined' ? content.height : 0);
             var src = content.src;
 
-            $.each(content, function(formatkey, format) {
-                if (typeof format.width !== 'undefined' && parseInt(format.width) > width) {
-                    width = parseInt(format.width);
-                    height = parseInt(typeof format.height !== 'undefined' ? format.height : "");
-                    src = format.src;
-                }
-            });
+            if (width === 0 && height === 0) {
+                $.each(content, function(formatkey, format) {
+                    if (typeof format.width !== 'undefined' && parseInt(format.width) > width) {
+                        width = parseInt(format.width);
+                        height = parseInt(typeof format.height !== 'undefined' ? format.height : "");
+                        src = format.src;
+                        if (width !== 0 || height !== 0) {
+                            return false;
+                        }
+                    }
+                });
+            }
 
             return '<img src="'+src+'" width="" height="" alt="">';
         };
