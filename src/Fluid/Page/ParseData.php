@@ -66,7 +66,14 @@ class ParseData
                     if (isset($data[$name])) {
                         $output[$name] = self::renderContent($data[$name]);
                     } else {
-                       $output[$name] = '';
+                        $output[$name] = '';
+                    }
+                    break;
+                case 'image':
+                    if (isset($data[$name]) && is_array($data[$name])) {
+                        $output[$name] = $data[$name];
+                    } else {
+                        $output[$name] = array();
                     }
                     break;
             }
