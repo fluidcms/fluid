@@ -178,12 +178,6 @@ abstract class Definition
                                     case 'quality': $thisFormat['quality'] = (string)$value; break;
                                 }
                             }
-                            if (empty($thisFormat['width']) && !empty($image['width'])) {
-                                $thisFormat['width'] = $image['width'];
-                            }
-                            if (empty($thisFormat['height']) && !empty($image['height'])) {
-                                $thisFormat['height'] = $image['height'];
-                            }
                             if (empty($thisFormat['quality']) && !empty($image['quality'])) {
                                 $thisFormat['quality'] = $image['quality'];
                             }

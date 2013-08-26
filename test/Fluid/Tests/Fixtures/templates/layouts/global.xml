@@ -6,6 +6,8 @@
         <variable name="Description" type="content"/>
         <image name="Logo" width="180" height="100" format="png">
             <format name="Retina" width="360" height="200" format="png"/>
+            <format name="NoHeight" width="500" format="png"/>
+            <format name="Original"/>
         </image>
         <variable name="New Var" type="string"/>
     </group>

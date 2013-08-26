@@ -15,7 +15,7 @@ class EditImageTest extends PHPUnit_Framework_TestCase
         Helper::copyStorage();
     }
 
-    public function testEditGlobalPage()
+    public function testEditImage()
     {
         $page = Page::get(null, 'en-US');
 
@@ -38,6 +38,8 @@ class EditImageTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(180, $retval['data']['Site']['Logo']['width']);
         $this->assertEquals(360, $retval['data']['Site']['Logo']['Retina']['width']);
+        $this->assertEquals(143, $retval['data']['Site']['Logo']['NoHeight']['height']);
+        $this->assertEquals('/fluidcms/images/0i7ygv3r/Logo.png', $retval['data']['Site']['Logo']['Original']['src']);
 
         $dir = Fluid\Fluid::getBranchStorage() . "files";
         $this->assertFileExists(preg_replace('!^/fluidcms/images!', $dir, $retval['data']['Site']['Logo']['src']));

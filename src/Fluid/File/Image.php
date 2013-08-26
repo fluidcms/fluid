@@ -22,12 +22,43 @@ class Image
         $path = $file->getPath();
         $info = FileInfo::getImageInfo($path);
 
+        if (isset($info['type']) && !empty($info['type'])) {
+            $info['type'] = preg_replace('/^image\//', '', trim(strtolower($info['type'])));
+        }
+
         $retval = array();
         foreach($formats as $format) {
-            $retval[$format['name']] = self::formatImage($info, $path, $format);
+            if (
+                (isset($format['width']) && $info['width'] !== $format['width']) ||
+                (isset($format['height']) && $info['height'] !== $format['height']) ||
+                (isset($format['type']) && $info['type'] !== $format['type'])
+            ) {
+                $retval[$format['name']] = self::formatImage($info, $path, $format);
+            } else {
+                $retval[$format['name']] = self::getFormatArray($info, $path, $format);
+            }
         }
 
         return $retval;
+    }
+
+    /**
+     * Format image info for output
+     *
+     * @param   array   $info
+     * @param   string  $path
+     * @param   array   $format
+     * @return  array
+     */
+    private static function getFormatArray($info, $path, $format)
+    {
+        return array(
+            'id' => '',
+            'format' => $info["type"],
+            'width' => $info["width"],
+            'height' => $info["height"],
+            'path' => $path
+        );
     }
 
     /**
@@ -39,7 +70,7 @@ class Image
      * @throws  DomainException
      * @return  array
      */
-    public static function formatImage($info, $path, $format)
+    private static function formatImage($info, $path, $format)
     {
         $uniqueId = Token::generate(8);
 
@@ -48,7 +79,7 @@ class Image
         if (isset($format['format']) && !empty($format['format'])) {
             $type = $format['format'];
         } else if (isset($info['type']) && !empty($info['type'])) {
-            $type = preg_replace('/^image\//', '', trim(strtolower($info['type'])));
+            $type = $info['type'];
         }
 
         if ($type !== 'png' && $type !== 'jpg' && $type !== 'jpeg' && $type !== 'gif') {
@@ -60,26 +91,33 @@ class Image
         mkdir("{$dir}/{$uniqueId}");
         $newPath = "{$dir}/{$uniqueId}/{$info['name']}";
 
-        // Determine new width
+        // Determine new width and height
         if (isset($format['width']) && is_int($format['width'])) {
             $width = $format['width'];
-        } else {
+        }
+
+        if (isset($format['height']) && is_int($format['height'])) {
+            $height = $format['height'];
+        }
+
+        if (!isset($width) && isset($height) && $height !== (int)$info['height']) {
+            $width = round($height / $info['height'] * $info['width']);
+        } else if (!isset($width)) {
             $width = (int)$info['width'];
         }
 
-        // Determine new height
-        if (isset($format['height']) && is_int($format['height'])) {
-            $height = $format['height'];
-        } else {
+        if (!isset($height) && isset($width) && $width !== (int)$info['width']) {
+            $height = round($width / $info['width'] * $info['height']);
+        } else if (!isset($height)) {
             $height = (int)$info['height'];
         }
 
         // Create the image
-        if ($info['type'] === "image/jpeg") {
+        if ($info['type'] === "jpeg" || $info['type'] === "jpg") {
             $img = imagecreatefromjpeg($path);
-        } else if ($info['type'] === "image/png") {
+        } else if ($info['type'] === "png") {
             $img = imagecreatefrompng($path);
-        } else if ($info['type'] === "image/gif") {
+        } else if ($info['type'] === "gif") {
             $img = imagecreatefromgif($path);
         } else {
             throw new DomainException('Unknown image type: '.$info['type']);
@@ -194,7 +232,7 @@ class Image
             }
 
             if (isset($item['format'])) {
-                $format['format'] = (string)$item['format'];
+                $format['type'] = (string)$item['format'];
             }
 
             $retval[] = $format;
