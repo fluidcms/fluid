@@ -55,8 +55,12 @@ class Data
 
         $page = self::makeParentTree($page);
 
+        $request = self::getRequest();
         return array(
-            'url' => self::getRequest(),
+            'url' => $request['url'],
+            'domain' => $request['domain'],
+            'path' => $request['path'],
+            'ssl' => $request['ssl'],
             'language' => substr(Fluid::getLanguage(), 0, 2),
             'global' => $global,
             'parents' => $page['parents'],
@@ -90,7 +94,7 @@ class Data
      * Get the requested url
      * NOTE: this is private because we only use it here, if we need to make if public, we will have to move it elsewhere
      *
-     * @return  string
+     * @return  array
      */
     private static function getRequest()
     {
@@ -101,11 +105,21 @@ class Data
             $secure = false;
         }
 
+        $url = '';
+        $domain = '';
+        $path = '';
         if (isset($_SERVER['SERVER_NAME']) && isset($_SERVER['REQUEST_URI'])) {
-            return ($secure ? 'https://' : 'http://') . "{$_SERVER['SERVER_NAME']}{$_SERVER['REQUEST_URI']}";
+            $url = ($secure ? 'https://' : 'http://') . "{$_SERVER['SERVER_NAME']}{$_SERVER['REQUEST_URI']}";
+            $domain = $_SERVER['SERVER_NAME'];
+            $path = $_SERVER['REQUEST_URI'];
         }
 
-        return '';
+        return array(
+            'url' => $url,
+            'domain' => $domain,
+            'path' => $path,
+            'ssl' => $secure
+        );
     }
 
     /**
