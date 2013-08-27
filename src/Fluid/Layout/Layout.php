@@ -14,7 +14,7 @@ class Layout
 {
     private $xmlFile;
     private $file;
-    private $variables;
+    private $definition;
 
     /**
      * Layout
@@ -45,7 +45,6 @@ class Layout
      * Get a layout
      *
      * @param   string  $layout
-     * @throws  Exception
      * @return  self
      */
     public static function get($layout)
@@ -75,24 +74,47 @@ class Layout
     }
 
     /**
-     * Set Variables
+     * Set layout definition
      *
      * @param   string  $value
      * @return  void
      */
-    public function setVariables($value)
+    public function setDefinition($value)
     {
-        $this->variables = $value;
+        $this->definition = $value;
     }
 
     /**
      * Set Variables
      *
+     * @param   string  $value
+     * @deprecated  use setDefinition instead
+     * @return  void
+     */
+    public function setVariables($value)
+    {
+        $this->setDefinition($value);
+    }
+
+    /**
+     * Get layout definition
+     *
+     * @return  array
+     */
+    public function getDefinition()
+    {
+        return $this->definition;
+    }
+
+    /**
+     * Get Variables
+     *
+     * @deprecated  use getDefinition instead
      * @return  array
      */
     public function getVariables()
     {
-        return $this->variables;
+        return $this->getDefinition();
     }
 
     /**

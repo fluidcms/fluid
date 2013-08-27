@@ -14,11 +14,12 @@ class ParseData
      *
      * @param   Page    $page
      * @param   Layout  $layout
+     * @param   string  $language
      * @return  array
      */
-    public static function parse(Page $page, Layout $layout)
+    public static function parse(Page $page, Layout $layout, $language = null)
     {
-        $data = $page->getRawData();
+        $data = $page->getRawData($language);
         $data = self::merge($layout->getVariables(), $data);
 
         return $data;

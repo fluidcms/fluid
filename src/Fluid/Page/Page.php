@@ -47,7 +47,7 @@ class Page extends FileSystem
     /**
      * Get a page
      *
-     * @param   mixed  $id
+     * @param   mixed   $id
      * @param   string  $language
      * @return  self
      */
@@ -67,7 +67,7 @@ class Page extends FileSystem
     }
 
     /**
-     * Set the language to get the data
+     * Set the current page language
      *
      * @param   string  $value
      * @throws  Exception
@@ -85,28 +85,42 @@ class Page extends FileSystem
     }
 
     /**
+     * Get the current page language
+     *
+     * @return  void
+     */
+    public function getLanguage()
+    {
+        return $this->language;
+    }
+
+    /**
      * Get the processed page data
      *
+     * @param   string  $language
      * @return  array
      */
-    public function getData()
+    public function getData($language = null)
     {
         if (empty($this->layout)) {
             $this->layout = 'global';
         }
 
-        return ParseData::parse($this, Layout::get($this->layout));
+        return ParseData::parse($this, Layout::get($this->layout), $language);
     }
 
     /**
      * Get the raw page data
      *
+     * @param   string  $language
      * @return  array
      */
-    public function getRawData()
+    public function getRawData($language = null)
     {
         $id = $this->getId();
-        $language = empty($this->language) ? Fluid::getLanguage() : $this->language;
+        if (null === $language) {
+            $language = empty($this->language) ? Fluid::getLanguage() : $this->language;
+        }
 
         if (!empty($id)) {
             $file = 'pages/' . $id . '_' . $language . '.json';
@@ -142,6 +156,16 @@ class Page extends FileSystem
     }
 
     /**
+     * Get the languages
+     *
+     * @return  string
+     */
+    public function getLanguages()
+    {
+        return $this->languages;
+    }
+
+    /**
      * Update a page's data
      *
      * @param   array   $data
@@ -150,32 +174,7 @@ class Page extends FileSystem
      */
     public function update($data)
     {
-        $id = $this->getId();
-
-        if (!empty($id)) {
-            $map = new Map();
-            if ($page = $map->findPage($id)) {
-                Language::validateLanguage($this->language);
-                $layout = new Layout($page['layout']);
-
-                if (in_array($this->language, $page['languages']))  {
-                    $file = 'pages/' . $id . '_' . $this->language . '.json';
-                }
-            }
-        } else {
-            Language::validateLanguage($this->language);
-            $layout = new Layout('global');
-
-            $file = 'global_' . $this->language . '.json';
-        }
-
-        if (isset($file) && isset($layout) && $layout instanceof Layout) {
-            $data = SanitizeData::sanitize($data, $layout);
-            self::save(json_encode($data, JSON_PRETTY_PRINT), $file);
-            return true;
-        }
-
-        throw new Exception('Invalid page');
+        UpdateData::update($this, $data);
     }
 
     /**

@@ -5,7 +5,8 @@
         "url": "\/",
         "layout": "home",
         "languages": [
-            "en-US"
+            "en-US",
+            "de-DE"
         ],
         "pages": [
             {

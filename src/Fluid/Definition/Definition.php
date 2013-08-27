@@ -65,13 +65,18 @@ abstract class Definition
 
         if (isset($xml->group)) {
             foreach($xml->group as $group) {
+                $universal = false;
                 foreach($group->attributes() as $key => $value) {
                     if ($key === 'name') {
                         $groupName = (string)$value;
                     }
+
+                    if ($key === 'universal' && ((string)$value === 'true' || (string)$value === '1')) {
+                        $universal = true;
+                    }
                 }
                 if (!empty($groupName)) {
-                    $groups[$groupName] = self::getVariables($group);
+                    $groups[$groupName] = self::getVariables($group, false, $universal);
 
                 }
             }
@@ -89,9 +94,10 @@ abstract class Definition
      *
      * @param   SimpleXMLElement   $xml
      * @param   bool    $child
+     * @param   bool    $universal
      * @return  array
      */
-    protected static function getVariables(SimpleXMLElement $xml, $child = false)
+    protected static function getVariables(SimpleXMLElement $xml, $child = false, $universal = false)
     {
         $variables = array();
 
@@ -100,10 +106,16 @@ abstract class Definition
             switch($itemName) {
                 // Variable
                 case 'variable':
+                    $variableUniversal = $universal;
                     foreach($item->attributes() as $key => $value) {
                         switch($key) {
                             case 'name': $variableName = (string)$value; break;
                             case 'type': $variableType = (string)$value; break;
+                            case 'universal':
+                                if ((string)$value === 'true' || (string)$value === '1') {
+                                    $variableUniversal = true;
+                                }
+                                break;
                         }
                     }
                     if (!empty($variableName) && !empty($variableType) && in_array($variableType, self::$variableTypes)) {
@@ -121,7 +133,8 @@ abstract class Definition
                         }
 
                         $groupItem = array(
-                            'type' => $variableType
+                            'type' => $variableType,
+                            'universal' => $variableUniversal
                         );
 
                         if (isset($variableOptions)) {
@@ -135,16 +148,22 @@ abstract class Definition
                 // Array
                 case 'array':
                     if (!$child) {
+                        $variableUniversal = $universal;
                         foreach($item->attributes() as $key => $value) {
                             switch($key) {
                                 case 'name': $variableName = (string)$value; break;
+                                case 'universal':
+                                    if ((string)$value === 'true' || (string)$value === '1') {
+                                        $variableUniversal = true;
+                                    }
+                                    break;
                             }
                         }
 
                         if (!empty($variableName)) {
                             $variables[$variableName] = array(
                                 'type' => 'array',
-                                'variables' => self::getVariables($item, true)
+                                'variables' => self::getVariables($item, true, $variableUniversal)
                             );
                         }
                     }
@@ -154,6 +173,7 @@ abstract class Definition
                 case 'image':
                     $image = array();
                     $image['type'] = 'image';
+                    $variableUniversal = $universal;
                     foreach($item->attributes() as $key => $value) {
                         switch($key) {
                             case 'name': $imageName = (string)$value; break;
@@ -161,8 +181,14 @@ abstract class Definition
                             case 'height': $image['height'] = (string)$value; break;
                             case 'format': $image['format'] = (string)$value; break;
                             case 'quality': $image['quality'] = (string)$value; break;
+                            case 'universal':
+                                if ((string)$value === 'true' || (string)$value === '1') {
+                                    $variableUniversal = true;
+                                }
+                                break;
                         }
                     }
+                    $image['universal'] = $variableUniversal;
 
                     // Formats
                     $formats = array();

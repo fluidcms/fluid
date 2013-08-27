@@ -25,4 +25,9 @@
     <group name="Sidebar">
         <variable name="Sidebar" type="components"/>
     </group>
+
+    <group name="Bilingual" universal="true">
+        <variable name="Name" type="string"/>
+        <image name="Image" width="64" height="64"/>
+    </group>
 </fluid-layout>

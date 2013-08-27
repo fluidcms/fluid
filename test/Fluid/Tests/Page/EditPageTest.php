@@ -64,6 +64,44 @@ class EditPageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($data['Content']['Content']['source'], $retval['data']['Content']['Content']['source']);
     }
 
+    public function testEditUniversal()
+    {
+        // Home page
+        $map = new Map;
+        $mapPage = $map->findPage('home page');
+        $page = Page::get($mapPage, 'en-US');
+
+        $data = $page->getRawData();
+
+        $data['Bilingual']['Name'] = "This is a test";
+
+        $request = array(
+            "method" => "PUT",
+            "url" => "page/en-US/home page",
+            "data" => $data
+        );
+
+        ob_start();
+        new Fluid\WebSockets\Requests($request['url'], $request['method'], $request['data'], 'develop', Helper::getUser());
+        ob_end_clean();
+
+        // Get page in other language
+        $request = array(
+            "method" => "GET",
+            "url" => "page/de-DE/home page",
+            "data" => array()
+        );
+
+        ob_start();
+        new Fluid\WebSockets\Requests($request['url'], $request['method'], $request['data'], 'develop', Helper::getUser());
+        $retval = ob_get_contents();
+        ob_end_clean();
+
+        $retval = json_decode($retval, true);
+
+        $this->assertEquals($data['Bilingual']['Name'], $retval['data']['Bilingual']['Name']);
+    }
+
     public function tearDown()
     {
         Helper::deleteStorage();
