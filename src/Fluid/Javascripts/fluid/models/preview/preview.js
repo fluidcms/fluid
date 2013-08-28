@@ -21,7 +21,7 @@ define(['backbone'], function (Backbone) {
             $('[href]', $(iframe.body)).on('click', function(e) {
                 var target = $(e.currentTarget)[0];
 
-                if (target.hostname == document.location.hostname) {
+                if (target.hostname == document.location.hostname && $(target).attr('href').charAt(0) !== '#') {
                     e.preventDefault();
                     root.getToken(function(response) {
                         var url = target.href;
