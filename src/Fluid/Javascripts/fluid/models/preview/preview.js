@@ -9,6 +9,29 @@ define(['backbone'], function (Backbone) {
             // Track iframe location change
             $("#website").on('load', function(e) { root.verifyFrameStatus(e) });
 
+            // Block normal link behavior of the iframe
+            this.overrideIframeBehavior();
+        },
+
+        overrideIframeBehavior: function() {
+            var root = this;
+            var iframe = $("#website")[0].contentWindow.document;
+
+            // Append the token and branch to local links
+            $('[href]', $(iframe.body)).on('click', function(e) {
+                var target = $(e.target)[0];
+
+                if (target.hostname == document.location.hostname) {
+                    e.preventDefault();
+                    root.getToken(function(response) {
+                        var url = target.href;
+                        url = updateQueryStringParameter(url, 'fluidbranch', fluidBranch);
+                        url = updateQueryStringParameter(url, 'fluidtoken', response.token);
+                        url = updateQueryStringParameter(url, 'fluidsession', fluidSession);
+                        iframe.location = url;
+                    });
+                }
+            });
         },
 
         getUrl: function() {
@@ -28,6 +51,8 @@ define(['backbone'], function (Backbone) {
 
             if (session === '' || token === '' || branch === '') {
                 this.loadPage(this.getUrl());
+            } else {
+                this.overrideIframeBehavior();
             }
         },
 
