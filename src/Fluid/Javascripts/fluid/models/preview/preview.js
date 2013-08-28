@@ -27,7 +27,7 @@ define(['backbone'], function (Backbone) {
             var branch = getParameterByName(url, 'fluidbranch');
 
             if (session === '' || token === '' || branch === '') {
-                this.loadPage(url);
+                this.loadPage(this.getUrl());
             }
         },
 
