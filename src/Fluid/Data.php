@@ -68,7 +68,7 @@ class Data
             'page' => $page
         );
 
-        foreach(Events::trigger('data', array($data)) as $retval) {
+        foreach(Events::trigger('data:get', array($data)) as $retval) {
             $data = $retval;
         }
 
