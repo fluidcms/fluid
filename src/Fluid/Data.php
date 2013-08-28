@@ -56,7 +56,7 @@ class Data
         $page = self::makeParentTree($page);
 
         $request = self::getRequest();
-        return array(
+        $data = array(
             'url' => $request['url'],
             'domain' => $request['domain'],
             'path' => $request['path'],
@@ -67,6 +67,12 @@ class Data
             'parent' => isset($page['parent']) ? $page['parent'] : array(),
             'page' => $page
         );
+
+        foreach(Events::trigger('data', array($data)) as $retval) {
+            $data = $retval;
+        }
+
+        return $data;
     }
 
     /**
