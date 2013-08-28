@@ -19,7 +19,7 @@ define(['backbone'], function (Backbone) {
 
             // Append the token and branch to local links
             $('[href]', $(iframe.body)).on('click', function(e) {
-                var target = $(e.target)[0];
+                var target = $(e.currentTarget)[0];
 
                 if (target.hostname == document.location.hostname) {
                     e.preventDefault();
