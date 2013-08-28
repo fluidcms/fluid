@@ -17,7 +17,7 @@ define(['backbone'], function (Backbone) {
             url = RemoveUrlParameter(url, 'fluidtoken');
             url = RemoveUrlParameter(url, 'fluidsession');
 
-            return url;
+            return url.replace(/^https?:\/\/[^\/]*/g, '');
         },
 
         verifyFrameStatus: function(e) {
@@ -32,16 +32,30 @@ define(['backbone'], function (Backbone) {
         },
 
         loadPage: function(url) {
+            var root = this;
+
             if (typeof url === 'undefined' || url === null) {
                 url = "/";
             }
 
-            this.getToken(function(response) {
-                url = updateQueryStringParameter(url, 'fluidbranch', fluidBranch);
-                url = updateQueryStringParameter(url, 'fluidtoken', response.token);
-                url = updateQueryStringParameter(url, 'fluidsession', fluidSession);
-                $("#website")[0].contentWindow.location = url;
-            });
+            var language;
+            if (typeof this.languages.current !== 'undefined' && this.languages.current !== null) {
+                language = this.languages.current.get('language');
+            }
+
+            $.ajax({url: "changepage.json", dataType: 'JSON', type: "GET", data: {
+                url: url,
+                language: language
+            }}).done(
+                function(url) {
+                    root.getToken(function(response) {
+                        url = updateQueryStringParameter(url, 'fluidbranch', fluidBranch);
+                        url = updateQueryStringParameter(url, 'fluidtoken', response.token);
+                        url = updateQueryStringParameter(url, 'fluidsession', fluidSession);
+                        $("#website")[0].contentWindow.location = url;
+                    });
+                }
+            );
         },
 
         getToken: function(callback) {

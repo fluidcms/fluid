@@ -55,7 +55,7 @@ class ManagerRouter
             self::upload() ||
             self::publicFiles() ||
             self::javascriptFiles() ||
-            self::changeLanguage() ||
+            self::changePage() ||
             self::htmlPages()
         );
     }
@@ -196,13 +196,13 @@ class ManagerRouter
      *
      * @return  bool
      */
-    private static function changeLanguage()
+    private static function changePage()
     {
-        if (!empty(self::$request) && self::$request === 'changelanguage.json') {
+        if (!empty(self::$request) && self::$request === 'changepage.json') {
             $url = isset($_GET['url']) ? filter_var($_GET['url'], FILTER_SANITIZE_STRING) : '';
             $language = isset($_GET['language']) ? filter_var($_GET['language'], FILTER_SANITIZE_STRING) : 'en-US';
 
-            foreach(Events::trigger('changeLanguage', array($url, $language)) as $retval) {
+            foreach(Events::trigger('changePage', array($url, $language)) as $retval) {
                 $url = $retval;
             }
 

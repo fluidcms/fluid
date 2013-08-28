@@ -58,15 +58,9 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
 
         changeLanguage: function (model) {
             if (model.target) {
-                var root = this;
                 var language = $(model.target).val();
-
-                $.ajax({url: "changelanguage.json", dataType: 'JSON', type: "GET", data: {
-                    url: this.preview.getUrl(),
-                    language: language
-                }}).done(function(response) {
-                        root.preview.loadPage(response)
-                });
+                this.languages.changeCurrent(language);
+                this.preview.loadPage(this.preview.getUrl());
             }
 
             else if (model.get('language') !== undefined && model.get('language') !== this.language) {
