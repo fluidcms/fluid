@@ -189,7 +189,10 @@ define(['backbone', 'models/page/page', 'views/page/page'], function (Backbone, 
                 var oldView = this.editor.view;
             }
 
-            this.editor.page = new Page({id: item, language: this.languages.current.get('language')}, {socket: this.socket, languages: this.languages});
+            this.editor.page = new Page(
+                {id: item, language: this.languages.current.get('language')},
+                {socket: this.socket, languages: this.languages, preview: this.preview}
+            );
             this.editor.view = new PageView({model: this.editor.page, app: this.app, components: this.components, files: this.files});
 
             this.editor.page.on('change', function() {
@@ -212,7 +215,6 @@ define(['backbone', 'models/page/page', 'views/page/page'], function (Backbone, 
         },
 
         stopEditing: function() {
-            this.preview.reload();
             if (typeof this.editor.page !== 'undefined') {
                 this.editor.page.destroy();
                 delete this.editor.page;

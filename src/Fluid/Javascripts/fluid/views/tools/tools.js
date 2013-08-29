@@ -85,6 +85,8 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
 
             if (root.contentEditor.is(':focus')) {
                 // Check if there is a paragrpah
+                // TODO: shouldnt this be part of the editor view instead?
+                // !!!!!!
                 if (root.contentEditor.find('p').length === 0) {
                     $("<p><br></p>").appendTo(root.contentEditor);
                 }
@@ -100,6 +102,8 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
 
                 // Check element type
                 var tag = root.checkCursorInElement();
+
+                // noinspection FallthroughInSwitchStatementJS
                 switch(tag) {
                     case 'H1':
                     case 'H2':
@@ -150,6 +154,7 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                 role = $(e.currentTarget).val();
             }
 
+            // noinspection FallthroughInSwitchStatementJS
             switch(role) {
                 case 'h1':
                 case 'h2':

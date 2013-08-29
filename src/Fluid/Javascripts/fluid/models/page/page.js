@@ -7,6 +7,7 @@ define(['backbone'], function (Backbone) {
         initialize: function (attrs, options) {
             this.socket = options.socket;
             this.languages = options.languages;
+            this.preview = options.preview;
             this.languages.on('change', this.changeLanguage, this);
         },
 
@@ -53,6 +54,7 @@ define(['backbone'], function (Backbone) {
                 response = root.parse(response);
                 root.set(response);
                 root.trigger('change');
+                root.preview.reload();
             });
         },
 
