@@ -50,8 +50,8 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                 this.contentEditor = this.map.editor.view.contentEditor.$el.find('[contenteditable]');
                 $(document).on('keypress keyup click mouseup', null, {root: this}, this.analyzeText);
 
-                $(this.$el).find('div.text a[data-role]').on('mousedown', this.formatText).on('mousedown', function() { root.analyzeText({data: {root: root}}); });
-                $(this.$el).find('div.text select').on('change', this.formatText).on('change', function() { root.analyzeText({data: {root: root}}); });
+                $(this.$el).find('div.text a[data-role]').on('mousedown', function(e) { root.formatText(e); }).on('mousedown', function() { root.analyzeText({data: {root: root}}); });
+                $(this.$el).find('div.text select').on('change', function(e) { root.formatText(e); }).on('change', function() { root.analyzeText({data: {root: root}}); });
 
                 this.analyzeText({data: {root: this}});
             }
@@ -84,6 +84,11 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
             var fontStyles = ['bold', 'italic', 'underline', 'strikeThrough'];
 
             if (root.contentEditor.is(':focus')) {
+                // Check if there is a paragrpah
+                if (root.contentEditor.find('p').length === 0) {
+                    $("<p><br></p>").appendTo(root.contentEditor);
+                }
+
                 // Check font styles
                 $.each(fontStyles, function(key, value) {
                     if (document.queryCommandValue(value) === 'true') {
@@ -155,13 +160,13 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                     document.execCommand('formatBlock', false, '<'+role+'>');
                     break;
                 case 'ul':
-                    document.execCommand('insertUnorderedList', false, null);
+                    this.formatList('UL');
                     break;
                 case 'ol':
-                    document.execCommand('insertOrderedList', false, null);
+                    this.formatList('OL');
                     break;
                 case 'p':
-                    document.execCommand('formatBlock', false, '<p>');
+                    this.formatParagraph();
                     break;
                 case 'bold':
                 case 'italic':
@@ -172,6 +177,51 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
             }
 
             return false;
+        },
+
+        formatList: function(type) {
+            if (type === 'OL') {
+                document.execCommand('insertOrderedList', false, null);
+            } else if (type === 'UL') {
+                document.execCommand('insertUnorderedList', false, null);
+            }
+
+            var selection = window.getSelection();
+            var range = selection.getRangeAt(0);
+
+            // Find paragraph or div
+            var parent = range.startContainer;
+            while (typeof parent.parentNode !== 'undefined' && parent.nodeName !== 'DIV' && parent.nodeName !== 'P') {
+                if (parent.nodeName == 'UL' || parent.nodeName == 'OL') {
+                    var child = parent;
+                }
+                parent = parent.parentNode;
+            }
+
+            if (typeof child !== 'undefined' && parent.getAttribute('contenteditable') !== 'true' && (parent.nodeName === 'DIV' || parent.nodeName === 'P')) {
+                $(parent).before(child);
+                $(parent).remove();
+
+                // TODO: fix this, this is not selecting the previous range all the time
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+        },
+
+        formatParagraph: function() {
+            var range = window.getSelection().getRangeAt(0);
+
+            var parent = range.startContainer;
+            while (typeof parent.parentNode !== 'undefined' && parent.nodeName !== 'DIV') {
+                if (parent.nodeName == 'UL') {
+                    document.execCommand('insertUnorderedList', false, null);
+                } else if (parent.nodeName == 'OL') {
+                    document.execCommand('insertOrderedList', false, null);
+                }
+                parent = parent.parentNode;
+            }
+
+            document.execCommand("formatBlock", false, "p");
         }
     });
 });

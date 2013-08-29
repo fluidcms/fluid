@@ -1,65 +1,57 @@
 define(['sanitize'], function (Sanitize) {
+    // !!!!!!!!
+    // !!!!!!!!
+    // TODO: Move all of this in the editor view
+    // !!!!!!!!
+    // !!!!!!!!
     return function (element, type) {
         $(element)
 
-            // Override return key
-            .on("keypress", function (e) {
+            // Keyup events
+            .on("keyup", function (e) {
                 if (e.which == 13) {
-                    // Use p instead of div in content, use br if shift is used
-                    if (type === 'content') {
-                        // Insert br if user is pressing shift and enter
-                        if (e.shiftKey) {
-                            var selection = window.getSelection(),
-                                range = selection.getRangeAt(0),
-                                br = document.createElement("br");
+                    var selection = window.getSelection();
+                    var range = selection.getRangeAt(0);
 
-                            // Insert br
-                            range.deleteContents();
-                            range.insertNode(br);
-                            range.setStartAfter(br);
-                            range.setEndAfter(br);
-                            selection.removeAllRanges();
-                            selection.addRange(range);
-                            return false;
+                    var parent = range.startContainer;
+                    while (parent && typeof parent.parentNode !== 'undefined') {
+                        if (parent.nodeName == 'DIV' && parent.getAttribute('contenteditable') === 'true') {
+                            return;
+                        } else if(parent.nodeName == 'DIV') {
+                            document.execCommand("formatBlock", false, "p");
+                            return;
+                        } else  {
+                            parent = parent.parentNode;
                         }
-                        // Insert p element instead of divs
-                        else {
-                            var selection = window.getSelection(),
-                                range = selection.getRangeAt(0),
-                                element = document.createElement("p");
-
-                            element.innerHTML = "&nbsp;"; // Tricky, chrome does not like empty nodes
-
-                            // Allow normal behavior for li and p
-                            var moveOutside = false;
-                            var parent = range.startContainer;
-                            while (parent && typeof parent.parentNode !== 'undefined') {
-                                // Allow normal behavior on li and p
-                                if (parent.nodeName.toLowerCase() == 'li' || parent.nodeName.toLowerCase() == 'p') {
-                                    return true;
-                                } else if (parent.nodeName.toLowerCase() == 'div') {
-                                    parent = false;
-                                } else {
-                                    parent = parent.parentNode;
-                                }
-                            }
-
-                            // Otherwise append p and block normal behavior
-                            range.deleteContents();
-                            range.insertNode(element);
-                            range.selectNodeContents(element);
-                            range.collapse(true);
-                            selection.removeAllRanges();
-                            selection.addRange(range);
-                            return false;
-                        }
-                    }
-
-                    // Block line return on strings
-                    else {
-                        return false;
                     }
                 }
+            })
+
+            // Keypress events
+            .on("keypress", function (e) {
+                // Block line return on strings
+                if (e.which === 13 && type !== 'content') {
+                    return false;
+                }
+
+                // Allow br when enter key is pressed with shift
+                else if (e.which == 13 && e.shiftKey) {
+                    // Insert br if user is pressing shift and enter
+                    var selection = window.getSelection();
+                    var range = selection.getRangeAt(0);
+                    var br = document.createElement("br");
+
+                    // Insert br
+                    range.deleteContents();
+                    range.insertNode(br);
+                    range.setStartAfter(br);
+                    range.setEndAfter(br);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                    return false;
+                }
+
+                return true;
             })
 
             // Sanitize Paste
