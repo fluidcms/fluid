@@ -26,6 +26,7 @@ define(['backbone', 'models/page/page', 'views/page/page'], function (Backbone, 
                 this.toJSON(),
                 function(response) {
                     root.base.parse(response);
+                    root.base.preview.reload();
                 }
             );
         },
@@ -142,6 +143,7 @@ define(['backbone', 'models/page/page', 'views/page/page'], function (Backbone, 
 
             socket.send('POST', this.url, data, function(response) {
                 root.base.parse(response);
+                root.base.preview.reload();
             });
         },
 
@@ -169,7 +171,8 @@ define(['backbone', 'models/page/page', 'views/page/page'], function (Backbone, 
                     index: position
                 },
                 function(response) {
-                   root.parse(response);
+                    root.parse(response);
+                    root.preview.reload();
                 }
             );
         },

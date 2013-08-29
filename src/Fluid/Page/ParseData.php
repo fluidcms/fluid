@@ -20,7 +20,7 @@ class ParseData
     public static function parse(Page $page, Layout $layout, $language = null)
     {
         $data = $page->getRawData($language);
-        $data = self::merge($layout->getVariables(), $data);
+        $data = self::merge($layout->getDefinition(), $data);
 
         return $data;
     }

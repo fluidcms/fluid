@@ -138,7 +138,26 @@ class Data
     {
         $data = Page::get()->getData();
         $data['pages'] = self::getPagesData($map->getPages());
+        $data = self::processPagesKeys($data);
         return $data;
+    }
+
+    /**
+     * Add keys to sub pages
+     *
+     * @param   array   $page
+     * @return  array
+     */
+    private static function processPagesKeys($page)
+    {
+        if (isset($page['pages']) && is_array($page['pages']) && count($page['pages'])) {
+            $newPages = array();
+            foreach($page['pages'] as $key => $childPage) {
+                $newPages[$childPage['page']] = self::processPagesKeys($childPage);
+            }
+            $page['pages'] = $newPages;
+        }
+        return $page;
     }
 
     /**
@@ -223,6 +242,12 @@ class Data
     private static function makeParentTree($page)
     {
         if (count($page['parents'])) {
+            $newParents = array();
+            foreach($page['parents'] as $parent) {
+                $newParents[$parent['page']] = $parent;
+            }
+            $page['parents'] = $newParents;
+
             $page['parent'] = current($page['parents']);
             $page['parent']['parents'] = array_slice($page['parents'], 1);
             $page['parent'] = self::makeParentTree($page['parent']);
