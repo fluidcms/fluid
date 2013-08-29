@@ -157,13 +157,11 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                 case 'h4':
                 case 'h5':
                 case 'h6':
-                    document.execCommand('formatBlock', false, '<'+role+'>');
+                    document.execCommand('formatBlock', false, role);
                     break;
                 case 'ul':
-                    this.formatList('UL');
-                    break;
                 case 'ol':
-                    this.formatList('OL');
+                    this.formatList(role);
                     break;
                 case 'p':
                     this.formatParagraph();
@@ -180,9 +178,9 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
         },
 
         formatList: function(type) {
-            if (type === 'OL') {
+            if (type === 'ol') {
                 document.execCommand('insertOrderedList', false, null);
-            } else if (type === 'UL') {
+            } else if (type === 'ul') {
                 document.execCommand('insertUnorderedList', false, null);
             }
 
@@ -211,8 +209,9 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
         formatParagraph: function() {
             var range = window.getSelection().getRangeAt(0);
 
+            // Remove from list before applying paragraph
             var parent = range.startContainer;
-            while (typeof parent.parentNode !== 'undefined' && parent.nodeName !== 'DIV') {
+            while (parent !== null && typeof parent.parentNode !== 'undefined' && parent.nodeName !== 'DIV') {
                 if (parent.nodeName == 'UL') {
                     document.execCommand('insertUnorderedList', false, null);
                 } else if (parent.nodeName == 'OL') {
