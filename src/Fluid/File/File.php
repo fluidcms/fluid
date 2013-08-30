@@ -156,7 +156,7 @@ class File
             if ($file !== '.' && $file !== '..' && is_file("{$dir}/{$file}")) {
                 if ($file = FileInfo::getImageInfo("{$dir}/{$file}")) {
                     return array_merge(
-                        array("id" => $id, 'src' => "/fluidcms/files/{$id}/{$file['name']}"),
+                        array("id" => $id, 'src' => "/fluidcms/images/{$id}/{$file['name']}"),
                         $file
                     );
                 }
