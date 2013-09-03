@@ -163,6 +163,24 @@ div.page-editor div.main div.content,
   img {
     max-width: 100%;
   }
+
+  div.component {
+    margin-bottom: 10px;
+    line-height: 24px;
+    height: 24px;
+    img {
+      display: block;
+      float: left;
+      margin: 0;
+      margin-right: 8px;
+      width: 41px;
+      height: 24px;
+    }
+  }
+  div[data-component] {
+    -webkit-user-select: none;
+  }
+
 }
 
 /* # Image variable

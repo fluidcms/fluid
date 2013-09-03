@@ -1,4 +1,4 @@
-define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/contextmenu', 'views/components/component'], function (Backbone, EJS, jUI, Editor, ContextMenu, ComponentView) {
+define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/contextmenu'], function (Backbone, EJS, jUI, EditorHelper, ContextMenu) {
     return Backbone.View.extend({
         events: {
             "click [data-action=cancel]": "close",
@@ -13,14 +13,19 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
 
         template: new EJS({url: 'javascripts/fluid/templates/editor/editor.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
+        data: null,
+        html: null,
+
         initialize: function (attrs) {
             var root = this;
 
             this.type = attrs.type;
-            this.model = attrs.model;
-            this.group = attrs.group;
-            this.item = attrs.item;
+            this.html = attrs.html;
+            this.data = attrs.data;
             this.components = attrs.components;
+            this.app = attrs.app;
+
+            this.app.editors[this.cid] = this;
 
             this.render();
 
@@ -44,22 +49,13 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
         },
 
         render: function () {
-            var render = this.model.get('render');
-            var content;
-
-            if (typeof render[this.group] === 'undefined' || typeof render[this.group][this.item] === 'undefined') {
-                content = "";
-            } else {
-                content = render[this.group][this.item];
-            }
-
             this.$el.html(this.template.render({
                 type: this.type,
-                content: content
+                html: this.html
             }));
-            $(".page-editor").after(this.$el);
+            $("#target").append(this.$el);
 
-            Editor(this.$el.find('div[contenteditable]'), this.type);
+            EditorHelper(this.$el.find('div[contenteditable]'), this.type); // TODO: integrate into this view
 
             this.droppable();
 
@@ -74,13 +70,23 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
         },
 
         save: function() {
+            var content = this.$el.find('div[contenteditable]').html();
+
+            if (this.type === 'string') {
+                this.data = content;
+            } else if (this.type === 'content') {
+                this.data.source = content;
+            }
+
             this.trigger('save');
-            this.model.saveData(this.group, this.item, this.$el.find('div[contenteditable]').html());
             this.close();
         },
 
         close: function() {
             this.trigger('close');
+
+            delete this.app.editors[this.cid];
+
             $(document).off('keydown', this.keyEvents.save);
             $(document).off('keyup', this.keyEvents.escape);
             this.remove();
@@ -99,14 +105,21 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
         },
 
         addComponent: function(item) {
-            var id = item.attr('data-component');
-            item.removeAttr('data-component');
-            item.attr('contenteditable', 'false');
-            item.wrap('<div id="'+randomString(8)+'" data-component="'+id+'"></div>');
-            this.editComponent($(item).parents('div[data-component]')[0]);
+            var id = randomString(8);
+            var componentName = item.attr('data-component');
+            var component = $('<div id="' + id + '" data-component="' + componentName + '" contenteditable="false" class="component"></div>');
+            component.html(item.html());
+            item.before(component);
+            item.remove();
+
+            this.data.components[id] = {
+                component: componentName,
+                data: {}
+            };
         },
 
         editComponent: function(e) {
+            var root = this;
             var element;
             if (typeof e.tagName === 'string') {
                 if ($(e).attr('data-component')) {
@@ -120,26 +133,23 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
 
             if (typeof element !== 'undefined' && element !== null) {
                 var id = element.attr('id');
-                var model = this.components.findWhere({'component': element.attr('data-component')});
-                var data = this.model.get('data');
 
-                if (
-                    typeof data[this.group] !== 'undefined' &&
-                    typeof data[this.group][this.item] !== 'undefined' &&
-                    typeof data[this.group][this.item]['components'] !== 'undefined' &&
-                    typeof data[this.group][this.item]['components'][id] !== 'undefined'
-                ) {
-                    data = data[this.group][this.item]['components'][id];
-                } else {
-                    data = {};
-                }
+                var definition = this.components.findWhere({'component': element.attr('data-component')});
 
-                new ComponentView({
-                    definition: model,
-                    data: data
+                var component = this.data['components'][id];
+
+                require(['views/components/component'], function (ComponentView) {
+                    var componentView = new ComponentView({
+                        app: root.app,
+                        components: root.components,
+                        definition: definition,
+                        component: component
+                    });
+
+                    componentView.on('save', function() {
+                        root.data['components'][id] = this.component;
+                    });
                 });
-//                console.log(id, model);
-//                console.log(this.model, this.group, this.item);
             }
         },
 
@@ -155,8 +165,9 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
 
             if (typeof element !== 'undefined' && element !== null) {
                 var id = element.attr('id');
-                // TODO: delete component from model
                 element.remove();
+
+                delete this.data.components[id];
             }
         }
     });

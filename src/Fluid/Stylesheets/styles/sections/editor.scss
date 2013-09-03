@@ -93,16 +93,16 @@ div.editor {
       ul {
         list-style: disc outside;
       }
-      a.component {
+      div.component {
         cursor: pointer;
-        display: block;
         margin-bottom: 20px;
-        width: 54px;
-        text-align: center;
+        line-height: 32px;
+        height: 32px;
         img {
           display: block;
+          float: left;
           margin: 0;
-          margin-bottom: 8px;
+          margin-right: 12px;
         }
         &:hover {
           color: $blue;

@@ -194,7 +194,7 @@ define(['backbone', 'models/page/page', 'views/page/page'], function (Backbone, 
 
             this.editor.page = new Page(
                 {id: item, language: this.languages.current.get('language')},
-                {socket: this.socket, languages: this.languages, preview: this.preview}
+                {socket: this.socket, languages: this.languages, preview: this.preview, components: this.components}
             );
             this.editor.view = new PageView({model: this.editor.page, app: this.app, components: this.components, files: this.files});
 
@@ -223,9 +223,14 @@ define(['backbone', 'models/page/page', 'views/page/page'], function (Backbone, 
                 delete this.editor.page;
             }
             if (typeof this.editor.view !== 'undefined') {
-                this.editor.view.remove();
+                this.editor.view.close();
                 delete this.editor.view;
             }
+
+            $.each(this.app.editors, function() {
+                this.close();
+            });
+
             this.editing = false;
         },
 

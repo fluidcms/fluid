@@ -8,7 +8,7 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
 
         textEnabled: false,
 
-        contentEditor: null,
+        editor: null,
 
         template: new EJS({url: 'javascripts/fluid/templates/tools/tools.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
@@ -45,9 +45,9 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
         enable: function() {
             var root = this;
 
-            if (this.map.editor.view.contentEditor.type === 'content') {
+            if (this.map.editor.view.editor.type === 'content') {
                 this.textEnabled = true;
-                this.contentEditor = this.map.editor.view.contentEditor.$el.find('[contenteditable]');
+                this.editor = this.map.editor.view.editor.$el.find('[contenteditable]');
                 $(document).on('keypress keyup click mouseup', null, {root: this}, this.analyzeText);
 
                 $(this.$el).find('div.text a[data-role]').on('mousedown', function(e) { root.formatText(e); }).on('mousedown', function() { root.analyzeText({data: {root: root}}); });
@@ -83,12 +83,12 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
 
             var fontStyles = ['bold', 'italic', 'underline', 'strikeThrough'];
 
-            if (root.contentEditor.is(':focus')) {
+            if (root.editor.is(':focus')) {
                 // Check if there is a paragrpah
                 // TODO: shouldnt this be part of the editor view instead?
                 // !!!!!!
-                if (root.contentEditor.find('p').length === 0) {
-                    $("<p><br></p>").appendTo(root.contentEditor);
+                if (root.editor.find('p').length === 0) {
+                    $("<p><br></p>").appendTo(root.editor);
                 }
 
                 // Check font styles

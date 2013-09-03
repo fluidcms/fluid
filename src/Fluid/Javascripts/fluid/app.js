@@ -35,6 +35,7 @@ define(
                 current: "",
                 main: null,
                 ready: false,
+                editors: {},
 
                 initialize: function () {
                     var root = this;
@@ -91,6 +92,7 @@ define(
                         root.models.languages.fetch();
                         root.models.layouts.fetch();
                         root.models.preview.loadPage();
+                        root.models.components.fetch();
                         root.models.map.fetch();
                     });
 

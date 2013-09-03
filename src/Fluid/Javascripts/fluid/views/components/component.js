@@ -1,4 +1,4 @@
-define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/editor/editor'], function (Backbone, EJS, jUI, ContextMenu, Editor) {
+define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'models/variables/variables', 'views/editor/editor'], function (Backbone, EJS, jUI, ContextMenu, Variables, Editor) {
     return Backbone.View.extend({
         events: {
             "click a[data-action='close']": "close",
@@ -7,24 +7,35 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/edit
 
         current: null,
 
-        previousAppNav: null,
-
-        contentEditor: null,
+        editor: null,
 
         className: 'variables',
+
+        changed: false,
 
         template: new EJS({url: 'javascripts/fluid/templates/components/component.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
-            /*var root = this;
             this.app = attrs.app;
-            this.languages = attrs.languages;
             this.components = attrs.components;
-            this.model.on('change', this.render, this);
-            this.app.on('change', function() { root.previousAppNav = null; });*/
-
             this.definition = attrs.definition;
-            this.data = attrs.data;
+            this.component = attrs.component;
+
+            this.app.editors[this.cid] = this;
+
+            this.variables = new Variables(null, {
+                components: this.components,
+                data: this.component.data,
+                definition: this.definition.get('variables')
+            });
+
+            if ($.isArray(this.component.data) && this.component.data.length === 0) {
+                this.component.data = {};
+            }
+
+            this.data = this.component.data;
+            this.html = this.variables.toHTML();
+
             this.render();
         },
 
@@ -34,6 +45,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/edit
             this.$el.html(this.template.render({
                 definition: this.definition.get('variables'),
                 data: this.data,
+                render: this.html,
                 variables: variables
             }));
 
@@ -41,38 +53,58 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/edit
             return this;
         },
 
+        save: function() {
+            this.trigger('save');
+        },
+
         close: function() {
+            if (this.changed) {
+                this.save();
+            }
+            delete this.app.editors[this.cid];
             this.remove();
         },
 
         edit: function(e) {
+            var root = this;
             var target = $(e.currentTarget);
-            var group = target.attr('data-group');
             var item = target.attr('data-item');
-            var data = target.find('div.data');
 
-            if (data.hasClass("string")) {
-                this.contentEditor = new Editor({type: 'string', group: group, item: item, model: this.model, components: this.components});
-            } else if (data.hasClass("content")) {
-                var previousAppNav = this.app.current;
-                if (previousAppNav !== 'components' && previousAppNav !== 'files') {
-                    this.app.make('tools');
-                    this.previousAppNav = previousAppNav;
-                }
-                this.contentEditor = new Editor({type: 'content', group: group, item: item, model: this.model, components: this.components});
-                this.contentEditor.on('close', this.toggleAppNav, this);
-            } else {
-                this.contentEditor = null;
+            var html = "";
+            if (typeof this.html[item] !== 'undefined') {
+                html = this.html[item];
             }
+
+            var data = null;
+            if (typeof this.data[item] !== 'undefined') {
+                data = this.data[item];
+            }
+
+            var type;
+            if (target.find('div.data').hasClass("string")) {
+                type = 'string';
+            } else if (target.find('div.data').hasClass("content")) {
+                type = "content";
+            }
+
+            this.editor = new Editor({
+                type: type,
+                html: html,
+                data: data,
+                app: this.app,
+                components: this.components
+            });
+
+            this.editor.on('save', function() {
+                root.data[item] = this.data;
+                root.component.data = root.data;
+                root.variables.updateData(root.data);
+                root.html = root.variables.toHTML();
+                root.changed = true;
+                root.render();
+            });
 
             this.trigger('editing');
-        },
-
-        toggleAppNav: function() {
-            this.trigger('stopEditing');
-            if (typeof this.previousAppNav !== 'undefined' && this.previousAppNav !== null) {
-                this.app.make(this.previousAppNav);
-            }
         }
     });
 });

@@ -9,7 +9,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/edit
 
         previousAppNav: null,
 
-        contentEditor: null,
+        editor: null,
 
         className: 'page-editor',
 
@@ -17,10 +17,15 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/edit
 
         initialize: function (attrs) {
             var root = this;
+
             this.app = attrs.app;
+
+            this.app.editors[this.cid] = this;
+
             this.languages = attrs.languages;
             this.components = attrs.components;
             this.files = attrs.files;
+
             this.model.on('change', this.render, this);
             this.app.on('change', function() { root.previousAppNav = null; });
         },
@@ -37,10 +42,15 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/edit
 
             this.droppable();
 
-            $("#website").after(this.$el);
+            $("#target").append(this.$el);
 
             this.changeGroup(this.current);
             return this;
+        },
+
+        close: function() {
+            delete this.app.editors[this.cid];
+            this.remove();
         },
 
         droppable: function() {
@@ -88,24 +98,53 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/edit
         },
 
         edit: function(e) {
+            var root = this;
             var target = $(e.currentTarget);
             var group = target.parents('div[data-group]').attr('data-group');
             var item = target.attr('data-item');
-            var data = target.find('div.data');
+            var content = target.find('div.data');
 
-            if (data.hasClass("string")) {
-                this.contentEditor = new Editor({type: 'string', group: group, item: item, model: this.model, components: this.components});
-            } else if (data.hasClass("content")) {
+            var html = this.model.get('render');
+            if (typeof html[group] !== 'undefined' && typeof html[group][item] !== 'undefined') {
+                html = html[group][item];
+            } else {
+                html = "";
+            }
+
+            var data = this.model.get('data');
+            if (typeof data[group] !== 'undefined' && typeof data[group][item] !== 'undefined') {
+                data = data[group][item];
+            } else {
+                data = null;
+            }
+
+            var type;
+            if (target.find('div.data').hasClass("string")) {
+                type = 'string';
+            } else if (target.find('div.data').hasClass("content")) {
+                type = "content";
                 var previousAppNav = this.app.current;
                 if (previousAppNav !== 'components' && previousAppNav !== 'files') {
                     this.app.make('tools');
                     this.previousAppNav = previousAppNav;
                 }
-                this.contentEditor = new Editor({type: 'content', group: group, item: item, model: this.model, components: this.components});
-                this.contentEditor.on('close', this.toggleAppNav, this);
-            } else {
-                this.contentEditor = null;
             }
+
+            this.editor = new Editor({
+                type: type,
+                html: html,
+                data: data,
+                app: this.app,
+                components: this.components
+            });
+
+            if (type === 'content') {
+                this.editor.on('close', this.toggleAppNav, this);
+            }
+
+            this.editor.on('save', function() {
+                root.model.saveData(group, item, this.data);
+            });
 
             this.trigger('editing');
         },
