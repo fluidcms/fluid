@@ -110,31 +110,11 @@ class UpdateData
             }
             $output[$group] = array();
 
-            foreach($vars as $name => $info) {
-                if (!isset($data[$group][$name])) {
-                    $data[$group][$name] = null;
-                }
-
-                // TODO: move to a sanitizeVariable method or something (same as below)
-                switch($info['type']) {
-                    case 'string':
-                        $output[$group][$name] = self::sanitizeString($data[$group][$name]);
-                        break;
-                    case 'content':
-                        $output[$group][$name] = self::sanitizeContent($data[$group][$name]);
-                        break;
-                    case 'image':
-                        if (is_string($data[$group][$name]) && strlen($data[$group][$name]) === 8) {
-                            $image = Image::format($data[$group][$name], $info);
-                            $output[$group][$name] = self::sanitizeNewImage($image);
-                        } else {
-                            $output[$group][$name] = self::sanitizeImage($data[$group][$name]);
-                        }
-                        break;
-                }
+            foreach($vars as $name => $variable) {
+                $output[$group][$name] = self::parseVariable($variable, (!empty($data[$group][$name]) ? $data[$group][$name] : null));
 
                 // Save universal variables
-                if (isset($info['universal']) && $info['universal'] === true) {
+                if (isset($variable['universal']) && $variable['universal'] === true) {
                     self::updateUniversal($page, $language, $languages, $group, $name, $output[$group][$name]);
                 }
             }
@@ -142,6 +122,45 @@ class UpdateData
         }
 
         return $output;
+    }
+
+    /**
+     * Parse a variable
+     *
+     * @param   array   $variable
+     * @param   mixed   $value
+     * @return  mixed
+     */
+    private static function parseVariable($variable, $value = null)
+    {
+        $retval = null;
+
+        switch($variable['type']) {
+            case 'string':
+                if (!empty($value)) {
+                    $retval = self::sanitizeString($value);
+                } else {
+                    $retval = "";
+                }
+                break;
+            case 'content':
+                if (!empty($value)) {
+                    $retval = self::sanitizeContent($value);
+                } else {
+                    $retval = array('source' => '', 'components' => null, 'images' => null);
+                }
+                break;
+            case 'image':
+                if (is_string($value) && strlen($value) === 8) {
+                    $image = Image::format($value, $variable);
+                    $retval = self::sanitizeNewImage($image);
+                } else {
+                    $retval = self::sanitizeImage($value);
+                }
+                break;
+        }
+
+        return $retval;
     }
 
     /**
@@ -174,10 +193,12 @@ class UpdateData
         );
 
         // Sanitize components
-        foreach($value['components'] as $id => $component) {
-            if (strpos($output['source'], '{'.$id.'}') !== false) {
-                if ($component = self::sanitizeComponent($component)) {
-                    $output['components'][$id] = $component;
+        if (isset($value['components']) && is_array($value['components'])) {
+            foreach($value['components'] as $id => $component) {
+                if (strpos($output['source'], '{'.$id.'}') !== false) {
+                    if ($component = self::sanitizeComponent($component)) {
+                        $output['components'][$id] = $component;
+                    }
                 }
             }
         }
@@ -211,24 +232,8 @@ class UpdateData
             'data' => array()
         );
 
-        // TODO: move to a sanitizeVariable method or something (same as above)
         foreach($definition->getVariables() as $name => $variable) {
-            switch($variable['type']) {
-                case 'string':
-                    $retval['data'][$name] = self::sanitizeString($component['data'][$name]);
-                    break;
-                case 'content':
-                    $retval['data'][$name] = self::sanitizeContent($component['data'][$name]);
-                    break;
-                case 'image':
-                    if (is_string($component['data'][$name]) && strlen($component['data'][$name]) === 8) {
-                        $image = Image::format($component['data'][$name], $variable);
-                        $retval['data'][$name] = self::sanitizeNewImage($image);
-                    } else {
-                        $retval['data'][$name] = self::sanitizeImage($component['data'][$name]);
-                    }
-                    break;
-            }
+            $retval['data'][$name] = self::parseVariable($variable, (!empty($component['data'][$name]) ? $component['data'][$name] : null));
         }
 
         return $retval;

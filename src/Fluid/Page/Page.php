@@ -87,7 +87,7 @@ class Page extends FileSystem
     /**
      * Get the current page language
      *
-     * @return  void
+     * @return  string
      */
     public function getLanguage()
     {

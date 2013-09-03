@@ -155,8 +155,7 @@ define(['backbone'], function (Backbone) {
             var content = data.source;
 
             // Components
-            var components = content.match(/<div id="[^"]*" data-component="[^"]*"(.|[\r\n])*<\/div>/gi);
-
+            var components = content.match(/<div id="[^"]*" data-component="[^"]*"(.|[\r\n])*?<\/div>/gi);
             if (components !== null) {
                 $.each(components, function(key, value) {
                     var id = value.match(/id="([^"]*)"/)[1];
@@ -165,6 +164,10 @@ define(['backbone'], function (Backbone) {
                     var componentData = {};
                     if (typeof data['components'][id] !== 'undefined' && typeof data['components'][id]['data'] !== 'undefined') {
                         componentData = data['components'][id]['data'];
+                    }
+
+                    if ($.isArray(componentData) && !componentData.length) {
+                        componentData = {};
                     }
 
                     output.components[id] = {
