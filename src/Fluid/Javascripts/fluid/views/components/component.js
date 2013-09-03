@@ -96,9 +96,9 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'models/var
             });
 
             this.editor.on('save', function() {
-                root.data[item] = this.data;
-                root.component.data = root.data;
+                root.data[item] = root.variables.toJSON(this.data, item);
                 root.variables.updateData(root.data);
+                root.component.data = root.data;
                 root.html = root.variables.toHTML();
                 root.changed = true;
                 root.render();

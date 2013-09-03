@@ -6,8 +6,20 @@
     "Content": {
         "Title": "Welcome",
         "Content": {
-            "source": "Hello World {PkPUah3bme2qvkTK}",
-            "components": {},
+            "source": "Hello World {PkPUah3bme2qvkTK} {H7inutVo}",
+            "components": {
+                "H7inutVo": {
+                    "component": "accordion",
+                    "data": {
+                        "Name": "Hello World",
+                        "Content": {
+                            "source": "",
+                            "components": [],
+                            "images": []
+                        }
+                    }
+                }
+            },
             "images": {
                 "PkPUah3bme2qvkTK": {
                     "src": "\/fluidcms\/images\/y3gsv57j\/My Logo.png",

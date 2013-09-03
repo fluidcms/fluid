@@ -20,6 +20,10 @@ class GetPageDataTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $data['page']['Header']['Title']);
         $this->assertEquals('Welcome', $data['parent']['parent']['Content']['Title']);
         $this->assertRegExp('/<img src="/', $data['parent']['parent']['Content']['Content']);
+
+        // Test components
+        $data = Fluid\Data::get('home page');
+        $this->assertRegExp('/<a>Hello World<\/a>/', $data['page']['Content']['Content']);
     }
 
     public function tearDown()

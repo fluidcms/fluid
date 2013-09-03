@@ -3,7 +3,9 @@
 namespace Fluid\Page;
 
 use Fluid\Fluid,
+    Fluid\View,
     Fluid\Layout\Layout,
+    Fluid\Component\Component,
     Fluid\Page\Page,
     Fluid\Storage\FileSystem;
 
@@ -95,7 +97,20 @@ class ParseData
 
         // Components
         foreach($content['components'] as $id => $component) {
+            $definition = Component::get($component['component']);
+            $data = self::parseVariables($definition->getVariables(), $component['data']);
 
+            $templates = View::getTemplatesDir();
+            $file = substr($definition->getFile(), strlen($templates)-1);
+            $macro = $definition->getMacro();
+
+            if (!empty($macro)) {
+                $html = View::macro($macro, $file, $data);
+            } else {
+                $html = View::create($file, $data);
+            }
+
+            $output = str_replace('{'.$id.'}', $html, $output);
         }
 
         // Images

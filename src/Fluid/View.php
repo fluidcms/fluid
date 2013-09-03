@@ -4,6 +4,8 @@ namespace Fluid;
 
 use Twig_Loader_Filesystem,
     Twig_Environment,
+    Twig_Loader_Chain,
+    Twig_Loader_String,
     Fluid\Token\Token;
 
 /**
@@ -29,6 +31,30 @@ class View
     }
 
     /**
+     * Create a view from a Twig macro
+     *
+     * @param   string   $macro
+     * @param   string   $file
+     * @param   array    $data
+     * @return  string
+     */
+    public static function macro($macro, $file, $data = array())
+    {
+        // TODO: add hook for Twig loader
+        // TODO: cache twig loaders in static variables
+        $loader = new Twig_Loader_Chain(array(
+            new Twig_Loader_Filesystem(self::getTemplatesDir()),
+            new Twig_Loader_String()
+        ));
+
+        $twig = new Twig_Environment($loader);
+
+        $input = '{% import "'.$file.'" as macros %}{{ macros.'.$macro.'(data) }}';
+
+        return $twig->render($input, array('data' => $data));
+    }
+
+    /**
      * Extends Twig Loader
      *
      * @param   TwigLoaderInterface $loader
@@ -45,12 +71,13 @@ class View
     /**
      * Initialize Twig
      *
-     * @param   string   $file
-     * @param   array    $data
      * @return  string
      */
     public static function initTwig()
     {
+        // TODO: make Twig hook event based
+        // TODO: cache twig loaders in static variables
+
         if (null !== self::$loader) {
             return call_user_func(array(self::$loader, 'loader'));
         }
@@ -70,6 +97,9 @@ class View
      */
     protected static function render($file, $data = array())
     {
+        // TODO: convert hook for Twig loader (same as macro method)
+        // TODO: cache twig loaders in static variables
+
         list($loader, $twig) = static::initTwig();
 
         $template = $twig->loadTemplate($file);
@@ -90,10 +120,14 @@ class View
     /**
      * Get templates directory
      *
-     * @return  void
+     * @return  string
      */
     public static function getTemplatesDir()
     {
+        if (null === self::$templatesDir) {
+            self::setTemplatesDir(Fluid::getConfig('templates'));
+        }
+
         return self::$templatesDir;
     }
 }

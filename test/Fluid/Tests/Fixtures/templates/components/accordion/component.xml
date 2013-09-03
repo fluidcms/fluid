@@ -5,6 +5,7 @@
         <setting name="name" value="Accordion" />
         <setting name="icon" value="icon.png" />
         <setting name="file" value="accordion.twig" />
+        <setting name="macro" value="accordion"/>
     </config>
 
     <variable name="Name" type="string" />

@@ -15,6 +15,7 @@ class Component
     private $component;
     private $xmlFile;
     private $name;
+    private $macro;
     private $file;
     private $icon;
     private $variables;
@@ -41,6 +42,17 @@ class Component
     }
 
     /**
+     * Get a component
+     *
+     * @param   string  $value
+     * @return  self
+     */
+    public static function get($value)
+    {
+        return new self($value);
+    }
+
+    /**
      * Set file
      *
      * @param   string  $value
@@ -60,6 +72,27 @@ class Component
     public function setName($value)
     {
         $this->name = (string)$value;
+    }
+
+    /**
+     * Set macro
+     *
+     * @param   string  $value
+     * @return  void
+     */
+    public function setMacro($value)
+    {
+        $this->macro = (string)$value;
+    }
+
+    /**
+     * Get macro
+     *
+     * @return  string
+     */
+    public function getMacro()
+    {
+        return $this->macro;
     }
 
     /**
@@ -102,6 +135,16 @@ class Component
     public function getXMLFile()
     {
         return $this->xmlFile;
+    }
+
+    /**
+     * Get component file
+     *
+     * @return  string
+     */
+    public function getFile()
+    {
+        return realpath(dirname($this->xmlFile) . "/{$this->file}");
     }
 
     /**

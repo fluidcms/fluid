@@ -32,6 +32,10 @@ class Parser extends Definition
             $component->setName($config['name']);
         }
 
+        if (isset($config['macro'])) {
+            $component->setMacro($config['macro']);
+        }
+
         $component->setVariables($variables);
 
         return $component;
