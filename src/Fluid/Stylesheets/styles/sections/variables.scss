@@ -67,6 +67,21 @@ div.page-editor, #target>div.component, #target>div.variables {
   div.main {
     padding-top: $big-margin-top - $big-margin-top/2;
 
+    header {
+      padding-top: $big-margin-top/2;
+      padding-bottom: $big-margin-bottom;
+      margin-left: $big-margin-left;
+
+      img {
+        float: left;
+        margin-right: $main-margin-right;
+      }
+
+      line-height: 32px;
+      font-size: 22px;
+      font-weight: $light;
+    }
+
     a {
       display: block;
       padding-top: $big-margin-top/2;

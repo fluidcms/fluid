@@ -122,21 +122,25 @@ define(['backbone'], function (Backbone) {
             var output = content.source;
 
             // Components
-            $.each(content.components, function(key, item) {
-                var component = root.components.findWhere({component: item.component});
-                var html = root.component
-                    .replace('%id', key)
-                    .replace('%src', 'data:image/jpg;base64,' + component.get('icon'))
-                    .replace('%component', component.get('component'))
-                    .replace('%name', component.get('name'));
-                output = output.replace('{'+key+'}', html);
-            });
+            if (typeof content.components !== 'undefined' && content.components !== null) {
+                $.each(content.components, function(key, item) {
+                    var component = root.components.findWhere({component: item.component});
+                    var html = root.component
+                        .replace('%id', key)
+                        .replace('%src', 'data:image/jpg;base64,' + component.get('icon'))
+                        .replace('%component', component.get('component'))
+                        .replace('%name', component.get('name'));
+                    output = output.replace('{'+key+'}', html);
+                });
+            }
 
             // Images
-            $.each(content.images, function(key, item) {
-                var html = root.image.replace('%src', item.src).replace('%id', key);
-                output = output.replace('{'+key+'}', html);
-            });
+            if (typeof content.images !== 'undefined' && content.images !== null) {
+                $.each(content.images, function(key, item) {
+                    var html = root.image.replace('%src', item.src).replace('%id', key);
+                    output = output.replace('{'+key+'}', html);
+                });
+            }
 
             return output;
         },

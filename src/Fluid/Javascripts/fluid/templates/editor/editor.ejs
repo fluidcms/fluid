@@ -4,9 +4,7 @@
             <% if (html !== '' && html !== null) { %><%= html %><% } else { %><p><br></p><% } %>
         </div>
     <% } else if (type === 'string') { %>
-        <div class="string-editor" contenteditable="true">
-            <%= html %>
-        </div>
+        <div class="string-editor" contenteditable="true"><%= html %></div>
     <% } %>
 
     <div class="commands">

@@ -1,7 +1,11 @@
 <div>
     <div class="main">
+        <header>
+            <img src="data:image/jpg;base64,<%= component.get('icon') %>" width="54" height="32" alt="">
+            <%= component.get('name') %>
+        </header>
         <div>
-            <%= variables.render({definition: definition, data: data}) %>
+            <%= variables.render({definition: definition, data: render}) %>
         </div>
     </div>
     <div class="commands">

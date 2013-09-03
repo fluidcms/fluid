@@ -43,6 +43,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'models/var
             var variables = new EJS({url: 'javascripts/fluid/templates/variables/variables.ejs?' + (new Date()).getTime()});  // !! Remove for production
 
             this.$el.html(this.template.render({
+                component: this.components.findWhere({component: this.component.component}),
                 definition: this.definition.get('variables'),
                 data: this.data,
                 render: this.html,
