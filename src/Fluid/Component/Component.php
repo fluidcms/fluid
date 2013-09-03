@@ -45,10 +45,12 @@ class Component
      * Get a component
      *
      * @param   string  $value
+     * @throws  Exception
      * @return  self
      */
     public static function get($value)
     {
+        // TODO: cache this
         return new self($value);
     }
 

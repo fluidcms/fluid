@@ -96,38 +96,42 @@ class ParseData
         $output = $content['source'];
 
         // Components
-        foreach($content['components'] as $id => $component) {
-            $definition = Component::get($component['component']);
-            $data = self::parseVariables($definition->getVariables(), $component['data']);
+        if (is_array($content['components'])) {
+            foreach($content['components'] as $id => $component) {
+                $definition = Component::get($component['component']);
+                $data = self::parseVariables($definition->getVariables(), $component['data']);
 
-            $templates = View::getTemplatesDir();
-            $file = substr($definition->getFile(), strlen($templates)-1);
-            $macro = $definition->getMacro();
+                $templates = View::getTemplatesDir();
+                $file = substr($definition->getFile(), strlen($templates)-1);
+                $macro = $definition->getMacro();
 
-            if (!empty($macro)) {
-                $html = View::macro($macro, $file, $data);
-            } else {
-                $html = View::create($file, $data);
+                if (!empty($macro)) {
+                    $html = View::macro($macro, $file, $data);
+                } else {
+                    $html = View::create($file, $data);
+                }
+
+                $output = str_replace('{'.$id.'}', $html, $output);
             }
-
-            $output = str_replace('{'.$id.'}', $html, $output);
         }
 
         // Images
-        foreach($content['images'] as $id => $image) {
-            $html = '<img src="'.$image['src'].'"';
-            if (!empty($image['width'])) {
-                $html .= ' width="'.$image['width'].'"';
-            }
-            if (!empty($image['height'])) {
-                $html .= ' height="'.$image['height'].'"';
-            }
-            if (!empty($image['alt'])) {
-                $html .= ' alt="'.$image['alt'].'"';
-            }
-            $html .= '>';
+        if (is_array($content['images'])) {
+            foreach($content['images'] as $id => $image) {
+                $html = '<img src="'.$image['src'].'"';
+                if (!empty($image['width'])) {
+                    $html .= ' width="'.$image['width'].'"';
+                }
+                if (!empty($image['height'])) {
+                    $html .= ' height="'.$image['height'].'"';
+                }
+                if (!empty($image['alt'])) {
+                    $html .= ' alt="'.$image['alt'].'"';
+                }
+                $html .= '>';
 
-            $output = str_replace('{'.$id.'}', $html, $output);
+                $output = str_replace('{'.$id.'}', $html, $output);
+            }
         }
 
         return $output;

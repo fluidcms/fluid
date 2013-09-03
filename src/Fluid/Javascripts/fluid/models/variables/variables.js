@@ -18,7 +18,7 @@ define(['backbone'], function (Backbone) {
 
         toJSON: function(data, item, group) {
             var definition;
-            if (group !== null && group !== '') {
+            if (typeof group !== 'undefined' && group !== null && group !== '') {
                 definition = this.definition[group][item];
             } else {
                 definition = this.definition[item];

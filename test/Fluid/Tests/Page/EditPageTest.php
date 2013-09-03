@@ -46,7 +46,7 @@ class EditPageTest extends PHPUnit_Framework_TestCase
 
         $data = $page->getRawData();
 
-        $data['Content']['Content']['source'] = "Hello World, how are you today? {PkPUah3bme2qvkTK}";
+        $data['Content']['Content']['source'] = "Hello World, how are you today? {PkPUah3bme2qvkTK} {H7inutVo}";
 
         $request = array(
             "method" => "PUT",

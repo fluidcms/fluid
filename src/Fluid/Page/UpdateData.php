@@ -6,10 +6,13 @@ use Exception,
     Fluid\Fluid,
     Fluid\Map\Map,
     Fluid\Layout\Layout,
+    Fluid\Component\Component,
     Fluid\File\Image;
 
 class UpdateData
 {
+    private static $components = array();
+
     /**
      * Sanitize page data input
      *
@@ -112,6 +115,7 @@ class UpdateData
                     $data[$group][$name] = null;
                 }
 
+                // TODO: move to a sanitizeVariable method or something (same as below)
                 switch($info['type']) {
                     case 'string':
                         $output[$group][$name] = self::sanitizeString($data[$group][$name]);
@@ -149,6 +153,7 @@ class UpdateData
     private static function sanitizeString($value)
     {
         $value = str_replace(array('\n', PHP_EOL), '', $value);
+        $value = str_replace('&nbsp;', ' ', $value);
         $value = trim($value);
 
         return $value;
@@ -162,7 +167,71 @@ class UpdateData
      */
     private static function sanitizeContent($value)
     {
-        return $value; // TODO: sanitize maybe?
+        $output = array(
+            'source' => $value['source'],
+            'components' => array(),
+            'images' => array()
+        );
+
+        // Sanitize components
+        foreach($value['components'] as $id => $component) {
+            if (strpos($output['source'], '{'.$id.'}') !== false) {
+                if ($component = self::sanitizeComponent($component)) {
+                    $output['components'][$id] = $component;
+                }
+            }
+        }
+
+        // TODO: sanitize images maybe?
+        $output['images'] = $value["images"];
+
+        return $output;
+    }
+
+    /**
+     * Sanitize component
+     *
+     * @param   array   $component
+     * @return  array
+     */
+    private static function sanitizeComponent($component)
+    {
+        try {
+            if (!isset(self::$components[$component['component']])) {
+                $definition = self::$components[$component['component']] = Component::get($component['component']);
+            } else {
+                $definition = self::$components[$component['component']];
+            }
+        } catch(Exception $e) {
+            return false;
+        }
+
+        $retval = array(
+            'component' => $component['component'],
+            'data' => array()
+        );
+
+        // TODO: move to a sanitizeVariable method or something (same as above)
+        foreach($definition->getVariables() as $name => $variable) {
+            switch($variable['type']) {
+                case 'string':
+                    $retval['data'][$name] = self::sanitizeString($component['data'][$name]);
+                    break;
+                case 'content':
+                    $retval['data'][$name] = self::sanitizeContent($component['data'][$name]);
+                    break;
+                case 'image':
+                    if (is_string($component['data'][$name]) && strlen($component['data'][$name]) === 8) {
+                        $image = Image::format($component['data'][$name], $variable);
+                        $retval['data'][$name] = self::sanitizeNewImage($image);
+                    } else {
+                        $retval['data'][$name] = self::sanitizeImage($component['data'][$name]);
+                    }
+                    break;
+            }
+        }
+
+        return $retval;
     }
 
     /**
