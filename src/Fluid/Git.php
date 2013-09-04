@@ -163,16 +163,25 @@ class Git
     /**
      * Get all commits for a branch
      *
-     * @param   string $branch
-     * @param   string $head
+     * @param   string  $branch
+     * @param   string  $head
+     * @param   int     $count
      * @return  array
      */
-    public static function getCommits($branch, $head = null)
+    public static function getCommits($branch, $head = null, $count = null)
     {
         $command = "git log";
 
-        if (null !== $head) {
+        if (null !== $head && null === $count) {
             $command .= " {$head}";
+        }
+
+        if (null !== $count && null === $head) {
+            $command .= " HEAD~{$count}..HEAD";
+        }
+
+        if (null !== $count && null !== $head) {
+            $command .= " {$head}~{$count}..{$head}";
         }
 
         $retval = self::command($branch, $command);

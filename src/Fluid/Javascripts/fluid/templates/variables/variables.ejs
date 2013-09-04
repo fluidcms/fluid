@@ -1,29 +1,17 @@
-<% $.each(definition, function(key, item) { %>
-<% if (item.type == 'array') { %>
-<div data-item="<%= key %>">
-    <div class="label array"><%= key %> <a data-action="addArrayItem">Add</a></div>
-    <% if (typeof data[key] !== 'undefined' && data[key] !== null) { $.each(data[key], function(arrayKey, arrayItem) { %>
-    <div class="array-item">
-        yo
-    </div>
-    <% }); } %>
-</div>
-<% } else { %>
-<a data-item="<%= key %>">
-    <div class="label"><%= key %></div>
-
-    <% if (item.type == 'string') { %>
-    <div class="data string"><% if (typeof data[key] !== 'undefined') { %><%= data[key] %><% } %></div>
-    <% } else if (item.type == 'content') { %>
-    <div class="data content"><% if (typeof data[key] !== 'undefined') { %><%= data[key] %><% } %></div>
-    <% } else if (item.type == 'image') { %>
-    <div class="data image">
+<%
+var renderVariable = function(variable, data) {
+    if (variable.type == 'string') { %>
+        <div class="data string"><% if (typeof data !== 'undefined') { %><%= data %><% } %></div>
+    <% } else if (variable.type == 'content') { %>
+        <div class="data content"><% if (typeof data !== 'undefined') { %><%= data %><% } %></div>
+    <% } else if (variable.type == 'image') { %>
+        <div class="data image">
         <%
-            var width = parseInt(typeof item.width !== 'undefined' ? item.width : 0);
-            var height = parseInt(typeof item.height !== 'undefined' ? item.height : 0);
+            var width = parseInt(typeof variable.width !== 'undefined' ? variable.width : 0);
+            var height = parseInt(typeof variable.height !== 'undefined' ? variable.height : 0);
 
-            if (typeof item.formats !== 'undefined' && width === 0 && height === 0) {
-                $.each(item.formats, function(formatkey, format) {
+            if (typeof variable.formats !== 'undefined' && width === 0 && height === 0) {
+                $.each(variable.formats, function(formatkey, format) {
                     if (typeof format.width !== 'undefined' && parseInt(format.width) > width) {
                         width = parseInt(format.width);
                         height = parseInt(typeof format.height !== 'undefined' ? format.height : "");
@@ -35,18 +23,40 @@
             }
         %>
 
-        <% if (typeof data[key] !== 'undefined') { %>
-        <%= data[key] %>
+        <% if (typeof data !== 'undefined') { %>
+            <%= data %>
         <% } else { %>
-        <img src="images/imgtmp-<%= width === 0 ? 3000 : width %>px-<%= height === 0 ? 200 : height %>px.gif"
-            width="<%= width === 0 ? 3000 : "" %>"
-            height="<%= height === 0 ? 200 : "" %>"
-            alt="">
+            <img src="images/imgtmp-<%= width === 0 ? 3000 : width %>px-<%= height === 0 ? 200 : height %>px.gif"
+                 width="<%= width === 0 ? 3000 : "" %>"
+                height="<%= height === 0 ? 200 : "" %>"
+                alt="">
         <% } %>
-    </div>
+        </div>
     <% } else { %>
-    <div class="data"></div>
+        <div class="data"></div>
+    <% }
+};
+%>
+
+<% $.each(definition, function(key, item) { %>
+    <% if (item.type == 'array') { %>
+        <div data-item="<%= key %>">
+            <div class="label array"><%= key %> <a data-action="addArrayItem">Add</a></div>
+            <% if (typeof data[key] !== 'undefined' && data[key] !== null) { $.each(data[key], function(arrayKey, arrayItem) { %>
+            <div class="array-item">
+                <% $.each(item.variables, function(arrayVariableName, arrayVariable) { %>
+                    <a data-array-item="<%= arrayVariableName %>">
+                        <div class="label"><%= arrayVariableName %></div>
+                        <% renderVariable(arrayVariable, arrayItem[arrayVariableName]) %>
+                    </a>
+                <% }); %>
+            </div>
+            <% }); } %>
+        </div>
+    <% } else { %>
+        <a data-item="<%= key %>">
+            <div class="label"><%= key %></div>
+            <% renderVariable(item, data[key]) %>
+        </a>
     <% } %>
-</a>
-<% } %>
 <% }); %>

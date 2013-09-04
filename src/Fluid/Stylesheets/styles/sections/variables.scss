@@ -2,6 +2,7 @@
 @import "../../mixins";
 @import "compass/css3/box";
 @import "compass/css3/box-shadow";
+@import "compass/css3/images";
 
 /* Table of Content
 ==================================================
@@ -82,7 +83,7 @@ div.page-editor, #target>div.component, #target>div.variables {
       font-weight: $light;
     }
 
-    [data-item] {
+    [data-item], [data-array-item] {
       display: block;
       padding-top: $big-margin-top/2;
       padding-bottom: $big-margin-bottom/2;
@@ -95,6 +96,31 @@ div.page-editor, #target>div.component, #target>div.variables {
         color: $gray;
         font-size: 13px;
         font-weight: $bold;
+      }
+    }
+
+    a[data-item], a[data-array-item] {
+      cursor: pointer;
+
+      &:after {
+        content: "\0020";
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+      }
+
+      div.data {
+        margin-left: 90px+$big-margin-left;
+        margin-right: $big-margin-right;
+        min-height: 1em;
+      }
+
+      &:hover div.label {
+        color: $blue;
+      }
+      &:active div.label {
+        color: $dark-blue;
       }
     }
 
@@ -134,32 +160,52 @@ div.page-editor, #target>div.component, #target>div.variables {
           }
         }
       }
+
+      div.label.array + div.array-item {
+        margin-top: $big-margin-top/2;
+      }
+
+      div.array-item {
+        cursor: move;
+        position: relative;
+        padding-left: 80px;
+        @include background(
+            linear-gradient(top, transparent 0%, transparent 19px, #e9e9e9 19px, #e9e9e9 50%, transparent 50%),
+            linear-gradient(bottom, transparent 0%, transparent 19px, #e9e9e9 19px, #e9e9e9 50%, transparent 50%),
+            linear-gradient(left, #e9e9e9, #e9e9e9)
+        );
+        background-size: 1px 100%, 1px 100%, 28px 1px;
+        background-repeat: no-repeat, no-repeat, no-repeat;
+        background-position: 40px 0, 40px 0, 40px 19px;
+
+        div.label {
+          margin-left: 0;
+        }
+
+        &:after {
+          content: "";
+          position: absolute;
+          display: block;
+          left: 40px;
+          width: 28px;
+          height: 1px;
+          background: #e9e9e9;
+          bottom: 19px;
+        }
+        &:before {
+          @include sprite-after(5px, 15px);
+          @include sprite-position(-65px -64px);
+          position: absolute;
+          top: 50%;
+          left: 38px;
+          margin-top: -7px;
+        }
+        &:hover:before {
+          @include sprite-position(-70px -64px);
+        }
+      }
     }
 
-    a[data-item] {
-      cursor: pointer;
-
-      &:after {
-        content: "\0020";
-        display: block;
-        height: 0;
-        clear: both;
-        visibility: hidden;
-      }
-
-      div.data {
-        margin-left: 90px+$big-margin-left;
-        margin-right: $big-margin-right;
-        min-height: 1em;
-      }
-
-      &:hover div.label {
-        color: $blue;
-      }
-      &:active div.label {
-        color: $dark-blue;
-      }
-    }
   }
 }
 

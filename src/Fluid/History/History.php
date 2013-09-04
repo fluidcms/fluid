@@ -30,12 +30,12 @@ class History
 
         // Get master branch commits
         if ($head !== 'master') {
-            $ghostCommits = Git::getCommits($this->branch, 'master');
+            $ghostCommits = Git::getCommits($this->branch, 'master', 20);
             $ghostCommits = array_map(function($commit) { return array_merge($commit, array('ghost' => true)); }, $ghostCommits);
         }
 
         $output = array();
-        foreach(array_merge($ghostCommits, Git::getCommits($this->branch)) as $commit) {
+        foreach(array_merge($ghostCommits, Git::getCommits($this->branch, null, 20)) as $commit) {
             if (strpos($commit['message'], 'history') === 0) {
                 $output[$commit['commit']] = array(
                     'id' => $commit['commit'],

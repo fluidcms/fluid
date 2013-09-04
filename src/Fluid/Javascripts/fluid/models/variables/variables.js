@@ -34,41 +34,44 @@ define(['backbone'], function (Backbone) {
 
         groupsToHTML: function(definition, data) {
             var root = this;
-            var output = {};
+            var retval = {};
 
             $.each(definition, function(key, item) {
                 if (typeof data[key] !== 'undefined') {
-                    output[key] = root.variablesToHTML(item, data[key]);
+                    retval[key] = root.variablesToHTML(item, data[key]);
                 }
             });
 
-           return output;
+           return retval;
         },
 
         variablesToHTML: function(definition, data) {
             var root = this;
-            var output = {};
+            var retval = {};
 
             $.each(definition, function(key, item) {
                 if (typeof data[key] !== 'undefined' && data[key] !== null) {
                     switch(item.type) {
                         case 'string':
-                            output[key] = data[key];
+                            retval[key] = data[key];
                             break;
                         case 'content':
-                            output[key] = root.contentToHTML(data[key]);
+                            retval[key] = root.contentToHTML(data[key]);
                             break;
                         case 'image':
-                            output[key] = root.imageToHTML(data[key]);
+                            retval[key] = root.imageToHTML(data[key]);
                             break;
                         case 'array':
-                            output[key] = root.variablesToHTML(item, data[key]);
+                            retval[key] = [];
+                            $.each(data[key], function(arrayKey, arrayItem) {
+                                retval[key].push(root.variablesToHTML(item.variables, arrayItem));
+                            });
                             break;
                     }
                 }
             });
 
-            return output;
+            return retval;
         },
 
         imageToHTML: function(content) {

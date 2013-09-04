@@ -88,6 +88,9 @@ define(['backbone', 'models/variables/variables'], function (Backbone, Variables
             data[group][item] = variable;
 
             this.set('data', data);
+            this.variables.updateData(data);
+            this.set('render', this.variables.toHTML());
+            this.trigger('change');
             this.save();
         }
     });
