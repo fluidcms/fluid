@@ -93,23 +93,37 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
         },
 
         sortableArray: function() {
+            var root = this;
+            var startIndex;
             this.$el.find('div[data-item]').sortable({
                 axis: "y",
                 cancel: ".label,[data-array-item]",
                 update: function (event, ui) {
-                    console.log('sort');
-                    /*var item = ui.item.attr('data-id');
-                    var receiver = $(event.target).parents('li').attr('data-id');
-                    if (typeof receiver == 'undefined') {
-                        receiver = '';
+                    var stopIndex = ui.item.index() - 1;
+
+                    var target = ui.item;
+                    if (target.parents('div[data-group]').length) {
+                        var group = target.parents('div[data-group]').attr('data-group');
                     }
-                    root.dropbox.position = ui.item.index();
-                    root.dropbox.item = item;
-                    root.dropbox.receiver = receiver;
-                    clearTimeout(root.dropbox.timeout);
-                    root.dropbox.timeout = setTimeout(function () {
-                        root.sort()
-                    }, 10);*/
+                    var item = target.parents('div[data-item]').attr('data-item');
+
+                    var array;
+                    if (typeof group !== 'undefined') {
+                        array = root.data[group][item][startIndex];
+                        root.data[group][item].splice(startIndex, 1);
+                        root.data[group][item].splice(stopIndex, 0, array);
+
+                        root.save(root.data[group][item], item, group);
+                    } else {
+                        array = root.data[item][startIndex];
+                        root.data[item].splice(startIndex, 1);
+                        root.data[item].splice(stopIndex, 0, array);
+
+                        root.save(root.data[item], item);
+                    }
+                },
+                start: function(event, ui) {
+                    startIndex = ui.item.index() - 1;
                 }
             });
             this.$el.find('div[data-item]').disableSelection();
