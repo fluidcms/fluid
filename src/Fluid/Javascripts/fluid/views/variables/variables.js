@@ -221,7 +221,7 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
                 var dataArray;
                 if (typeof group !== 'undefined') {
                     if (array) {
-                        dataArray = root.html[group][item];
+                        dataArray = root.data[group][item];
                         dataArray[key][array] = this.data;
                         this.data = dataArray;
                     }
@@ -229,7 +229,7 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
                     root.save(this.data, item, group);
                 } else {
                     if (array) {
-                        dataArray = root.html[item];
+                        dataArray = root.data[item];
                         dataArray[key][array] = this.data;
                         this.data = dataArray;
                     }
