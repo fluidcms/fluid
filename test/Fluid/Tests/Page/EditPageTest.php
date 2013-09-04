@@ -156,11 +156,21 @@ class EditPageTest extends PHPUnit_Framework_TestCase
             "data" => array(
                 "Rows" => array(
                     array(
+                        "Description" => array(
+                            "source" => "This is the item description",
+                            "components" => array(),
+                            "images" => array()
+                        ),
                         "Quantity" => "2",
                         "Amount" => "4.00",
                         "Total" => "8.00"
                     ),
                     array(
+                        "Description" => array(
+                            "source" => "Item 2",
+                            "components" => array(),
+                            "images" => array()
+                        ),
                         "Quantity" => "6",
                         "Amount" => "13.00",
                         "Total" => "78.00"

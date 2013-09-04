@@ -75,6 +75,9 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
             if (this.type === 'string') {
                 this.data = content;
             } else if (this.type === 'content') {
+                if (typeof this.data === 'undefined' || this.data === null) {
+                    this.data = {};
+                }
                 this.data.source = content;
             }
 
@@ -111,6 +114,14 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
             component.html(item.html());
             item.before(component);
             item.remove();
+
+            if (typeof this.data === 'undefined' || this.data === null) {
+                this.data = {};
+            }
+
+            if (typeof this.data.components === 'undefined' || this.data.components === null) {
+                this.data.components = {};
+            }
 
             this.data.components[id] = {
                 component: componentName,
