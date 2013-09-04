@@ -2,6 +2,7 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
     return {
         events: {
             "click a[data-item]": "edit",
+            "click a[data-array-item]": "edit",
             "click nav a": "changeGroup",
             "click [data-action=addArrayItem]": "addArrayItem",
             'contextmenu div.array-item': 'arrayContextMenu'
@@ -146,6 +147,15 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
                 var group = target.parents('div[data-group]').attr('data-group');
             }
             var item = target.attr('data-item');
+            if (typeof item === 'undefined') {
+                item = target.parents('[data-item]').attr('data-item');
+            }
+
+            var array = false;
+            if (target.attr("data-array-item")) {
+                var key = target.parents("div.array-item").index() - 1;
+                array = target.attr("data-array-item");
+            }
 
             var html = "";
             if (typeof this.html[item] !== 'undefined' || (typeof group !== 'undefined' && typeof this.html[group] !== 'undefined' && typeof this.html[group][item] !== 'undefined')) {
@@ -156,6 +166,10 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
                 }
             }
 
+            if (array) {
+                html = html[key][array];
+            }
+
             var data = null;
             if (typeof this.data[item] !== 'undefined' || (typeof group !== 'undefined' && typeof this.data[group] !== 'undefined' && typeof this.data[group][item] !== 'undefined')) {
                 if (typeof group !== 'undefined') {
@@ -163,6 +177,10 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
                 } else {
                     data = this.data[item];
                 }
+            }
+
+            if (array) {
+                data = data[key][array];
             }
 
             var type;
@@ -185,9 +203,22 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
             }
 
             this.editor.on('save', function() {
+                var dataArray;
                 if (typeof group !== 'undefined') {
+                    if (array) {
+                        dataArray = root.html[group][item];
+                        dataArray[key][array] = this.data;
+                        this.data = dataArray;
+                    }
+
                     root.save(this.data, item, group);
                 } else {
+                    if (array) {
+                        dataArray = root.html[item];
+                        dataArray[key][array] = this.data;
+                        this.data = dataArray;
+                    }
+
                     root.save(this.data, item);
                 }
             });

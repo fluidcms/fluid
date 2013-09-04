@@ -182,11 +182,9 @@ define(['backbone'], function (Backbone) {
                 images: {}
             };
 
-            var content;
-            if (typeof data !== 'undefined' && data !== null) {
+            var content = "";
+            if (typeof data !== 'undefined' && data !== null && typeof data.source !== 'undefined' && data.source !== null) {
                 content = data.source;
-            } else {
-                content = "";
             }
 
             // Components
