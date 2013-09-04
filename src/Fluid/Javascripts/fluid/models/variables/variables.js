@@ -16,33 +16,6 @@ define(['backbone'], function (Backbone) {
             this.data = data;
         },
 
-        toJSON: function(data, item, group) {
-            var definition;
-            if (typeof group !== 'undefined' && group !== null && group !== '') {
-                definition = this.definition[group][item];
-            } else {
-                definition = this.definition[item];
-            }
-
-            var output;
-            switch(definition.type) {
-                case 'string':
-                    // Trim and remove trailing <br> added by the editor
-                    data = data.replace(/^\s+|\s+$/g, '');
-                    data = data.replace(/^<br>+|<br>+$/g, '');
-                    output = data;
-                    break;
-                case 'content':
-                    output = this.contentToJSON(data);
-                    break;
-                case 'image':
-                    output = data;
-                    break;
-            }
-
-            return output;
-        },
-
         toHTML: function() {
             var groups = false;
             for(var key in this.definition) {
@@ -87,6 +60,9 @@ define(['backbone'], function (Backbone) {
                             break;
                         case 'image':
                             output[key] = root.imageToHTML(data[key]);
+                            break;
+                        case 'array':
+                            output[key] = root.variablesToHTML(item, data[key]);
                             break;
                     }
                 }
@@ -143,6 +119,57 @@ define(['backbone'], function (Backbone) {
             }
 
             return output;
+        },
+
+        toJSON: function(data, item, group) {
+            var definition;
+            if (typeof group !== 'undefined' && group !== null && group !== '') {
+                definition = this.definition[group][item];
+            } else {
+                definition = this.definition[item];
+            }
+
+            return this.variableToJSON(definition, data);
+        },
+
+        variableToJSON: function(definition, data) {
+            switch(definition.type) {
+                case 'string':
+                    // Trim and remove trailing <br> added by the editor
+                    if (data === null) {
+                        data = '';
+                    }
+                    data = data.replace(/^\s+|\s+$/g, '');
+                    data = data.replace(/^<br>+|<br>+$/g, '');
+                    return data;
+                case 'content':
+                    return this.contentToJSON(data);
+                case 'image':
+                    return data;
+                case 'array':
+                    return this.arrayToJSON(definition.variables, data);
+            }
+            return null;
+        },
+
+        arrayToJSON: function(definition, data) {
+            var root = this;
+            var retval = [];
+            $.each(data, function(key, item) {
+                retval[key] = {};
+                if (item === null) {
+                    item = {};
+                }
+
+                $.each(definition, function(name, variable) {
+                    if (typeof item[name] === 'undefined') {
+                        item[name] = null;
+                    }
+                    retval[key][name] = root.variableToJSON(variable, item[name]);
+                });
+            });
+
+            return retval;
         },
 
         contentToJSON: function(data) {

@@ -82,11 +82,61 @@ div.page-editor, #target>div.component, #target>div.variables {
       font-weight: $light;
     }
 
-    a {
+    [data-item] {
       display: block;
       padding-top: $big-margin-top/2;
       padding-bottom: $big-margin-bottom/2;
       clear: both;
+
+      div.label {
+        width: 90px;
+        float: left;
+        margin-left: $big-margin-left;
+        color: $gray;
+        font-size: 13px;
+        font-weight: $bold;
+      }
+    }
+
+    div[data-item] {
+      div.label.array {
+        color: $dark-gray;
+        width: auto;
+        float: none;
+
+        a[data-action] {
+          cursor: pointer;
+          display: inline-block;
+          margin-left: $main-margin-left;
+          color: $gray;
+          position: relative;
+          padding-left: $list-link-sprite-left;
+
+          &:before {
+            @include sprite-after(10px, 10px);
+            @include sprite-position(-35px -64px);
+            position: absolute;
+            top: 3px;
+            left: 12px;
+          }
+
+          &:hover {
+            color: $blue;
+            &:before {
+              @include sprite-position(-45px -64px);
+            }
+          }
+          &:active {
+            color: $dark-blue;
+            &:before {
+              @include sprite-position(-55px -64px);
+            }
+          }
+        }
+      }
+    }
+
+    a[data-item] {
       cursor: pointer;
 
       &:after {
@@ -97,14 +147,6 @@ div.page-editor, #target>div.component, #target>div.variables {
         visibility: hidden;
       }
 
-      div.label {
-        width: 90px;
-        float: left;
-        margin-left: $big-margin-left;
-        color: #989898;
-        font-size: 13px;
-        font-weight: $bold;
-      }
       div.data {
         margin-left: 90px+$big-margin-left;
         margin-right: $big-margin-right;

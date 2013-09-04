@@ -1,4 +1,14 @@
 <% $.each(definition, function(key, item) { %>
+<% if (item.type == 'array') { %>
+<div data-item="<%= key %>">
+    <div class="label array"><%= key %> <a data-action="addArrayItem">Add</a></div>
+    <% if (typeof data[key] !== 'undefined' && data[key] !== null) { $.each(data[key], function(arrayKey, arrayItem) { %>
+    <div class="array-item">
+        yo
+    </div>
+    <% }); } %>
+</div>
+<% } else { %>
 <a data-item="<%= key %>">
     <div class="label"><%= key %></div>
 
@@ -38,4 +48,5 @@
     <div class="data"></div>
     <% } %>
 </a>
+<% } %>
 <% }); %>
