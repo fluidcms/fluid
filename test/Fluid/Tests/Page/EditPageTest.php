@@ -102,6 +102,44 @@ class EditPageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($data['Bilingual']['Name'], $retval['data']['Bilingual']['Name']);
     }
 
+    public function testEditArray()
+    {
+        // Home page
+        $map = new Map;
+        $mapPage = $map->findPage('home page');
+        $page = Page::get($mapPage, 'en-US');
+
+        $data = $page->getRawData();
+
+        $data['Content']['Sections'] = array(
+            array(
+                "Name" => "Test",
+                "Image" => array(
+                    "src" => "/fluidcms/images/y3gsv57j/My Logo.png",
+                    "alt" => "",
+                    "width" => "64",
+                    "height" => "64"
+                )
+            )
+        );
+
+        $request = array(
+            "method" => "PUT",
+            "url" => "page/en-US/home page",
+            "data" => $data
+        );
+
+        ob_start();
+        new Fluid\WebSockets\Requests($request['url'], $request['method'], $request['data'], 'develop', Helper::getUser());
+        $retval = ob_get_contents();
+        ob_end_clean();
+
+        $retval = json_decode($retval, true);
+
+        $this->assertEquals($data['Content']['Sections'][0]['Name'], $retval['data']['Content']['Sections'][0]['Name']);
+        $this->assertEquals(1, count($retval['data']['Content']['Sections']));
+    }
+
     public function tearDown()
     {
         Helper::deleteStorage();
