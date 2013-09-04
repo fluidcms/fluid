@@ -1,6 +1,7 @@
 define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], function (jUI, Editor, ContextMenu) {
     return {
         events: {
+            "click a[data-action='close']": "close",
             "click a[data-item]": "edit",
             "click a[data-array-item]": "edit",
             "click nav a": "changeGroup",

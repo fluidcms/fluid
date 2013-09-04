@@ -53,6 +53,7 @@ define(['backbone', 'models/variables/variables'], function (Backbone, Variables
                 data = data['data'];
             }
 
+            // TODO: we need to add chaining for these so they don't overlap each others and bug the application
             this.socket.send('PUT', url, data, function(response) {
                 response = root.parse(response);
                 root.set(response);

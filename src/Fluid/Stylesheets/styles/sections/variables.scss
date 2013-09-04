@@ -131,13 +131,14 @@ div.page-editor, #target>div.component, #target>div.variables {
         float: none;
         position: relative;
         cursor: pointer;
+        padding-left: 18px;
 
         &:before {
           @include sprite-after(10px, 10px);
           @include sprite-position(-35px -64px);
           position: absolute;
           top: 4px;
-          left: -18px;
+          left: 0;
         }
 
         &:hover {
