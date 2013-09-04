@@ -172,7 +172,12 @@ class Git
     {
         $command = "git log";
 
-        if (null !== $head && null === $count) {
+        // TODO: replace by script below once it passes tests
+        if (null !== $head) {
+            $command .= " {$head}";
+        }
+        // TODO: this does not pass tests
+        /*if (null !== $head && null === $count) {
             $command .= " {$head}";
         }
 
@@ -182,7 +187,7 @@ class Git
 
         if (null !== $count && null !== $head) {
             $command .= " {$head}~{$count}..{$head}";
-        }
+        }*/
 
         $retval = self::command($branch, $command);
         $commits = preg_split("/(commit [a-zA-Z0-9]*)/", $retval, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);

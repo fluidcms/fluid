@@ -140,6 +140,55 @@ class EditPageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($retval['data']['Content']['Sections']));
     }
 
+
+    public function testEditComponentArray()
+    {
+        // Home page
+        $map = new Map;
+        $mapPage = $map->findPage('home page');
+        $page = Page::get($mapPage, 'en-US');
+
+        $data = $page->getRawData();
+
+        $data['Content']['Content']['source'] = "Hello World {PkPUah3bme2qvkTK} {H7inutVo} {3o7367Wy}";
+        $data['Content']['Content']['components']['3o7367Wy'] = array(
+            "component" => "table2",
+            "data" => array(
+                "Rows" => array(
+                    array(
+                        "Quantity" => "2",
+                        "Amount" => "4.00",
+                        "Total" => "8.00"
+                    ),
+                    array(
+                        "Quantity" => "6",
+                        "Amount" => "13.00",
+                        "Total" => "78.00"
+                    )
+                )
+            )
+        );
+
+        $request = array(
+            "method" => "PUT",
+            "url" => "page/en-US/home page",
+            "data" => $data
+        );
+
+        ob_start();
+        new Fluid\WebSockets\Requests($request['url'], $request['method'], $request['data'], 'develop', Helper::getUser());
+        $retval = ob_get_contents();
+        ob_end_clean();
+
+        $retval = json_decode($retval, true);
+
+        $this->assertEquals(
+            $data['Content']['Content']['components']['3o7367Wy']['data']['Rows'][0]['Quantity'],
+            $retval['data']['Content']['Content']['components']['3o7367Wy']['data']['Rows'][0]['Quantity']
+        );
+        $this->assertEquals(2, count($retval['data']['Content']['Content']['components']['3o7367Wy']['data']['Rows']));
+    }
+
     public function tearDown()
     {
         Helper::deleteStorage();
