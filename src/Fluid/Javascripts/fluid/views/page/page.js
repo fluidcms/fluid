@@ -47,6 +47,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/edit
             }));
 
             this.droppable();
+            this.sortableArray();
 
             $("#target").append(this.$el);
 

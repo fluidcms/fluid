@@ -160,12 +160,14 @@ class UpdateData
                 break;
             case 'array':
                 $retval = array();
-                foreach($value as $array) {
-                    $retArray = array();
-                    foreach($variable['variables'] as $name => $arrayVar) {
-                        $retArray[$name] = self::parseVariable($arrayVar, (!empty($array[$name]) ? $array[$name] : null));
+                if (isset($value) && is_array($value) && count($value)) {
+                    foreach($value as $array) {
+                        $retArray = array();
+                        foreach($variable['variables'] as $name => $arrayVar) {
+                            $retArray[$name] = self::parseVariable($arrayVar, (!empty($array[$name]) ? $array[$name] : null));
+                        }
+                        $retval[] = $retArray;
                     }
-                    $retval[] = $retArray;
                 }
         }
 

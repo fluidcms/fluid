@@ -1,9 +1,10 @@
-define(['jquery-ui', 'views/editor/editor'], function (jUI, Editor) {
+define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], function (jUI, Editor, ContextMenu) {
     return {
         events: {
             "click a[data-item]": "edit",
             "click nav a": "changeGroup",
-            "click [data-action=addArrayItem]": "addArrayItem"
+            "click [data-action=addArrayItem]": "addArrayItem",
+            'contextmenu div.array-item': 'arrayContextMenu'
         },
 
         current: null,
@@ -15,6 +16,25 @@ define(['jquery-ui', 'views/editor/editor'], function (jUI, Editor) {
         close: function() {
             delete this.app.editors[this.cid];
             this.remove();
+        },
+
+        changeGroup: function(e) {
+            this.$el.find('nav li').removeClass('current');
+            this.$el.find('div.main>div').css("display", "none");
+
+            if (typeof e === 'undefined' || e === null) {
+                this.$el.find('nav li:first').addClass('current');
+                this.$el.find('div.main div:first').css("display", "block");
+            } else {
+                if (typeof e === 'object') {
+                    this.current = $(e.currentTarget).attr("data-group");
+                } else {
+                    this.current = e;
+                }
+
+                this.$el.find('nav li a[data-group="'+this.current+'"]').parents('li').addClass('current');
+                this.$el.find('div.main>div[data-group="'+this.current+'"]').css("display", "block");
+            }
         },
 
         droppable: function() {
@@ -49,23 +69,49 @@ define(['jquery-ui', 'views/editor/editor'], function (jUI, Editor) {
             });
         },
 
-        changeGroup: function(e) {
-            this.$el.find('nav li').removeClass('current');
-            this.$el.find('div.main>div').css("display", "none");
+        arrayContextMenu: function(e) {
+            e.preventDefault();
+            new ContextMenu({url: 'javascripts/fluid/templates/variables/arraycm.ejs', parent: this, event: e}).render();
+        },
 
-            if (typeof e === 'undefined' || e === null) {
-                this.$el.find('nav li:first').addClass('current');
-                this.$el.find('div.main div:first').css("display", "block");
-            } else {
-                if (typeof e === 'object') {
-                    this.current = $(e.currentTarget).attr("data-group");
-                } else {
-                    this.current = e;
-                }
-
-                this.$el.find('nav li a[data-group="'+this.current+'"]').parents('li').addClass('current');
-                this.$el.find('div.main>div[data-group="'+this.current+'"]').css("display", "block");
+        deleteArray: function(e) {
+            var target = $(e);
+            if (target.parents('div[data-group]').length) {
+                var group = target.parents('div[data-group]').attr('data-group');
             }
+            var item = target.parents('div[data-item]').attr('data-item');
+
+            var index = target.index() - 1;
+            if (typeof group !== 'undefined') {
+                this.data[group][item].splice(index, 1);
+                this.save(this.data[group][item], item, group);
+            } else {
+                this.data[item].splice(index, 1);
+                this.save(this.data[item], item);
+            }
+        },
+
+        sortableArray: function() {
+            this.$el.find('div[data-item]').sortable({
+                axis: "y",
+                cancel: ".label,[data-array-item]",
+                update: function (event, ui) {
+                    console.log('sort');
+                    /*var item = ui.item.attr('data-id');
+                    var receiver = $(event.target).parents('li').attr('data-id');
+                    if (typeof receiver == 'undefined') {
+                        receiver = '';
+                    }
+                    root.dropbox.position = ui.item.index();
+                    root.dropbox.item = item;
+                    root.dropbox.receiver = receiver;
+                    clearTimeout(root.dropbox.timeout);
+                    root.dropbox.timeout = setTimeout(function () {
+                        root.sort()
+                    }, 10);*/
+                }
+            });
+            this.$el.find('div[data-item]').disableSelection();
         },
 
         addArrayItem: function(e) {

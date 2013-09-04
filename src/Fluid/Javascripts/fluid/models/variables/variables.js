@@ -182,7 +182,12 @@ define(['backbone'], function (Backbone) {
                 images: {}
             };
 
-            var content = data.source;
+            var content;
+            if (typeof data !== 'undefined' && data !== null) {
+                content = data.source;
+            } else {
+                content = "";
+            }
 
             // Components
             var components = content.match(/<div id="[^"]*" data-component="[^"]*"(.|[\r\n])*?<\/div>/gi);
