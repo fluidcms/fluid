@@ -54,35 +54,43 @@ class ParseData
      */
     private static function parseVariables($variables, $data)
     {
-        $output = array();
+        $retval = array();
 
         foreach($variables as $name => $var) {
             switch($var['type']) {
                 case 'string':
                     if (isset($data[$name])) {
-                        $output[$name] = (string)$data[$name];
+                        $retval[$name] = (string)$data[$name];
                     } else {
-                        $output[$name] = '';
+                        $retval[$name] = '';
                     }
                     break;
                 case 'content':
                     if (isset($data[$name])) {
-                        $output[$name] = self::renderContent($data[$name]);
+                        $retval[$name] = self::renderContent($data[$name]);
                     } else {
-                        $output[$name] = '';
+                        $retval[$name] = '';
                     }
                     break;
                 case 'image':
                     if (isset($data[$name]) && is_array($data[$name])) {
-                        $output[$name] = $data[$name];
+                        $retval[$name] = $data[$name];
                     } else {
-                        $output[$name] = array();
+                        $retval[$name] = array();
+                    }
+                    break;
+                case 'array':
+                    $retval[$name] = array();
+                    if (isset($data[$name]) && is_array($data[$name]) && count($data[$name])) {
+                        foreach($data[$name] as $arrayValue) {
+                            $retval[$name][] = self::parseVariables($var['variables'], $arrayValue);
+                        }
                     }
                     break;
             }
         }
 
-        return $output;
+        return $retval;
     }
 
     /**
