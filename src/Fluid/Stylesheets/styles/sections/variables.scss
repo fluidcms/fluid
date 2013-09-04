@@ -129,34 +129,27 @@ div.page-editor, #target>div.component, #target>div.variables {
         color: $dark-gray;
         width: auto;
         float: none;
+        position: relative;
+        cursor: pointer;
 
-        a[data-action] {
-          cursor: pointer;
-          display: inline-block;
-          margin-left: $main-margin-left;
-          color: $gray;
-          position: relative;
-          padding-left: $list-link-sprite-left;
+        &:before {
+          @include sprite-after(10px, 10px);
+          @include sprite-position(-35px -64px);
+          position: absolute;
+          top: 4px;
+          left: -18px;
+        }
 
+        &:hover {
+          color: $blue;
           &:before {
-            @include sprite-after(10px, 10px);
-            @include sprite-position(-35px -64px);
-            position: absolute;
-            top: 3px;
-            left: 12px;
+            @include sprite-position(-45px -64px);
           }
-
-          &:hover {
-            color: $blue;
-            &:before {
-              @include sprite-position(-45px -64px);
-            }
-          }
-          &:active {
-            color: $dark-blue;
-            &:before {
-              @include sprite-position(-55px -64px);
-            }
+        }
+        &:active {
+          color: $dark-blue;
+          &:before {
+            @include sprite-position(-55px -64px);
           }
         }
       }
