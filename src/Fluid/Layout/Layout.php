@@ -74,6 +74,16 @@ class Layout
     }
 
     /**
+     * Get file
+     *
+     * @return  string
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
      * Set layout definition
      *
      * @param   string  $value

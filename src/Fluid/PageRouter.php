@@ -30,7 +30,7 @@ class PageRouter
 
         if (isset($page) && false !== $page) {
             Data::setMap($map);
-            return PageMaker::create(Data::get($page['id']));
+            return PageMaker::create($page, Data::get($page['id']));
         }
 
         return Fluid::NOT_FOUND;
