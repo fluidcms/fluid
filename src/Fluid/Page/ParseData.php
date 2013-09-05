@@ -11,6 +11,8 @@ use Fluid\Fluid,
 
 class ParseData
 {
+    private static $language;
+
     /**
      * Parse json data
      *
@@ -21,6 +23,16 @@ class ParseData
      */
     public static function parse(Page $page, Layout $layout, $language = null)
     {
+        if (null === self::$language) {
+            if (!empty($language)) {
+                self::$language = $language;
+            } else if (null !== $page->getLanguage()) {
+                self::$language = $page->getLanguage();
+            } else {
+                self::$language = Fluid::getLanguage();
+            }
+        }
+
         $data = $page->getRawData($language);
         $data = self::merge($layout->getDefinition(), $data);
 
@@ -112,6 +124,8 @@ class ParseData
                 $templates = View::getTemplatesDir();
                 $file = substr($definition->getFile(), strlen($templates)-1);
                 $macro = $definition->getMacro();
+
+                $data = array_merge(array('language' => substr(self::$language, 0, 2)), $data);
 
                 if (!empty($macro)) {
                     $html = View::macro($macro, $file, $data);

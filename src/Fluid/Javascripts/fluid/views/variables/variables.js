@@ -15,8 +15,19 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
 
         className: 'variables',
 
+        hide: function() {
+            this.trigger('hide');
+            this.$el.hide();
+        },
+
+        show: function() {
+            this.trigger('show');
+            this.$el.show();
+        },
+
         close: function() {
             delete this.app.editors[this.cid];
+            this.trigger('close');
             this.remove();
         },
 
@@ -214,6 +225,8 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
         editData: function(data, html, type, array, key, item, group) {
             var root = this;
 
+            this.hide();
+
             this.editor = new Editor({
                 type: type,
                 html: html,
@@ -226,7 +239,12 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
                 this.editor.on('close', this.toggleAppNav, this);
             }
 
+            this.editor.on('close', function() {
+                root.show();
+            });
+
             this.editor.on('save', function() {
+                root.show();
                 var dataArray;
                 if (typeof group !== 'undefined') {
                     if (array) {

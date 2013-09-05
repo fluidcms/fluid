@@ -69,6 +69,16 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
             new ContextMenu({url: 'javascripts/fluid/templates/editor/componentcm.ejs', parent: this, event: e}).render();
         },
 
+        hide: function() {
+            this.$el.hide();
+            this.trigger('hide');
+        },
+
+        show: function() {
+            this.$el.show();
+            this.trigger('show');
+        },
+
         save: function() {
             var content = this.$el.find('div[contenteditable]').html();
 
@@ -150,6 +160,8 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
                 var component = this.data['components'][id];
 
                 require(['views/components/component'], function (ComponentView) {
+                    root.hide();
+
                     var componentView = new ComponentView({
                         app: root.app,
                         components: root.components,
@@ -158,7 +170,12 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
                     });
 
                     componentView.on('save', function() {
+                        root.show();
                         root.data['components'][id] = this.component;
+                    });
+
+                    componentView.on('close', function() {
+                        root.show();
                     });
                 });
             }
