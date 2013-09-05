@@ -186,9 +186,30 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                 case 'strikeThrough':
                     document.execCommand(role, false, null);
                     break;
+                case 'anchor':
+                    this.formatAnchor();
+                    break;
             }
 
             return false;
+        },
+
+        formatAnchor: function() {
+            var range = window.getSelection().getRangeAt(0);
+
+            var url = "";
+            var parent = range.startContainer.parentNode;
+            if (parent.nodeName == 'A') {
+                url = $(parent).attr('href');
+            }
+
+            if (url = prompt(fluidLanguage['editor']['text']['linkPrompt'], url)) {
+                document.execCommand("createLink", false, url);
+            } else {
+                if (url == '') {
+                    document.execCommand("unlink", false, null);
+                }
+            }
         },
 
         formatList: function(type) {

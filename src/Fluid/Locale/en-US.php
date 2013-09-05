@@ -20,6 +20,13 @@ return array(
         'days' => '%s days'
     ),
 
+    // Editor
+    'editor' => array(
+        'text' => array(
+            'linkPrompt' => 'Enter a link'
+        )
+    ),
+
     // History
     'history' => array(
         'steps' => array(
