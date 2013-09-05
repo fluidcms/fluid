@@ -36,7 +36,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/help
         className: 'files',
 
         template: new EJS({url: 'javascripts/fluid/templates/files/files.ejs?' + (new Date()).getTime()}),  // !! Remove for production
-        fileTemplate: new EJS({url: 'javascripts/fluid/templates/files/file.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+        fileTemplate: new EJS({url: 'javascripts/fluid/templates/files/file.ejs'}),  // !! Remove for production
 
         initialize: function (attrs) {
             var root = this;
@@ -59,11 +59,13 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/help
         addFile: function(item, key) {
             var root = this;
             if (typeof item.get('preview') !== 'undefined' && typeof item.get('preview').image !== 'undefined' && item.get('preview').image !== null) {
-                this.$el.find('li[data-id="'+item.id+'"]').html(this.fileTemplate.render({preview: item.get('preview')}));
-                this.draggable(this.$el.find('li[data-id="'+item.id+'"] img'));
+                root.$el.find('li[data-id="'+item.id+'"] img').remove();
+                root.$el.find('li[data-id="'+item.id+'"] span').before($(root.fileTemplate.render({preview: item.get('preview')})));
+                root.draggable(root.$el.find('li[data-id="'+item.id+'"] img'));
             } else {
                 item.on('preview', function() {
-                    root.$el.find('li[data-id="'+this.id+'"]').html(root.fileTemplate.render({preview: this.get('preview')}));
+                    root.$el.find('li[data-id="'+this.id+'"] img').remove();
+                    root.$el.find('li[data-id="'+this.id+'"] span').before($(root.fileTemplate.render({preview: this.get('preview')})));
                     root.draggable(root.$el.find('li[data-id="'+this.id+'"] img'));
                 });
                 item.getPreview();

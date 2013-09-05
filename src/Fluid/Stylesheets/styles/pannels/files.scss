@@ -37,11 +37,15 @@
       float: left;
       display: block;
       width: 84px;
-      height: 84px;
+      height: 98px;
       padding: 0;
       margin: 0 6px 6px 0;
-      @include display-box;
-      @include box-align(center);
+      @include display-flex; // Support Flexbox and Flexbox Legacy
+
+      //@include align-content(center); // flex-start | flex-end | center | space-between | space-around | stretch (aligns a flex container's lines within the flex container when there is extra space in the cross-axis)
+      //@include align-items(center); // flex-start | flex-end | center | baseline | stretch (sets the default alignment for all of the flex container's items)
+      //@include flex-flow(column wrap); // (flex-direction | flex-wrap shortand)
+      @include justify-content(center); // flex-start | flex-end | center | space-between | space-around (aligns flex items along the main axis of the current line of the flex container)
 
       img {
         cursor: move;
@@ -50,6 +54,18 @@
         &:hover {
           border-color: $blue;
         }
+      }
+
+      span {
+        position: absolute;
+        width: 84px;
+        height: 14px;
+        overflow: hidden;
+        color: white;
+        font-size: 11px;
+        bottom: 0;
+        left: 0;
+        white-space: nowrap;
       }
 
       img.dark {
