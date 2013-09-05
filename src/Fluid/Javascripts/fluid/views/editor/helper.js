@@ -56,6 +56,28 @@ define(['sanitize'], function (Sanitize) {
 
             // Sanitize Paste
             .on('paste', function () {
+                var selection = window.getSelection();
+                var range = selection.getRangeAt(0);
+
+                // Create dummy textarea
+                var textarea = $("<textarea id='copyCapter'></textarea>");
+                $(document.body).append(textarea);
+                textarea.focus();
+
+                setTimeout(function () {
+                    var value = textarea.val();
+                    textarea.remove();
+                    console.log(value);
+
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+
+                    range.deleteContents();
+                    range.insertNode(document.createTextNode(value));
+                }, 0);
+
+                /*
+                // TODO: revisit this code
                 setTimeout(function () {
                     if (type === 'content') {
                         var s = new Sanitize({
@@ -76,7 +98,7 @@ define(['sanitize'], function (Sanitize) {
                     var cleaned_html = s.clean_node(element[0]);
                     $(element).empty().append(cleaned_html);
                     $(element).blur();
-                }, 0);
+                }, 0);*/
             })
 
             .on('drop', function (e) {

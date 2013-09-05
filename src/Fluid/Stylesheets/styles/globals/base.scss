@@ -37,6 +37,15 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
+#copyCapter {
+  top: -1000px;
+  left: -1000px;
+  position: absolute;
+  z-index: -1000;
+  width: 0px;
+  height: 0px;
+}
+
 /* #Typography
 ================================================== */
 
