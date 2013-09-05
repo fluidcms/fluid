@@ -54,7 +54,7 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
             var root = this;
 
             // Images
-            this.$el.find("a[data-item] div.data.image img").droppable({
+            this.$el.find("[data-item] div.data.image img").droppable({
                 hoverClass: "active",
                 drop: function( event, ui ) {
                     var source = ui.draggable[0];
