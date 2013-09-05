@@ -156,7 +156,6 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
         },
 
         edit: function(e) {
-            var root = this;
             var target = $(e.currentTarget);
             if (target.parents('div[data-group]').length) {
                 var group = target.parents('div[data-group]').attr('data-group');
@@ -205,6 +204,16 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
                 type = "content";
             }
 
+            this.editData(data, html, type, array, key, item, group);
+        },
+
+        editContent: function(data, html, item, group) {
+            this.editData(data, html, 'content', null, null, item, group);
+        },
+
+        editData: function(data, html, type, array, key, item, group) {
+            var root = this;
+
             this.editor = new Editor({
                 type: type,
                 html: html,
@@ -240,6 +249,7 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
 
             this.trigger('editing');
             this.trigger('editing:'+type);
+
         }
     };
 });

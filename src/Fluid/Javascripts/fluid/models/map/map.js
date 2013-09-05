@@ -196,7 +196,13 @@ define(['backbone', 'models/page/page', 'views/page/page'], function (Backbone, 
                 {id: item, language: this.languages.current.get('language')},
                 {socket: this.socket, languages: this.languages, preview: this.preview, components: this.components}
             );
-            this.editor.view = new PageView({model: this.editor.page, app: this.app, components: this.components, files: this.files});
+            this.editor.view = new PageView({
+                model: this.editor.page,
+                app: this.app,
+                components: this.components,
+                files: this.files,
+                languages: this.languages
+            });
 
             this.editor.page.on('change', function() {
                 if (typeof oldPage !== 'undefined') {

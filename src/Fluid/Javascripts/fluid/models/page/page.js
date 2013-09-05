@@ -78,6 +78,23 @@ define(['backbone', 'models/variables/variables'], function (Backbone, Variables
             this.trigger('destroy', this);
         },
 
+        requestContent: function(group, item, lang, callback) {
+            var root = this;
+            var url = 'page_variable/' + lang + '/';
+
+            if (typeof this.id !== 'undefined') {
+                url = url  + this.id;
+            } else {
+                url = url + "global";
+            }
+
+            url = url + '/' + group + '/' + item;
+
+            this.socket.send('GET', url, {}, function(response) {
+                callback(response, root.variables.contentToHTML(response));
+            });
+        },
+
         saveData: function(group, item, data) {
             var variable = this.variables.toJSON(data, item, group);
 

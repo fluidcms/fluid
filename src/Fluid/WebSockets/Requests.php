@@ -127,14 +127,7 @@ class Requests
                         echo json_encode($components);
                         return true;
                     }
-                    // Get specific component
-                    else {
-                        /*$layout = trim($match[2], '/ ');
-                        $layout = Layout::get($layout);
-                        echo json_encode($layout->getVariables());
-                        return true;*/
-                        die('howdy');
-                    }
+                    break;
             }
         }
         return false;
@@ -371,6 +364,50 @@ class Requests
                     return true;
             }
         }
+
+        // Get specific variable
+        if (!empty($this->request) && preg_match('{^(page_variable)(/[a-z]{2,2}\-[A-Z]{2,2})(/.*)?(/[^/]*)/([^/]*)$}', $this->request, $match)) {
+            $language = null;
+            if (isset($match[2])) {
+                $language = trim($match[2], '/ ');
+            }
+
+            $item = null;
+            if (isset($match[5])) {
+                $item = trim($match[5], '/ ');
+            }
+
+            $group = null;
+            if (isset($match[4])) {
+                $group = trim($match[4], '/ ');
+            }
+
+            $page = null;
+            if (isset($match[3])) {
+                $page = trim($match[3], '/ ');
+
+                if (empty($page) && null !== $group) {
+                    $page = $group;
+                    $group = null;
+                } else if ($page === 'global') {
+                    $page = null;
+                }
+            }
+
+            $retval = array();
+            if ($page === null) {
+                $page = Page::get(null, $language);
+                $retval = $page->getVariable($item, $group);
+            } else {
+                $map = new Map;
+                if ($mapPage = $map->findPage($page)) {
+                    $page = Page::get($mapPage, $language);
+                    $retval = $page->getVariable($item, $group);
+                }
+            }
+            echo json_encode($retval);
+        }
+
         return false;
     }
 

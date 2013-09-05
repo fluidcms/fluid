@@ -67,6 +67,23 @@ class Page extends FileSystem
     }
 
     /**
+     * Get a variable
+     *
+     * @param   string  $item
+     * @param   string  $group
+     * @return  array
+     */
+    public function getVariable($item, $group = null)
+    {
+        $data = $this->getRawData();
+        if (null !== $group) {
+            return $data[$group][$item];
+        } else {
+            return $data[$item];
+        }
+    }
+
+    /**
      * Set the current page language
      *
      * @param   string  $value

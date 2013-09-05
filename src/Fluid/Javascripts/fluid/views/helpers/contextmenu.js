@@ -16,9 +16,9 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
             });
         },
 
-        render: function () {
+        render: function (data) {
             $(this.event.target).addClass('active');
-            this.$el.html(this.template.render());
+            this.$el.html(this.template.render(data));
             this.$el.css({left: this.event.pageX, top: this.event.pageY});
             $(document.body).append(this.$el);
 
@@ -38,7 +38,7 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
         click: function (e) {
             this.close();
             var action = $(e.currentTarget).attr('data-action');
-            this.parent[action](this.event.target);
+            this.parent[action](this.event.target, e);
         },
 
         close: function () {

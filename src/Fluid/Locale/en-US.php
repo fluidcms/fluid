@@ -29,5 +29,12 @@ return array(
             'map_edit' => 'Edited a page configuration',
             'page_edit' => 'Edited a page'
         )
+    ),
+
+    // Variables
+    'variables' => array(
+        'contentcm' => array(
+            'copy' => 'Copy from %lang'
+        )
     )
 );

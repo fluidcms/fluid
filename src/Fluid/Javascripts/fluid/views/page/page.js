@@ -1,69 +1,108 @@
-define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/editor/editor', 'views/variables/variables'], function (Backbone, EJS, jUI, ContextMenu, Editor, VariablesView) {
-    return Backbone.View.extend($.extend({}, VariablesView, {
-        previousAppNav: null,
+define(
+    ['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/editor/editor', 'views/variables/variables'],
+    function (Backbone, EJS, jUI, ContextMenu, Editor, VariablesView) {
+        return Backbone.View.extend($.extend({}, VariablesView, {
+            events: $.extend({}, VariablesView.events, {
+                "contextmenu a[data-type=content]": "contentCM"
+            }),
 
-        template: new EJS({url: 'javascripts/fluid/templates/page/page.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+            previousAppNav: null,
 
-        initialize: function (attrs) {
-            var root = this;
+            template: new EJS({url: 'javascripts/fluid/templates/page/page.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
-            this.app = attrs.app;
+            initialize: function (attrs) {
+                var root = this;
 
-            this.app.editors[this.cid] = this;
+                this.app = attrs.app;
 
-            this.languages = attrs.languages;
-            this.components = attrs.components;
-            this.files = attrs.files;
+                this.app.editors[this.cid] = this;
 
-            this.definition = this.model.get('layoutDefinition');
-            this.data = this.model.get('data');
-            this.html = this.model.get('render');
+                this.languages = attrs.languages;
+                this.components = attrs.components;
+                this.files = attrs.files;
 
-            this.on('editing:content', function() {
-                var previousAppNav = root.app.current;
-                if (previousAppNav !== 'components' && previousAppNav !== 'files') {
-                    root.app.make('tools');
-                    root.previousAppNav = previousAppNav;
+                this.definition = this.model.get('layoutDefinition');
+                this.data = this.model.get('data');
+                this.html = this.model.get('render');
+
+                this.on('editing:content', function() {
+                    var previousAppNav = root.app.current;
+                    if (previousAppNav !== 'components' && previousAppNav !== 'files') {
+                        root.app.make('tools');
+                        root.previousAppNav = previousAppNav;
+                    }
+                });
+
+                this.model.on('change', function() {
+                    root.definition = root.model.get('layoutDefinition');
+                    root.data = root.model.get('data');
+                    root.html = root.model.get('render');
+                    root.render();
+                });
+                this.app.on('change', function() { root.previousAppNav = null; });
+            },
+
+            render: function () {
+                var variables = new EJS({url: 'javascripts/fluid/templates/variables/variables.ejs?' + (new Date()).getTime()});  // !! Remove for production
+
+                this.$el.html(this.template.render({
+                    definition: this.definition,
+                    data: this.data,
+                    render: this.html,
+                    variables: variables
+                }));
+
+                this.droppable();
+                this.sortableArray();
+
+                $("#target").append(this.$el);
+
+                this.changeGroup(this.current);
+                return this;
+            },
+
+            save: function(data, item, group) {
+                this.model.saveData(group, item, data);
+            },
+
+            toggleAppNav: function() {
+                this.trigger('stopEditing');
+                if (typeof this.previousAppNav !== 'undefined' && this.previousAppNav !== null) {
+                    this.app.make(this.previousAppNav);
                 }
-            });
+            },
 
-            this.model.on('change', function() {
-                root.definition = root.model.get('layoutDefinition');
-                root.data = root.model.get('data');
-                root.html = root.model.get('render');
-                root.render();
-            });
-            this.app.on('change', function() { root.previousAppNav = null; });
-        },
+            contentCM: function(e) {
+                e.preventDefault();
+                new ContextMenu({url: 'javascripts/fluid/templates/variables/contentcm.ejs', parent: this, event: e}).render({languages: this.languages});
+            },
 
-        render: function () {
-            var variables = new EJS({url: 'javascripts/fluid/templates/variables/variables.ejs?' + (new Date()).getTime()});  // !! Remove for production
+            copyLang: function(target, e) {
+                var root = this;
+                var lang = $(e.target).attr('data-lang');
+                var group;
+                var item;
 
-            this.$el.html(this.template.render({
-                definition: this.definition,
-                data: this.data,
-                render: this.html,
-                variables: variables
-            }));
+                if ($(target).parents('[data-group]').length) {
+                    group = $(target).parents('[data-group]').attr('data-group');
+                } else if ($(target).attr('data-group')) {
+                    group = $(target).attr('data-group');
+                } else if ($(target).children('[data-group]').length) {
+                    group = $(target).children('[data-group]').attr('data-group');
+                }
 
-            this.droppable();
-            this.sortableArray();
+                if ($(target).parents('[data-item]').length) {
+                    item = $(target).parents('[data-item]').attr('data-item');
+                } else if ($(target).attr('data-item')) {
+                    item = $(target).attr('data-item');
+                } else if ($(target).children('[data-item]').length) {
+                    item = $(target).children('[data-item]').attr('data-item');
+                }
 
-            $("#target").append(this.$el);
-
-            this.changeGroup(this.current);
-            return this;
-        },
-
-        save: function(data, item, group) {
-            this.model.saveData(group, item, data);
-        },
-
-        toggleAppNav: function() {
-            this.trigger('stopEditing');
-            if (typeof this.previousAppNav !== 'undefined' && this.previousAppNav !== null) {
-                this.app.make(this.previousAppNav);
+                this.model.requestContent(group, item, lang, function(response, html) {
+                    root.editContent(response, html, item, group);
+                });
             }
-        }
-    }));
-});
+        }));
+    }
+);
