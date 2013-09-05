@@ -45,13 +45,22 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
         enable: function() {
             var root = this;
 
+            if (!this.rendered) {
+                setTimeout(function() { root.enable(); }, 10);
+                return false;
+            }
+
             if (this.map.editor.view.editor.type === 'content') {
                 this.textEnabled = true;
                 this.editor = this.map.editor.view.editor.$el.find('[contenteditable]');
                 $(document).on('keypress keyup click mouseup', null, {root: this}, this.analyzeText);
 
                 $(this.$el).find('div.text a[data-role]').on('mousedown', function(e) { root.formatText(e); }).on('mousedown', function() { root.analyzeText({data: {root: root}}); });
-                $(this.$el).find('div.text select').on('change', function(e) { root.formatText(e); }).on('change', function() { root.analyzeText({data: {root: root}}); });
+
+                $(this.$el).find('div.text select').on('change', function(e) {
+                    root.formatText(e);
+                    root.analyzeText({data: {root: root}});
+                });
 
                 this.analyzeText({data: {root: this}});
             }
@@ -162,7 +171,7 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                 case 'h4':
                 case 'h5':
                 case 'h6':
-                    document.execCommand('formatBlock', false, role);
+                    this.formatHeader(role);
                     break;
                 case 'ul':
                 case 'ol':
@@ -208,6 +217,39 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                 // TODO: fix this, this is not selecting the previous range all the time
                 selection.removeAllRanges();
                 selection.addRange(range);
+            }
+        },
+
+        formatHeader: function(type) {
+            document.execCommand("formatBlock", false, type);
+
+            var range = window.getSelection().getRangeAt(0);
+
+            // Find paragraph or div
+            var content = range.startContainer;
+            var parent = content.parentNode;
+            var element = false;
+            var inContentEditable = false;
+            var paragraph = false;
+            while (typeof parent !== 'undefined' && parent !== null && parent !== false) {
+                if (parent.nodeName == 'DIV' && parent.getAttribute('contenteditable') == 'true') {
+                    parent = false;
+                    inContentEditable = true;
+                }
+
+                else if (parent.nodeName == type.toUpperCase()) {
+                    element = parent;
+                }
+
+                else if (parent.nodeName == 'P') {
+                    paragraph = parent;
+                }
+
+                parent = parent.parentNode;
+            }
+
+            if (inContentEditable && paragraph && element) {
+                $(paragraph).before($(element));
             }
         },
 
