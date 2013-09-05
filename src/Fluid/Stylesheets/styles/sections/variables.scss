@@ -19,17 +19,20 @@ div.page-editor, #target>div.component, #target>div.variables {
   left: 0;
   width: 100%;
   height: 100%;
-  padding: 42px 0 0 306px;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  overflow: auto;
   background: white;
 
   &>div {
     width: 100%;
     height: 100%;
     background: white;
+    padding: 42px 0 0 306px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+
+    &.spacing {
+      padding-bottom: 58px;
+    }
   }
 
   nav {
@@ -66,7 +69,12 @@ div.page-editor, #target>div.component, #target>div.variables {
   }
 
   div.main {
+    height: 100%;
+    overflow: auto;
     padding-top: $big-margin-top - $big-margin-top/2;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 
     header {
       padding-top: $big-margin-top/2;
