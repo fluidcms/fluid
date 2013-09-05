@@ -67,13 +67,41 @@ define(['sanitize'], function (Sanitize) {
                 setTimeout(function () {
                     var value = textarea.val();
                     textarea.remove();
-                    console.log(value);
+
+                    var lines = value.split(/[\r\n]/);
+                    var realLines = [];
+                    var lastKey = 0;
+                    for(var i = 0; i < lines.length; i++) {
+                        var line = lines[i].trim();
+
+                        if (line !== '') {
+                            realLines.push({type: 'line', value: line});
+                            lastKey = realLines.length - 1;
+                        } else {
+                            realLines[lastKey]['type'] = 'paragraph';
+                        }
+                    }
 
                     selection.removeAllRanges();
                     selection.addRange(range);
 
                     range.deleteContents();
-                    range.insertNode(document.createTextNode(value));
+
+                    for(var j = 0; j < realLines.length; j++) {
+                        var node;
+                        range.insertNode(node = document.createTextNode(realLines[j].value));
+                        range.setStartAfter(node);
+                        range.setEndAfter(node);
+
+                        // TODO: add support for paragraphs
+                        //if (realLines[j].type === 'line') {
+                            range.insertNode(node = document.createElement("br"));
+                            range.setStartAfter(node);
+                            range.setEndAfter(node);
+                        //} else {
+                        //}
+
+                    }
                 }, 0);
 
                 /*
