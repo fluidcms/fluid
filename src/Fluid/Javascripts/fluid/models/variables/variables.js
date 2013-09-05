@@ -210,7 +210,7 @@ define(['backbone'], function (Backbone) {
 
                     content = content.replace(value, "{"+id+"}");
                 });
-            } else if (typeof data['components'] !== 'undefined' && data['components'] !== null) {
+            } else if (typeof data !== 'undefined' && data !== null && typeof data['components'] !== 'undefined' && data['components'] !== null) {
                 $.each(data['components'], function(key, value) {
                     if (content.match(new RegExp("\{"+key+"\}"))) {
                         output.components[key] = value;
@@ -233,7 +233,7 @@ define(['backbone'], function (Backbone) {
 
                     content = content.replace(value, "{"+id+"}");
                 });
-            } else if (typeof data['images'] !== 'undefined' && data['images'] !== null) {
+            } else if (typeof data !== 'undefined' && data !== null && typeof data['images'] !== 'undefined' && data['images'] !== null) {
                 $.each(data['images'], function(key, value) {
                     if (content.match(new RegExp("\{"+key+"\}"))) {
                         output.images[key] = value;
