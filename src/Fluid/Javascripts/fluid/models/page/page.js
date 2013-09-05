@@ -100,6 +100,10 @@ define(['backbone', 'models/variables/variables'], function (Backbone, Variables
 
             data = this.get('data');
 
+            if ($.isArray(data) && data.length == 0) {
+                data = {};
+            }
+
             if (typeof data[group] === 'undefined') {
                 data[group] = {};
             }
