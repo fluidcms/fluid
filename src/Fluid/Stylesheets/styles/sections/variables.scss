@@ -91,7 +91,7 @@ div.page-editor, #target>div.component, #target>div.variables {
       font-weight: $light;
     }
 
-    [data-item], [data-array-item] {
+    [data-item], [data-array], [data-array-item] {
       display: block;
       padding-top: $big-margin-top/2;
       padding-bottom: $big-margin-bottom/2;
@@ -107,7 +107,7 @@ div.page-editor, #target>div.component, #target>div.variables {
       }
     }
 
-    a[data-item], a[data-array-item] {
+    [data-item], [data-array-item] {
       cursor: pointer;
 
       &:after {
@@ -132,7 +132,7 @@ div.page-editor, #target>div.component, #target>div.variables {
       }
     }
 
-    div[data-item] {
+    [data-array] {
       div.label.array {
         color: $dark-gray;
         width: auto;

@@ -2,8 +2,8 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
     return {
         events: {
             "click a[data-action='close']": "close",
-            "click a[data-item]": "edit",
-            "click a[data-array-item]": "edit",
+            "click [data-item]": "edit",
+            "click [data-array-item]": "edit",
             "click nav a": "changeGroup",
             "click [data-action=addArrayItem]": "addArrayItem",
             'contextmenu div.array-item': 'arrayContextMenu'
@@ -68,7 +68,13 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
                             if ($(target).parents('[data-group]').length) {
                                 var group = $(target).parents('[data-group]').attr('data-group');
                             }
-                            var item = $(target).parents('[data-item]').attr('data-item');
+                            var item;
+                            if ($(target).parents('div[data-item]').length) {
+                                item = $(target).parents('div[data-item]').attr('data-item');
+                            } else if ($(target).parents('div[data-array]').length) {
+                                item = $(target).parents('div[data-array]').attr('data-array');
+                            }
+
                             $(target).css('opacity',.5);
 
                             if (typeof group !== 'undefined') {
@@ -92,7 +98,12 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
             if (target.parents('div[data-group]').length) {
                 var group = target.parents('div[data-group]').attr('data-group');
             }
-            var item = target.parents('div[data-item]').attr('data-item');
+            var item;
+            if (target.parents('div[data-item]').length) {
+                item = target.parents('div[data-item]').attr('data-item');
+            } else if (target.parents('div[data-array]').length) {
+                item = target.parents('div[data-array]').attr('data-array');
+            }
 
             var index = target.index() - 1;
             if (typeof group !== 'undefined') {
@@ -107,7 +118,7 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
         sortableArray: function() {
             var root = this;
             var startIndex;
-            this.$el.find('div[data-item]').sortable({
+            this.$el.find('div[data-array]').sortable({
                 axis: "y",
                 cancel: ".label,[data-array-item]",
                 update: function (event, ui) {
@@ -117,7 +128,12 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
                     if (target.parents('div[data-group]').length) {
                         var group = target.parents('div[data-group]').attr('data-group');
                     }
-                    var item = target.parents('div[data-item]').attr('data-item');
+                    var item;
+                    if (target.parents('div[data-item]').length) {
+                        item = target.parents('div[data-item]').attr('data-item');
+                    } else if (target.parents('div[data-array]').length) {
+                        item = target.parents('div[data-array]').attr('data-array');
+                    }
 
                     var array;
                     if (typeof group !== 'undefined') {
@@ -138,7 +154,7 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
                     startIndex = ui.item.index() - 1;
                 }
             });
-            this.$el.find('div[data-item]').disableSelection();
+            this.$el.find('div[data-array]').disableSelection();
         },
 
         addArrayItem: function(e) {
@@ -146,7 +162,12 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
             if (target.parents('div[data-group]').length) {
                 var group = target.parents('div[data-group]').attr('data-group');
             }
-            var item = target.parents('div[data-item]').attr('data-item');
+            var item;
+            if (target.parents('div[data-item]').length) {
+                item = target.parents('div[data-item]').attr('data-item');
+            } else if (target.parents('div[data-array]').length) {
+                item = target.parents('div[data-array]').attr('data-array');
+            }
 
             if (typeof group !== 'undefined') {
                 if (typeof this.data[group] === 'undefined') {
@@ -173,7 +194,11 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
             }
             var item = target.attr('data-item');
             if (typeof item === 'undefined') {
-                item = target.parents('[data-item]').attr('data-item');
+                if (target.parents('[data-item]').length) {
+                    item = target.parents('[data-item]').attr('data-item');
+                } else if (target.parents('[data-array]').length) {
+                    item = target.parents('[data-array]').attr('data-array');
+                }
             }
 
             var array = false;

@@ -40,23 +40,23 @@ var renderVariable = function(variable, data) {
 
 <% $.each(definition, function(key, item) { %>
     <% if (item.type == 'array') { %>
-        <div data-item="<%= key %>">
+        <div data-array="<%= key %>">
             <div class="label array" data-action="addArrayItem"><%= key %></div>
             <% if (typeof data[key] !== 'undefined' && data[key] !== null) { $.each(data[key], function(arrayKey, arrayItem) { %>
             <div class="array-item">
                 <% $.each(item.variables, function(arrayVariableName, arrayVariable) { %>
-                    <a data-array-item="<%= arrayVariableName %>">
+                    <div data-array-item="<%= arrayVariableName %>">
                         <div class="label"><%= arrayVariableName %></div>
                         <% renderVariable(arrayVariable, arrayItem[arrayVariableName]) %>
-                    </a>
+                    </div>
                 <% }); %>
             </div>
             <% }); } %>
         </div>
     <% } else { %>
-        <a data-item="<%= key %>" data-type="<%= item.type %>">
+        <div data-item="<%= key %>" data-type="<%= item.type %>">
             <div class="label"><%= key %></div>
             <% renderVariable(item, data[key]) %>
-        </a>
+        </div>
     <% } %>
 <% }); %>
