@@ -42,6 +42,9 @@ define(
                     variables: variables
                 }));
 
+                this.droppable();
+                this.sortableArray();
+
                 $("#target").append(this.$el);
                 return this;
             },
