@@ -39,12 +39,20 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
                 // Escape key event
                 'escape': function (e) {
                     if (e.keyCode == 27) {
-                        root.close();
+                        // TODO: fix this
+                        //root.close();
+                    }
+                },
+                // Enter key events
+                'enter': function(e) {
+                    if (root.type == 'string' && e.keyCode == 13) {
+                        root.save();
                     }
                 }
             };
 
             $(document).on('keydown', this.keyEvents.save);
+            $(document).on('keydown', this.keyEvents.enter);
             $(document).on('keyup', this.keyEvents.escape);
         },
 
@@ -101,6 +109,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
             delete this.app.editors[this.cid];
 
             $(document).off('keydown', this.keyEvents.save);
+            $(document).off('keydown', this.keyEvents.enter);
             $(document).off('keyup', this.keyEvents.escape);
             this.remove();
         },

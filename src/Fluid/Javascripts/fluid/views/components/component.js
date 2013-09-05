@@ -60,6 +60,8 @@ define(
             },
 
             close: function() {
+                this.trigger('close');
+
                 if (this.changed) {
                     this.trigger('save');
                 }
