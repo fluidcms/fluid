@@ -3,7 +3,7 @@ define(
     function (Backbone, EJS, jUI, ContextMenu, Editor, VariablesView) {
         return Backbone.View.extend($.extend({}, VariablesView, {
             events: $.extend({}, VariablesView.events, {
-                "contextmenu a[data-type=content]": "contentCM"
+                "contextmenu [data-type=content]": "contentCM"
             }),
 
             previousAppNav: null,

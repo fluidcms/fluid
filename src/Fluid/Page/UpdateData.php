@@ -182,7 +182,7 @@ class UpdateData
      */
     private static function sanitizeString($value)
     {
-        $value = str_replace(array('\n', PHP_EOL), '', $value);
+        $value = str_replace(array('\n', PHP_EOL, '<br>'), '', $value);
         $value = str_replace('&nbsp;', ' ', $value);
         $value = trim($value);
 
