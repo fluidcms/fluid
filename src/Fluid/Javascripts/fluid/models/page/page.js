@@ -6,6 +6,9 @@ define(['backbone', 'models/variables/variables'], function (Backbone, Variables
 
         variables: null,
 
+        saving: false,
+        chain: false,
+
         initialize: function (attrs, options) {
             this.socket = options.socket;
             this.languages = options.languages;
@@ -53,14 +56,24 @@ define(['backbone', 'models/variables/variables'], function (Backbone, Variables
                 data = data['data'];
             }
 
-            // TODO: we need to add chaining for these so they don't overlap each others and bug the application
-
-            this.socket.send('PUT', url, data, function(response) {
-                response = root.parse(response);
-                root.set(response);
-                root.trigger('change');
-                root.preview.reload();
-            });
+            if (!this.saving) {
+                this.saving = true;
+                this.socket.send('PUT', url, data, function(response) {
+                    if (!root.chain) {
+                        response = root.parse(response);
+                        root.set(response);
+                        root.trigger('change');
+                        root.preview.reload();
+                        root.saving = false;
+                    } else {
+                        root.saving = false;
+                        root.chain = false;
+                        root.save();
+                    }
+                });
+            } else {
+                this.chain = true;
+            }
         },
 
         parse: function(response) {
@@ -110,14 +123,13 @@ define(['backbone', 'models/variables/variables'], function (Backbone, Variables
 
             data[group][item] = variable;
 
-            this.set('data', data);
-
             this.variables.updateData(data);
 
-            if (this.variables.definition[group][item]['type'] !== 'image') {
-                this.set('render', this.variables.toHTML());
-                this.trigger('change');
-            }
+            this.set({
+                'data': data,
+                'render': this.variables.toHTML()
+            });
+
             this.save();
         }
     });

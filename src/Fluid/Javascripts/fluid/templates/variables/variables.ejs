@@ -44,6 +44,7 @@ var renderVariable = function(variable, data) {
             <div class="label array" data-action="addArrayItem"><%= key %></div>
             <% if (typeof data[key] !== 'undefined' && data[key] !== null) { $.each(data[key], function(arrayKey, arrayItem) { %>
             <div class="array-item">
+                <span class="key"><%= (arrayKey + 1) %></span>
                 <% $.each(item.variables, function(arrayVariableName, arrayVariable) { %>
                     <div data-array-item="<%= arrayVariableName %>">
                         <div class="label"><%= arrayVariableName %></div>

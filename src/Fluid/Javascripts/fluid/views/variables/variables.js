@@ -9,6 +9,8 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
             'contextmenu div.array-item': 'arrayContextMenu'
         },
 
+        rendered: false,
+
         current: null,
 
         editor: null,
@@ -54,33 +56,51 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
             var root = this;
 
             // Images
-            this.$el.find("[data-item] div.data.image img").droppable({
+            this.$el.find("[data-item] div.data.image img, [data-array-item] div.data.image img").droppable({
                 hoverClass: "active",
                 drop: function( event, ui ) {
                     var source = ui.draggable[0];
-                    var target = event.target;
+                    var target = $(event.target);
 
                     if (source.tagName === 'IMG') {
                         var id = $(source).parents('li').attr('data-id');
                         var file = root.files.get(id);
 
                         if (typeof file !== 'undefined') {
-                            if ($(target).parents('[data-group]').length) {
-                                var group = $(target).parents('[data-group]').attr('data-group');
+                            if (target.parents('[data-group]').length) {
+                                var group = target.parents('[data-group]').attr('data-group');
                             }
                             var item;
-                            if ($(target).parents('div[data-item]').length) {
-                                item = $(target).parents('div[data-item]').attr('data-item');
-                            } else if ($(target).parents('div[data-array]').length) {
-                                item = $(target).parents('div[data-array]').attr('data-array');
+                            if (target.parents('div[data-item]').length) {
+                                item = target.parents('div[data-item]').attr('data-item');
+                            } else if (target.parents('div[data-array]').length) {
+                                item = target.parents('div[data-array]').attr('data-array');
                             }
 
-                            $(target).css('opacity',.5);
+                            var array = false;
+                            if (target.parents('[data-array-item]').attr("data-array-item")) {
+                                var key = target.parents("div.array-item").index() - 1;
+                                array = target.parents('[data-array-item]').attr("data-array-item");
+                            }
+
+                            var data;
+                            if (array) {
+                                if (typeof group !== 'undefined') {
+                                    data = root.data[group][item];
+                                } else {
+                                    data = root.data[item];
+                                }
+                                data[key][array] = file.id;
+                            } else {
+                                data = file.id;
+                            }
+
+                            target.css('opacity',.5);
 
                             if (typeof group !== 'undefined') {
-                                root.save(file.id, item, group);
+                                root.save(data, item, group);
                             } else {
-                                root.save(file.id, item);
+                                root.save(data, item);
                             }
                         }
                     }
@@ -105,7 +125,13 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
                 item = target.parents('div[data-array]').attr('data-array');
             }
 
-            var index = target.index() - 1;
+            var index;
+            if (target.hasClass('array-item')) {
+                index = target.index() - 1;
+            } else {
+                index = target.parents(".array-item").index() - 1;
+            }
+
             if (typeof group !== 'undefined') {
                 this.data[group][item].splice(index, 1);
                 this.save(this.data[group][item], item, group);
@@ -121,6 +147,8 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
             this.$el.find('div[data-array]').sortable({
                 axis: "y",
                 cancel: ".label,[data-array-item]",
+                distance: 15,
+                placeholder: 'ui-state-highlight',
                 update: function (event, ui) {
                     var stopIndex = ui.item.index() - 1;
 
@@ -151,6 +179,7 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
                     }
                 },
                 start: function(event, ui) {
+                    $(event.currentTarget).find(".ui-state-highlight").height($(ui.item).height() - (2*19));
                     startIndex = ui.item.index() - 1;
                 }
             });

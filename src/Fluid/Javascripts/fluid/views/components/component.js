@@ -32,7 +32,12 @@ define(
             },
 
             render: function () {
+                var root = this;
                 var variables = new EJS({url: 'javascripts/fluid/templates/variables/variables.ejs?' + (new Date()).getTime()});  // !! Remove for production
+
+                if (this.rendered === true) {
+                    var scroll = this.$el.find("div.main").scrollTop();
+                }
 
                 this.$el.html(this.template.render({
                     component: this.components.findWhere({component: this.component.component}),
@@ -46,6 +51,14 @@ define(
                 this.sortableArray();
 
                 $("#target").append(this.$el);
+
+                if (typeof scroll !== 'undefined') {
+                    this.$el.find("div.main").scrollTop(scroll);
+                    setTimeout(function() {
+                        root.$el.find("div.main").scrollTop(scroll);
+                    }, 10);
+                }
+
                 return this;
             },
 

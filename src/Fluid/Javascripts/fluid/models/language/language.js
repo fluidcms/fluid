@@ -14,8 +14,11 @@ define(['backbone'], function (Backbone) {
         },
 
         changeCurrent: function(item) {
+            var lastCurrent = this.current;
             this.current = this.where({language: item})[0];
-            this.trigger('change');
+            if (this.current !== lastCurrent) {
+                this.trigger('change');
+            }
         },
 
         fetch: function () {

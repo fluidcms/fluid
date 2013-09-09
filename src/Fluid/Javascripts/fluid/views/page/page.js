@@ -43,7 +43,12 @@ define(
             },
 
             render: function () {
+                var root = this;
                 var variables = new EJS({url: 'javascripts/fluid/templates/variables/variables.ejs?' + (new Date()).getTime()});  // !! Remove for production
+
+                if (this.rendered === true) {
+                    var scroll = this.$el.find("div.main").scrollTop();
+                }
 
                 this.$el.html(this.template.render({
                     definition: this.definition,
@@ -52,12 +57,22 @@ define(
                     variables: variables
                 }));
 
+                this.rendered = true;
+
                 this.droppable();
                 this.sortableArray();
 
                 $("#target").append(this.$el);
 
                 this.changeGroup(this.current);
+
+                if (typeof scroll !== 'undefined') {
+                    this.$el.find("div.main").scrollTop(scroll);
+                    setTimeout(function() {
+                        root.$el.find("div.main").scrollTop(scroll);
+                    }, 10);
+                }
+
                 return this;
             },
 
