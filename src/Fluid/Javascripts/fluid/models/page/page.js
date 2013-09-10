@@ -128,7 +128,9 @@ define(['backbone', 'models/variables/variables'], function (Backbone, Variables
             this.set({
                 'data': data,
                 'render': this.variables.toHTML()
-            });
+            }, { silent: true });
+
+            this.trigger('change');
 
             this.save();
         }

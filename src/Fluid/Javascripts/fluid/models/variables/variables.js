@@ -59,7 +59,7 @@ define(['backbone'], function (Backbone) {
                             retval[key] = root.contentToHTML(data[key]);
                             break;
                         case 'image':
-                            if (typeof content !== 'string') {
+                            if (typeof data[key] !== 'string') {
                                 retval[key] = root.imageToHTML(data[key]);
                             }
                             break;
