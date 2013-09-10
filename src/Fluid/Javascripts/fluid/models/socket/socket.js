@@ -44,6 +44,9 @@ define(['backbone', 'views/helpers/error'], function (Backbone, ErrorView) {
                     this.models.map.changeCurrent(response.data['page']);
                     this.models.language.changeCurrent(response.data['language']);
                     break;
+                case 'language_detected':
+                    this.models.language.changeCurrent(response.data['language']);
+                    break;
                 case 'map':
                     this.models.map.parse(response.data);
                     break;

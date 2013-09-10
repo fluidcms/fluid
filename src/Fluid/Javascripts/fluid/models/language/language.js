@@ -14,9 +14,9 @@ define(['backbone'], function (Backbone) {
         },
 
         changeCurrent: function(item) {
-            var lastCurrent = this.current;
+            var lastCurrent = this.current.get('language');
             this.current = this.where({language: item})[0];
-            if (this.current !== lastCurrent) {
+            if (this.current.get('language') !== lastCurrent) {
                 this.trigger('change');
             }
         },

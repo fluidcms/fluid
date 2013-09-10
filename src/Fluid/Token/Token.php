@@ -49,7 +49,7 @@ class Token
         $sth = $dbh->prepare("SELECT `token` FROM `fluid_page_tokens` WHERE `token`=:token AND `expiration`>NOW();");
         $sth->execute(array(':token' => $token));
         if ($sth->fetch()) {
-            // !! Delete token
+            // TODO: Delete token?
             return true;
         } else {
             return false;

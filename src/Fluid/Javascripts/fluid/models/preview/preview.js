@@ -68,19 +68,28 @@ define(['backbone'], function (Backbone) {
                 language = this.languages.current.get('language');
             }
 
-            $.ajax({url: "changepage.json", dataType: 'JSON', type: "GET", data: {
-                url: url,
-                language: language
-            }}).done(
-                function(url) {
-                    root.getToken(function(response) {
-                        url = updateQueryStringParameter(url, 'fluidbranch', fluidBranch);
-                        url = updateQueryStringParameter(url, 'fluidtoken', response.token);
-                        url = updateQueryStringParameter(url, 'fluidsession', fluidSession);
-                        $("#website")[0].contentWindow.location = url;
-                    });
-                }
-            );
+            if (typeof language === 'undefined') {
+                root.getToken(function(response) {
+                    url = updateQueryStringParameter(url, 'fluidbranch', fluidBranch);
+                    url = updateQueryStringParameter(url, 'fluidtoken', response.token);
+                    url = updateQueryStringParameter(url, 'fluidsession', fluidSession);
+                    $("#website")[0].contentWindow.location = url;
+                });
+            } else {
+                $.ajax({url: "changepage.json", dataType: 'JSON', type: "GET", data: {
+                    url: url,
+                    language: language
+                }}).done(
+                    function(url) {
+                        root.getToken(function(response) {
+                            url = updateQueryStringParameter(url, 'fluidbranch', fluidBranch);
+                            url = updateQueryStringParameter(url, 'fluidtoken', response.token);
+                            url = updateQueryStringParameter(url, 'fluidsession', fluidSession);
+                            $("#website")[0].contentWindow.location = url;
+                        });
+                    }
+                );
+            }
         },
 
         getToken: function(callback) {

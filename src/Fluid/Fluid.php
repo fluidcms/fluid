@@ -17,6 +17,7 @@ class Fluid
     private static $storage;
     private static $language = 'en-US';
     private static $requestPayload;
+    private static $requestFromControlPannel = false;
 
     const NOT_FOUND = '404';
 
@@ -33,28 +34,22 @@ class Fluid
         self::config($config);
 
         // Init Fluid
-        if (!VerifyFluid::check() && php_sapi_name() !== 'cli') {
-            Init::init();
-        }
-
-        // Set language
-        if (null === $language) {
-            $languages = self::getConfig('languages');
-            $language = reset($languages);
-        }
-        self::$language = $language;
-
-        // Set View Templates Directory
-        if (null === View::getTemplatesDir()) {
-            View::setTemplatesDir(self::getConfig('templates'));
-        }
+        //if (!VerifyFluid::check() && php_sapi_name() !== 'cli') {
+        //    Init::init();
+        //}
 
         // Validate token and change branch
         if (isset($_SERVER['QUERY_STRING'])) {
             parse_str($_SERVER['QUERY_STRING'], $queryString);
-            if (isset($queryString['fluidBranch']) && isset($queryString['fluidToken']) && Token\Token::validateToken($queryString['fluidToken'])) {
-                self::setBranch($queryString['fluidBranch'], true);
+            if (isset($queryString['fluidbranch']) && isset($queryString['fluidtoken']) && Token\Token::validateToken($queryString['fluidtoken'])) {
+                self::$requestFromControlPannel = $queryString['fluidsession'];
+                self::setBranch($queryString['fluidbranch'], true);
             }
+        }
+
+        // Set View Templates Directory
+        if (null === View::getTemplatesDir()) {
+            View::setTemplatesDir(self::getConfig('templates'));
         }
     }
 
@@ -78,6 +73,22 @@ class Fluid
      */
     public static function setLanguage($value)
     {
+        // If page is loading from control pannel, send language to control pannel
+        if (self::$requestFromControlPannel) {
+            MessageQueue::send(array(
+                'task' => 'LanguageDetected',
+                'data' => array(
+                    'session' => self::$requestFromControlPannel,
+                    'message' => array(
+                        'target' => 'language_detected',
+                        'data' => array(
+                            'language' => $value
+                        )
+                    )
+                )
+            ));
+        }
+
         self::$language = $value;
     }
 
@@ -88,6 +99,13 @@ class Fluid
      */
     public static function getLanguage()
     {
+        // Set language
+        if (null === self::$language) {
+            $languages = self::getConfig('languages');
+            $language = reset($languages);
+            self::setLanguage($language);
+        }
+
         return self::$language;
     }
 

@@ -15,6 +15,7 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
             this.map = attrs.map;
 
             this.languages.on('change', this.render, this);
+            this.map.on('update', this.render, this);
             this.map.on('editing', this.render, this);
         },
 

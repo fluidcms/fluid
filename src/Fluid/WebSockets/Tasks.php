@@ -18,6 +18,7 @@ class Tasks
         $this->register(new Fluid\WebSockets\Tasks\WatchBranchStatus($server));
         $this->register(new Fluid\WebSockets\Tasks\WatchRemote($server));
         $this->register(new Fluid\WebSockets\Tasks\RequestedData($server));
+        $this->register(new Fluid\WebSockets\Tasks\LanguageDetected($server));
     }
 
     /**
