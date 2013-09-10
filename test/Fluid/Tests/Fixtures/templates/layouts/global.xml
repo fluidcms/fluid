@@ -10,5 +10,8 @@
             <format name="Original"/>
         </image>
         <variable name="New Var" type="string"/>
+        <array name="MyArray">
+            <image name="Image"/>
+        </array>
     </group>
 </fluid-layout>
