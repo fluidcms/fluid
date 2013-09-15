@@ -50,6 +50,8 @@ define(
                     var scroll = this.$el.find("div.main").scrollTop();
                 }
 
+                // TODO: live tracking of the scroll
+
                 this.$el.html(this.template.render({
                     definition: this.definition,
                     data: this.data,

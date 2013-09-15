@@ -24,6 +24,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
             this.data = attrs.data;
             this.components = attrs.components;
             this.app = attrs.app;
+            this.files = attrs.files;
 
             this.app.editors[this.cid] = this;
 
@@ -174,6 +175,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
                     var componentView = new ComponentView({
                         app: root.app,
                         components: root.components,
+                        files: root.files,
                         definition: definition,
                         component: component
                     });

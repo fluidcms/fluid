@@ -9,6 +9,8 @@ define(
             initialize: function (attrs) {
                 this.app = attrs.app;
                 this.components = attrs.components;
+                this.files = attrs.files;
+
                 this.definition = attrs.definition;
                 this.component = attrs.component;
 
