@@ -122,8 +122,12 @@ class Page extends FileSystem
         if (empty($this->layout)) {
             $this->layout = 'global';
         }
-
-        return ParseData::parse($this, Layout::get($this->layout), $language);
+        try {
+            return ParseData::parse($this, Layout::get($this->layout), $language);
+        } catch(Exception $e) {
+            null;
+        }
+        return array();
     }
 
     /**

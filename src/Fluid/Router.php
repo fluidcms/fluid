@@ -1,16 +1,15 @@
 <?php
 
 namespace Fluid;
+use Fluid\Requests\HTTP;
 
 /**
  * Route requests to pages.
  *
  * @package fluid
  */
-class PageRouter
+class Router
 {
-    private static $request;
-
     /**
      * Route a request
      *
@@ -19,18 +18,27 @@ class PageRouter
      */
     public static function route($request = null)
     {
-        if (null === $request && isset($_SERVER['REQUEST_URI'])) {
-            $request = $_SERVER['REQUEST_URI'];
+        // Route requests
+        if (stripos($request, '/fluidcms/') === 0) {
+            if (HTTP::route($request)) {
+                return true;
+            }
         }
+        // Route pages
+        else {
+            if (null === $request && isset($_SERVER['REQUEST_URI'])) {
+                $request = $_SERVER['REQUEST_URI'];
+            }
 
-        $request = '/' . ltrim($request, '/');
+            $request = '/' . ltrim($request, '/');
 
-        $map = new Map\Map;
-        $page = self::matchRequest($request, $map->getPages());
+            $map = new Map\Map;
+            $page = self::matchRequest($request, $map->getPages());
 
-        if (isset($page) && false !== $page) {
-            Data::setMap($map);
-            return PageMaker::create($page, Data::get($page['id']));
+            if (isset($page) && false !== $page) {
+                Data::setMap($map);
+                return PageMaker::create($page, Data::get($page['id']));
+            }
         }
 
         return Fluid::NOT_FOUND;
@@ -42,7 +50,7 @@ class PageRouter
      * @param   string  $request
      * @param   array   $pages
      * @param   string  $parent
-     * @return  bool
+     * @return  array
      */
     private static function matchRequest($request, $pages, $parent = '')
     {

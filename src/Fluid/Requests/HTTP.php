@@ -1,15 +1,21 @@
 <?php
 
-namespace Fluid;
+namespace Fluid\Requests;
 
+use Fluid\Events;
+use Fluid\Fluid;
+use Fluid\StaticFile;
 use Fluid\Token\Token;
+use Fluid\Session\Session;
+use Fluid\View;
+use Fluid\WebSockets;
 
 /**
  * Route manager requests
  *
  * @package fluid
  */
-class ManagerRouter
+class HTTP
 {
     private static $request, $method, $input;
 
@@ -23,7 +29,11 @@ class ManagerRouter
      */
     public static function route($request, $method = null, $input = null)
     {
-        self::$request = $request;
+        if (stripos($request, '/fluidcms/') === 0) {
+            $request = substr($request, 10);
+        }
+
+        self::$request = ltrim($request, '/');
 
         // Get request method
         if (null !== $method) {
@@ -162,8 +172,9 @@ class ManagerRouter
     private static function publicFiles()
     {
         if (!empty(self::$request)) {
-            $file = __DIR__ . '/Public/' . trim(self::$request, ' ./');
+            $file = '/Public/' . trim(self::$request, ' ./');
             $file = str_replace('..', '', $file);
+            $file = realpath(__DIR__ . "/..{$file}");
             if (file_exists($file)) {
                 new StaticFile($file);
                 return true;
@@ -220,7 +231,7 @@ class ManagerRouter
     private static function htmlPages()
     {
         if (self::$request == '' || self::$request == 'files') {
-            View::setTemplatesDir(__DIR__ . "/Templates/");
+            View::setTemplatesDir(__DIR__ . "/../Templates/");
             View::setLoader(null);
 
             if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) {
@@ -241,15 +252,15 @@ class ManagerRouter
                     'user_id' => uniqid(),
                     'site_url' => $url,
                     'branch' => 'develop',
-                    'session' => Token::getToken(),
-                    'language' => require __DIR__ . "/Locale/en-US.php"
+                    'session' => Session::create(),
+                    'language' => require __DIR__ . "/../Locale/en-US.php"
                 )
             );
             return true;
         }
 
         else if (self::$request == 'test') {
-            View::setTemplatesDir(__DIR__ . "/Templates/");
+            View::setTemplatesDir(__DIR__ . "/../Templates/");
             View::setLoader(null);
 
             echo View::create('test.twig');

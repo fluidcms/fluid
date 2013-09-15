@@ -1,20 +1,40 @@
 <?php
 
-namespace Fluid;
+namespace Fluid\WebSockets;
 
-class Task
+abstract class Task
 {
-    /*
-     * Send a job to the gearman server
+    protected $interval;
+    protected $lastExecutionTime;
+
+    /**
+     * Get the timestamp of the last execution
      *
-     * @param   string  $task
-     * @param   array   $data
+     * @return int
+     */
+    public function getLastExecutionTime()
+    {
+        return $this->lastExecutionTime;
+    }
+
+    /**
+     * Get the timestamp of the last execution
+     *
+     * @param   string  $time
      * @return  void
      */
-    public static function execute($task, $data = [], $unique = null)
+    public function setExecutionTime($time)
     {
-        $client = new \GearmanClient();
-        $client->addServers("127.0.0.1");
-        $client->doLowBackground($task, json_encode($data), $unique);
+        $this->lastExecutionTime = $time;
+    }
+
+    /**
+     * Get last executed
+     *
+     * @return int
+     */
+    public function getInterval()
+    {
+        return $this->interval;
     }
 }
