@@ -107,8 +107,8 @@ define(
                         root.models.languages.fetch();
                         root.models.layouts.fetch();
                         root.models.preview.loadPage();
-//                        root.models.components.fetch();
-//                        root.models.map.fetch();
+                        root.models.components.fetch();
+                        root.models.map.fetch();
                     });
 
                     this.socket.connection();

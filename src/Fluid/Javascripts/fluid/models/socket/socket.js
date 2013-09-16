@@ -1,5 +1,7 @@
 define(['backbone', 'views/helpers/error'], function (Backbone, ErrorView) {
     return Backbone.Model.extend({
+        pingTimeout: 30000,
+
         conn: null,
         loader: null,
         topic: {},
@@ -21,11 +23,10 @@ define(['backbone', 'views/helpers/error'], function (Backbone, ErrorView) {
             root.conn = new ab.Session(
                 fluidWebSocketUrl,
                 function() {
-                    console.log('connected');
                     root.conn.subscribe(JSON.stringify(root.topic), function(topic, message) {
-                        console.log('subscribed');
                         root.parse(topic, message);
                         root.trigger('ready');
+                        setTimeout(function() { root.ping(); }, root.pingTimeout);
                     });
                 },
                 function() {
@@ -55,11 +56,20 @@ define(['backbone', 'views/helpers/error'], function (Backbone, ErrorView) {
             }
         },
 
+        ping: function() {
+            var root = this;
+
+            this.conn.call('', {ping: 'ping'});
+
+            setTimeout(function() {
+                root.ping();
+            }, this.pingTimeout);
+        },
+
         send: function(method, url, data, callback) {
             if (typeof data !== 'object' || data === null) {
                 data = {};
             }
-            console.log('call method');
 
             this.conn.call(JSON.stringify(this.topic), {
                 method: method,

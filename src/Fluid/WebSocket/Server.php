@@ -101,6 +101,12 @@ class Server implements Ratchet\Wamp\WampServerInterface
 
     public function onCall(Ratchet\ConnectionInterface $conn, $id, $topic, array $params)
     {
+        // Ping
+        if (isset($params['ping'])) {
+            $conn->send('true');
+            return;
+        }
+
         if (
             isset($params['url']) &&
             isset($params['method']) &&
