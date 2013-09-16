@@ -14,6 +14,9 @@ class Helper
         if (is_dir(__DIR__ . "/Fluid/Tests/Fixtures/storage/master")) {
             self::deleteDir(__DIR__ . "/Fluid/Tests/Fixtures/storage/master");
         }
+        if (file_exists(__DIR__ . "/Fluid/Tests/Fixtures/storage/data")) {
+            unlink(__DIR__ . "/Fluid/Tests/Fixtures/storage/data");
+        }
     }
 
     public static function destroy()

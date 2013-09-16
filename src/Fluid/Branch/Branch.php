@@ -3,6 +3,7 @@
 namespace Fluid\Branch;
 use Fluid\Fluid;
 use Fluid\Git;
+use Fluid\Debug\Log;
 
 class Branch
 {
@@ -23,18 +24,20 @@ class Branch
      */
     public static function init($branch)
     {
-        \Fluid\Debug\Log::add('Initializing branch ' . $branch . "");
-        \Fluid\Debug\Log::add('Checking if dir ' . Fluid::getConfig("storage") . $branch . "/.git" . " exists");
+        Log::add('Initializing branch ' . $branch . "");
+        Log::add('Checking if dir ' . Fluid::getConfig("storage") . $branch . "/.git" . " exists");
 
         if (!is_dir(Fluid::getConfig("storage") . $branch . "/.git")) {
-            \Fluid\Debug\Log::add(Fluid::getConfig("storage") . $branch . "/.git" . " does not exists");
-            \Fluid\Debug\Log::add('Checking if dir ' . Fluid::getConfig("storage") . $branch . " exists");
+
+            Log::add(Fluid::getConfig("storage") . $branch . "/.git" . " does not exists");
+            Log::add('Checking if dir ' . Fluid::getConfig("storage") . $branch . " exists");
+
             if (!is_dir(Fluid::getConfig("storage") . $branch)) {
-                \Fluid\Debug\Log::add(Fluid::getConfig("storage") . $branch . " does not exists");
+                Log::add(Fluid::getConfig("storage") . $branch . " does not exists");
                 if (mkdir(Fluid::getConfig("storage") . $branch, 0777, true)) {
-                    \Fluid\Debug\Log::add("Created " . Fluid::getConfig("storage") . $branch . "");
+                    Log::add("Created " . Fluid::getConfig("storage") . $branch . "");
                 } else {
-                    \Fluid\Debug\Log::add("Failed creating " . Fluid::getConfig("storage") . $branch . "");
+                    Log::add("Failed creating " . Fluid::getConfig("storage") . $branch . "");
                 }
             }
             Git::init($branch);
@@ -65,7 +68,7 @@ class Branch
         }
 
         Git::addRemote($this->branch, $master->getDir());
-        \Fluid\Debug\Log::add('Branch ' . $this->branch . ' pulls from master');
+        Log::add('Branch ' . $this->branch . ' pulls from master');
         Git::pull($this->branch);
         Git::clean($this->branch);
     }

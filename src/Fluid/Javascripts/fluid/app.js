@@ -105,8 +105,8 @@ define(
                         root.ready = true;
                         root.loader.remove();
                         root.models.languages.fetch();
-//                        root.models.layouts.fetch();
-//                        root.models.preview.loadPage();
+                        root.models.layouts.fetch();
+                        root.models.preview.loadPage();
 //                        root.models.components.fetch();
 //                        root.models.map.fetch();
                     });

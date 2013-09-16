@@ -60,7 +60,7 @@ class WebSocket
     private function token()
     {
         if ($this->request === 'token' && $this->method === 'GET') {
-            $token = Token::getToken();
+            $token = Token::get();
             echo json_encode(array('token' => $token));
             return true;
         }

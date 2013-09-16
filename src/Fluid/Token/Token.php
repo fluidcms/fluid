@@ -1,19 +1,34 @@
 <?php
 
 namespace Fluid\Token;
+use Fluid\Fluid;
+use Fluid\Database;
 
-use PDO, Fluid\Database\Connection;
-
-class Token
+class Token extends Database
 {
+    /**
+     * Default timeout of 1 hour
+     */
+    private static $timeOut = 3600;
+
     /**
      * Get a token
      *
      * @return  string
      */
-    public static function getToken()
+    public static function get()
     {
-        return self::createToken();
+        return self::create();
+    }
+
+    /**
+     * Create table if it doesn't exists
+     *
+     * @return  void
+     */
+    private static function table() {
+        $dbh = self::getDatabase();
+        $dbh->query("CREATE TABLE IF NOT EXISTS page_tokens (token CHAR(64) PRIMARY KEY, expiration DATETIME)");
     }
 
     /**
@@ -21,16 +36,19 @@ class Token
      *
      * @return  string
      */
-    public static function createToken()
+    public static function create()
     {
-        $dbh = Connection::getConnection();
+        self::table();
 
         $token = self::generate(64);
 
-        $sth = $dbh->prepare("INSERT INTO `fluid_page_tokens` (`token`, `expiration`) VALUES (:token, :expiration);");
+        $dbh = self::getDatabase();
+
+        $sth = $dbh->prepare("INSERT INTO page_tokens (token, expiration) VALUES (:token, :expiration);");
+
         $sth->execute(array(
             ':token' => $token,
-            ':expiration' => date('Y-m-d H:i:s', time() + 3600)
+            ':expiration' => date('Y-m-d H:i:s', time() + self::$timeOut)
         ));
         return $token;
     }
@@ -38,22 +56,25 @@ class Token
     /**
      * Validate a token and delete it
      *
-     * @param   string  $token
+     * @param   string  $value
      * @return  bool
      */
-    public static function validateToken($token)
+    public static function validate($value)
     {
+        self::table();
+
+        $dbh = self::getDatabase();
+
         self::deleteExpired();
 
-        $dbh = Connection::getConnection();
-        $sth = $dbh->prepare("SELECT `token` FROM `fluid_page_tokens` WHERE `token`=:token AND `expiration`>NOW();");
-        $sth->execute(array(':token' => $token));
+        $sth = $dbh->prepare("SELECT token FROM page_tokens WHERE token=:token AND expiration>date('now');");
+        $sth->execute(array(':token' => $value));
+
         if ($sth->fetch()) {
             // TODO: Delete token?
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
@@ -63,8 +84,8 @@ class Token
      */
     private static function deleteExpired()
     {
-        $dbh = Connection::getConnection();
-        $dbh->query("DELETE FROM `fluid_page_tokens` WHERE `expiration`<NOW();");
+        $dbh = self::getDatabase();
+        $dbh->query("DELETE FROM page_tokens WHERE expiration<date('now');");
     }
 
     /**

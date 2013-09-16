@@ -30,7 +30,7 @@ class Data
         // If rendering page for CMS, we change the current branch to the CMS branch and send a signal to the CMS
         if (isset($_SERVER['QUERY_STRING'])) {
             parse_str($_SERVER['QUERY_STRING']);
-            if (isset($fluidtoken) && isset($fluidbranch) && isset($fluidsession) && Token::validateToken($fluidtoken)) {
+            if (isset($fluidtoken) && isset($fluidbranch) && isset($fluidsession) && Token::validate($fluidtoken)) {
                 Fluid::setBranch($fluidbranch);
 
                 MessageQueue::send(array(

@@ -20,8 +20,8 @@ class Database
 
         $database = Fluid::getConfig('storage') . "data";
 
-        if (!file_exists(dirname($database))) {
-            mkdir(dirname($database));
+        if (!is_dir(dirname($database))) {
+            mkdir(dirname($database), 0777, true);
         }
 
         return self::$dbh = new PDO('sqlite:'.$database);

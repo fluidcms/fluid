@@ -45,7 +45,7 @@ class Fluid
         // Validate token and change branch
         if (isset($_SERVER['QUERY_STRING'])) {
             parse_str($_SERVER['QUERY_STRING'], $queryString);
-            if (isset($queryString['fluidbranch']) && isset($queryString['fluidtoken']) && Token\Token::validateToken($queryString['fluidtoken'])) {
+            if (isset($queryString['fluidbranch']) && isset($queryString['fluidtoken']) && Token\Token::validate($queryString['fluidtoken'])) {
                 self::$requestFromControlPannel = $queryString['fluidsession'];
                 self::setBranch($queryString['fluidbranch'], true);
             }
