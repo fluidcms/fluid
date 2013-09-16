@@ -21,9 +21,10 @@ class Git
      * @param   string  $command
      * @param   bool    $check
      * @param   bool    $quiet
+     * @param   bool    $worktreeEnabled
      * @return  string
      */
-    private static function command($branch, $command, $check = true, $quiet = false)
+    private static function command($branch, $command, $check = true, $quiet = false, $worktreeEnabled = true)
     {
         $dir = Fluid::getConfig("storage") . $branch;
         $dir = preg_replace('!/{2,}!', '/', $dir);
@@ -36,7 +37,11 @@ class Git
         }
 
         if (!$check || is_dir($dir)) {
-            $command = preg_replace("/^git/", "git --git-dir={$dir} --work-tree={$workTree}", $command);
+            if ($worktreeEnabled) {
+                $command = preg_replace("/^git/", "git --work-tree={$workTree}", $command);
+            }
+
+            $command = preg_replace("/^git/", "git --git-dir={$dir}", $command);
 
             if ($quiet) {
                 $command .= ' --quiet';
@@ -46,6 +51,7 @@ class Git
 
             ob_start();
 
+            \Fluid\Debug\Log::add('Git command: ' . $command);
             $handle = popen($command, 'r');
 
             while(!feof($handle)) {
@@ -424,7 +430,7 @@ class Git
      */
     public static function pull($branch, $remote = 'master')
     {
-        return self::command($branch, "git pull origin {$remote}", true, true);
+        return self::command($branch, "git pull origin {$remote}", true, true, false);
     }
 
     /**
@@ -447,5 +453,16 @@ class Git
     public static function status($branch)
     {
         return self::command($branch, "git status");
+    }
+
+    /**
+     * Clear all changed files
+     *
+     * @param   string $branch
+     * @return  string
+     */
+    public static function clean($branch)
+    {
+        return self::command($branch, "git checkout -- .");
     }
 }

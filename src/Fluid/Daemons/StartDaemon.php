@@ -16,8 +16,6 @@ if (is_dir($vendor) && is_file($vendor."/autoload.php")) {
         if (isset($argv[4])) {
             $debugMode = (int)$argv[4];
             if ($debugMode !== 0) {
-                error_reporting(E_ALL);
-                ini_set('display_errors', 'On');
                 Fluid::debug($debugMode);
             }
         }

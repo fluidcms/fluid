@@ -4,11 +4,13 @@ namespace Fluid\Tests\Components;
 
 use Fluid, PHPUnit_Framework_TestCase, Fluid\Tests\Helper;
 
-class InitBranchTest extends PHPUnit_Framework_TestCase
+class CloneBranchTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         Helper::init();
+        Helper::createMaster();
+        Helper::commitMaster();
     }
 
     public function tearDown()
@@ -19,8 +21,6 @@ class InitBranchTest extends PHPUnit_Framework_TestCase
     public function testInitBranch()
     {
         Fluid\Branch\Branch::init('develop');
-
-        $this->assertFileExists(Helper::getFixtureDir() . "/storage/master/.gitignore");
-        $this->assertFileExists(Helper::getFixtureDir() . "/storage/develop/.gitignore");
+        $this->assertFileExists(Helper::getStorage() . "/global_en-US.json");
     }
 }

@@ -18,7 +18,8 @@ class Server implements Ratchet\Wamp\WampServerInterface
     public function __construct()
     {
         $this->lastConnection = time();
-        Log::add("Websocket Server Started\n                    ==============================");
+        Log::add("==============================");
+        Log::add("Websocket Server Started");
     }
 
     /**
@@ -56,8 +57,6 @@ class Server implements Ratchet\Wamp\WampServerInterface
     {
         $topicId = json_decode($topic->getId(), true);
 
-        Log::add("User subscribe " . $topic->getId());
-
         if (!array_key_exists($topic->getId(), $this->connections[$conn->WAMP->sessionId])) {
             $this->connections[$conn->WAMP->sessionId][$topic->getId()] = array(
                 'session' => $topicId['session'],
@@ -67,25 +66,27 @@ class Server implements Ratchet\Wamp\WampServerInterface
                 'user_email' => $topicId['user_email'],
                 'topic' => $topic
             );
+            Log::add("User " . $topicId['user_id'] ." subscribed");
             $topic->broadcast('true');
         }
     }
 
     public function onUnSubscribe(Ratchet\ConnectionInterface $conn, $topic)
     {
-        Log::add("User unsubscribe");
+        Log::add("User unsubscribed");
         unset($this->connections[$conn->WAMP->sessionId][$topic->getId()]);
     }
 
     public function onOpen(Ratchet\ConnectionInterface $conn)
     {
-        Log::add("User open connection");
+        Log::add("User opened connection " . $conn->WAMP->sessionId);
         $this->connections[$conn->WAMP->sessionId] = array();
     }
 
     public function onClose(Ratchet\ConnectionInterface $conn)
     {
-        Log::add("User close connection");
+        Log::add("User closed connection " . $conn->WAMP->sessionId);
+
         if (isset($this->connections[$conn->WAMP->sessionId]) && is_array($this->connections[$conn->WAMP->sessionId])) {
             $topic = key($this->connections[$conn->WAMP->sessionId]);
             ServerEvents::unregister($this->connections[$conn->WAMP->sessionId][$topic]['user_id']);
@@ -100,7 +101,6 @@ class Server implements Ratchet\Wamp\WampServerInterface
 
     public function onCall(Ratchet\ConnectionInterface $conn, $id, $topic, array $params)
     {
-        Log::add("User call method");
         if (
             isset($params['url']) &&
             isset($params['method']) &&
@@ -110,6 +110,8 @@ class Server implements Ratchet\Wamp\WampServerInterface
             is_array($params['data'])
         ) {
             $topic = json_decode($topic, true);
+
+            Log::add("User " . $topic['user_id'] . " called method " . $params['method'] . " " . $params['url']);
 
             ob_start();
             new WebSocketRequest(
@@ -138,7 +140,7 @@ class Server implements Ratchet\Wamp\WampServerInterface
 
     public function onPublish(Ratchet\ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible)
     {
-        Log::add("User publish message");
+        Log::add("User published message");
     }
 
     public function onError(Ratchet\ConnectionInterface $conn, \Exception $e)

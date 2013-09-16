@@ -23,9 +23,19 @@ class Branch
      */
     public static function init($branch)
     {
+        \Fluid\Debug\Log::add('Initializing branch ' . $branch . "");
+        \Fluid\Debug\Log::add('Checking if dir ' . Fluid::getConfig("storage") . $branch . "/.git" . " exists");
+
         if (!is_dir(Fluid::getConfig("storage") . $branch . "/.git")) {
+            \Fluid\Debug\Log::add(Fluid::getConfig("storage") . $branch . "/.git" . " does not exists");
+            \Fluid\Debug\Log::add('Checking if dir ' . Fluid::getConfig("storage") . $branch . " exists");
             if (!is_dir(Fluid::getConfig("storage") . $branch)) {
-                mkdir(Fluid::getConfig("storage") . $branch);
+                \Fluid\Debug\Log::add(Fluid::getConfig("storage") . $branch . " does not exists");
+                if (mkdir(Fluid::getConfig("storage") . $branch, 0777, true)) {
+                    \Fluid\Debug\Log::add("Created " . Fluid::getConfig("storage") . $branch . "");
+                } else {
+                    \Fluid\Debug\Log::add("Failed creating " . Fluid::getConfig("storage") . $branch . "");
+                }
             }
             Git::init($branch);
         }
@@ -34,9 +44,9 @@ class Branch
 
         if ($branch !== 'master') {
             $retval->pullMaster();
+        } else {
+            $retval->initialCommit();
         }
-//        self::checkout($branch, $tracking);
-//        self::intialCommit($branch);
 
         return $retval;
     }
@@ -55,7 +65,9 @@ class Branch
         }
 
         Git::addRemote($this->branch, $master->getDir());
+        \Fluid\Debug\Log::add('Branch ' . $this->branch . ' pulls from master');
         Git::pull($this->branch);
+        Git::clean($this->branch);
     }
 
     /**
@@ -77,5 +89,26 @@ class Branch
     public static function exists($branch)
     {
         return is_dir(Fluid::getConfig('storage') . $branch . '/.git');
+    }
+
+    /**
+     * Initial commit
+     *
+     * @return  void
+     */
+    public function initialCommit()
+    {
+        $gitIgnoreFile = Fluid::getConfig("storage") . $this->branch . "/.gitignore";
+        $gitIgnoreContent = <<<TEXT
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+Desktop.ini
+/cache/*
+TEXT;
+        file_put_contents($gitIgnoreFile, $gitIgnoreContent);
+        Git::commit($this->branch, 'initial commit');
     }
 }
