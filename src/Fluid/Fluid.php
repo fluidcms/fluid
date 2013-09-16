@@ -144,7 +144,7 @@ class Fluid
      */
     public static function setBranch($branch, $create = false)
     {
-        if ($create && !Branch::exists($branch)) {
+        if (!Branch::exists($branch)) {
             Branch::init($branch);
         }
 

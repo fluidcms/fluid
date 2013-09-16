@@ -112,6 +112,7 @@ Desktop.ini
 /cache/*
 TEXT;
         file_put_contents($gitIgnoreFile, $gitIgnoreContent);
+        Log::add('Added '.$gitIgnoreFile.' file for initial commit on '.$this->branch.' branch');
         Git::commit($this->branch, 'initial commit');
     }
 }

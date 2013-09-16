@@ -1,6 +1,7 @@
 <?php
 
 namespace Fluid;
+use Fluid\Debug\Log;
 
 /**
  * Version control for Fluid
@@ -51,7 +52,7 @@ class Git
 
             ob_start();
 
-            \Fluid\Debug\Log::add('Git command: ' . $command);
+            Log::add('Git command: ' . $command);
             $handle = popen($command, 'r');
 
             while(!feof($handle)) {
@@ -64,6 +65,9 @@ class Git
             $retval .= ob_get_contents();
             ob_end_clean();
 
+            if (!empty($retval)) {
+                Log::add('Git result: ' . trim($retval));
+            }
             return $retval;
         }
 
@@ -407,18 +411,27 @@ class Git
      */
     public static function commit($branch, $msg, $name = null, $email = null)
     {
+        if (null === $email) {
+            $email = 'fluid@localhost';
+        }
+        if (null === $name) {
+            $name = 'fluid';
+        }
+
         $msg = preg_replace('/[^\s\w\-:]/', '', $msg);
 
         self::command($branch , 'git add -A');
 
+        self::command($branch, 'git config --global user.email '.escapeshellarg($email));
+        self::command($branch, 'git config --global user.name '.escapeshellarg($name));
+
         $command = "git commit -m " . escapeshellarg($msg);
 
-        if (null !== $name && null !== $email) {
-            $author = "$name <$email>";
-            $command .= " --author=". escapeshellarg($author);
-        }
+        $author = "$name <$email>";
+        $command .= " --author=". escapeshellarg($author);
 
         return self::command($branch, $command);
+
     }
 
     /**
@@ -430,7 +443,7 @@ class Git
      */
     public static function pull($branch, $remote = 'master')
     {
-        return self::command($branch, "git pull origin {$remote}", true, true, false);
+        return self::command($branch, "git pull origin {$remote}", true, true);
     }
 
     /**
