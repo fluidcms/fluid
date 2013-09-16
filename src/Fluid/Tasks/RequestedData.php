@@ -1,10 +1,10 @@
 <?php
 
-namespace Fluid\WebSockets\Tasks;
+namespace Fluid\Tasks;
 
 use Fluid;
 
-class RequestedData extends Fluid\WebSockets\Task implements Fluid\WebSockets\TaskInterface
+class RequestedData extends Fluid\Task /* TODO implements Fluid\WebSockets\TaskInterface*/
 {
     protected $interval = 0;
     private $server;

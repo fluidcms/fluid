@@ -1,10 +1,10 @@
 <?php
 
-namespace Fluid\WebSockets;
+namespace Fluid\WebSocket;
 
 use Ratchet,
     Fluid,
-    Fluid\WebSockets\Events as ServerEvents;
+    Fluid\WebSocket\Events as ServerEvents;
 
 class Server implements Ratchet\Wamp\WampServerInterface
 {

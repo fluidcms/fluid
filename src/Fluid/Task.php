@@ -1,6 +1,6 @@
 <?php
 
-namespace Fluid\WebSockets;
+namespace Fluid;
 
 abstract class Task
 {

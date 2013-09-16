@@ -1,10 +1,10 @@
 <?php
 
-namespace Fluid\WebSockets\Tasks;
+namespace Fluid\Tasks;
 
 use Fluid;
 
-class WatchRemote extends Fluid\WebSockets\Task implements Fluid\WebSockets\TaskInterface
+class WatchRemote extends Fluid\Task /* TODO implements Fluid\WebSockets\TaskInterface*/
 {
     protected $interval = 10;
     private $server;

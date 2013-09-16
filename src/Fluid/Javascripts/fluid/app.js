@@ -40,6 +40,14 @@ define(
                 initialize: function () {
                     var root = this;
 
+                    $.ajax({url: "server", type: "POST", data: {session: fluidSession}}).done(function(response) {
+                        console.log(response);
+                    });
+                },
+
+                load: function() {
+                    var root = this;
+
                     this.models = {};
                     this.views = {};
                     this.loader = new LoaderView();

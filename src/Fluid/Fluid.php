@@ -24,8 +24,8 @@ class Fluid
     /**
      * Initialize Fluid
      *
-     * @param   array   $config     The configuration array
-     * @param   string  $language   The language of the instance
+     * @param   array $config     The configuration array
+     * @param   string $language   The language of the instance
      * @return  void
      */
     public static function init($config = null, $language = null)
@@ -56,7 +56,7 @@ class Fluid
     /**
      * Configure Fluid
      *
-     * @param   array   $config     The configuration array
+     * @param   array $config     The configuration array
      * @return  void
      */
     public static function config($config = null)
@@ -68,7 +68,7 @@ class Fluid
     /**
      * Get the language of the instance
      *
-     * @param   string  $value
+     * @param   string $value
      * @return  string
      */
     public static function setLanguage($value)
@@ -122,8 +122,8 @@ class Fluid
     /**
      * Set the branch
      *
-     * @param   string  $branch
-     * @param   bool    $create
+     * @param   string $branch
+     * @param   bool $create
      * @throws  Exception   Branch does not exists
      * @return  void
      */
@@ -165,7 +165,7 @@ class Fluid
     /**
      * Set the request payload in case you use file_get_contents("php://input") before Fluid
      *
-     * @param   string  $value
+     * @param   string $value
      * @return  void
      */
     public static function setRequestPayload($value)
@@ -186,11 +186,15 @@ class Fluid
     /**
      * Get a configuration
      *
-     * @param   string  $name     The key of the config
+     * @param   string $name     The key of the config
      * @return  mixed
      */
-    public static function getConfig($name)
+    public static function getConfig($name = null)
     {
+        if ($name === null) {
+            return self::$config;
+        }
+
         switch ($name) {
             case 'storage':
             case 'templates':
@@ -200,11 +204,7 @@ class Fluid
                     return (substr(self::$config[$name], -1) === '/' ? self::$config[$name] : self::$config[$name] . '/');
                 }
                 break;
-            case 'url':
-            case 'database':
-            case 'languages':
-            case 'git':
-            case 'ports':
+            default:
                 if (isset(self::$config[$name])) {
                     return self::$config[$name];
                 }
@@ -217,8 +217,8 @@ class Fluid
     /**
      * Set a configuration
      *
-     * @param   string  $name     The key of the config
-     * @param   string  $value    The value of the config
+     * @param   string $name     The key of the config
+     * @param   string $value    The value of the config
      * @return  void
      */
     public static function setConfig($name, $value)

@@ -1,24 +1,56 @@
 <?php
 
 namespace Fluid\Daemons;
+use Fluid;
+use Fluid\WebSocket\Tasks;
+use Fluid\WebSocket\Server;
+use Fluid\WebSocket\Events as ServerEvents;
+use Exception;
+use React;
+use Ratchet;
+use ZMQ;
+use ZMQSocketException;
+use React\EventLoop\LibEventLoop;
+use Fluid\MessageQueue;
 
-use Fluid,
-    Fluid\WebSockets\Tasks,
-    Fluid\WebSockets\Server,
-    Fluid\WebSockets\Events as ServerEvents,
-    Exception,
-    React,
-    Ratchet,
-    ZMQ,
-    ZMQSocketException,
-    React\EventLoop\LibEventLoop;
-
-class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
+class WebSocketServer extends Fluid\Daemon implements Fluid\DaemonInterface
 {
+    private static $lockFile = '.server.lock';
+
     private $instanceId;
     private $lock;
-    private $zmqPort = 57600;
     protected $statusFile = 'WebSocketStatus.txt';
+
+    /**
+     * Check if daemon is running
+     *
+     * @return  bool
+     */
+    public static function isRunning()
+    {
+        $dir = Fluid\Fluid::getConfig('storage');
+        $handler = fopen($dir . self::$lockFile, "w+");
+
+        if (!flock($handler, LOCK_EX | LOCK_NB)) {
+            fclose($handler);
+            return true;
+        }
+
+        flock($handler, LOCK_UN);
+        fclose($handler);
+        return false;
+    }
+
+    /**
+     * Start daemon in background
+     *
+     * @return  bool
+     */
+    public static function start()
+    {
+        shell_exec("php -q " . __DIR__ . "/StartDaemon.php WebSocketServer " . base64_encode(serialize(Fluid\Fluid::getConfig())) . " > /dev/null &");
+        return true;
+    }
 
     /**
      * Create and lock the lock file
@@ -27,12 +59,13 @@ class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
      */
     private function lock()
     {
-        $dir = Fluid\Fluid::getConfig('storage') . ".data/";
+        $dir = Fluid\Fluid::getConfig('storage');
+
         if (!is_dir($dir)) {
             mkdir($dir);
         }
 
-        $this->lock = fopen($dir."server.lock", "w+");
+        $this->lock = fopen($dir . self::$lockFile, "w+");
 
         if (flock($this->lock, LOCK_EX | LOCK_NB)) {
             return true;
@@ -96,30 +129,6 @@ class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
     }
 
     /**
-     * Get an avalaible port for ZeroMQ
-     *
-     * @param   int $port
-     * @param   int $loop
-     * @throws  Exception
-     * @return  int
-     */
-    private function getPort($port, $loop = 0)
-    {
-        if ($loop >= 100) {
-            throw new Exception('Could not find a port to open ZeroMQ server');
-        }
-
-        $connection = @fsockopen('127.0.0.1', $port);
-
-        if (is_resource($connection)) {
-            fclose($connection);
-            return $this->getPort(($port+1), ($loop+1));
-        }
-
-        return $port;
-    }
-
-    /**
      * Create the ZeroMQ server
      *
      * @param   LibEventLoop    $loop
@@ -129,14 +138,12 @@ class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
     private function zmqServer(LibEventLoop $loop, Tasks $tasks)
     {
         // Get a port
-        $port = $this->getPort($this->zmqPort);
+        $port = MessageQueue::getAvalaiblePort();
 
         $context = new React\ZMQ\Context($loop);
         $pull = $context->getSocket(ZMQ::SOCKET_PULL);
         $pull->bind("tcp://127.0.0.1:{$port}");
         $pull->on('message', array($tasks, 'message'));
-
-        file_put_contents(Fluid\Fluid::getConfig('storage') . ".data/zmqport", json_encode(array("id" => $this->instanceId, "port" => $port)));
     }
 
     /**
@@ -148,10 +155,10 @@ class WebSocket extends Fluid\Daemon implements Fluid\DaemonInterface
      */
     private function websocketServer(LibEventLoop $loop, Server $server)
     {
-        $ports = Fluid\Fluid::getConfig('ports');
+        $port = Fluid\Fluid::getConfig('websocket');
 
         $socket = new React\Socket\Server($loop);
-        $socket->listen($ports['websockets'], '0.0.0.0');
+        $socket->listen($port, '0.0.0.0');
 
         new Ratchet\Server\IoServer(
             new Ratchet\WebSocket\WsServer(

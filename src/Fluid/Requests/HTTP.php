@@ -1,7 +1,6 @@
 <?php
 
 namespace Fluid\Requests;
-
 use Fluid\Events;
 use Fluid\Fluid;
 use Fluid\StaticFile;
@@ -9,6 +8,7 @@ use Fluid\Token\Token;
 use Fluid\Session\Session;
 use Fluid\View;
 use Fluid\WebSockets;
+use Fluid\Daemons\WebSocketServer;
 
 /**
  * Route manager requests
@@ -60,6 +60,7 @@ class HTTP
         }
 
         return (
+            self::serverStatus() ||
             self::tmpImages() ||
             self::files() ||
             self::upload() ||
@@ -68,6 +69,28 @@ class HTTP
             self::changePage() ||
             self::htmlPages()
         );
+    }
+
+    /**
+     * Returns the server status and tries to start it if it is shut down
+     *
+     * @return  bool
+     */
+    private static function serverStatus()
+    {
+        if (!empty(self::$request) && self::$method === 'POST' && strpos(self::$request, 'server') === 0 && isset(self::$input['session'])) {
+            if (Session::validate(self::$input['session'])) {
+                if (WebSocketServer::isRunning() || WebSocketServer::start()) {
+                    echo json_encode(true);
+                    return true;
+                } else {
+                    echo json_encode(false);
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -192,8 +215,9 @@ class HTTP
     {
         if (!empty(self::$request)) {
             $request = preg_replace('/javascripts/i', '', self::$request);
-            $file = __DIR__ . '/Javascripts/' . trim($request, ' ./');
+            $file = '/Javascripts/' . trim($request, ' ./');
             $file = str_replace('..', '', $file);
+            $file = realpath(__DIR__ . "/..{$file}");
             if (file_exists($file)) {
                 new StaticFile($file);
                 return true;

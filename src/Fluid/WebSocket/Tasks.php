@@ -1,6 +1,6 @@
 <?php
 
-namespace Fluid\WebSockets;
+namespace Fluid\WebSocket;
 
 use Fluid;
 
@@ -15,10 +15,10 @@ class Tasks
     public function __construct(Server $server)
     {
         $this->server = $server;
-        $this->register(new Fluid\WebSockets\Tasks\WatchBranchStatus($server));
-        $this->register(new Fluid\WebSockets\Tasks\WatchRemote($server));
-        $this->register(new Fluid\WebSockets\Tasks\RequestedData($server));
-        $this->register(new Fluid\WebSockets\Tasks\LanguageDetected($server));
+//        $this->register(new Fluid\Tasks\WatchBranchStatus($server));
+//        $this->register(new Fluid\Tasks\WatchRemote($server));
+//        $this->register(new Fluid\Tasks\RequestedData($server));
+//        $this->register(new Fluid\Tasks\LanguageDetected($server));
     }
 
     /**
