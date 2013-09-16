@@ -8,7 +8,12 @@ class LayoutDefinitionTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        Helper::copyStorage();
+        Helper::createDevelop();
+    }
+
+    public function tearDown()
+    {
+        Helper::destroy();
     }
 
     public function testGetLayouts()
@@ -45,10 +50,5 @@ class LayoutDefinitionTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('string', $retval['Site']['Name']['type']);
         $this->assertEquals('png', $retval['Site']['Logo']['format']);
-    }
-
-    public function tearDown()
-    {
-        Helper::deleteStorage();
     }
 }

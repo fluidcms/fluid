@@ -8,7 +8,12 @@ class GetComponentTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        Helper::copyStorage();
+        Helper::createDevelop();
+    }
+
+    public function tearDown()
+    {
+        Helper::destroy();
     }
 
     public function testGetComponent()
@@ -30,10 +35,5 @@ class GetComponentTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Accordion', $retval[0]['name']);
         $this->assertEquals('table', $retval[1]['component']);
         $this->assertGreaterThan(5, strlen($retval[0]['icon']));
-    }
-
-    public function tearDown()
-    {
-        Helper::deleteStorage();
     }
 }

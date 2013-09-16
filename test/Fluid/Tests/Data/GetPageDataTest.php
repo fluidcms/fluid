@@ -8,7 +8,12 @@ class GetPageDataTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        Helper::copyStorage();
+        Helper::createDevelop();
+    }
+
+    public function tearDown()
+    {
+        Helper::destroy();
     }
 
     public function testGetPageData()
@@ -24,10 +29,5 @@ class GetPageDataTest extends PHPUnit_Framework_TestCase
         // Test components
         $data = Fluid\Data::get('home page');
         $this->assertRegExp('/<a>Hello World<\/a>/', $data['page']['Content']['Content']);
-    }
-
-    public function tearDown()
-    {
-        Helper::deleteStorage();
     }
 }

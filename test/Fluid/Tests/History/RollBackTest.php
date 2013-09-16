@@ -8,7 +8,12 @@ class RollBackTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        Helper::copyStorage();
+        Helper::createDevelop();
+    }
+
+    public function tearDown()
+    {
+        Helper::destroy();
     }
 
     public function testRollBackHistory()
@@ -105,10 +110,5 @@ class RollBackTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($history[0]['ghost']);
         $this->assertEquals('test999', $history[2]['action']);
         $this->assertFalse($history[2]['ghost']);
-    }
-
-    public function tearDown()
-    {
-        Helper::deleteStorage();
     }
 }

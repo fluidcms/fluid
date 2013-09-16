@@ -6,6 +6,21 @@ use Fluid\Fluid;
 
 class Helper
 {
+    public static function init()
+    {
+        if (is_dir(__DIR__ . "/Fluid/Tests/Fixtures/storage/develop")) {
+            self::deleteDir(__DIR__ . "/Fluid/Tests/Fixtures/storage/develop");
+        }
+        if (is_dir(__DIR__ . "/Fluid/Tests/Fixtures/storage/master")) {
+            self::deleteDir(__DIR__ . "/Fluid/Tests/Fixtures/storage/master");
+        }
+    }
+
+    public static function destroy()
+    {
+        self::init();
+    }
+
     public static function getUser()
     {
         return array(
@@ -25,48 +40,50 @@ class Helper
         return self::getFixtureDir() . "/storage/develop";
     }
 
-    public static function copyStorage()
+    public static function copyDir($dir, $dest)
     {
-        Fluid::setConfig('database', array(
-                'config'	=> array(
-                    'driver'     => 'mysql',
-                    'host'       => $GLOBALS['DB_HOST'],
-                    'dbname'     => $GLOBALS['DB_DBNAME'],
-                    'user'       => $GLOBALS['DB_USER'],
-                    'password'   => $GLOBALS['DB_PASSWD']
-                )
-            )
-        );
-
-        $copy = function($dir = null, $dest = null) use (&$copy) {
-            if (null === $dir) {
-                $dir = __DIR__ . "/Fluid/Tests/Fixtures/storage/master";
-            }
-
-            if (null === $dest) {
-                $dest = __DIR__ . "/Fluid/Tests/Fixtures/storage/develop";
-            }
-
-            if (!is_dir($dest)) {
-                mkdir($dest);
-            }
-
-            foreach(scandir($dir) as $file) {
-                if ($file === '.' || $file === '..') {
-                    continue;
-                } else if (is_file($dir . "/" . $file)) {
-                    copy($dir . "/" . $file, $dest . "/" . $file);
-                } else if (is_dir($dir . "/" . $file)) {
-                    $copy($dir . "/" . $file, $dest . "/" . $file);
-                }
-            }
-        };
-
-        if (is_dir(__DIR__ . "/Fluid/Tests/Fixtures/storage/develop")) {
-            self::deleteStorage();
+        if (!is_dir($dest)) {
+            mkdir($dest);
         }
 
-        $copy();
+        foreach(scandir($dir) as $file) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            } else if (is_file($dir . "/" . $file)) {
+                copy($dir . "/" . $file, $dest . "/" . $file);
+            } else if (is_dir($dir . "/" . $file)) {
+                self::copyDir($dir . "/" . $file, $dest . "/" . $file);
+            }
+        }
+    }
+
+    public static function deleteDir($dir)
+    {
+        foreach(scandir($dir) as $file) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            } else if (is_file($dir . "/" . $file)) {
+                unlink($dir . "/" . $file);
+            } else if (is_dir($dir . "/" . $file)) {
+                self::deleteDir($dir . "/" . $file);
+            }
+        }
+
+        rmdir($dir);
+    }
+
+    public static function createDevelop()
+    {
+        if (is_dir(__DIR__ . "/Fluid/Tests/Fixtures/storage/develop")) {
+            self::deleteDir(__DIR__ . "/Fluid/Tests/Fixtures/storage/develop");
+        }
+
+        self::createMaster();
+
+        self::copyDir(
+            __DIR__ . "/Fluid/Tests/Fixtures/storage/master",
+            __DIR__ . "/Fluid/Tests/Fixtures/storage/develop"
+        );
 
         exec("git init ". self::getStorage());
         exec("git --git-dir=".self::getStorage()."/.git --work-tree=".self::getStorage()." add ".self::getStorage()."/*");
@@ -75,22 +92,24 @@ class Helper
         Fluid::setBranch('develop');
     }
 
-    public static function deleteStorage($dir = null)
+    public static function createMaster()
     {
-        if (null === $dir) {
-            $dir = __DIR__ . "/Fluid/Tests/Fixtures/storage/develop";
+        if (is_dir(__DIR__ . "/Fluid/Tests/Fixtures/storage/master")) {
+            self::deleteDir(__DIR__ . "/Fluid/Tests/Fixtures/storage/master");
         }
 
-        foreach(scandir($dir) as $file) {
-            if ($file === '.' || $file === '..') {
-                continue;
-            } else if (is_file($dir . "/" . $file)) {
-                unlink($dir . "/" . $file);
-            } else if (is_dir($dir . "/" . $file)) {
-                self::deleteStorage($dir . "/" . $file);
-            }
-        }
+        self::copyDir(
+            __DIR__ . "/Fluid/Tests/Fixtures/storage/default",
+            __DIR__ . "/Fluid/Tests/Fixtures/storage/master"
+        );
+    }
 
-        rmdir($dir);
+    public static function commitMaster()
+    {
+        $dir = __DIR__ . "/Fluid/Tests/Fixtures/storage/master";
+
+        exec("git init ". $dir);
+        exec("git --git-dir=".$dir."/.git --work-tree=".$dir." add ".$dir."/*");
+        exec("git --git-dir=".$dir."/.git --work-tree=".$dir." commit -m initial\\ commit");
     }
 }

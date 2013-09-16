@@ -8,7 +8,12 @@ class GetTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        Helper::copyStorage();
+        Helper::createDevelop();
+    }
+
+    public function tearDown()
+    {
+        Helper::destroy();
     }
 
     public function testGetHistory()
@@ -38,10 +43,5 @@ class GetTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('test123', $history[0]['action']);
         $this->assertEquals('test789', $history[2]['action']);
-    }
-
-    public function tearDown()
-    {
-        Helper::deleteStorage();
     }
 }

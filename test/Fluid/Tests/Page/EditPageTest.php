@@ -12,7 +12,12 @@ class EditPageTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        Helper::copyStorage();
+        Helper::createDevelop();
+    }
+
+    public function tearDown()
+    {
+        Helper::destroy();
     }
 
     public function testEditPage()
@@ -197,10 +202,5 @@ class EditPageTest extends PHPUnit_Framework_TestCase
             $retval['data']['Content']['Content']['components']['3o7367Wy']['data']['Rows'][0]['Quantity']
         );
         $this->assertEquals(2, count($retval['data']['Content']['Content']['components']['3o7367Wy']['data']['Rows']));
-    }
-
-    public function tearDown()
-    {
-        Helper::deleteStorage();
     }
 }

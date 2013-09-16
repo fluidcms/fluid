@@ -8,7 +8,12 @@ class AddTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        Helper::copyStorage();
+        Helper::createDevelop();
+    }
+
+    public function tearDown()
+    {
+        Helper::destroy();
     }
 
     public function testAddMap()
@@ -61,10 +66,5 @@ class AddTest extends PHPUnit_Framework_TestCase
         $this->assertFileNotExists(Helper::getStorage() . "/pages/home page/contact/New Page_en-US.json");
         $this->assertFileExists(Helper::getStorage() . "/pages/home page/contact/New Page_de-DE.json");
         $this->assertEquals('New Page', $map[1]['pages'][0]['pages'][0]['page']);
-    }
-
-    public function tearDown()
-    {
-        Helper::deleteStorage();
     }
 }

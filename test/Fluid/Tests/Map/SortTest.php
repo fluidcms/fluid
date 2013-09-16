@@ -8,7 +8,12 @@ class SortTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        Helper::copyStorage();
+        Helper::createDevelop();
+    }
+
+    public function tearDown()
+    {
+        Helper::destroy();
     }
 
     public function testSortMap()
@@ -65,10 +70,5 @@ class SortTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('home page', $pages[0]['pages'][0]['page']);
 
         ob_end_clean();
-    }
-
-    public function tearDown()
-    {
-        Helper::deleteStorage();
     }
 }

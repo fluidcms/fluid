@@ -8,7 +8,12 @@ class LayoutTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        Helper::copyStorage();
+        Helper::createDevelop();
+    }
+
+    public function tearDown()
+    {
+        Helper::destroy();
     }
 
     public function testGetLayouts()
@@ -28,10 +33,5 @@ class LayoutTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('default', $retval[0]['layout']);
         $this->assertEquals('home', $retval[1]['layout']);
-    }
-
-    public function tearDown()
-    {
-        Helper::deleteStorage();
     }
 }

@@ -8,7 +8,12 @@ class GetPageTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        Helper::copyStorage();
+        Helper::createDevelop();
+    }
+
+    public function tearDown()
+    {
+        Helper::destroy();
     }
 
     public function testGetPage()
@@ -47,10 +52,5 @@ class GetPageTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('Welcome', $retval['data']['Content']['Title']);
         $this->assertEquals('image', $retval['layoutDefinition']['Header']['Logo']['type']);
-    }
-
-    public function tearDown()
-    {
-        Helper::deleteStorage();
     }
 }

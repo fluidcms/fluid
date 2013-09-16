@@ -20,9 +20,10 @@ class Git
      * @param   string  $branch
      * @param   string  $command
      * @param   bool    $check
+     * @param   bool    $quiet
      * @return  string
      */
-    private static function command($branch, $command, $check = true)
+    private static function command($branch, $command, $check = true, $quiet = false)
     {
         $dir = Fluid::getConfig("storage") . $branch;
         $dir = preg_replace('!/{2,}!', '/', $dir);
@@ -36,6 +37,10 @@ class Git
 
         if (!$check || is_dir($dir)) {
             $command = preg_replace("/^git/", "git --git-dir={$dir} --work-tree={$workTree}", $command);
+
+            if ($quiet) {
+                $command .= ' --quiet';
+            }
 
             $retval = '';
 
@@ -419,7 +424,7 @@ class Git
      */
     public static function pull($branch, $remote = 'master')
     {
-        return self::command($branch, "git pull origin {$remote}");
+        return self::command($branch, "git pull origin {$remote}", true, true);
     }
 
     /**

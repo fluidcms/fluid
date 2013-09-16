@@ -8,7 +8,12 @@ class GetFilesTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        Helper::copyStorage();
+        Helper::createDevelop();
+    }
+
+    public function tearDown()
+    {
+        Helper::destroy();
     }
 
     public function testGetFiles()
@@ -55,10 +60,5 @@ class GetFilesTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('drvXRrtN', $file['id']);
         $this->assertEquals(2000, $file['width']);
         $this->assertEquals('image/jpeg', $file['type']);
-    }
-
-    public function tearDown()
-    {
-        Helper::deleteStorage();
     }
 }

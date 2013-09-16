@@ -8,7 +8,12 @@ class DeleteTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        Helper::copyStorage();
+        Helper::createDevelop();
+    }
+
+    public function tearDown()
+    {
+        Helper::destroy();
     }
 
     public function testDeleteMap()
@@ -28,10 +33,5 @@ class DeleteTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(isset($pages[0]['pages'][2]));
         $this->assertFalse(file_exists(Helper::getStorage() . "/pages/products_en-US.json"));
         $this->assertFalse(is_dir(Helper::getStorage() . "/pages/home page/products/"));
-    }
-
-    public function tearDown()
-    {
-        Helper::deleteStorage();
     }
 }

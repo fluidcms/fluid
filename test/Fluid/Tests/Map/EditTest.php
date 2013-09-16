@@ -8,7 +8,12 @@ class EditTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        Helper::copyStorage();
+        Helper::createDevelop();
+    }
+
+    public function tearDown()
+    {
+        Helper::destroy();
     }
 
     public function testEditMap()
@@ -39,10 +44,5 @@ class EditTest extends PHPUnit_Framework_TestCase
         $this->assertFileExists(Helper::getStorage() . "/pages/home page/our products/awesome_en-US.json");
         $this->assertEquals('our products', $map[0]['pages'][2]['page']);
         $this->assertEquals('home page/our products/awesome', $map[0]['pages'][2]['pages'][0]['id']);
-    }
-
-    public function tearDown()
-    {
-        Helper::deleteStorage();
     }
 }

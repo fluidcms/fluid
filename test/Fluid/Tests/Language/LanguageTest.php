@@ -8,7 +8,12 @@ class LanguageTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        Helper::copyStorage();
+        Helper::createDevelop();
+    }
+
+    public function tearDown()
+    {
+        Helper::destroy();
     }
 
     public function testGetLanguage()
@@ -28,10 +33,5 @@ class LanguageTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('en-US', $language[0]['language']);
         $this->assertEquals('de-DE', $language[1]['language']);
-    }
-
-    public function tearDown()
-    {
-        Helper::deleteStorage();
     }
 }

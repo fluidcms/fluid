@@ -8,7 +8,12 @@ class GetTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        Helper::copyStorage();
+        Helper::createDevelop();
+    }
+
+    public function tearDown()
+    {
+        Helper::destroy();
     }
 
     public function testGetMap()
@@ -27,10 +32,5 @@ class GetTest extends PHPUnit_Framework_TestCase
         $map = json_decode($retval, true);
 
         $this->assertEquals('contact', $map[0]['pages'][0]['page']);
-    }
-
-    public function tearDown()
-    {
-        Helper::deleteStorage();
     }
 }

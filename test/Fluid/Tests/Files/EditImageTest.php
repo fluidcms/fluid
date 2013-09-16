@@ -12,7 +12,12 @@ class EditImageTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        Helper::copyStorage();
+        Helper::createDevelop();
+    }
+
+    public function tearDown()
+    {
+        Helper::destroy();
     }
 
     public function testEditImage()
@@ -73,10 +78,5 @@ class EditImageTest extends PHPUnit_Framework_TestCase
 
         $dir = Fluid\Fluid::getBranchStorage() . "files";
         $this->assertFileExists(preg_replace('!^/fluidcms/images!', $dir, $retval['data']['Site']['MyArray'][0]['Image']['src']));
-    }
-
-    public function tearDown()
-    {
-        Helper::deleteStorage();
     }
 }

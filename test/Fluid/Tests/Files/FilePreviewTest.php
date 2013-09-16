@@ -8,7 +8,12 @@ class FilePreviewTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        Helper::copyStorage();
+        Helper::createDevelop();
+    }
+
+    public function tearDown()
+    {
+        Helper::destroy();
     }
 
     public function testGetComponent()
@@ -28,10 +33,5 @@ class FilePreviewTest extends PHPUnit_Framework_TestCase
         $retval = json_decode($retval, true);
 
         $this->assertGreaterThan(5, strlen($retval['image']));
-    }
-
-    public function tearDown()
-    {
-        Helper::deleteStorage();
     }
 }

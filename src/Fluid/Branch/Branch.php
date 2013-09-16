@@ -38,6 +38,7 @@ class Branch
 //        self::checkout($branch, $tracking);
 //        self::intialCommit($branch);
 
+        return $retval;
     }
 
     /**
@@ -54,6 +55,7 @@ class Branch
         }
 
         Git::addRemote($this->branch, $master->getDir());
+        Git::pull($this->branch);
     }
 
     /**

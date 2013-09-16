@@ -8,7 +8,12 @@ class GetContentVariableTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        Helper::copyStorage();
+        Helper::createDevelop();
+    }
+
+    public function tearDown()
+    {
+        Helper::destroy();
     }
 
     public function testGetContentVariable()
@@ -29,10 +34,5 @@ class GetContentVariableTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals("Hello World {PkPUah3bme2qvkTK} {H7inutVo}", $retval['source']);
         $this->assertEquals('Hello World', $retval['components']['H7inutVo']['data']['Name']);
-    }
-
-    public function tearDown()
-    {
-        Helper::deleteStorage();
     }
 }
