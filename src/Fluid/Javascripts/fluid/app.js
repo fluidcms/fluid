@@ -12,7 +12,8 @@ define(
         'models/file/file',
         'views/nav/nav',
         'views/toolbar/toolbar',
-        'views/tools/tools'
+        'views/tools/tools',
+        'views/helpers/error'
     ],
     function (
         Backbone,
@@ -27,7 +28,8 @@ define(
         Files,
         Nav,
         Toolbar,
-        ToolsView
+        ToolsView,
+        ErrorView
         ) {
         var run = function () {
             var FluidRouter = Backbone.Router.extend({
@@ -41,7 +43,12 @@ define(
                     var root = this;
 
                     $.ajax({url: "server", type: "POST", data: {session: fluidSession}}).done(function(response) {
-                        console.log(response);
+                        if (response == 'true') {
+                            root.load();
+                        } else {
+                            console.log(response);
+                            new ErrorView({msg: 'Could not start the server, please contact the administrator.'});
+                        }
                     });
                 },
 
@@ -98,10 +105,10 @@ define(
                         root.ready = true;
                         root.loader.remove();
                         root.models.languages.fetch();
-                        root.models.layouts.fetch();
-                        root.models.preview.loadPage();
-                        root.models.components.fetch();
-                        root.models.map.fetch();
+//                        root.models.layouts.fetch();
+//                        root.models.preview.loadPage();
+//                        root.models.components.fetch();
+//                        root.models.map.fetch();
                     });
 
                     this.socket.connection();

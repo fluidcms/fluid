@@ -21,9 +21,11 @@ define(['backbone', 'views/helpers/error'], function (Backbone, ErrorView) {
             root.conn = new ab.Session(
                 fluidWebSocketUrl,
                 function() {
-                    root.trigger('ready');
+                    console.log('connected');
                     root.conn.subscribe(JSON.stringify(root.topic), function(topic, message) {
+                        console.log('subscribed');
                         root.parse(topic, message);
+                        root.trigger('ready');
                     });
                 },
                 function() {
@@ -57,6 +59,7 @@ define(['backbone', 'views/helpers/error'], function (Backbone, ErrorView) {
             if (typeof data !== 'object' || data === null) {
                 data = {};
             }
+            console.log('call method');
 
             this.conn.call(JSON.stringify(this.topic), {
                 method: method,

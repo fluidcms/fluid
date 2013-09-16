@@ -1,8 +1,8 @@
 <?php
 
 namespace Fluid;
-
 use Exception;
+use Fluid\Branch\Branch;
 
 /**
  * The fluid class
@@ -11,7 +11,11 @@ use Exception;
  */
 class Fluid
 {
-    private static $tables = array('fluid_api_consumers', 'fluid_api_nonce', 'fluid_api_tokens', 'fluid_page_tokens');
+    const DEBUG_OFF = 0;
+    const DEBUG_LOG = 1;
+
+    const NOT_FOUND = '404';
+
     private static $branch;
     private static $config;
     private static $storage;
@@ -19,7 +23,7 @@ class Fluid
     private static $requestPayload;
     private static $requestFromControlPannel = false;
 
-    const NOT_FOUND = '404';
+    private static $debugMode = self::DEBUG_OFF;
 
     /**
      * Initialize Fluid
@@ -63,6 +67,27 @@ class Fluid
     {
         self::$config = $config;
         self::$storage = $config['storage'];
+    }
+
+    /**
+     * Turns debug mode on
+     *
+     * @param   int $mode
+     * @return  void
+     */
+    public static function debug($mode = self::DEBUG_LOG)
+    {
+        self::$debugMode = $mode;
+    }
+
+    /**
+     * Get the debug mode
+     *
+     * @return  int
+     */
+    public static function getDebugMode()
+    {
+        return self::$debugMode;
     }
 
     /**
@@ -110,16 +135,6 @@ class Fluid
     }
 
     /**
-     * Get the fluid database tables
-     *
-     * @return  array
-     */
-    public static function getTables()
-    {
-        return self::$tables;
-    }
-
-    /**
      * Set the branch
      *
      * @param   string $branch
@@ -129,8 +144,8 @@ class Fluid
      */
     public static function setBranch($branch, $create = false)
     {
-        if ($create && !VerifyFluid::branchExists($branch)) {
-            Tasks\Branch::execute($branch);
+        if ($create && !Branch::exists($branch)) {
+            Branch::init($branch);
         }
 
         if ($branch == self::$branch) {
@@ -224,21 +239,14 @@ class Fluid
     public static function setConfig($name, $value)
     {
         switch ($name) {
-            case 'url':
-            case 'storage':
-            case 'templates':
-            case 'database':
-            case 'layouts':
-            case 'components':
-            case 'git':
-            case 'ports':
-                self::$config[$name] = $value;
-                break;
             case 'languages':
                 self::$config[$name] = $value;
                 if (null === self::$language) {
                     self::$language = reset($value);
                 }
+                break;
+            default:
+                self::$config[$name] = $value;
                 break;
         }
     }

@@ -31,12 +31,11 @@ class WebSocketServer extends Fluid\Daemon implements Fluid\DaemonInterface
         $dir = Fluid\Fluid::getConfig('storage');
         $handler = fopen($dir . self::$lockFile, "w+");
 
-        if (!flock($handler, LOCK_EX | LOCK_NB)) {
+        if (!flock($handler, LOCK_SH | LOCK_NB)) {
             fclose($handler);
             return true;
         }
 
-        flock($handler, LOCK_UN);
         fclose($handler);
         return false;
     }
@@ -48,8 +47,37 @@ class WebSocketServer extends Fluid\Daemon implements Fluid\DaemonInterface
      */
     public static function start()
     {
-        shell_exec("php -q " . __DIR__ . "/StartDaemon.php WebSocketServer " . base64_encode(serialize(Fluid\Fluid::getConfig())) . " > /dev/null &");
-        return true;
+        $instanceId = uniqid();
+        $debugMode = Fluid\Fluid::getDebugMode();
+        $timeZone = date_default_timezone_get();
+        shell_exec(
+            "php -q " . __DIR__ . "/StartDaemon.php WebSocketServer " .
+            base64_encode(serialize(Fluid\Fluid::getConfig())) . " " .
+            $instanceId . " " .
+            $debugMode . " " .
+            base64_encode($timeZone) .
+            " > /dev/null &"
+        );
+
+        $dir = Fluid\Fluid::getConfig('storage');
+        $i = 0;
+        while ($i < 100) {
+            $fileContent = file_get_contents($dir . self::$lockFile);
+            if ($fileContent === $instanceId) {
+                return true;
+            }
+            $i++;
+            usleep(100000);
+        }
+        return false;
+    }
+
+    /**
+     * Init
+     */
+    public function __construct($instanceId = "")
+    {
+        $this->instanceId = $instanceId;
     }
 
     /**
@@ -81,6 +109,10 @@ class WebSocketServer extends Fluid\Daemon implements Fluid\DaemonInterface
      */
     private function release()
     {
+        $dir = Fluid\Fluid::getConfig('storage');
+
+        file_put_contents($dir . self::$lockFile, "");
+
         flock($this->lock, LOCK_UN);
         fclose($this->lock);
     }
@@ -96,7 +128,6 @@ class WebSocketServer extends Fluid\Daemon implements Fluid\DaemonInterface
             return;
         }
 
-        $this->instanceId = uniqid();
         $this->upTimeCallback();
 
         $server = new Server;
@@ -109,7 +140,13 @@ class WebSocketServer extends Fluid\Daemon implements Fluid\DaemonInterface
 
         $root = $this;
         $loop->addPeriodicTimer(1, function() use ($root, $server, $tasks) {
+            // Stops server if no one is using it
+            if ($server->isInactive()) {
+                exit;
+            }
+            // Render websocket server status
             $root->renderStatus($server);
+            // Execute tasks
             $tasks->execute();
         });
 
@@ -123,6 +160,7 @@ class WebSocketServer extends Fluid\Daemon implements Fluid\DaemonInterface
 
         $this->renderStatus($server);
 
+        file_put_contents(Fluid\Fluid::getConfig('storage') . self::$lockFile, $this->instanceId);
         $loop->run();
 
         $this->release();

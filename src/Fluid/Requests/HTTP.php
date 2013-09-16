@@ -80,7 +80,10 @@ class HTTP
     {
         if (!empty(self::$request) && self::$method === 'POST' && strpos(self::$request, 'server') === 0 && isset(self::$input['session'])) {
             if (Session::validate(self::$input['session'])) {
-                if (WebSocketServer::isRunning() || WebSocketServer::start()) {
+                if (WebSocketServer::isRunning()) {
+                    echo json_encode(true);
+                    return true;
+                } else if (WebSocketServer::start()) {
                     echo json_encode(true);
                     return true;
                 } else {
@@ -166,7 +169,7 @@ class HTTP
                     }
                 }
                 if (isset($file)) {
-                    new WebSockets\Requests(
+                    new WebSockets\WebSocket(
                         self::$request,
                         self::$method,
                         array(

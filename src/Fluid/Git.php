@@ -284,15 +284,12 @@ class Git
      * Add remote repo to branch
      *
      * @param   string $branch
-     * @param   string $url
-     * @param   string $username
-     * @param   string $password
+     * @param   string $remote
      * @return  string
      */
-    public static function addRemote($branch, $url, $username, $password)
+    public static function addRemote($branch, $remote)
     {
-        $url = preg_replace("{^(https?://)(.*)$}i", "$1{$username}:{$password}@$2", $url); // TODO this is not secure
-        return self::command($branch, 'git remote add origin ' . $url);
+        return self::command($branch, 'git remote add origin ' . $remote);
     }
 
     /**

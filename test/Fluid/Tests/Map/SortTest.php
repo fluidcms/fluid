@@ -24,7 +24,7 @@ class SortTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        new Fluid\WebSockets\Requests($request['url'], $request['method'], $request['data'], 'develop', Helper::getUser());
+        new Fluid\Requests\WebSocket($request['url'], $request['method'], $request['data'], 'develop', Helper::getUser());
 
         $map = new Fluid\Map\Map;
         $pages = $map->getPages();
@@ -42,7 +42,7 @@ class SortTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        new Fluid\WebSockets\Requests($request['url'], $request['method'], $request['data'], 'develop', Helper::getUser());
+        new Fluid\Requests\WebSocket($request['url'], $request['method'], $request['data'], 'develop', Helper::getUser());
 
         $map = new Fluid\Map\Map;
         $pages = $map->getPages();
@@ -58,7 +58,7 @@ class SortTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        new Fluid\WebSockets\Requests($request['url'], $request['method'], $request['data'], 'develop', Helper::getUser());
+        new Fluid\Requests\WebSocket($request['url'], $request['method'], $request['data'], 'develop', Helper::getUser());
 
         $map = new Fluid\Map\Map;
         $pages = $map->getPages();

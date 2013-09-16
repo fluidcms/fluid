@@ -21,7 +21,7 @@ class GetContentVariableTest extends PHPUnit_Framework_TestCase
         );
 
         ob_start();
-        new Fluid\WebSockets\Requests($request['url'], $request['method'], $request['data'], 'develop', Helper::getUser());
+        new Fluid\Requests\WebSocket($request['url'], $request['method'], $request['data'], 'develop', Helper::getUser());
         $retval = ob_get_contents();
         ob_end_clean();
 

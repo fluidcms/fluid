@@ -1,10 +1,10 @@
 <?php
 
-namespace Fluid\WebSockets;
+namespace Fluid\Requests;
 
 use Fluid\Fluid,
     Fluid\Events as FluidEvents,
-    Fluid\WebSockets\Events as ServerEvents,
+    Fluid\WebSocket\Events as ServerEvents,
     Fluid\Language\Language,
     Fluid\Layout\Layout,
     Fluid\Map\Map,
@@ -14,7 +14,7 @@ use Fluid\Fluid,
     Fluid\Component\Component,
     Fluid\History\History;
 
-class Requests
+class WebSocket
 {
     private $request;
     private $method;

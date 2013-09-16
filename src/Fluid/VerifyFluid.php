@@ -62,47 +62,4 @@ class VerifyFluid
             is_dir(Fluid::getConfig('storage') . 'master/.git')
         );
     }
-
-    /**
-     * Check if a git branch exsits
-     *
-     * @param   string  $branch
-     * @return  bool
-     */
-    public static function branchExists($branch = 'bare')
-    {
-        if ($branch === 'bare')  {
-            return is_dir(Fluid::getConfig('storage') . 'bare');
-        } else {
-            return is_dir(Fluid::getConfig('storage') . $branch . '/.git');
-        }
-    }
-
-    /**
-     * Check if database connection is working
-     *
-     * @return  bool
-     */
-    public static function checkDatabase()
-    {
-        try {
-            $dbh = Database\Connection::getConnection();
-        } catch (PDOException $e) {
-            return false;
-        }
-
-        $config = Fluid::getConfig('database');
-        $config = $config['config'];
-        $sth = $dbh->prepare("SELECT COUNT(*) FROM `information_schema`.`tables` WHERE `table_schema`=:database AND `table_name`=:table;");
-
-        foreach (Fluid::getTables() as $table) {
-            $sth->execute(array(':database' => $config["dbname"], ':table' => $table));
-            $result = $sth->fetch();
-            if ($result[0] != 1) {
-                return false;
-            }
-        }
-
-        return true;
-    }
 }
