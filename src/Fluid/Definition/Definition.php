@@ -123,11 +123,20 @@ abstract class Definition
                             $variableOptions = array();
                             foreach($item->children() as $option) {
                                 if ($option->getName() === 'option') {
+                                    $name = '';
+                                    $value = '';
                                     foreach($option->attributes() as $key => $value) {
                                         if ($key === 'value') {
-                                            $variableOptions[] = (string)$value;
+                                            $value = (string)$value;
                                         }
                                     }
+                                    $name = (string)$option;
+                                    if ($name === '' && $value !== '') {
+                                        $name = $value;
+                                    } else if ($name !== '' && $value === '') {
+                                        $value = $name;
+                                    }
+                                    $variableOptions[] = array('name' => $name, 'value' => $value);
                                 }
                             }
                         }

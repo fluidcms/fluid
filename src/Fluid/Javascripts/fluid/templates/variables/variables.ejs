@@ -4,6 +4,14 @@ var renderVariable = function(variable, data) {
         <div class="data string"><% if (typeof data !== 'undefined') { %><%= data %><% } %></div>
     <% } else if (variable.type == 'content') { %>
         <div class="data content"><% if (typeof data !== 'undefined') { %><%= data %><% } %></div>
+    <% } else if (variable.type == 'option') { %>
+        <div class="data option">
+            <select>
+                <% $.each(variable.options, function(key, item) { %>
+                <option value="<%= item['value'] %>" <% if (typeof data !== 'undefined' && data == item['value']) { %>selected<% } %>><%= item['name'] %></option>
+                <% }); %>
+            </select>
+        </div>
     <% } else if (variable.type == 'image') { %>
         <div class="data image">
         <%

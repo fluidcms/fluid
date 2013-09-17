@@ -111,7 +111,13 @@ class UpdateData
             $output[$group] = array();
 
             foreach($vars as $name => $variable) {
-                $output[$group][$name] = self::parseVariable($variable, (!empty($data[$group][$name]) ? $data[$group][$name] : null));
+                if (!isset($data[$group][$name])) {
+                    $data[$group][$name] = null;
+                } else if ($data[$group][$name] === '') {
+                    $data[$group][$name] = null;
+                }
+
+                $output[$group][$name] = self::parseVariable($variable, $data[$group][$name]);
 
                 // Save universal variables
                 if (isset($variable['universal']) && $variable['universal'] === true) {
@@ -169,6 +175,35 @@ class UpdateData
                         $retval[] = $retArray;
                     }
                 }
+                break;
+            case 'option':
+                echo '';
+
+                if (null !== $value) {
+                    $newVal = $value;
+                    $value = null;
+                    if (isset($variable['options']) && is_array($variable['options']) && count($variable['options'])) {
+                        foreach($variable['options'] as $option) {
+                            if ($option['value'] === $newVal) {
+                                $value = $option['value'];
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (null === $value && isset($variable['options']) && is_array($variable['options']) && count($variable['options'])) {
+                    $value = reset($variable['options']);
+                    if (isset($value['value'])) {
+                        $value = $value['value'];
+                    } else {
+                        $value = null;
+                    }
+                }
+
+                $retval = $value;
+
+                break;
         }
 
         return $retval;

@@ -63,6 +63,9 @@ define(['backbone'], function (Backbone) {
                                 retval[key] = root.imageToHTML(data[key]);
                             }
                             break;
+                        case 'option':
+                            retval[key] = data[key];
+                            break;
                         case 'array':
                             retval[key] = [];
                             $.each(data[key], function(arrayKey, arrayItem) {
@@ -150,6 +153,8 @@ define(['backbone'], function (Backbone) {
                 case 'content':
                     return this.contentToJSON(data);
                 case 'image':
+                    return data;
+                case 'option':
                     return data;
                 case 'array':
                     return this.arrayToJSON(definition.variables, data);

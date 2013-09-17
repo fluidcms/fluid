@@ -6,7 +6,8 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
             "click [data-array-item]": "edit",
             "click nav a": "changeGroup",
             "click [data-action=addArrayItem]": "addArrayItem",
-            'contextmenu div.array-item': 'arrayContextMenu'
+            'contextmenu div.array-item': 'arrayContextMenu',
+            'change div.option select': 'changeOptionItem'
         },
 
         rendered: false,
@@ -216,6 +217,45 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
             }
         },
 
+        changeOptionItem: function(e) {
+            var target = $(e.currentTarget);
+            var value = target.val();
+            if (target.parents('div[data-group]').length) {
+                var group = target.parents('div[data-group]').attr('data-group');
+            }
+            var item;
+            if (target.parents('div[data-item]').length) {
+                item = target.parents('div[data-item]').attr('data-item');
+            } else if (target.parents('div[data-array]').length) {
+                item = target.parents('div[data-array]').attr('data-array');
+            }
+
+            var array = false;
+            if (target.parents('div[data-array-item]')) {
+                var key = target.parents("div.array-item").index() - 1;
+                array = target.parents('div[data-array-item]').attr("data-array-item");
+            }
+
+            var dataArray;
+            if (typeof group !== 'undefined') {
+                if (array) {
+                    dataArray = this.data[group][item];
+                    dataArray[key][array] = value;
+                    value = dataArray;
+                }
+
+                this.save(value, item, group);
+            } else {
+                if (array) {
+                    dataArray = this.data[item];
+                    dataArray[key][array] = value;
+                    value = dataArray;
+                }
+
+                this.save(value, item);
+            }
+        },
+
         edit: function(e) {
             var target = $(e.currentTarget);
             if (target.parents('div[data-group]').length) {
@@ -267,6 +307,10 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
                 type = 'string';
             } else if (target.find('div.data').hasClass("content")) {
                 type = "content";
+            }
+
+            if (typeof type === 'undefined' || type === null) {
+                return;
             }
 
             this.editData(data, html, type, array, key, item, group);
