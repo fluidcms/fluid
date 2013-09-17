@@ -76,19 +76,17 @@ define(['backbone'], function (Backbone) {
                     $("#website")[0].contentWindow.location = url;
                 });
             } else {
-                $.ajax({url: "changepage.json", dataType: 'JSON', type: "GET", data: {
+                $.ajax({url: 'changepage.json', dataType: 'JSON', type: "GET", data: {
                     url: url,
                     language: language
-                }}).done(
-                    function(url) {
+                }}).done(function(url) {
                         root.getToken(function(response) {
                             url = updateQueryStringParameter(url, 'fluidbranch', fluidBranch);
                             url = updateQueryStringParameter(url, 'fluidtoken', response.token);
                             url = updateQueryStringParameter(url, 'fluidsession', fluidSession);
                             $("#website")[0].contentWindow.location = url;
                         });
-                    }
-                );
+                    });
             }
         },
 

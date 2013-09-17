@@ -1,8 +1,8 @@
 <?php
 
 namespace Fluid\WebSocket;
-
 use Fluid;
+use Fluid\TaskInterface;
 
 class Tasks
 {
@@ -17,8 +17,8 @@ class Tasks
         $this->server = $server;
 //        $this->register(new Fluid\Tasks\WatchBranchStatus($server));
 //        $this->register(new Fluid\Tasks\WatchRemote($server));
-//        $this->register(new Fluid\Tasks\RequestedData($server));
-//        $this->register(new Fluid\Tasks\LanguageDetected($server));
+        $this->register(new Fluid\Tasks\RequestedData($server));
+        $this->register(new Fluid\Tasks\LanguageDetected($server));
     }
 
     /**

@@ -102,13 +102,15 @@ define(
 
                     // Socket event
                     this.socket.on('ready', function() {
-                        root.ready = true;
-                        root.loader.remove();
-                        root.models.languages.fetch();
-                        root.models.layouts.fetch();
-                        root.models.preview.loadPage();
-                        root.models.components.fetch();
-                        root.models.map.fetch();
+                        if (root.ready !== true) {
+                            root.ready = true;
+                            root.loader.remove();
+                            root.models.languages.fetch();
+                            root.models.layouts.fetch();
+                            root.models.preview.loadPage();
+                            root.models.components.fetch();
+                            root.models.map.fetch();
+                        }
                     });
 
                     this.socket.connection();

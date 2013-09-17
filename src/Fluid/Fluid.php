@@ -35,12 +35,8 @@ class Fluid
     public static function init($config = null, $language = null)
     {
         self::$branch = 'master';
-        self::config($config);
-
-        // Init Fluid
-        //if (!VerifyFluid::check() && php_sapi_name() !== 'cli') {
-        //    Init::init();
-        //}
+        self::$config = $config;
+        self::$storage = $config['storage'];
 
         // Validate token and change branch
         if (isset($_SERVER['QUERY_STRING'])) {
@@ -61,6 +57,7 @@ class Fluid
      * Configure Fluid
      *
      * @param   array $config     The configuration array
+     * @deprecated  use init instead
      * @return  void
      */
     public static function config($config = null)

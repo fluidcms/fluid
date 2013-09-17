@@ -1,10 +1,10 @@
 <?php
 
 namespace Fluid\Tasks;
-
 use Fluid;
+use Fluid\WebSocket\Server;
 
-class LanguageDetected extends Fluid\Task /* TODO implements Fluid\TaskInterface*/
+class LanguageDetected extends Fluid\Task implements Fluid\TaskInterface
 {
     protected $interval = 0;
     private $server;
@@ -12,9 +12,9 @@ class LanguageDetected extends Fluid\Task /* TODO implements Fluid\TaskInterface
     /**
      * Init the task
      *
-     * @param   Fluid\WebSockets\Server $server
+     * @param   Server $server
      */
-    public function __construct(Fluid\WebSockets\Server $server)
+    public function __construct(Server $server)
     {
         $this->server = $server;
     }
