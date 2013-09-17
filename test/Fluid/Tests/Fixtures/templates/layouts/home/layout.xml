@@ -11,6 +11,8 @@
         <variable name="Title" type="string"/>
         <variable name="Content" type="content"/>
 
+        <variable name="Available" type="bool"/>
+
         <variable name="Status" type="option">
             <option value="Open"/>
             <option value="Closed"/>

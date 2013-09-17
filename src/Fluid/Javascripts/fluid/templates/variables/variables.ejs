@@ -12,6 +12,10 @@ var renderVariable = function(variable, data) {
                 <% }); %>
             </select>
         </div>
+    <% } else if (variable.type == 'bool') { %>
+        <div class="data bool">
+            <label class="checkbox"><input type="checkbox" value="1" <% if (typeof data !== 'undefined' && data == true || data == 'true') { %>checked<% } %>></label>
+        </div>
     <% } else if (variable.type == 'image') { %>
         <div class="data image">
         <%

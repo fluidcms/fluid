@@ -7,7 +7,8 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
             "click nav a": "changeGroup",
             "click [data-action=addArrayItem]": "addArrayItem",
             'contextmenu div.array-item': 'arrayContextMenu',
-            'change div.option select': 'changeOptionItem'
+            'change div.option select': 'changeOptionItem',
+            'change div.bool input': 'changeBoolItem'
         },
 
         rendered: false,
@@ -214,6 +215,59 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
                 }
                 this.data[item].push(null);
                 this.save(this.data[item], item);
+            }
+        },
+
+        getItem: function(e) {
+            var target = $(e.currentTarget);
+            var group;
+            if (target.parents('div[data-group]').length) {
+                group = target.parents('div[data-group]').attr('data-group');
+            }
+            var item;
+            if (target.parents('div[data-item]').length) {
+                item = target.parents('div[data-item]').attr('data-item');
+            } else if (target.parents('div[data-array]').length) {
+                item = target.parents('div[data-array]').attr('data-array');
+            }
+
+            var array = false;
+            var key;
+            if (target.parents('div[data-array-item]')) {
+                key = target.parents("div.array-item").index() - 1;
+                array = target.parents('div[data-array-item]').attr("data-array-item");
+            }
+
+            return {
+                target: target,
+                group: group,
+                item: item,
+                array: array,
+                key: key
+            };
+        },
+
+        changeBoolItem: function(e) {
+            e = this.getItem(e);
+            var value = e.target.is(':checked');
+
+            var dataArray;
+            if (typeof e.group !== 'undefined' && e.group !== null) {
+                if (e.array) {
+                    dataArray = this.data[e.group][e.item];
+                    dataArray[e.key][e.array] = value;
+                    value = dataArray;
+                }
+
+                this.save(value, e.item, e.group);
+            } else {
+                if (e.array) {
+                    dataArray = this.data[e.item];
+                    dataArray[e.key][e.array] = value;
+                    value = dataArray;
+                }
+
+                this.save(value, e.item);
             }
         },
 

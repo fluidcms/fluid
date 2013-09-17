@@ -63,6 +63,9 @@ define(['backbone'], function (Backbone) {
                                 retval[key] = root.imageToHTML(data[key]);
                             }
                             break;
+                        case 'bool':
+                            retval[key] = data[key];
+                            break;
                         case 'option':
                             retval[key] = data[key];
                             break;
@@ -153,6 +156,8 @@ define(['backbone'], function (Backbone) {
                 case 'content':
                     return this.contentToJSON(data);
                 case 'image':
+                    return data;
+                case 'bool':
                     return data;
                 case 'option':
                     return data;

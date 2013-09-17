@@ -91,6 +91,13 @@ class ParseData
                         $retval[$name] = array();
                     }
                     break;
+                case 'bool':
+                    if (isset($data[$name])) {
+                        $retval[$name] = (bool)$data[$name];
+                    } else {
+                        $retval[$name] = false;
+                    }
+                    break;
                 case 'option':
                     if (isset($data[$name])) {
                         $retval[$name] = (string)$data[$name];

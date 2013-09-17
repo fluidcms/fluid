@@ -254,4 +254,30 @@ class EditPageTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('0', $retval['data']['Content']['Status']);
     }
+
+    public function testEditBool()
+    {
+        $map = new Map;
+        $mapPage = $map->findPage('home page');
+        $page = Page::get($mapPage, 'en-US');
+
+        $data = $page->getRawData();
+
+        $data['Content']['Available'] = '1';
+
+        $request = array(
+            "method" => "PUT",
+            "url" => "page/en-US/home page",
+            "data" => $data
+        );
+
+        ob_start();
+        new Fluid\Requests\WebSocket($request['url'], $request['method'], $request['data'], 'develop', Helper::getUser());
+        $retval = ob_get_contents();
+        ob_end_clean();
+
+        $retval = json_decode($retval, true);
+
+        $this->assertTrue($retval['data']['Content']['Available']);
+    }
 }

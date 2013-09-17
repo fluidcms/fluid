@@ -176,6 +176,13 @@ class UpdateData
                     }
                 }
                 break;
+            case 'bool':
+                if (!empty($value)) {
+                    $retval = (bool)$value;
+                } else {
+                    $retval = false;
+                }
+                break;
             case 'option':
                 echo '';
 
