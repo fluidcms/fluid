@@ -6,5 +6,9 @@ php:
   - 5.4
 
 before_script:
+  - git clone https://github.com/mkoppanen/php-zmq.git
+  - sh -c "cd php-zmq && phpize && ./configure && make --silent && sudo make install"
+  - echo "extension=zmq.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
   - curl -s http://getcomposer.org/installer | php
+  - php composer.phar self-update
   - php composer.phar install
