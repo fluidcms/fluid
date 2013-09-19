@@ -16,6 +16,11 @@ if (is_dir($vendor) && is_file($vendor."/autoload.php")) {
         if (isset($argv[4])) {
             $debugMode = (int)$argv[4];
             if ($debugMode !== 0) {
+                require_once __DIR__ . "/../Debug/Log.php";
+
+                set_error_handler(array('Fluid\\Debug\\ErrorHandler', 'error'));
+                register_shutdown_function(array('Fluid\\Debug\\ErrorHandler', 'shutdown'));
+
                 Fluid::debug($debugMode);
             }
         }
