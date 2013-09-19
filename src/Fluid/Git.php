@@ -422,8 +422,8 @@ class Git
 
         self::command($branch , 'git add -A');
 
-        self::command($branch, 'git config --global user.email '.escapeshellarg($email));
-        self::command($branch, 'git config --global user.name '.escapeshellarg($name));
+        self::command($branch, 'git config user.email '.escapeshellarg($email));
+        self::command($branch, 'git config user.name '.escapeshellarg($name));
 
         $command = "git commit -m " . escapeshellarg($msg);
 

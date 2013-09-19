@@ -90,7 +90,7 @@ abstract class Daemon
      */
     protected function upTimeCallback()
     {
-        if (is_callable($this->upTimeCallback)) {
+        if (isset($this->upTimeCallback) && is_callable($this->upTimeCallback)) {
             call_user_func($this->upTimeCallback);
         }
     }

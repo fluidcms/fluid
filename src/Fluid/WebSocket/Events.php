@@ -1,8 +1,8 @@
 <?php
 
 namespace Fluid\WebSocket;
-
 use Fluid\Events as FluidEvents;
+use Fluid\Requests\WebSocket as WebSocketRequest;
 
 class Events
 {
@@ -152,7 +152,7 @@ class Events
         if ($this->topicIsRegistered('map')) {
 
             ob_start();
-            new Requests('map', 'GET', array(), $branch);
+            new WebSocketRequest('map', 'GET', array(), $branch);
             $retval = json_decode(ob_get_contents());
             ob_end_clean();
 

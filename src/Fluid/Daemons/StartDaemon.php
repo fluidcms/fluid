@@ -27,7 +27,7 @@ if (is_dir($vendor) && is_file($vendor."/autoload.php")) {
 
         if (isset($argv[5])) {
             $timeZone = base64_decode($argv[5]);
-            if (date_default_timezone_get() !== $timeZone) {
+            if (@date_default_timezone_get() !== $timeZone) {
                 date_default_timezone_set($timeZone);
             }
         }
