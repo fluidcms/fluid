@@ -259,6 +259,10 @@ class UpdateData
         // TODO: sanitize images maybe?
         $output['images'] = $value["images"];
 
+        // Remove trailing empty p at the end, replace div by p
+        $output['source'] = preg_replace('!(<p>\s*<br>\s*<\\\?/p>\s*)*$!', '', $output['source']);
+        $output['source'] = preg_replace('!<div[^>]*>(.*)<\\\?/div>!U', '<p>$1</p>', $output['source']);
+
         return $output;
     }
 
