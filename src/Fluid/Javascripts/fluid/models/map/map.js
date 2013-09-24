@@ -52,6 +52,7 @@ define(['backbone', 'models/page/page', 'views/page/page'], function (Backbone, 
             } else {
                 delete output.pages;
             }
+            output.page = output.page.replace(/^\s+|\s+$/g, '');
             return output;
         },
 
