@@ -9,6 +9,8 @@ define(
                 'click ul.map a': 'editPage'
             },
 
+            rendered: false,
+
             className: 'map',
 
             dropbox: {},
@@ -24,6 +26,7 @@ define(
             },
 
             render: function () {
+                var root = this;
                 var current;
                 if (typeof this.collection.editor.page !== 'undefined') {
                     current = this.collection.editor.page.get('id');
@@ -36,12 +39,30 @@ define(
                     current = this.collection.current;
                 }
 
+                if (this.rendered === true) {
+                    var scroll = this.$el.scrollTop();
+                }
+
+                // TODO: live tracking of the scroll
+
                 this.$el.html(this.template.render({
                     pages: this.collection,
                     current: current
                 }));
+
+                this.rendered = true;
+
                 $("#main #content").append(this.$el);
+
+                if (typeof scroll !== 'undefined') {
+                    this.$el.scrollTop(scroll);
+                    setTimeout(function() {
+                        root.$el.scrollTop(scroll);
+                    }, 10);
+                }
+
                 this.sortable();
+
                 return this;
             },
 
