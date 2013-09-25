@@ -234,7 +234,6 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                     break;
                 case 'p':
                     this.formatBlock(role);
-//                    this.formatParagraph();
                     break;
                 case 'bold':
                 case 'italic':
@@ -244,6 +243,9 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                     break;
                 case 'anchor':
                     this.formatAnchor();
+                    break;
+                case 'indentRight':
+                    this.addIndent();
                     break;
             }
 
@@ -299,6 +301,61 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                 // TODO: fix this, this is not selecting the previous range all the time
                 selection.removeAllRanges();
                 selection.addRange(range);
+            }
+        },
+
+        addIndent: function() {
+            var selection;
+            var range;
+            var parent;
+            var container;
+
+            // Indent list (list inside list)
+            selection = window.getSelection();
+            range = selection.getRangeAt(0);
+            container = range.startContainer;
+            if (typeof container.tagName === 'undefined' || container.tagName === null) {
+                container = container.parentNode;
+            }
+            parent = container;
+            var list = false;
+            var listType;
+            while (typeof parent.parentNode !== 'undefined') {
+                if (parent.tagName === 'DIV' && parent.getAttribute('contenteditable') !== 'true') {
+                    break;
+                }
+                else if (parent.tagName === 'LI') {
+                    list = parent;
+                }
+                else if (parent.tagName === 'UL') {
+                    listType = 'UL';
+                }
+                else if (parent.tagName === 'OL') {
+                    listType = 'OL';
+                }
+                parent = parent.parentNode;
+            }
+
+            if (list && typeof listType !== 'undefined' && listType !== null) {
+                var ul = document.createElement("ul");
+                var li = document.createElement("li");
+                range.surroundContents(li);
+                selection.removeAllRanges();
+                selection.addRange(range);
+                range.surroundContents(ul);
+                selection.removeAllRanges();
+                selection.addRange(range);
+
+                // Remove trailing br
+                if ($(ul).next('br').length) {
+                    $(ul).next('br').remove();
+                }
+
+
+
+                // Add br before list if there is none
+
+//                console.log($(list).text());
             }
         },
 

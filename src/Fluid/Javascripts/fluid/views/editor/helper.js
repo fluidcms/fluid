@@ -4,7 +4,7 @@ define(['sanitize'], function (Sanitize) {
     // TODO: Move all of this in the editor view
     // !!!!!!!!
     // !!!!!!!!
-    return function (element, type) {
+    return function (element, type, editor) {
         $(element)
 
             // Keyup events
@@ -13,6 +13,7 @@ define(['sanitize'], function (Sanitize) {
                     var selection = window.getSelection();
                     var range = selection.getRangeAt(0);
 
+                    // Force DIV into P
                     var parent = range.startContainer;
                     while (parent && typeof parent.parentNode !== 'undefined') {
                         if (parent.nodeName == 'DIV' && parent.getAttribute('contenteditable') === 'true') {
@@ -32,6 +33,7 @@ define(['sanitize'], function (Sanitize) {
                 var selection;
                 var range;
                 var br;
+                var parent;
 
                 // Block line return on strings
                 if (e.which === 13 && type !== 'content') {
@@ -64,7 +66,6 @@ define(['sanitize'], function (Sanitize) {
                     return false;
                 }
 
-                // Check if use is in a block element in a list and wants to exit the block element
                 else if (e.which == 13) {
                     selection = window.getSelection();
                     range = selection.getRangeAt(0);
@@ -73,18 +74,18 @@ define(['sanitize'], function (Sanitize) {
                     if (typeof container.tagName === 'undefined' || container.tagName === null) {
                         container = container.parentNode;
                     }
+
+                    // Check if use is in a block element in a list and wants to exit the block element
                     if (container.tagName === 'P' || container.tagName === 'H1' || container.tagName === 'H2' || container.tagName === 'H3' || container.tagName === 'H4' || container.tagName === 'H5' || container.tagName === 'H6') {
-                        var parent = container;
+                        parent = container;
                         var list = false;
                         while (typeof parent.parentNode !== 'undefined') {
                             if (parent.tagName === 'DIV' && parent.getAttribute('contenteditable') !== 'true') {
                                 break;
                             }
-
                             if (parent.tagName === 'LI') {
                                 list = true;
                             }
-
                             parent = parent.parentNode;
                         }
 
@@ -102,6 +103,34 @@ define(['sanitize'], function (Sanitize) {
                             selection.addRange(range);
 
                             $(br).remove();
+                            return true;
+                        }
+                    }
+
+                    // Verify that lists don't try to escape their position
+                    else if (container.tagName === 'LI') {
+                        parent = container.parentNode;
+                        var list = false;
+                        while (typeof parent.parentNode !== 'undefined') {
+                            if (parent.tagName === 'DIV' && parent.getAttribute('contenteditable') !== 'true') {
+                                break;
+                            }
+                            if (parent.tagName === 'LI') {
+                                list = parent;
+                            }
+                            parent = parent.parentNode;
+                        }
+
+                        if (list) {
+                            var content = $(list).clone();
+                            $.each(content.find('>ul:last>li:last'), function(key, node) {
+                                if ($(node).html() === $(container).html()) {
+                                    $(node).remove();
+                                }
+                            });
+                            content = content.html();
+                            var prev = $(container).prev('li');
+                            setTimeout(function() { editor.fixIndentedList(container, prev, list, content); }, 0);
                             return true;
                         }
                     }

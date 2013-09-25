@@ -86,12 +86,18 @@ div.editor {
       ul, ol {
         margin-bottom: 20px;
         margin-left: 30px;
+        ul, ol {
+          margin-bottom: 0;
+        }
       }
       ol {
         list-style: decimal;
       }
       ul {
         list-style: disc outside;
+        ul {
+          list-style: circle outside;
+        }
       }
       div.component {
         cursor: pointer;

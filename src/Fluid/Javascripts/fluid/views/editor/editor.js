@@ -65,7 +65,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
             }));
             $("#target").append(this.$el);
 
-            EditorHelper(this.$el.find('div[contenteditable]'), this.type); // TODO: integrate into this view
+            EditorHelper(this.$el.find('div[contenteditable]'), this.type, this); // TODO: integrate into this view
 
             this.tools.editor = this;
             this.tools.enable();
@@ -217,6 +217,23 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
 
                 delete this.data.components[id];
             }
+        },
+
+        fixIndentedList: function(item, previousItem, container, content) {
+            if (typeof item.parentNode === 'undefined' || item.parentNode === null) {
+                if (!previousItem.length) {
+                    return false;
+                }
+                item = previousItem[0];
+            }
+
+            if (!$.contains(container, item)) {
+                var ul = $(item).parents('ul:first');
+                ul.prev('li').html(content);
+                ul.remove();
+            }
+
+            return false;
         }
     });
 });
