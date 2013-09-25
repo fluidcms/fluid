@@ -10,11 +10,11 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
 
         editor: null,
 
+        editorElement: null,
+
         template: new EJS({url: 'javascripts/fluid/templates/tools/tools.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
-            this.map = attrs.map;
-            this.map.on('editing', this.trackEditing, this);
         },
 
         render: function () {
@@ -37,11 +37,6 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
             this.$el.show();
         },
 
-        trackEditing: function() {
-            this.map.editor.view.on('editing', this.enable, this);
-            this.map.editor.view.on('stopEditing', this.disable, this);
-        },
-
         enable: function() {
             var root = this;
 
@@ -50,9 +45,9 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                 return false;
             }
 
-            if (this.map.editor.view.editor.type === 'content') {
+            if (this.editor.type === 'content') {
                 this.textEnabled = true;
-                this.editor = this.map.editor.view.editor.$el.find('[contenteditable]');
+                this.editorElement = this.editor.$el.find('[contenteditable]');
                 $(document).on('keypress keyup click mouseup', null, {root: this}, this.analyzeText);
 
                 $(this.$el).find('div.text a[data-role]').on('mousedown', function(e) { root.formatText(e); }).on('mousedown', function() { root.analyzeText({data: {root: root}}); });
@@ -92,16 +87,16 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
 
             var fontStyles = ['bold', 'italic', 'underline', 'strikeThrough'];
 
-            if (root.editor.is(':focus')) {
+            if (root.editorElement.is(':focus')) {
                 // Check if there is a paragrpah
                 // TODO: shouldnt this be part of the editor view instead?
                 // !!!!!!
-                if (root.editor.find('p').length === 0) {
-                    $("<p><br></p>").appendTo(root.editor);
+                if (root.editorElement.find('p').length === 0) {
+                    $("<p><br></p>").appendTo(root.editorElement);
                 }
 
                 // Check if there is spans, and destroy them
-                if (root.editor.find('span').length !== 0) {
+                if (root.editorElement.find('span').length !== 0) {
                     root.cleanContent();
                 }
 
@@ -121,6 +116,7 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                 if (!tree) {
                     root.cleanContent();
                 } else {
+                    var found = false;
                     var list;
                     $.each(tree, function(key, node) {
                         // Check if we are in a div
@@ -129,12 +125,13 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                         }
 
                         // Headers
-                        if (node.tagName === 'H1' || node.tagName === 'H2' || node.tagName === 'H3' || node.tagName === 'H4' || node.tagName === 'H5' || node.tagName === 'H6') {
+                        if (node.tagName === 'P' || node.tagName === 'H1' || node.tagName === 'H2' || node.tagName === 'H3' || node.tagName === 'H4' || node.tagName === 'H5' || node.tagName === 'H6') {
+                            found = true;
                             root.$el.find('[data-role="tag"]').val(node.tagName.toLowerCase());
                         }
 
                         // Paragraph
-                        else {
+                        else if (!found) {
                             root.$el.find('[data-role="tag"]').val('p');
                         }
 
@@ -190,13 +187,18 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
         },
 
         cleanContent: function() {
+            // Remove lone brs
+            $.each(this.editorElement.find('>br'), function(key, node) {
+                $(node).replaceWith($(node).html());
+            });
+
             // Remove spans
-            $.each(this.editor.find('span'), function(key, node) {
+            $.each(this.editorElement.find('span'), function(key, node) {
                 $(node).replaceWith($(node).html());
             });
 
             // Replace text nodes by paragraphs
-            $.each(this.editor.contents(), function(key, node) {
+            $.each(this.editorElement.contents(), function(key, node) {
                 if (node.nodeName === '#text') {
                     var nodeValue = node.nodeValue.replace(/^\s+|\s+$/g, '');
                     if (nodeValue === '') {
@@ -224,14 +226,15 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                 case 'h4':
                 case 'h5':
                 case 'h6':
-                    this.formatHeader(role);
+                    this.formatBlock(role);
                     break;
                 case 'ul':
                 case 'ol':
                     this.formatList(role);
                     break;
                 case 'p':
-                    this.formatParagraph();
+                    this.formatBlock(role);
+//                    this.formatParagraph();
                     break;
                 case 'bold':
                 case 'italic':
@@ -278,16 +281,20 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
 
             // Find paragraph or div
             var parent = range.startContainer;
-            while (typeof parent.parentNode !== 'undefined' && parent.nodeName !== 'DIV' && parent.nodeName !== 'P') {
+            while (typeof parent.parentNode !== 'undefined' && parent.nodeName !== 'DIV' && parent.nodeName !== 'P' && parent.nodeName !== 'H1' && parent.nodeName !== 'H2' && parent.nodeName !== 'H3' && parent.nodeName !== 'H4' && parent.nodeName !== 'H5' && parent.nodeName !== 'H6') {
                 if (parent.nodeName == 'UL' || parent.nodeName == 'OL') {
                     var child = parent;
                 }
                 parent = parent.parentNode;
             }
 
-            if (typeof child !== 'undefined' && parent.getAttribute('contenteditable') !== 'true' && (parent.nodeName === 'DIV' || parent.nodeName === 'P')) {
-                $(parent).before(child);
-                $(parent).remove();
+            if (typeof child !== 'undefined' && parent.getAttribute('contenteditable') !== 'true' && (parent.nodeName === 'DIV' || parent.nodeName === 'P' || parent.nodeName === 'H1' || parent.nodeName === 'H2' || parent.nodeName === 'H3' || parent.nodeName === 'H4' || parent.nodeName === 'H5' || parent.nodeName === 'H6')) {
+                // TODO: divide into 2 blocks and put in the middle
+                $(parent).after(child);
+                var parentContent = $(parent).html().replace(/^\s+|\s+$/g, '');
+                if (parentContent === '') {
+                    $(parent).remove();
+                }
 
                 // TODO: fix this, this is not selecting the previous range all the time
                 selection.removeAllRanges();
@@ -295,54 +302,63 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
             }
         },
 
-        formatHeader: function(type) {
-            document.execCommand("formatBlock", false, type);
+        formatBlock: function(type) {
+            var parent;
+            var container;
+            var range;
 
-            var range = window.getSelection().getRangeAt(0);
+            range = window.getSelection().getRangeAt(0);
+            container = range.startContainer;
+            parent = container.parentNode;
 
-            // Find paragraph or div
-            var content = range.startContainer;
-            var parent = content.parentNode;
-            var element = false;
-            var inContentEditable = false;
-            var paragraph = false;
-            while (typeof parent !== 'undefined' && parent !== null && parent !== false) {
-                if (parent.nodeName == 'DIV' && parent.getAttribute('contenteditable') == 'true') {
-                    parent = false;
-                    inContentEditable = true;
-                }
-
-                else if (parent.nodeName == type.toUpperCase()) {
-                    element = parent;
-                }
-
-                else if (parent.nodeName == 'P') {
-                    paragraph = parent;
-                }
-
-                parent = parent.parentNode;
+            // Check if in list
+            if (container.tagName === 'LI') {
+                parent = container;
             }
 
-            if (inContentEditable && paragraph && element) {
-                $(paragraph).before($(element));
-            }
-        },
+            if (parent.tagName === 'LI') {
+                var content = $(parent).html().replace(/^\s+|\s+$/g, '');
 
-        formatParagraph: function() {
-            var range = window.getSelection().getRangeAt(0);
-
-            // Remove from list before applying paragraph
-            var parent = range.startContainer;
-            while (parent !== null && typeof parent.parentNode !== 'undefined' && parent.nodeName !== 'DIV') {
-                if (parent.nodeName == 'UL') {
-                    document.execCommand('insertUnorderedList', false, null);
-                } else if (parent.nodeName == 'OL') {
-                    document.execCommand('insertOrderedList', false, null);
+                if (content === '') {
+                    content = '<br>';
                 }
-                parent = parent.parentNode;
+
+                $(parent).html('<'+type.toLowerCase()+'>' + content + '</'+type.toLowerCase()+'>');
             }
 
-            document.execCommand("formatBlock", false, "p");
+            // Not in list
+            else {
+                document.execCommand("formatBlock", false, type);
+
+                range = window.getSelection().getRangeAt(0);
+
+                // Find paragraph or div
+                parent = range.startContainer.parentNode;
+                var element = false;
+                var inContentEditable = false;
+                var paragraph = false;
+                while (typeof parent !== 'undefined' && parent !== null && parent !== false) {
+                    if (parent.nodeName == 'DIV' && parent.getAttribute('contenteditable') == 'true') {
+                        parent = false;
+                        inContentEditable = true;
+                    }
+
+                    else if (parent.nodeName == type.toUpperCase()) {
+                        element = parent;
+                    }
+
+                    else if (parent.nodeName == 'P' || parent.nodeName == 'H1' || parent.nodeName == 'H2' || parent.nodeName == 'H3' || parent.nodeName == 'H4' || parent.nodeName == 'H5' || parent.nodeName == 'H6') {
+                        paragraph = parent;
+                    }
+
+                    parent = parent.parentNode;
+                }
+
+                if (inContentEditable && paragraph && element) {
+                    // TODO: divide into 2 blocks and put in the middle
+                    $(paragraph).before($(element));
+                }
+            }
         }
     });
 });

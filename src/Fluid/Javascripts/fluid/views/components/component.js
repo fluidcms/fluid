@@ -10,6 +10,7 @@ define(
                 this.app = attrs.app;
                 this.components = attrs.components;
                 this.files = attrs.files;
+                this.tools = attrs.tools;
 
                 this.definition = attrs.definition;
                 this.component = attrs.component;

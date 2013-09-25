@@ -29,6 +29,10 @@ define(['sanitize'], function (Sanitize) {
 
             // Keypress events
             .on("keypress", function (e) {
+                var selection;
+                var range;
+                var br;
+
                 // Block line return on strings
                 if (e.which === 13 && type !== 'content') {
                     return false;
@@ -37,9 +41,9 @@ define(['sanitize'], function (Sanitize) {
                 // Allow br when enter key is pressed with shift
                 else if (e.which == 13 && e.shiftKey) {
                     // Insert br if user is pressing shift and enter
-                    var selection = window.getSelection();
-                    var range = selection.getRangeAt(0);
-                    var br = document.createElement("br");
+                    selection = window.getSelection();
+                    range = selection.getRangeAt(0);
+                    br = document.createElement("br");
 
                     // Insert br
                     range.deleteContents();
@@ -58,6 +62,49 @@ define(['sanitize'], function (Sanitize) {
                     selection.removeAllRanges();
                     selection.addRange(range);
                     return false;
+                }
+
+                // Check if use is in a block element in a list and wants to exit the block element
+                else if (e.which == 13) {
+                    selection = window.getSelection();
+                    range = selection.getRangeAt(0);
+
+                    var container = range.startContainer;
+                    if (typeof container.tagName === 'undefined' || container.tagName === null) {
+                        container = container.parentNode;
+                    }
+                    if (container.tagName === 'P' || container.tagName === 'H1' || container.tagName === 'H2' || container.tagName === 'H3' || container.tagName === 'H4' || container.tagName === 'H5' || container.tagName === 'H6') {
+                        var parent = container;
+                        var list = false;
+                        while (typeof parent.parentNode !== 'undefined') {
+                            if (parent.tagName === 'DIV' && parent.getAttribute('contenteditable') !== 'true') {
+                                break;
+                            }
+
+                            if (parent.tagName === 'LI') {
+                                list = true;
+                            }
+
+                            parent = parent.parentNode;
+                        }
+
+                        if (list === true) {
+                            var nextBr = $(container).next('br');
+
+                            // Create a br so we can select the range
+                            if (!nextBr.length) {
+                                br = document.createElement("br");
+                                $(container).after(br);
+                            }
+                            range.setStartAfter(container);
+                            range.setEndAfter(container);
+                            selection.removeAllRanges();
+                            selection.addRange(range);
+
+                            $(br).remove();
+                            return true;
+                        }
+                    }
                 }
 
                 return true;

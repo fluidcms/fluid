@@ -385,7 +385,8 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
                 data: data,
                 app: this.app,
                 components: this.components,
-                files: this.files
+                files: this.files,
+                tools: this.tools
             });
 
             if (type === 'content') {

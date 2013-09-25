@@ -20,6 +20,7 @@ define(
                 this.languages = attrs.languages;
                 this.components = attrs.components;
                 this.files = attrs.files;
+                this.tools = attrs.tools;
 
                 this.definition = this.model.get('layoutDefinition');
                 this.data = this.model.get('data');

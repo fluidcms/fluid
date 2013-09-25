@@ -99,6 +99,7 @@ define(
                     this.views.tools = new ToolsView({
                         map: this.models.map
                     });
+                    this.models.map.tools = this.views.tools;
 
                     // Socket event
                     this.socket.on('ready', function() {

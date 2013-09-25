@@ -25,6 +25,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
             this.components = attrs.components;
             this.app = attrs.app;
             this.files = attrs.files;
+            this.tools = attrs.tools;
 
             this.app.editors[this.cid] = this;
 
@@ -66,6 +67,9 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
 
             EditorHelper(this.$el.find('div[contenteditable]'), this.type); // TODO: integrate into this view
 
+            this.tools.editor = this;
+            this.tools.enable();
+
             this.droppable();
 
             this.$el.find("div[contenteditable]").focus();
@@ -81,11 +85,14 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
         hide: function() {
             this.$el.hide();
             this.trigger('hide');
+            this.tools.disable();
         },
 
         show: function() {
             this.$el.show();
             this.trigger('show');
+            this.tools.editor = this;
+            this.tools.enable();
         },
 
         save: function() {
@@ -112,6 +119,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
             $(document).off('keydown', this.keyEvents.save);
             $(document).off('keydown', this.keyEvents.enter);
             $(document).off('keyup', this.keyEvents.escape);
+            this.tools.disable();
             this.remove();
         },
 
@@ -177,7 +185,8 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
                         components: root.components,
                         files: root.files,
                         definition: definition,
-                        component: component
+                        component: component,
+                        tools: root.tools
                     });
 
                     componentView.on('save', function() {

@@ -203,7 +203,8 @@ define(['backbone', 'models/page/page', 'views/page/page'], function (Backbone, 
                 app: this.app,
                 components: this.components,
                 files: this.files,
-                languages: this.languages
+                languages: this.languages,
+                tools: this.tools
             });
 
             this.editor.page.on('change', function() {
