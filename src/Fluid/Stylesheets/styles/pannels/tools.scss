@@ -98,6 +98,18 @@ div.tools>div.text {
       &[data-role="strikeThrough"]:after {
         @include sprite-position(-102px -56px);
       }
+      &[data-role="ul"]:after {
+        @include sprite-position(-114px -68px);
+      }
+      &[data-role="ol"]:after {
+        @include sprite-position(-78px -68px);
+      }
+      &[data-role="indentLeft"]:after {
+        @include sprite-position(-90px -68px);
+      }
+      &[data-role="indentRight"]:after {
+        @include sprite-position(-102px -68px);
+      }
       &[data-role="anchor"] {
         padding-left: 22px;
         &:after {

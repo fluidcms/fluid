@@ -11,15 +11,7 @@
             <option value="h5">Header 5</option>
             <option value="h6">Header 6</option>
             <option value="p" selected>Paragraph</option>
-            <option value="ul">Unordered List</option>
-            <option value="ol">Ordered List</option>
         </select>
-        <div class="group">
-            <a data-role="alignLeft" <% if (!textEnabled) { %>data-disabled<% } %>></a>
-            <a data-role="alignCenter" <% if (!textEnabled) { %>data-disabled<% } %>></a>
-            <a data-role="alignRight" <% if (!textEnabled) { %>data-disabled<% } %>></a>
-            <a data-role="justifyLeft" <% if (!textEnabled) { %>data-disabled<% } %>></a>
-        </div>
     </div>
     <div class="row">
         <div class="group">
@@ -30,6 +22,22 @@
         </div>
         <div class="group">
             <a data-role="anchor" <% if (!textEnabled) { %>data-disabled<% } %>>Link</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="group">
+            <a data-role="ul" <% if (!textEnabled) { %>data-disabled<% } %>></a>
+            <a data-role="ol" <% if (!textEnabled) { %>data-disabled<% } %>></a>
+        </div>
+        <div class="group">
+            <a data-role="alignLeft" <% if (!textEnabled) { %>data-disabled<% } %>></a>
+            <a data-role="alignCenter" <% if (!textEnabled) { %>data-disabled<% } %>></a>
+            <a data-role="alignRight" <% if (!textEnabled) { %>data-disabled<% } %>></a>
+            <a data-role="justifyLeft" <% if (!textEnabled) { %>data-disabled<% } %>></a>
+        </div>
+        <div class="group">
+            <a data-role="indentLeft" <% if (!textEnabled) { %>data-disabled<% } %>></a>
+            <a data-role="indentRight" <% if (!textEnabled) { %>data-disabled<% } %>></a>
         </div>
     </div>
 </div>

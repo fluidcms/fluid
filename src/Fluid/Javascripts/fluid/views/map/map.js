@@ -84,6 +84,7 @@ define(
                 };
 
                 this.$el.find('ul.map, ul.pages').sortable({
+                    distance: 25,
                     over: function(event, ui) {
                         $(event.target).parents('li:eq(0)').find('>span>a').addClass('dragover');
                     },

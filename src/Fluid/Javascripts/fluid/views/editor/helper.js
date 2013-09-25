@@ -46,6 +46,15 @@ define(['sanitize'], function (Sanitize) {
                     range.insertNode(br);
                     range.setStartAfter(br);
                     range.setEndAfter(br);
+
+                    // Create another br after the one we inserted if there is none
+                    if (!$(br).next('br').length) {
+                        br = document.createElement("br");
+                        range.insertNode(br);
+                        range.setStartAfter(br);
+                        range.setEndAfter(br);
+                    }
+
                     selection.removeAllRanges();
                     selection.addRange(range);
                     return false;

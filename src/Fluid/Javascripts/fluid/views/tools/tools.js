@@ -100,6 +100,11 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                     $("<p><br></p>").appendTo(root.editor);
                 }
 
+                // Check if there is spans, and destroy them
+                if (root.editor.find('span').length !== 0) {
+                    root.cleanContent();
+                }
+
                 // Check font styles
                 $.each(fontStyles, function(key, value) {
                     if (document.queryCommandValue(value) === 'true') {
@@ -110,23 +115,42 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                 });
 
                 // Check element type
-                var tag = root.checkCursorInElement();
+                var tree = root.checkCursorInElement();
 
-                // noinspection FallthroughInSwitchStatementJS
-                switch(tag) {
-                    case 'H1':
-                    case 'H2':
-                    case 'H3':
-                    case 'H4':
-                    case 'H5':
-                    case 'H6':
-                    case 'UL':
-                    case 'OL':
-                        root.$el.find('[data-role="tag"]').val(tag.toLowerCase());
-                        break;
-                    default:
-                        root.$el.find('[data-role="tag"]').val('p');
-                        break;
+                // Check if text is not wrapped in an element
+                if (!tree) {
+                    root.cleanContent();
+                } else {
+                    var list;
+                    $.each(tree, function(key, node) {
+                        // Check if we are in a div
+                        if (node.tagName === 'DIV') {
+                            root.replaceDivWithP();
+                        }
+
+                        // Headers
+                        if (node.tagName === 'H1' || node.tagName === 'H2' || node.tagName === 'H3' || node.tagName === 'H4' || node.tagName === 'H5' || node.tagName === 'H6') {
+                            root.$el.find('[data-role="tag"]').val(node.tagName.toLowerCase());
+                        }
+
+                        // Paragraph
+                        else {
+                            root.$el.find('[data-role="tag"]').val('p');
+                        }
+
+                        // Lists
+                        if ((node.tagName === 'UL' || node.tagName === 'OL') && (typeof list === 'undefined' || list === null)) {
+                            list = node.tagName.toLowerCase();
+                        }
+
+                    });
+
+                    root.$el.find('[data-role="ol"]').removeClass('active');
+                    root.$el.find('[data-role="ul"]').removeClass('active');
+
+                    if (typeof list !== 'undefined' && list !== null) {
+                        root.$el.find('[data-role="'+list+'"]').addClass('active');
+                    }
                 }
             }
         },
@@ -141,18 +165,47 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
             } else if ( (sel = document.selection) && sel.type != "Control" ) {
                 containerNode = sel.createRange().parentElement();
             }
+            var tree = [];
+
             while (containerNode) {
                 if (containerNode.nodeType == 1 && containerNode.tagName == 'DIV' && containerNode.getAttribute('contenteditable')) {
                     break;
                 }
                 parentNode = containerNode;
                 containerNode = containerNode.parentNode;
+                tree.push(parentNode);
             }
 
             if (typeof parentNode !== 'undefined' && parentNode.nodeType == 1) {
-                return parentNode.tagName;
+                return tree;
             }
             return false;
+        },
+
+        replaceDivWithP: function() {
+            var selection = window.getSelection();
+            var range = selection.getRangeAt(0);
+            var element = range.startContainer.parentNode;
+            $(element).replaceWith($('<p>' + $(element).html() + '</p>'));
+        },
+
+        cleanContent: function() {
+            // Remove spans
+            $.each(this.editor.find('span'), function(key, node) {
+                $(node).replaceWith($(node).html());
+            });
+
+            // Replace text nodes by paragraphs
+            $.each(this.editor.contents(), function(key, node) {
+                if (node.nodeName === '#text') {
+                    var nodeValue = node.nodeValue.replace(/^\s+|\s+$/g, '');
+                    if (nodeValue === '') {
+                        $(node).remove();
+                    } else {
+                        $(node).replaceWith($('<p>' + nodeValue + '</p>'));
+                    }
+                }
+            });
         },
 
         formatText: function(e) {
@@ -191,6 +244,7 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                     break;
             }
 
+            this.analyzeText({data: {root: this}});
             return false;
         },
 
