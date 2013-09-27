@@ -1,4 +1,6 @@
 define(['backbone', 'ejs'], function (Backbone, EJS) {
+    // TODO: this view contains a lot of methods that needs to be moved to the editor view so they can be used outside of
+    // TODO: the tools pannel. This view should be small and rely uppon methods in the editor view.
     return Backbone.View.extend({
         className: 'tools',
 
@@ -82,6 +84,15 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
             $(document).off('keypress keyup click mouseup', this.analyzeText);
         },
 
+        toggleNoneTag: function(enable) {
+            if (enable && !this.$el.find('div.text select option[value=li]').length) {
+                this.$el.find('div.text select').append('<option value="li">None</option>');
+            } else if (!enable) {
+                this.$el.find('div.text select option[value=li]').remove();
+            }
+        },
+
+        // TODO: Rename to analyze cursor or something similar because we are just analysing the cursor's position
         analyzeText: function(e) {
             var root = e.data.root;
 
@@ -89,18 +100,19 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
 
             if (root.editorElement.is(':focus')) {
                 // Check if there is a paragrpah
-                // TODO: shouldnt this be part of the editor view instead?
-                // !!!!!!
+                // TODO: move to cleanContent method and analyse all the content
                 if (root.editorElement.find('p').length === 0) {
                     $("<p><br></p>").appendTo(root.editorElement);
                 }
 
                 // Check if there is spans, and destroy them
+                // TODO: this should not be necessary here if we analyse and clean the content smartly
                 if (root.editorElement.find('span').length !== 0) {
                     root.cleanContent();
                 }
 
                 // Check font styles
+                // TODO: I think we can simply move this to the tree loop below and scan for strong, b, i, em, u, strike elements
                 $.each(fontStyles, function(key, value) {
                     if (document.queryCommandValue(value) === 'true') {
                         root.$el.find('[data-role="'+value+'"]').addClass('active');
@@ -118,29 +130,44 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                 } else {
                     var found = false;
                     var list;
+                    var li = false;
                     $.each(tree, function(key, node) {
                         // Check if we are in a div
+                        // TODO: move to cleanContent method and analyse all the content
                         if (node.tagName === 'DIV') {
                             root.replaceDivWithP();
                         }
 
                         // Headers
-                        if (node.tagName === 'P' || node.tagName === 'H1' || node.tagName === 'H2' || node.tagName === 'H3' || node.tagName === 'H4' || node.tagName === 'H5' || node.tagName === 'H6') {
-                            found = true;
-                            root.$el.find('[data-role="tag"]').val(node.tagName.toLowerCase());
+                        if (!found && node.tagName === 'P' || node.tagName === 'H1' || node.tagName === 'H2' || node.tagName === 'H3' || node.tagName === 'H4' || node.tagName === 'H5' || node.tagName === 'H6') {
+                            found = node.tagName.toLowerCase();
                         }
 
-                        // Paragraph
-                        else if (!found) {
-                            root.$el.find('[data-role="tag"]').val('p');
+                        // List Item
+                        if (node.tagName === 'LI') {
+                            if (!found) {
+                                found = 'li';
+                            }
+                            li = true;
                         }
 
                         // Lists
                         if ((node.tagName === 'UL' || node.tagName === 'OL') && (typeof list === 'undefined' || list === null)) {
                             list = node.tagName.toLowerCase();
                         }
-
                     });
+
+                    if (li) {
+                        root.toggleNoneTag(true);
+                    } else {
+                        root.toggleNoneTag(false);
+                    }
+
+                    if (!found) {
+                        found = 'p';
+                    }
+
+                    root.$el.find('[data-role="tag"]').val(found);
 
                     root.$el.find('[data-role="ol"]').removeClass('active');
                     root.$el.find('[data-role="ul"]').removeClass('active');
@@ -152,6 +179,7 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
             }
         },
 
+        // TODO: rename this method to something more relevant
         checkCursorInElement: function() {
             var sel, containerNode, parentNode;
             if (window.getSelection) {
@@ -187,6 +215,9 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
         },
 
         cleanContent: function() {
+            // Fix renegade lists
+            // TODO: fix renegade lists
+
             // Remove lone brs
             $.each(this.editorElement.find('>br'), function(key, node) {
                 $(node).replaceWith($(node).html());
@@ -226,14 +257,15 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                 case 'h4':
                 case 'h5':
                 case 'h6':
+                case 'p':
                     this.formatBlock(role);
                     break;
                 case 'ul':
                 case 'ol':
                     this.formatList(role);
                     break;
-                case 'p':
-                    this.formatBlock(role);
+                case 'li':
+                    this.removeFromBlock();
                     break;
                 case 'bold':
                 case 'italic':
@@ -246,6 +278,9 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                     break;
                 case 'indentRight':
                     this.addIndent();
+                    break;
+                case 'indentLeft':
+                    this.removeIndent();
                     break;
             }
 
@@ -340,22 +375,76 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                 var ul = document.createElement("ul");
                 var li = document.createElement("li");
                 range.surroundContents(li);
-                selection.removeAllRanges();
-                selection.addRange(range);
-                range.surroundContents(ul);
-                selection.removeAllRanges();
-                selection.addRange(range);
+                if (range) {
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                }
+
+                if (!$.contains(ul, li)) {
+                    $(li).after(ul);
+                    $(ul).append(li);
+                }
 
                 // Remove trailing br
                 if ($(ul).next('br').length) {
                     $(ul).next('br').remove();
                 }
 
+                // Add br before list if there is no content
+                var textBefore = ul.previousSibling.nodeValue.replace(/^\s+|\s+$/g, '');
+                if (textBefore === '' && !$(ul).prev('*').length) {
+                    $(ul).before('<br>');
+                }
+            }
+        },
 
+        removeIndent: function() {
+            // Outdent list
+            var selection = window.getSelection();
+            var range = selection.getRangeAt(0);
+            var container = range.startContainer;
+            if (typeof container.tagName === 'undefined' || container.tagName === null) {
+                container = container.parentNode;
+            }
+            var list = false;
+            var parent = container;
+            while (typeof parent !== 'undefined' && parent !== null && parent !== false) {
+                if (parent.nodeName == 'DIV' && parent.getAttribute('contenteditable') == 'true') {
+                    parent = false;
+                }
 
-                // Add br before list if there is none
+                if (parent.tagName === 'LI') {
+                    list = parent;
+                    parent = false;
+                }
+            }
 
-//                console.log($(list).text());
+            if (list) {
+                var ul = $(list).parents('ul:first');
+                // TODO: insert li at position instead of at the begining and split list into 2 if necessary
+                $(ul).before(list);
+                // TODO: Insert BR before if there is content before
+                // TODO: Insert into P if we are outdenting the last list
+                $(list).replaceWith($(list).html());
+
+                if (ul.find('li').length === 0) {
+                    $(ul).remove();
+                }
+            }
+
+        },
+
+        removeFromBlock: function() {
+            var selection = window.getSelection();
+            var range = selection.getRangeAt(0);
+            var container = range.startContainer;
+            if (typeof container.tagName === 'undefined' || container.tagName === null) {
+                container = container.parentNode;
+            }
+            if (container.tagName === 'LI') {
+                $(container).find('>*:first').replaceWith($(container).find('>*:first').html());
+            } else {
+                $(container).replaceWith($(container).html());
             }
         },
 

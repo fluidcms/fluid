@@ -53,8 +53,9 @@ define(['sanitize'], function (Sanitize) {
                     range.setStartAfter(br);
                     range.setEndAfter(br);
 
-                    // Create another br after the one we inserted if there is none
-                    if (!$(br).next('br').length) {
+                    // Create another br after the one we inserted if there is no content
+                    var textAfter = br.nextSibling.nodeValue.replace(/^\s+|\s+$/g, '');
+                    if (!$(br).next('br').length && textAfter == '') {
                         br = document.createElement("br");
                         range.insertNode(br);
                         range.setStartAfter(br);
