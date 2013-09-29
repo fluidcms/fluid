@@ -105,6 +105,13 @@ class ParseData
                         $retval[$name] = '';
                     }
                     break;
+                case 'table':
+                    if (isset($data[$name])) {
+                        $retval[$name] = $data[$name];
+                    } else {
+                        $retval[$name] = '';
+                    }
+                    break;
                 case 'array':
                     $retval[$name] = array();
                     if (isset($data[$name]) && is_array($data[$name]) && count($data[$name])) {

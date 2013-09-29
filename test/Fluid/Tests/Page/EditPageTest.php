@@ -280,4 +280,47 @@ class EditPageTest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue($retval['data']['Content']['Available']);
     }
+
+    public function testEditTable()
+    {
+        // Home page
+        $map = new Map;
+        $mapPage = $map->findPage('home page');
+        $page = Page::get($mapPage, 'en-US');
+
+        $data = $page->getRawData();
+
+        $data['Content']['Content']['source'] .= '{LAg2T3VE}';
+        $data['Content']['Content']['components']['LAg2T3VE'] = array(
+            'component' => 'table',
+            'data' => array(
+                'Table' => array(
+                    'tbody' => array(
+                        array('test1', 'test2'),
+                        array('test3', 'test4')
+                    ),
+                    'thead' => array('thead test1', 'thead test2'),
+                    'tfoot' => array('tfoot test1', 'tfoot test2')
+                )
+            )
+        );
+
+        $request = array(
+            "method" => "PUT",
+            "url" => "page/en-US/home page",
+            "data" => $data
+        );
+
+        ob_start();
+        new Fluid\Requests\WebSocket($request['url'], $request['method'], $request['data'], 'develop', Helper::getUser());
+        $retval = ob_get_contents();
+        ob_end_clean();
+
+        $retval = json_decode($retval, true);
+
+        $this->assertEquals(
+            $data['Content']['Content']['components']['LAg2T3VE']['data']['Table']['thead'][0],
+            $retval['data']['Content']['Content']['components']['LAg2T3VE']['data']['Table']['thead'][0]
+        );
+    }
 }

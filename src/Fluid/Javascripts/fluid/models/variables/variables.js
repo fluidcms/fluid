@@ -69,6 +69,9 @@ define(['backbone'], function (Backbone) {
                         case 'option':
                             retval[key] = data[key];
                             break;
+                        case 'table':
+                            retval[key] = data[key];
+                            break;
                         case 'array':
                             retval[key] = [];
                             $.each(data[key], function(arrayKey, arrayItem) {
@@ -163,8 +166,39 @@ define(['backbone'], function (Backbone) {
                     return data;
                 case 'array':
                     return this.arrayToJSON(definition.variables, data);
+                case 'table':
+                    return this.tableToJSON(definition, data);
+                    break;
             }
             return null;
+        },
+
+        tableToJSON: function(definition, data) {
+            var table = $('<table/>').html(data);
+            data = {};
+            $.each(table.find('thead td'), function(key, item) {
+                if (typeof data.thead === 'undefined') {
+                    data.thead = [];
+                }
+                data.thead.push($(item).text());
+            });
+            $.each(table.find('tbody tr'), function(key, row) {
+                if (typeof data.tbody === 'undefined') {
+                    data.tbody = [];
+                }
+                var rowData = [];
+                $.each($(row).find('td'), function(key, item) {
+                    rowData.push($(item).text());
+                });
+                data.tbody.push(rowData);
+            });
+            $.each(table.find('tfoot td'), function(key, item) {
+                if (typeof data.tfoot === 'undefined') {
+                    data.tfoot = [];
+                }
+                data.tfoot.push($(item).text());
+            });
+            return data;
         },
 
         arrayToJSON: function(definition, data) {

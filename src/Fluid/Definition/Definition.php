@@ -106,6 +106,7 @@ abstract class Definition
             switch($itemName) {
                 // Variable
                 case 'variable':
+                    // TODO: use an array here because variables can overlap with the previous item unless they are unset
                     $variableUniversal = $universal;
                     foreach($item->attributes() as $key => $value) {
                         switch($key) {
@@ -157,6 +158,7 @@ abstract class Definition
                 // Array
                 case 'array':
                     if (!$child) {
+                        // TODO: use an array here because variables can overlap with the previous item unless they are unset
                         $variableUniversal = $universal;
                         foreach($item->attributes() as $key => $value) {
                             switch($key) {
@@ -178,10 +180,47 @@ abstract class Definition
                     }
                     break;
 
+                // Table
+                case 'table':
+                    $table = array(
+                        'type' => 'table',
+                        'header' => false,
+                        'footer' => false,
+                        'universal' => $universal
+                    );
+                    foreach($item->attributes() as $key => $value) {
+                        switch($key) {
+                            case 'name': $table['name'] = (string)$value; break;
+                            case 'header':
+                                if ((string)$value === 'true' || (string)$value === '1') {
+                                    $table['header'] = true;
+                                }
+                                break;
+                            case 'footer':
+                                if ((string)$value === 'true' || (string)$value === '1') {
+                                    $table['footer'] = true;
+                                }
+                                break;
+                            case 'columns': $table['columns'] = (int)$value; break;
+                            case 'rows': $table['rows'] = (int)$value; break;
+                            case 'universal':
+                                if ((string)$value === 'true' || (string)$value === '1') {
+                                    $table['universal'] = true;
+                                }
+                                break;
+                        }
+                    }
+                    if (!empty($table['name'])) {
+                        $variables[$table['name']] = $table;
+                    }
+                    break;
+
                 // Image
                 case 'image':
                     $image = array();
                     $image['type'] = 'image';
+                    // TODO: use an array here because variables can overlap with the previous item unless they are unset
+                    // TODO: for variableUniversal and imageName in this case
                     $variableUniversal = $universal;
                     foreach($item->attributes() as $key => $value) {
                         switch($key) {

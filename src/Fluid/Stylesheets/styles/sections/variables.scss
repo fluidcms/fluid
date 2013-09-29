@@ -107,6 +107,10 @@ div.page-editor, #target>div.component, #target>div.variables {
       }
     }
 
+    [data-type="table"] div.label {
+      float: none;
+    }
+
     [data-item], [data-array-item] {
       cursor: pointer;
 
@@ -167,6 +171,7 @@ div.page-editor, #target>div.component, #target>div.variables {
         margin-top: $big-margin-top/2;
       }
 
+      // TODO: move like the table into separate section
       div.array-item {
         cursor: move;
         position: relative;
@@ -283,12 +288,18 @@ div.page-editor div.main div.content,
   ul, ol {
     margin-bottom: 20px;
     margin-left: 30px;
+    ul, ol {
+      margin-bottom: 0;
+    }
   }
   ol {
     list-style: decimal;
   }
   ul {
     list-style: disc outside;
+    ul {
+      list-style: circle outside;
+    }
   }
 
   img {
@@ -312,6 +323,38 @@ div.page-editor div.main div.content,
     -webkit-user-select: none;
   }
 
+}
+
+/* # Table
+================================================== */
+div.page-editor div.main div.table,
+#target>div.component div.main div.table,
+#target>div.variables div.main div.table {
+  margin-top: $big-margin-top/2;
+  margin-bottom: $big-margin-top/2;
+  margin-left: $big-margin-left !important;
+  table {
+    border-collapse: collapse;
+    border-color: none;
+    border-spacing: none;
+    td {
+      padding: 8px 12px;
+      border: 1px solid $light-gray;
+      border-collapse: collapse;
+
+      &:hover {
+        color: $blue;
+        border: 1px double $blue;
+      }
+      &:focus {
+        outline: none;
+        border: 1px double $blue;
+      }
+    }
+    thead td, tfoot td {
+      background: $lighter-gray;
+    }
+  }
 }
 
 /* # Image variable

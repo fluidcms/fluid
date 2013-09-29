@@ -1,6 +1,6 @@
-define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], function (jUI, Editor, ContextMenu) {
-    return {
-        events: {
+define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu', 'views/variables/table'], function (jUI, Editor, ContextMenu, Table) {
+    return $.extend({}, Table, {
+        events: $.extend({}, Table.events, {
             "click a[data-action='close']": "close",
             "click [data-item]": "edit",
             "click [data-array-item]": "edit",
@@ -9,7 +9,7 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
             'contextmenu div.array-item': 'arrayContextMenu',
             'change div.option select': 'changeOptionItem',
             'change div.bool input': 'changeBoolItem'
-        },
+        }),
 
         rendered: false,
 
@@ -423,5 +423,5 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu'], functi
             this.trigger('editing:'+type);
 
         }
-    };
+    });
 });

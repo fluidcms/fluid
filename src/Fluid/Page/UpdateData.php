@@ -176,6 +176,37 @@ class UpdateData
                     }
                 }
                 break;
+            case 'table':
+                $retval = array();
+                if (isset($variable['header']) && $variable['header'] === true) {
+                    $retval['thead'] = array();
+                    if (isset($value['thead']) && is_array($value['thead'])) {
+                        foreach($value['thead'] as $item) {
+                            $retval['thead'][] = $item;
+                        }
+                    }
+                }
+                if (isset($variable['footer']) && $variable['footer'] === true) {
+                    $retval['tfoot'] = array();
+                    if (isset($value['tfoot']) && is_array($value['tfoot'])) {
+                        foreach($value['tfoot'] as $item) {
+                            $retval['tfoot'][] = $item;
+                        }
+                    }
+                }
+                $retval['tbody'] = array();
+                if (isset($value['tbody']) && is_array($value['tbody'])) {
+                    foreach($value['tbody'] as $row) {
+                        $rowData = array();
+                        if (is_array($row)) {
+                            foreach($row as $item) {
+                                $rowData[] = $item;
+                            }
+                        }
+                        $retval['tbody'][] = $rowData;
+                    }
+                }
+                break;
             case 'bool':
                 if (!empty($value)) {
                     $retval = (bool)$value;

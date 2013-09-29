@@ -65,14 +65,18 @@ define(
                 return this;
             },
 
-            save: function(data, item) {
+            save: function(data, item, options) {
                 this.data[item] = this.variables.toJSON(data, item);
                 this.variables.updateData(this.data);
 
                 this.component.data = this.data;
                 this.html = this.variables.toHTML();
                 this.changed = true;
-                this.render();
+                if (typeof options !== 'undefined' && options !== null && typeof options.silent !== 'undefined' && options.silent === true) {
+                    null;
+                } else {
+                    this.render();
+                }
             },
 
             close: function() {

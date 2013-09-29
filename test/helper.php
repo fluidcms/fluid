@@ -8,14 +8,14 @@ class Helper
 {
     public static function init()
     {
-        if (is_dir(__DIR__ . "/Fluid/Tests/Fixtures/storage/develop")) {
-            self::deleteDir(__DIR__ . "/Fluid/Tests/Fixtures/storage/develop");
+        if (is_dir(__DIR__ . "/Fluid/Tests/_files/storage/develop")) {
+            self::deleteDir(__DIR__ . "/Fluid/Tests/_files/storage/develop");
         }
-        if (is_dir(__DIR__ . "/Fluid/Tests/Fixtures/storage/master")) {
-            self::deleteDir(__DIR__ . "/Fluid/Tests/Fixtures/storage/master");
+        if (is_dir(__DIR__ . "/Fluid/Tests/_files/storage/master")) {
+            self::deleteDir(__DIR__ . "/Fluid/Tests/_files/storage/master");
         }
-        if (file_exists(__DIR__ . "/Fluid/Tests/Fixtures/storage/data")) {
-            unlink(__DIR__ . "/Fluid/Tests/Fixtures/storage/data");
+        if (file_exists(__DIR__ . "/Fluid/Tests/_files/storage/data")) {
+            unlink(__DIR__ . "/Fluid/Tests/_files/storage/data");
         }
     }
 
@@ -35,7 +35,7 @@ class Helper
 
     public static function getFixtureDir()
     {
-        return __DIR__ . "/Fluid/Tests/Fixtures";
+        return __DIR__ . "/Fluid/Tests/_files";
     }
 
     public static function getStorage()
@@ -77,15 +77,15 @@ class Helper
 
     public static function createDevelop()
     {
-        if (is_dir(__DIR__ . "/Fluid/Tests/Fixtures/storage/develop")) {
-            self::deleteDir(__DIR__ . "/Fluid/Tests/Fixtures/storage/develop");
+        if (is_dir(__DIR__ . "/Fluid/Tests/_files/storage/develop")) {
+            self::deleteDir(__DIR__ . "/Fluid/Tests/_files/storage/develop");
         }
 
         self::createMaster();
 
         self::copyDir(
-            __DIR__ . "/Fluid/Tests/Fixtures/storage/master",
-            __DIR__ . "/Fluid/Tests/Fixtures/storage/develop"
+            __DIR__ . "/Fluid/Tests/_files/storage/master",
+            __DIR__ . "/Fluid/Tests/_files/storage/develop"
         );
 
         exec("git init ". self::getStorage());
@@ -97,19 +97,19 @@ class Helper
 
     public static function createMaster()
     {
-        if (is_dir(__DIR__ . "/Fluid/Tests/Fixtures/storage/master")) {
-            self::deleteDir(__DIR__ . "/Fluid/Tests/Fixtures/storage/master");
+        if (is_dir(__DIR__ . "/Fluid/Tests/_files/storage/master")) {
+            self::deleteDir(__DIR__ . "/Fluid/Tests/_files/storage/master");
         }
 
         self::copyDir(
-            __DIR__ . "/Fluid/Tests/Fixtures/storage/default",
-            __DIR__ . "/Fluid/Tests/Fixtures/storage/master"
+            __DIR__ . "/Fluid/Tests/_files/storage/default",
+            __DIR__ . "/Fluid/Tests/_files/storage/master"
         );
     }
 
     public static function commitMaster()
     {
-        $dir = __DIR__ . "/Fluid/Tests/Fixtures/storage/master";
+        $dir = __DIR__ . "/Fluid/Tests/_files/storage/master";
 
         exec("git init ". $dir);
         exec("git --git-dir=".$dir."/.git --work-tree=".$dir." add ".$dir."/*");
