@@ -1,25 +1,59 @@
 <?php
 
 namespace Fluid\WebSocket;
-use Ratchet;
+
+use Ratchet\Wamp\WampServerInterface;
 use Fluid;
+use Fluid\Config;
 use Fluid\Debug\Log;
 use Fluid\Requests\WebSocket as WebSocketRequest;
 use Fluid\WebSocket\Events as ServerEvents;
+use Ratchet;
+use React;
+use React\EventLoop\StreamSelectLoop;
 
-class Server implements Ratchet\Wamp\WampServerInterface
+/**
+ * WebSocket Server for receiving and sending communications to the local server, remote servers and clients
+ * @package Fluid
+ */
+class Server implements WampServerInterface
 {
+    /** @var int $lastConnection Tiem of the last connedction */
     private $lastConnection;
+
+    /** @var int $port */
+    private $port;
+
+    /** @var React\Socket\Server $socket */
+    private $socket;
+
+    /** @var array $connections */
     protected $connections = array();
 
     /**
      * Init websocket server
      */
-    public function __construct()
+    public function __construct(StreamSelectLoop $loop)
     {
         $this->lastConnection = time();
-        Log::add("==============================");
+
+        Log::line();
         Log::add("Websocket Server Started");
+
+        $this
+            ->setPort(Config::get('websocket'))
+            ->setSocket(new React\Socket\Server($loop));
+
+        $this->socket->listen($this->port, '0.0.0.0');
+
+        new Ratchet\Server\IoServer(
+            new Ratchet\WebSocket\WsServer(
+                new Ratchet\Wamp\WampServer(
+                    $this
+                )
+            ),
+            $this->socket
+        );
     }
 
     /**
@@ -158,4 +192,41 @@ class Server implements Ratchet\Wamp\WampServerInterface
         }
         unset($this->connections[$conn->WAMP->sessionId]);
     }
+
+    /**
+     * @param int $port
+     * @return self
+     */
+    public function setPort($port)
+    {
+        $this->port = $port;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPort()
+    {
+        return $this->port;
+    }
+
+    /**
+     * @param \React\Socket\Server $socket
+     * @return self
+     */
+    public function setSocket($socket)
+    {
+        $this->socket = $socket;
+        return $this;
+    }
+
+    /**
+     * @return \React\Socket\Server
+     */
+    public function getSocket()
+    {
+        return $this->socket;
+    }
+
 }

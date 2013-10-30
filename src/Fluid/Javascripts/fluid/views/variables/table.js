@@ -1,8 +1,41 @@
-define(['jquery-ui', 'views/helpers/contextmenu', 'models/variables/variables'], function (jUI, ContextMenu, Variables) {
+define([
+    'jquery-ui',
+    'views/helpers/contextmenu',
+    'views/editor/editor2',
+    'models/variables/variables',
+], function (
+    jUI,
+    ContextMenu,
+    Editor,
+    Variables
+    ) {
     return {
         events: {
             'contextmenu div.table td': 'tableContextMenu',
             'input div.table td': 'tableSaveData'
+        },
+
+        initTables: function() {
+            var root = this;
+            var tables = $('[data-type=table]');
+            if (tables.length) {
+                $.each(tables, function(key, item) {
+                    root.initTableEditors($(item));
+                });
+            }
+        },
+
+        initTableEditors: function(table) {
+            var root = this;
+            $.each(table.find('tbody td'), function(key, item) {
+                new Editor({
+                    el: item,
+                    app: root.app,
+                    components: root.components,
+                    files: root.files,
+                    tools: root.tools
+                });
+            });
         },
 
         tableContextMenu: function(e) {

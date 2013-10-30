@@ -62,6 +62,8 @@ define(
                     }, 10);
                 }
 
+                this.initVariables();
+
                 return this;
             },
 

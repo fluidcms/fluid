@@ -19,6 +19,10 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu', 'views/
 
         className: 'variables',
 
+        initVariables: function() {
+            this.initTables();
+        },
+
         hide: function() {
             this.trigger('hide');
             this.$el.hide();

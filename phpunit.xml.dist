@@ -5,7 +5,7 @@
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
-         processIsolation="true"
+         processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false">
     <testsuites>
@@ -13,4 +13,7 @@
             <directory>./test/Fluid/</directory>
         </testsuite>
     </testsuites>
+    <php>
+        <var name="fluid.websocket" value="8099" />
+    </php>
 </phpunit>

@@ -28,6 +28,24 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
             return this;
         },
 
+        register: function(editor) {
+            var root = this;
+            editor.on('focus', function() {
+                root.editor = editor;
+                if (editor.$el.attr('contenteditable') == 'true') {
+                    root.editorElement = editor.$el;
+                } else {
+                    root.editorElement = editor.$el.find('[contenteditable]');
+                }
+                root.enable();
+            });
+            editor.on('blur', function() {
+                if(!root.selectFocused()) {
+                    root.disable();
+                }
+            });
+        },
+
         hide: function() {
             this.$el.hide();
         },
@@ -39,6 +57,10 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
             this.$el.show();
         },
 
+        selectFocused: function() {
+            return $.contains(this.$el[0], document.activeElement);
+        },
+
         enable: function() {
             var root = this;
 
@@ -47,12 +69,23 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
                 return false;
             }
 
-            if (this.editor.type === 'content') {
+            // TODO remove this check because all editors will be content editors
+            if (this.editor.type === 'content' || typeof this.editor.type === 'undefined') {
                 this.textEnabled = true;
-                this.editorElement = this.editor.$el.find('[contenteditable]');
+                // TODO moved to register method, remove from here when all classes use the register method
+                if (this.editor.$el.attr('contenteditable') == 'true') {
+                    this.editorElement = this.editor.$el;
+                } else {
+                    this.editorElement = this.editor.$el.find('[contenteditable]');
+                }
+
                 $(document).on('keypress keyup click mouseup', null, {root: this}, this.analyzeText);
 
                 $(this.$el).find('div.text a[data-role]').on('mousedown', function(e) { root.formatText(e); }).on('mousedown', function() { root.analyzeText({data: {root: root}}); });
+
+                $(this.$el).find('div.text select').on('mousedown', function(e) {
+                    e.stopPropagation();
+                });
 
                 $(this.$el).find('div.text select').on('change', function(e) {
                     root.formatText(e);
