@@ -42,6 +42,7 @@ class Client
     /** @var React\Socket\Connection $socket */
     private $socket;
 
+    /** @var bool $connected */
     private $connected = false;
 
     /**
@@ -55,27 +56,12 @@ class Client
             ->setKey($this->generateToken());
     }
 
+    /**
+     * Disconnect on destruct
+     */
     public function __destruct()
     {
-        //$this->disconnect();
-    }
-
-    /**
-     * Create header for websocket client
-     *
-     * @return string
-     */
-    private function createHeader()
-    {
-        return "GET " . self::PATH . " HTTP/1.1" . "\r\n" .
-            "Origin: this" . "\r\n" .
-            "Host: {$this->getHost()}" . "\r\n" .
-            "Sec-WebSocket-Key: {$this->getKey()}" . "\r\n" .
-            "User-Agent: PHP " . phpversion() . "\r\n" .
-            "Upgrade: websocket" . "\r\n" .
-            "Sec-WebSocket-Protocol: wamp" . "\r\n" .
-            "Connection: Upgrade" . "\r\n" .
-            "Sec-WebSocket-Version: 13" . "\r\n" . "\r\n";
+        $this->disconnect();
     }
 
     /**
@@ -97,12 +83,130 @@ class Client
         $client = stream_socket_client("tcp://{$host}:{$port}");
         $this->setSocket(new React\Socket\Connection($client, $this->loop));
         $this->socket->pipe(new React\Stream\Stream(STDOUT, $this->loop));
-        $this->socket->on('data', function ($data) {
-            echo '';
+        $root = $this;
+        $this->socket->on('data', function ($data) use ($root) {
+            $data = $root->parseIncomingRaw($data);
+            $root->parseData($data);
         });
         $this->socket->write($this->createHeader());
     }
 
+    /**
+     * Disconnect from server
+     */
+    public function disconnect()
+    {
+        $this->connected = false;
+        $this->socket->close();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConnected()
+    {
+        return $this->connected;
+    }
+
+    /**
+     * @param $data
+     * @param $header
+     */
+    private function receiveData($data, $header)
+    {
+        // Do something with all that data!
+    }
+
+    /**
+     * @param $data
+     * @param string $type
+     * @param bool $masked
+     * @return bool
+     */
+    private function sendData($data, $type = 'text', $masked = true)
+    {
+        if ($this->connected === false) {
+            return false;
+        }
+
+        $this->socket->write($this->hybi10Encode('[5,"mytopicyo"]'));
+        return true;
+    }
+
+    /**
+     * Parse received data
+     *
+     * @param $response
+     */
+    private function parseData($response)
+    {
+        if (!$this->connected && isset($response['Sec-Websocket-Accept'])) {
+            if (base64_encode(pack('H*', sha1($this->key . '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'))) === $response['Sec-Websocket-Accept']) {
+                $this->connected = true;
+            }
+        }
+
+        if ($this->connected && !empty($response['content'])) {
+            $content = trim($response['content']);
+            if (preg_match('/(\[.*\])/', $content, $match)) {
+                $content = json_decode($match[1], true);
+                if (is_array($content)) {
+                    unset($response['status']);
+                    unset($response['content']);
+                    $this->receiveData($content, $response);
+                }
+
+            }
+        }
+    }
+
+    /**
+     * Create header for websocket client
+     *
+     * @return string
+     */
+    private function createHeader()
+    {
+        return "GET " . self::PATH . " HTTP/1.1" . "\r\n" .
+            "Origin: this" . "\r\n" .
+            "Host: {$this->getHost()}" . "\r\n" .
+            "Sec-WebSocket-Key: {$this->getKey()}" . "\r\n" .
+            "User-Agent: PHP " . phpversion() . "\r\n" .
+            "Upgrade: websocket" . "\r\n" .
+            "Sec-WebSocket-Protocol: wamp" . "\r\n" .
+            "Connection: Upgrade" . "\r\n" .
+            "Sec-WebSocket-Version: 13" . "\r\n" . "\r\n";
+    }
+
+    /**
+     * Parse raw incoming data
+     *
+     * @param $header
+     * @return array
+     */
+    private function parseIncomingRaw($header)
+    {
+        $retval = array();
+        $content = "";
+        $fields = explode("\r\n", preg_replace('/\x0D\x0A[\x09\x20]+/', ' ', $header));
+        foreach ($fields as $field) {
+            if (preg_match('/([^:]+): (.+)/m', $field, $match)) {
+                $match[1] = preg_replace_callback('/(?<=^|[\x09\x20\x2D])./', function($matches) { return strtoupper($matches[0]); }, strtolower(trim($match[1])));
+                if (isset($retval[$match[1]])) {
+                    $retval[$match[1]] = array($retval[$match[1]], $match[2]);
+                } else {
+                    $retval[$match[1]] = trim($match[2]);
+                }
+            } else if (preg_match('!HTTP/1\.\d (\d)* .!', $field)) {
+                $retval["status"] = $field;
+            } else {
+                $content .= $field . "\r\n";
+            }
+        }
+        $retval['content'] = $content;
+
+        return $retval;
+    }
 
     /**
      * Generate token
@@ -198,109 +302,12 @@ class Client
         return $this->key;
     }
 
-    public function oldconnect($host, $port, $path, $origin = false)
-    {
-        $this->key = base64_encode($this->generateRandomString(16, false, true));
-
-        $header = "GET {$path} HTTP/1.1" . "\r\n" .
-            ($origin ? "Origin: {$origin}" . "\r\n" : "") .
-            "Host: {$host}" . "\r\n" .
-            "Sec-WebSocket-Key: {$this->key}" . "\r\n" .
-            "User-Agent: PHP " . phpversion() . "\r\n" .
-            "Upgrade: websocket" . "\r\n" .
-            "Sec-WebSocket-Protocol: wamp" . "\r\n" .
-            "Connection: Upgrade" . "\r\n" .
-            "Sec-WebSocket-Version: 13" . "\r\n" . "\r\n";
-
-        $this->socket = fsockopen($host, $port, $errno, $errstr, 2);
-        socket_set_timeout($this->socket, 0, 10000);
-        fwrite($this->socket, $header);
-
-        $raw = "";
-        while (!feof($this->socket)) {
-            $line = fgets($this->socket);
-
-            if ($line !== false) {
-                $raw .= $line;
-            } else {
-                if (!empty($raw)) {
-                    $response = $this->parseHeader($raw);
-                    $raw = "";
-                    $this->parseResponse($response);
-                }
-            }
-        }
-    }
-
-    private function parseResponse($response)
-    {
-        if (!$this->connected && isset($response['Sec-Websocket-Accept'])) {
-            if (base64_encode(pack('H*', sha1($this->key . '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'))) === $response['Sec-Websocket-Accept']) {
-                $this->connected = true;
-            }
-        }
-
-        if ($this->connected && !empty($response['content'])) {
-            $content = trim($response['content']);
-            if (preg_match('/(\[.*\])/', $content, $match)) {
-                $content = json_decode($match[1], true);
-                if (is_array($content)) {
-                    unset($response['status']);
-                    unset($response['content']);
-                    $this->receiveData($content, $response);
-                }
-
-            }
-        }
-    }
-
-    private function receiveData($data, $header)
-    {
-        sleep(1);
-        $this->sendData('hello world');
-    }
-
-    private function sendData($data, $type = 'text', $masked = true)
-    {
-        if ($this->connected === false) {
-            return false;
-        }
-
-        fwrite($this->socket, $this->hybi10Encode('[5,"mytopicyo"]'));
-
-        return true;
-    }
-
-    public function disconnect()
-    {
-        $this->connected = false;
-        fclose($this->socket);
-    }
-
-    private function parseHeader($header)
-    {
-        $retval = array();
-        $content = "";
-        $fields = explode("\r\n", preg_replace('/\x0D\x0A[\x09\x20]+/', ' ', $header));
-        foreach ($fields as $field) {
-            if (preg_match('/([^:]+): (.+)/m', $field, $match)) {
-                $match[1] = preg_replace('/(?<=^|[\x09\x20\x2D])./e', 'strtoupper("\0")', strtolower(trim($match[1])));
-                if (isset($retval[$match[1]])) {
-                    $retval[$match[1]] = array($retval[$match[1]], $match[2]);
-                } else {
-                    $retval[$match[1]] = trim($match[2]);
-                }
-            } else if (preg_match('!HTTP/1\.\d (\d)* .!', $field)) {
-                $retval["status"] = $field;
-            } else {
-                $content .= $field . "\r\n";
-            }
-        }
-        $retval['content'] = $content;
-
-        return $retval;
-    }
-
+    /**
+     * @param $payload
+     * @param string $type
+     * @param bool $masked
+     * @return bool|string
+     */
     private function hybi10Encode($payload, $type = 'text', $masked = true)
     {
         $frameHead = array();
@@ -374,6 +381,10 @@ class Client
         return $frame;
     }
 
+    /**
+     * @param $data
+     * @return null|string
+     */
     private function hybi10Decode($data)
     {
         if (empty($data)) {

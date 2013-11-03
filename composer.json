@@ -13,8 +13,9 @@
     ],
     "require": {
         "twig/twig": "v1.14.1",
-        "cboden/ratchet": "v0.3.0",
-        "guzzle/guzzle": "v3.7.4"
+        "cboden/ratchet": "0.3.*",
+        "guzzle/guzzle": "3.7.*",
+        "gavroche/websocket-client": "0.1.*"
     },
     "autoload": {
         "psr-0" : {
