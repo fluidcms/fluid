@@ -10,3 +10,6 @@ Desktop.ini
 compass_app_log.txt
 .idea
 phpunit.xml
+composer.lock
+composer.phar
+vendor
