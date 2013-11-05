@@ -8,8 +8,10 @@ Desktop.ini
 *.scssc
 .sass-cache
 compass_app_log.txt
-.idea
-phpunit.xml
-composer.lock
-composer.phar
-vendor
+/.idea
+/phpunit.xml
+/composer.lock
+/composer.phar
+/vendor
+/node_modules
+/npm-debug.log

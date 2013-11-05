@@ -3,10 +3,10 @@
 # Set this to the root of your project when deployed:
 http_path = "/"
 http_fonts_path = ""
-css_dir = "../Public/stylesheets"
-sass_dir = ""
-images_dir = ""
-javascripts_dir = "../Public/javascripts"
+css_dir = "public/stylesheets"
+sass_dir = "src/FluidSCSS"
+images_dir = "public/images"
+javascripts_dir = "public/javascripts"
 output_style = :compressed
 
 # You can select your preferred output style here (can be overridden via the command line):

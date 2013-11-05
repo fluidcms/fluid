@@ -5,22 +5,26 @@
         baseUrl: "javascripts/fluid/",
         urlArgs: (new Date()).getTime(), // !! Remove for production
         paths: {
-            async: '../vendor/async',
-            jquery: '../vendor/jquery',
-            "jquery-ui-origin": '../vendor/jquery-ui',
-            "jquery-ui": '../vendor/jquery-ui-custom',
-            underscore: '../vendor/underscore',
-            backbone: '../vendor/backbone',
-            ejs: '../vendor/ejs',
-            qtip: '../vendor/jquery-qtip',
-            sanitize: '../vendor/sanitize'
+            'async': 'vendor/async-0.1.1.min',
+            'autobahn': 'vendor/autobahn-1.0.min',
+            'backbone': 'vendor/backbone-1.0.min',
+            'ejs': 'vendor/ejs-1.0.min',
+            'jquery': 'vendor/jquery-2.0.3.min',
+            'qtip': 'vendor/jquery-qtip-2.0.1-111-nightly.min',
+            'jquery-ui-origin': 'vendor/jquery-ui-1.10.3.min',
+            'jquery-ui': 'vendor/jquery-ui-custom-1.0.min',
+            'require': 'vendor/require-2.1.6.min',
+            'sanitize': 'vendor/sanitize-1.0.min',
+            'text': 'vendor/text-2.0.10.min',
+            'underscore': 'vendor/underscore-1.4.4.min',
+            'when': 'vendor/when-2.2.1.min'
         },
         shim: {
-            underscore: { exports: '_' },
-            backbone: { deps: ['underscore', 'jquery'], exports: 'Backbone' },
-            ejs: { deps: ['backbone'], exports: 'EJS' },
-            "jquery-ui": { deps: ['jquery-ui-origin'], exports: 'jUI' },
-            qtip: { deps: ['jquery'] }
+            'underscore': { exports: '_' },
+            'backbone': { deps: ['underscore', 'jquery'], exports: 'Backbone' },
+            'ejs': { deps: ['backbone'], exports: 'EJS' },
+            'jquery-ui': { deps: ['jquery-ui-origin'], exports: 'jUI' },
+            'qtip': { deps: ['jquery'] }
         }
     });
 
