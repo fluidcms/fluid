@@ -16,6 +16,7 @@ module.exports = function(grunt) {
                     mainConfigFile: 'src/FluidJS/bootstrap.js',
                     paths: {
                         "jquery": "../../components/jquery/jquery",
+                        "jquery-ui": "../../components/jquery-ui/ui/jquery-ui",
                         "backbone": "../../components/backbone/backbone",
                         "underscore": "../../components/underscore/underscore",
                         "async": "../../components/async/lib/async",
@@ -29,13 +30,14 @@ module.exports = function(grunt) {
                     name: 'bootstrap',
                     exclude: [
                         'jquery',
+                        'jquery-ui',
                         'backbone',
                         'underscore',
                         'async',
                         'ejs',
                         'qtip',
-                        'text',
-                        'when'
+                        'when',
+                        'text'
                     ],
                     out: 'public/javascripts/fluid-0.0.1.min'
                 }
@@ -49,6 +51,7 @@ module.exports = function(grunt) {
             my_target: {
                 files: {
                     'public/javascripts/vendor/jquery-2.0.3.min.js': ['components/jquery/jquery.js'],
+                    'public/javascripts/vendor/jquery-ui-1.10.3.min.js': ['components/jquery-ui/ui/jquery-ui.js'],
                     'public/javascripts/vendor/backbone-1.1.0.min.js': ['components/backbone/backbone.js'],
                     'public/javascripts/vendor/underscore-1.5.2.min.js': ['components/underscore/underscore.js'],
                     'public/javascripts/vendor/async-0.2.5.min.js': ['components/async/lib/async.js'],

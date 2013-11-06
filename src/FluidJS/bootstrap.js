@@ -5,25 +5,21 @@
         baseUrl: "javascripts/fluid/",
         urlArgs: (new Date()).getTime(), // !! Remove for production
         paths: {
-            'async': 'vendor/async-0.1.1.min',
-            'autobahn': 'vendor/autobahn-1.0.min',
+            'async': 'vendor/async-0.2.5.min',
+            'autobahn': 'vendor/autobahnjs-0.8.0.min',
             'backbone': 'vendor/backbone-1.1.0.min',
-            'ejs': 'vendor/ejs-1.0.min',
+            'ejs': 'vendor/ejs-0.8.4.min',
             'jquery': 'vendor/jquery-2.0.3.min',
-            'qtip': 'vendor/jquery-qtip-2.0.1-111-nightly.min',
-            'jquery-ui-origin': 'vendor/jquery-ui-1.10.3.min',
-            'jquery-ui': 'vendor/jquery-ui-custom-1.0.min',
-            'require': 'vendor/require-2.1.6.min',
-            'sanitize': 'vendor/sanitize-1.0.min',
+            'qtip': 'vendor/jquery-qtip-2.1.1.min',
+            'jquery-ui': 'vendor/jquery-ui-1.10.3.min',
             'text': 'vendor/text-2.0.10.min',
             'underscore': 'vendor/underscore-1.5.2.min',
-            'when': 'vendor/when-2.2.1.min'
+            'when': 'vendor/when-2.5.1.min'
         },
         shim: {
             'underscore': { exports: '_' },
             'backbone': { deps: ['underscore', 'jquery'], exports: 'Backbone' },
             'ejs': { deps: ['backbone'], exports: 'EJS' },
-            'jquery-ui': { deps: ['jquery-ui-origin'], exports: 'jUI' },
             'qtip': { deps: ['jquery'] }
         }
     });
