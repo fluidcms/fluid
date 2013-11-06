@@ -7,7 +7,7 @@
         paths: {
             'async': 'vendor/async-0.1.1.min',
             'autobahn': 'vendor/autobahn-1.0.min',
-            'backbone': 'vendor/backbone-1.0.min',
+            'backbone': 'vendor/backbone-1.1.0.min',
             'ejs': 'vendor/ejs-1.0.min',
             'jquery': 'vendor/jquery-2.0.3.min',
             'qtip': 'vendor/jquery-qtip-2.0.1-111-nightly.min',
@@ -16,7 +16,7 @@
             'require': 'vendor/require-2.1.6.min',
             'sanitize': 'vendor/sanitize-1.0.min',
             'text': 'vendor/text-2.0.10.min',
-            'underscore': 'vendor/underscore-1.4.4.min',
+            'underscore': 'vendor/underscore-1.5.2.min',
             'when': 'vendor/when-2.2.1.min'
         },
         shim: {
