@@ -4,7 +4,7 @@ namespace Fluid;
 
 use InvalidArgumentException;
 
-class Events
+class Event
 {
     private static $listeners = array();
 

@@ -1,7 +1,0 @@
-
-Fluid Web Socket Client Daemon Status
-=====================================
-
-Memory usage: %memory
-Daemon up time: %uptime
-Connected: %status
