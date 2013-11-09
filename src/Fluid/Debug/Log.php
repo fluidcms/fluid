@@ -1,7 +1,9 @@
 <?php
 
 namespace Fluid\Debug;
+
 use Fluid\Fluid;
+use Fluid\Config;
 
 class Log
 {
@@ -13,7 +15,7 @@ class Log
     public static function add($text)
     {
         if (Fluid::getDebugMode() === Fluid::DEBUG_LOG) {
-            $file = Fluid::getConfig('log');
+            $file = Config::get('log');
 
             if (!empty($file)) {
                 $content = file_get_contents($file);

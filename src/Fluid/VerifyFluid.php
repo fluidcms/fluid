@@ -38,7 +38,7 @@ class VerifyFluid
      */
     public static function checkStorage()
     {
-        $dir = Fluid::getConfig('storage');
+        $dir = Config::get('storage');
         // Base dir
         if (!is_dir($dir)) {
             if (mkdir($dir, 0777, true)) {
@@ -59,7 +59,7 @@ class VerifyFluid
     public static function checkGit()
     {
         return (
-            is_dir(Fluid::getConfig('storage') . 'master/.git')
+            is_dir(Config::get('storage') . 'master/.git')
         );
     }
 }

@@ -125,7 +125,7 @@ class View
     public static function getTemplatesDir()
     {
         if (null === self::$templatesDir) {
-            self::setTemplatesDir(Fluid::getConfig('templates'));
+            self::setTemplatesDir(Config::get('templates'));
         }
 
         return self::$templatesDir;

@@ -18,7 +18,7 @@ class Database
             return self::$dbh;
         }
 
-        $database = Fluid::getConfig('storage') . "data";
+        $database = Config::get('storage') . "data";
 
         if (!is_dir(dirname($database))) {
             mkdir(dirname($database), 0777, true);

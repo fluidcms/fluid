@@ -15,4 +15,4 @@ compass_app_log.txt
 /vendor
 /node_modules
 /npm-debug.log
-/components
+/bower_components

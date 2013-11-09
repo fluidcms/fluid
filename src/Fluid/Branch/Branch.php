@@ -1,6 +1,8 @@
 <?php
 
 namespace Fluid\Branch;
+
+use Fluid\Config;
 use Fluid\Fluid;
 use Fluid\Git;
 use Fluid\Debug\Log;
@@ -13,7 +15,7 @@ class Branch
     public function __construct($branch)
     {
         $this->branch = $branch;
-        $this->dir = Fluid::getConfig("storage") . $branch;
+        $this->dir = Config::get("storage") . $branch;
     }
 
     /**
@@ -25,19 +27,19 @@ class Branch
     public static function init($branch)
     {
         Log::add('Initializing branch ' . $branch . "");
-        Log::add('Checking if dir ' . Fluid::getConfig("storage") . $branch . "/.git" . " exists");
+        Log::add('Checking if dir ' . Config::get("storage") . $branch . "/.git" . " exists");
 
-        if (!is_dir(Fluid::getConfig("storage") . $branch . "/.git")) {
+        if (!is_dir(Config::get("storage") . $branch . "/.git")) {
 
-            Log::add(Fluid::getConfig("storage") . $branch . "/.git" . " does not exists");
-            Log::add('Checking if dir ' . Fluid::getConfig("storage") . $branch . " exists");
+            Log::add(Config::get("storage") . $branch . "/.git" . " does not exists");
+            Log::add('Checking if dir ' . Config::get("storage") . $branch . " exists");
 
-            if (!is_dir(Fluid::getConfig("storage") . $branch)) {
-                Log::add(Fluid::getConfig("storage") . $branch . " does not exists");
-                if (mkdir(Fluid::getConfig("storage") . $branch, 0777, true)) {
-                    Log::add("Created " . Fluid::getConfig("storage") . $branch . "");
+            if (!is_dir(Config::get("storage") . $branch)) {
+                Log::add(Config::get("storage") . $branch . " does not exists");
+                if (mkdir(Config::get("storage") . $branch, 0777, true)) {
+                    Log::add("Created " . Config::get("storage") . $branch . "");
                 } else {
-                    Log::add("Failed creating " . Fluid::getConfig("storage") . $branch . "");
+                    Log::add("Failed creating " . Config::get("storage") . $branch . "");
                 }
             }
             Git::init($branch);
@@ -91,7 +93,7 @@ class Branch
      */
     public static function exists($branch)
     {
-        return is_dir(Fluid::getConfig('storage') . $branch . '/.git');
+        return is_dir(Config::get('storage') . $branch . '/.git');
     }
 
     /**
@@ -101,7 +103,7 @@ class Branch
      */
     public function initialCommit()
     {
-        $gitIgnoreFile = Fluid::getConfig("storage") . $this->branch . "/.gitignore";
+        $gitIgnoreFile = Config::get("storage") . $this->branch . "/.gitignore";
         $gitIgnoreContent = <<<TEXT
 .DS_Store
 ._*

@@ -2,7 +2,8 @@
 
 namespace Fluid\Tasks;
 
-use Fluid\Fluid, Fluid\Git;
+use Fluid\Config;
+use Fluid\Git;
 
 class CommitPush
 {
@@ -19,7 +20,7 @@ class CommitPush
         Git::push($branch);
 
         // Trigger update on remote server
-        $gitConfig = Fluid::getConfig('git');
+        $gitConfig = Config::get('git');
         $url = preg_replace('!repo.git$!', 'update', $gitConfig['url']);
         file_get_contents($url);
 

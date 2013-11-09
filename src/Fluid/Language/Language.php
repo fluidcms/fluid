@@ -2,7 +2,9 @@
 
 namespace Fluid\Language;
 
-use Fluid, Exception;
+use Fluid;
+use Fluid\Config;
+use Exception;
 
 /**
  * Language model
@@ -19,7 +21,7 @@ class Language
     public static function getLanguages()
     {
         $output = array();
-        foreach(Fluid\Fluid::getConfig('languages') as $language) {
+        foreach(Config::get('languages') as $language) {
             $output[] = array(
                 'language' => $language
             );

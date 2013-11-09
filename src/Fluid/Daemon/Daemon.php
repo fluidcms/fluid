@@ -9,6 +9,7 @@ use Closure;
 use Fluid\Socket\Server;
 use Fluid\Socket\Server\WebSocket;
 use Fluid\Socket\Server\Message;
+use Fluid\Config;
 
 class Daemon implements DaemonInterface
 {
@@ -58,7 +59,7 @@ class Daemon implements DaemonInterface
      */
     public static function isRunning()
     {
-        $dir = Fluid\Fluid::getConfig('storage');
+        $dir = Config::get('storage');
         $handler = fopen($dir . self::LOCK_FILE, "w+");
 
         if (!flock($handler, LOCK_SH | LOCK_NB)) {
@@ -80,15 +81,16 @@ class Daemon implements DaemonInterface
         $instanceId = uniqid();
         $debugMode = Fluid\Fluid::getDebugMode();
         $timeZone = date_default_timezone_get();
+
         shell_exec(
             "php -q " . __DIR__ . "/StartBackgroundDaemon.php " .
-            base64_encode(serialize(Fluid\Fluid::getConfig())) . " " .
+            base64_encode(serialize(Config::getAll())) . " " .
             " {$instanceId} {$debugMode} " .
             base64_encode($timeZone) .
             " > /dev/null &"
         );
 
-        $dir = Fluid\Fluid::getConfig('storage');
+        $dir = Config::get('storage');
         $i = 0;
         while ($i < 100) {
             $fileContent = file_get_contents($dir . self::LOCK_FILE);
@@ -108,7 +110,7 @@ class Daemon implements DaemonInterface
      */
     private function lock()
     {
-        $dir = Fluid\Fluid::getConfig('storage');
+        $dir = Config::get('storage');
 
         if (!is_dir($dir)) {
             mkdir($dir);
@@ -130,7 +132,7 @@ class Daemon implements DaemonInterface
      */
     private function release()
     {
-        $dir = Fluid\Fluid::getConfig('storage');
+        $dir = Config::get('storage');
 
         file_put_contents($dir . self::LOCK_FILE, "");
 
@@ -172,7 +174,7 @@ class Daemon implements DaemonInterface
             $root->uptimeCallback();
         });
 
-        file_put_contents(Fluid\Fluid::getConfig('storage') . self::LOCK_FILE, $this->instanceId);
+        file_put_contents(Config::get('storage') . self::LOCK_FILE, $this->instanceId);
         $server->run();
 
         $this->release();

@@ -12,6 +12,22 @@ class Config
     private static $configs = array();
 
     /**
+     * @param array $configs
+     */
+    public static function setAll(array $configs)
+    {
+        self::$configs = $configs;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getAll()
+    {
+        return self::$configs;
+    }
+
+    /**
      * Set config
      *
      * @param $name

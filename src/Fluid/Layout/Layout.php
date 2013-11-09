@@ -2,8 +2,9 @@
 
 namespace Fluid\Layout;
 
-use Exception,
-    Fluid\Fluid;
+use Exception;
+use Fluid\Fluid;
+use Fluid\Config;
 
 /**
  * Layout model
@@ -24,7 +25,7 @@ class Layout
      */
     public function __construct($layout)
     {
-        $dir = Fluid::getConfig('templates') . Fluid::getConfig('layouts');
+        $dir = Config::get('templates') . Config::get('layouts');
 
         if ($layout !== 'global') {
             $file = "{$dir}{$layout}/layout.xml";
@@ -135,7 +136,7 @@ class Layout
     public static function getLayouts()
     {
         $layouts = array();
-        $dir = Fluid::getConfig('templates') . Fluid::getConfig('layouts');
+        $dir = Config::get('templates') . Config::get('layouts');
 
         if (is_dir($dir)) {
             foreach (scandir($dir) as $file) {

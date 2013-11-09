@@ -2,7 +2,7 @@
 
 namespace Fluid\Tasks;
 
-use Fluid\Fluid;
+use Fluid\Config;
 
 class Init {
     /*
@@ -14,7 +14,7 @@ class Init {
         Branch::execute('master');
         Database::execute();
 
-        $dir = Fluid::getConfig('storage') . ".data/";
+        $dir = Config::get('storage') . ".data/";
         if (!is_dir($dir)) {
             mkdir($dir);
         }

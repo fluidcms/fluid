@@ -5,8 +5,8 @@
         baseUrl: "javascripts/",
         urlArgs: (new Date()).getTime(), // !! Remove for production
         paths: {
+            'autobahnjs': 'vendor/autobahnjs-0.8.0.min',
             'async': 'vendor/async-0.2.5.min',
-            'autobahn': 'vendor/autobahnjs-0.8.0.min',
             'backbone': 'vendor/backbone-1.1.0.min',
             'ejs': 'vendor/ejs-0.8.4.min',
             'jquery': 'vendor/jquery-2.0.3.min',

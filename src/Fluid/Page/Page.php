@@ -2,12 +2,11 @@
 
 namespace Fluid\Page;
 
-use Exception,
-    Fluid\Fluid,
-    Fluid\Map\Map,
-    Fluid\Language\Language,
-    Fluid\Layout\Layout,
-    Fluid\Storage\FileSystem;
+use Exception;
+use Fluid\Fluid;
+use Fluid\Config;
+use Fluid\Layout\Layout;
+use Fluid\Storage\FileSystem;
 
 /**
  * Page model
@@ -92,7 +91,7 @@ class Page extends FileSystem
      */
     public function setLanguage($value)
     {
-        $languages = Fluid::getConfig("languages");
+        $languages = Config::get("languages");
         if (in_array($value, $languages)) {
             $this->language = $value;
             return;

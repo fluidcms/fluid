@@ -1,7 +1,7 @@
 define(
     [
-        'backbone',
-        'views/helpers/loader',
+        'backbone'
+        /*'views/helpers/loader',
         'models/socket/socket',
         'models/map/map',
         'models/language/language',
@@ -13,11 +13,11 @@ define(
         'views/nav/nav',
         'views/toolbar/toolbar',
         'views/tools/tools',
-        'views/helpers/error'
+        'views/helpers/error'*/
     ],
     function (
-        Backbone,
-        LoaderView,
+        Backbone
+        /*LoaderView,
         Socket,
         Map,
         Language,
@@ -29,7 +29,7 @@ define(
         Nav,
         Toolbar,
         ToolsView,
-        ErrorView
+        ErrorView*/
         ) {
         var run = function () {
             var FluidRouter = Backbone.Router.extend({
@@ -41,6 +41,8 @@ define(
 
                 initialize: function () {
                     var root = this;
+
+                    alert();
 
                     $.ajax({url: "server", type: "POST", data: {session: fluidSession}}).done(function(response) {
                         if (response == 'true') {
@@ -54,6 +56,9 @@ define(
 
                 load: function() {
                     var root = this;
+
+                    alert();
+                    return;
 
                     this.models = {};
                     this.views = {};
@@ -143,6 +148,7 @@ define(
                 },
 
                 make: function (method) {
+                    return;
                     var root = this;
                     method = method ? method : 'map';
                     if (typeof this[method] == 'function') {

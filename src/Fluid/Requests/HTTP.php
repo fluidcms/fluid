@@ -1,10 +1,11 @@
 <?php
 
 namespace Fluid\Requests;
+
+use Fluid\Config;
 use Fluid\Event;
 use Fluid\Fluid;
 use Fluid\StaticFile;
-use Fluid\Token\Token;
 use Fluid\Session\Session;
 use Fluid\View;
 use Fluid\Daemon\Daemon;
@@ -135,7 +136,7 @@ class HTTP
     {
         if (!empty(self::$request) && strpos(self::$request, 'images/') === 0) {
             $found = null;
-            $dir = Fluid::getConfig('storage');
+            $dir = Config::get('storage');
             $file = preg_replace('!images/!', 'files/', urldecode(self::$request));
 
             foreach(scandir($dir) as $branch) {
@@ -274,7 +275,7 @@ class HTTP
             $url .= "{$_SERVER['SERVER_NAME']}{$_SERVER['REQUEST_URI']}";
             $url = preg_replace("!/fluidcms/(.*)$!i", "/", $url);
 
-            $ports = Fluid::getConfig('ports');
+            $ports = Config::get('ports');
 
             echo View::create(
                 'master.twig',

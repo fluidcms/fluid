@@ -15,15 +15,15 @@ module.exports = function(grunt) {
                     baseUrl: 'src/FluidJS',
                     mainConfigFile: 'src/FluidJS/bootstrap.js',
                     paths: {
-                        "jquery": "../../components/jquery/jquery",
-                        "jquery-ui": "../../components/jquery-ui/ui/jquery-ui",
-                        "backbone": "../../components/backbone/backbone",
-                        "underscore": "../../components/underscore/underscore",
-                        "async": "../../components/async/lib/async",
-                        "ejs": "../../components/ejs/ejs",
-                        "qtip": "../../components/qtip2/jquery.qtip",
-                        "when": "../../components/when/when",
-                        "text": "../../components/text/text"
+                        "jquery": "../../bower_components/jquery/jquery",
+                        "jquery-ui": "../../bower_components/jquery-ui/ui/jquery-ui",
+                        "backbone": "../../bower_components/backbone/backbone",
+                        "underscore": "../../bower_components/underscore/underscore",
+                        "async": "../../bower_components/async/lib/async",
+                        "ejs": "../../bower_components/ejs/ejs",
+                        "qtip": "../../bower_components/qtip2/jquery.qtip",
+                        "when": "../../bower_components/when/when",
+                        "text": "../../bower_components/text/text"
                     },
                     findNestedDependencies: true,
                     removeCombined: false,
@@ -50,17 +50,17 @@ module.exports = function(grunt) {
             },
             my_target: {
                 files: {
-                    'public/javascripts/vendor/jquery-2.0.3.min.js': ['components/jquery/jquery.js'],
-                    'public/javascripts/vendor/jquery-ui-1.10.3.min.js': ['components/jquery-ui/ui/jquery-ui.js'],
-                    'public/javascripts/vendor/backbone-1.1.0.min.js': ['components/backbone/backbone.js'],
-                    'public/javascripts/vendor/underscore-1.5.2.min.js': ['components/underscore/underscore.js'],
-                    'public/javascripts/vendor/async-0.2.5.min.js': ['components/async/lib/async.js'],
-                    'public/javascripts/vendor/autobahnjs-0.8.0.min.js': ['components/autobahnjs/autobahn/autobahn.js'],
-                    'public/javascripts/vendor/ejs-0.8.4.min.js': ['components/ejs/ejs.js'],
-                    'public/javascripts/vendor/jquery-qtip-2.1.1.min.js': ['components/qtip2/jquery.qtip.js'],
-                    'public/javascripts/vendor/requirejs-2.1.9.min.js': ['components/requirejs/require.js'],
-                    'public/javascripts/vendor/when-2.5.1.min.js': ['components/when/when.js'],
-                    'public/javascripts/vendor/text-2.0.10.min.js': ['components/text/text.js']
+                    'public/javascripts/vendor/jquery-2.0.3.min.js': ['bower_components/jquery/jquery.js'],
+                    'public/javascripts/vendor/jquery-ui-1.10.3.min.js': ['bower_components/jquery-ui/ui/jquery-ui.js'],
+                    'public/javascripts/vendor/backbone-1.1.0.min.js': ['bower_components/backbone/backbone.js'],
+                    'public/javascripts/vendor/underscore-1.5.2.min.js': ['bower_components/underscore/underscore.js'],
+                    'public/javascripts/vendor/async-0.2.5.min.js': ['bower_components/async/lib/async.js'],
+                    'public/javascripts/vendor/ejs-0.8.4.min.js': ['bower_components/ejs/ejs.js'],
+                    'public/javascripts/vendor/jquery-qtip-2.1.1.min.js': ['bower_components/qtip2/jquery.qtip.js'],
+                    'public/javascripts/vendor/requirejs-2.1.9.min.js': ['bower_components/requirejs/require.js'],
+                    'public/javascripts/vendor/when-2.5.1.min.js': ['bower_components/when/when.js'],
+                    'public/javascripts/vendor/text-2.0.10.min.js': ['bower_components/text/text.js'],
+                    'public/javascripts/vendor/autobahnjs-0.8.0.min.js': ['src/FluidJS/vendor/autobahnjs.js']
                 }
             }
         }

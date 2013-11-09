@@ -2,7 +2,8 @@
 
 namespace Fluid\File;
 
-use Fluid\Fluid, DomainException;
+use DomainException;
+use Fluid\Config;
 
 /**
  * Make a preview of a file
@@ -72,7 +73,7 @@ class FilePreview
         imagecopyresampled($newImg, $img, 0, 0, 0, 0, $width, $height, $size[0], $size[1]);
         imagedestroy($img);
 
-        $tmp = Fluid::getConfig('storage') . uniqid();
+        $tmp = Config::get('storage') . uniqid();
         imagepng($newImg, $tmp, 9);
         $out = file_get_contents($tmp);
         unlink($tmp);

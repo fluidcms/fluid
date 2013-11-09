@@ -2,8 +2,9 @@
 
 namespace Fluid\Component;
 
-use Exception,
-    Fluid\Fluid;
+use Exception;
+use Fluid\Config;
+use Fluid\Fluid;
 
 /**
  * Component model
@@ -28,7 +29,7 @@ class Component
      */
     public function __construct($component)
     {
-        $dir = Fluid::getConfig('templates') . Fluid::getConfig('components');
+        $dir = Config::get('templates') . Config::get('components');
         $file = "{$dir}{$component}/component.xml";
 
         if (!is_file($file)) {
@@ -179,7 +180,7 @@ class Component
     public static function getComponents()
     {
         $components = array();
-        $dir = Fluid::getConfig('templates') . Fluid::getConfig('components');
+        $dir = Config::get('templates') . Config::get('components');
 
         if (is_dir($dir)) {
             foreach (scandir($dir) as $file) {

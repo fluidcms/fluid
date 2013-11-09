@@ -1,6 +1,7 @@
 <?php
 
 namespace Fluid;
+
 use Exception;
 use Fluid\Branch\Branch;
 
@@ -17,7 +18,6 @@ class Fluid
     const NOT_FOUND = '404';
 
     private static $branch;
-    private static $config;
     private static $storage;
     private static $language = 'en-US';
     private static $requestPayload;
@@ -28,15 +28,19 @@ class Fluid
     /**
      * Initialize Fluid
      *
-     * @param   array $config     The configuration array
-     * @param   string $language   The language of the instance
-     * @return  void
+     * @param array|null $config
+     * @param string|null $language The language of the instance
      */
-    public static function init($config = null, $language = null)
+    public static function init(array $config = null, $language = null)
     {
+        if (null !== $config) {
+            Config::setAll($config);
+        }
         self::$branch = 'master';
-        self::$config = $config;
-        self::$storage = $config['storage'];
+        self::$storage = Config::get('storage');
+        if (null !== $language) {
+            self::$language = $language;
+        }
 
         // Validate token and change branch
         if (isset($_SERVER['QUERY_STRING'])) {
@@ -49,21 +53,8 @@ class Fluid
 
         // Set View Templates Directory
         if (null === View::getTemplatesDir()) {
-            View::setTemplatesDir(self::getConfig('templates'));
+            View::setTemplatesDir(Config::get('templates'));
         }
-    }
-
-    /**
-     * Configure Fluid
-     *
-     * @param   array $config     The configuration array
-     * @deprecated  use init instead
-     * @return  void
-     */
-    public static function config($config = null)
-    {
-        self::$config = $config;
-        self::$storage = $config['storage'];
     }
 
     /**
@@ -123,7 +114,7 @@ class Fluid
     {
         // Set language
         if (null === self::$language) {
-            $languages = self::getConfig('languages');
+            $languages = Config::get('languages');
             $language = reset($languages);
             self::setLanguage($language);
         }
@@ -135,11 +126,10 @@ class Fluid
      * Set the branch
      *
      * @param   string $branch
-     * @param   bool $create
      * @throws  Exception   Branch does not exists
      * @return  void
      */
-    public static function setBranch($branch, $create = false)
+    public static function setBranch($branch)
     {
         if (!Branch::exists($branch)) {
             Branch::init($branch);
@@ -147,7 +137,7 @@ class Fluid
 
         if ($branch == self::$branch) {
             return null;
-        } else if (is_dir(self::getConfig('storage') . $branch)) {
+        } else if (is_dir(Config::get('storage') . $branch)) {
             self::$branch = $branch;
         } else {
             throw new Exception("Branch does not exists.");
@@ -171,7 +161,7 @@ class Fluid
      */
     public static function getBranchStorage()
     {
-        return self::getConfig('storage') . self::$branch . "/";
+        return Config::get('storage') . self::$branch . "/";
     }
 
     /**
@@ -193,58 +183,5 @@ class Fluid
     public static function getRequestPayload()
     {
         return self::$requestPayload;
-    }
-
-    /**
-     * Get a configuration
-     *
-     * @param   string $name     The key of the config
-     * @return  mixed
-     */
-    public static function getConfig($name = null)
-    {
-        if ($name === null) {
-            return self::$config;
-        }
-
-        switch ($name) {
-            case 'storage':
-            case 'templates':
-            case 'layouts':
-            case 'components':
-                if (isset(self::$config[$name])) {
-                    return (substr(self::$config[$name], -1) === '/' ? self::$config[$name] : self::$config[$name] . '/');
-                }
-                break;
-            default:
-                if (isset(self::$config[$name])) {
-                    return self::$config[$name];
-                }
-                break;
-        }
-
-        return null;
-    }
-
-    /**
-     * Set a configuration
-     *
-     * @param   string $name     The key of the config
-     * @param   string $value    The value of the config
-     * @return  void
-     */
-    public static function setConfig($name, $value)
-    {
-        switch ($name) {
-            case 'languages':
-                self::$config[$name] = $value;
-                if (null === self::$language) {
-                    self::$language = reset($value);
-                }
-                break;
-            default:
-                self::$config[$name] = $value;
-                break;
-        }
     }
 }

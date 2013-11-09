@@ -2,7 +2,11 @@
 
 namespace Fluid\Tasks;
 
-use Fluid\Fluid, Fluid\Database\Connection, PDO, PDOException, Exception;
+use Fluid\Fluid;
+use Fluid\Config;
+use PDO;
+use PDOException;
+use Exception;
 
 class Database
 {
@@ -20,7 +24,7 @@ class Database
             throw new Exception("Database configuration is invalid.");
         }
 
-        $config = Fluid::getConfig('database')['config'];
+        $config = Config::get('database')['config'];
         $sth = $dbh->prepare("SELECT COUNT(*) FROM `information_schema`.`tables` WHERE `table_schema`=:database AND `table_name`=:table;");
 
         foreach (Fluid::getTables() as $table) {
