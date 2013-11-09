@@ -73,7 +73,7 @@ class FilePreview
         imagecopyresampled($newImg, $img, 0, 0, 0, 0, $width, $height, $size[0], $size[1]);
         imagedestroy($img);
 
-        $tmp = Config::get('storage') . uniqid();
+        $tmp = Config::get('storage') . '/' . uniqid();
         imagepng($newImg, $tmp, 9);
         $out = file_get_contents($tmp);
         unlink($tmp);

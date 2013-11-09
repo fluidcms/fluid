@@ -93,7 +93,7 @@ class Branch
      */
     public static function exists($branch)
     {
-        return is_dir(Config::get('storage') . $branch . '/.git');
+        return is_dir(Config::get('storage') . '/' . $branch . '/.git');
     }
 
     /**

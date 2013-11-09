@@ -14,7 +14,7 @@ class Init {
         Branch::execute('master');
         Database::execute();
 
-        $dir = Config::get('storage') . ".data/";
+        $dir = Config::get('storage') . "/.data/";
         if (!is_dir($dir)) {
             mkdir($dir);
         }

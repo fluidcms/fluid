@@ -137,7 +137,7 @@ class Fluid
 
         if ($branch == self::$branch) {
             return null;
-        } else if (is_dir(Config::get('storage') . $branch)) {
+        } else if (is_dir(Config::get('storage') . '/' . $branch)) {
             self::$branch = $branch;
         } else {
             throw new Exception("Branch does not exists.");

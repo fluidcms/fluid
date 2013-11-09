@@ -60,7 +60,7 @@ class Daemon implements DaemonInterface
     public static function isRunning()
     {
         $dir = Config::get('storage');
-        $handler = fopen($dir . self::LOCK_FILE, "w+");
+        $handler = fopen($dir . '/' . self::LOCK_FILE, "w+");
 
         if (!flock($handler, LOCK_SH | LOCK_NB)) {
             fclose($handler);
@@ -93,7 +93,7 @@ class Daemon implements DaemonInterface
         $dir = Config::get('storage');
         $i = 0;
         while ($i < 100) {
-            $fileContent = file_get_contents($dir . self::LOCK_FILE);
+            $fileContent = file_get_contents($dir . '/' . self::LOCK_FILE);
             if ($fileContent === $instanceId) {
                 return true;
             }
@@ -116,7 +116,7 @@ class Daemon implements DaemonInterface
             mkdir($dir);
         }
 
-        $this->lock = fopen($dir . self::LOCK_FILE, "w+");
+        $this->lock = fopen($dir . '/' . self::LOCK_FILE, "w+");
 
         if (flock($this->lock, LOCK_EX | LOCK_NB)) {
             return true;
@@ -134,7 +134,7 @@ class Daemon implements DaemonInterface
     {
         $dir = Config::get('storage');
 
-        file_put_contents($dir . self::LOCK_FILE, "");
+        file_put_contents($dir . '/' . self::LOCK_FILE, "");
 
         flock($this->lock, LOCK_UN);
         fclose($this->lock);
@@ -174,7 +174,7 @@ class Daemon implements DaemonInterface
             $root->uptimeCallback();
         });
 
-        file_put_contents(Config::get('storage') . self::LOCK_FILE, $this->instanceId);
+        file_put_contents(Config::get('storage') . '/' . self::LOCK_FILE, $this->instanceId);
         $server->run();
 
         $this->release();

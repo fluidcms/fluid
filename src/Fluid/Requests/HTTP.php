@@ -141,8 +141,8 @@ class HTTP
 
             foreach(scandir($dir) as $branch) {
                 if ($branch !== '.' && $branch !== '..') {
-                    if (file_exists("{$dir}{$branch}/{$file}")) {
-                        new StaticFile("{$dir}{$branch}/{$file}");
+                    if (file_exists("{$dir}/{$branch}/{$file}")) {
+                        new StaticFile("{$dir}/{$branch}/{$file}");
                         return true;
                     }
                 }

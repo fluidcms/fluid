@@ -52,7 +52,7 @@ class MessageQueue
             return self::getAvalaiblePort(($port+1), ($loop+1));
         }
 
-        file_put_contents(Config::get('storage') . self::$portFile, json_encode(array("port" => $port)));
+        file_put_contents(Config::get('storage') . '/' . self::$portFile, json_encode(array("port" => $port)));
         return $port;
     }
 
@@ -67,8 +67,8 @@ class MessageQueue
             return self::$port;
         }
 
-        if (is_file(Config::get('storage') . self::$portFile)) {
-            $content = file_get_contents(Config::get('storage') . self::$portFile);
+        if (is_file(Config::get('storage') . '/' . self::$portFile)) {
+            $content = file_get_contents(Config::get('storage') . '/' . self::$portFile);
             $content = json_decode($content, true);
 
             if (isset($content['port'])) {
