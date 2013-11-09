@@ -153,7 +153,7 @@ class Daemon implements DaemonInterface
         }
 
         $port = Config::get('websocket');
-        Log::add('Trying to start socket on port ' . $port);
+        Log::add('Starting socket on port ' . $port);
 
         $root = $this;
 
