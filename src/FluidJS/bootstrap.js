@@ -2,7 +2,7 @@
     var root = this;
 
     require.config({
-        baseUrl: "javascripts/fluid/",
+        baseUrl: "javascripts/",
         urlArgs: (new Date()).getTime(), // !! Remove for production
         paths: {
             'async': 'vendor/async-0.2.5.min',

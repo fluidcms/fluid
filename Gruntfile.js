@@ -39,7 +39,7 @@ module.exports = function(grunt) {
                         'when',
                         'text'
                     ],
-                    out: 'public/javascripts/fluid-0.0.1.min'
+                    out: 'public/javascripts/fluid-0.0.1.min.js'
                 }
             }
         },
