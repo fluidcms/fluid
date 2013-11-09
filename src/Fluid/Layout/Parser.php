@@ -2,15 +2,16 @@
 
 namespace Fluid\Layout;
 
-use Fluid\Layout\Layout, Fluid\Definition\Definition, SimpleXMLElement;
+use Fluid\Definition\Definition;
+use SimpleXMLElement;
 
 class Parser extends Definition
 {
     /**
      * Parse a layout XML file
      *
-     * @param   Layout  $layout
-     * @return  Layout
+     * @param Layout $layout
+     * @return Layout
      */
     public static function parse(Layout $layout)
     {

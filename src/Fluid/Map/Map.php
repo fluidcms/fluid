@@ -5,6 +5,7 @@ namespace Fluid\Map;
 use Fluid\Page\Page;
 use Fluid\Storage\FileSystem;
 use Exception;
+use InvalidArgumentException;
 
 /**
  * Site structure model
@@ -28,7 +29,7 @@ class Map extends FileSystem
     /**
      * Get pages
      *
-     * @return  array
+     * @return array
      */
     public function getPages()
     {
@@ -41,10 +42,10 @@ class Map extends FileSystem
     /**
      * Set pages
      *
-     * @param   array   $value
-     * @return  void
+     * @param array $value
+     * @return void
      */
-    public function setPages($value)
+    public function setPages(array $value)
     {
         $this->pages = $value;
     }
@@ -52,14 +53,14 @@ class Map extends FileSystem
     /**
      * Create a new page.
      *
-     * @param   array   $attrs
-     * @throws  Exception
-     * @return  array
+     * @param array $attrs
+     * @throws Exception
+     * @return array
      */
-    public function createPage($attrs)
+    public function createPage(array $attrs)
     {
         if (!is_int($attrs['index'])) {
-            throw new \InvalidArgumentException;
+            throw new InvalidArgumentException;
         }
 
         $page = Page::create($attrs['page'], $attrs['parent'], $attrs['languages'], $attrs['layout'], $attrs['url']);
@@ -73,8 +74,8 @@ class Map extends FileSystem
     /**
      * Find a page in the map.
      *
-     * @param   string  $id
-     * @return  array
+     * @param string $id
+     * @return array
      */
     public function findPage($id)
     {
@@ -107,10 +108,10 @@ class Map extends FileSystem
     /**
      * Edit a page.
      *
-     * @param   array   $attrs
-     * @return  bool
+     * @param array $attrs
+     * @return bool
      */
-    public function editPage($attrs)
+    public function editPage(array $attrs)
     {
         $page = Page::config($attrs['id'], $attrs['page'], $attrs['languages'], $attrs['layout'], $attrs['url']);
 
@@ -123,9 +124,9 @@ class Map extends FileSystem
     /**
      * Delete a page.
      *
-     * @param   string   $id
-     * @throws  \InvalidArgumentException
-     * @return  bool
+     * @param string $id
+     * @throws InvalidArgumentException
+     * @return bool
      */
     public function deletePage($id)
     {
@@ -144,11 +145,11 @@ class Map extends FileSystem
     /**
      * Sort a page.
      *
-     * @param   string   $id
-     * @param   string   $to
-     * @param   string   $index
-     * @throws  \InvalidArgumentException
-     * @return  bool
+     * @param string $id
+     * @param string $to
+     * @param string $index
+     * @throws InvalidArgumentException
+     * @return bool
      */
     public function sortPage($id, $to, $index)
     {
@@ -175,13 +176,11 @@ class Map extends FileSystem
             return true;
         }
 
-        throw new \InvalidArgumentException();
+        throw new InvalidArgumentException();
     }
 
     /**
      * Save map.
-     *,
-     * @return  void
      */
     public function store()
     {

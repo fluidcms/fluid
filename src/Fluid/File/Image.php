@@ -2,19 +2,19 @@
 
 namespace Fluid\File;
 
-use Fluid\Token\Token,
-    DomainException;
+use Fluid\Token\Token;
+use DomainException;
 
 class Image
 {
     /**
      * Format an image
      *
-     * @param   string  $id
-     * @param   array   $format
-     * @return  array
+     * @param string $id
+     * @param array $format
+     * @return array
      */
-    public static function format($id, $format)
+    public static function format($id, array $format)
     {
         $formats = self::parseFormatArray($format);
 
@@ -27,7 +27,7 @@ class Image
         }
 
         $retval = array();
-        foreach($formats as $format) {
+        foreach ($formats as $format) {
             if (
                 (isset($format['width']) && $info['width'] !== $format['width']) ||
                 (isset($format['height']) && $info['height'] !== $format['height']) ||
@@ -45,12 +45,12 @@ class Image
     /**
      * Format image info for output
      *
-     * @param   array   $info
-     * @param   string  $path
-     * @param   array   $format
-     * @return  array
+     * @param array $info
+     * @param string $path
+     * @param array $format
+     * @return array
      */
-    private static function getFormatArray($info, $path, $format)
+    private static function getFormatArray(array $info, $path, array $format)
     {
         return array(
             'id' => '',
@@ -64,13 +64,13 @@ class Image
     /**
      * Do the actual formatting
      *
-     * @param   array   $info
-     * @param   string  $path
-     * @param   array   $format
-     * @throws  DomainException
-     * @return  array
+     * @param array $info
+     * @param string $path
+     * @param array $format
+     * @throws DomainException
+     * @return array
      */
-    private static function formatImage($info, $path, $format)
+    private static function formatImage(array $info, $path, array $format)
     {
         $uniqueId = Token::generate(8);
 
@@ -120,7 +120,7 @@ class Image
         } else if ($info['type'] === "gif") {
             $img = imagecreatefromgif($path);
         } else {
-            throw new DomainException('Unknown image type: '.$info['type']);
+            throw new DomainException('Unknown image type: ' . $info['type']);
         }
 
         $newImg = imagecreatetruecolor($width, $height);
@@ -141,9 +141,7 @@ class Image
         // Copy image
         if ($width == (int)$info['width'] && $height == (int)$info['height']) {
             imagecopy($newImg, $img, 0, 0, 0, 0, $width, $height);
-        }
-
-        // Resize and crop image
+        } // Resize and crop image
         else {
             // Get resize ratio and cropping offset.
             $widthRatio = $info['width'] / $width;
@@ -158,8 +156,7 @@ class Image
 
                 $offsetY = ($height - $newHeight) / 2;
                 $offsetX = 0;
-            }
-            else {
+            } else {
                 $ratio = $heightRatio;
 
                 $newWidth = $info['width'] / $ratio;
@@ -174,7 +171,7 @@ class Image
 
         imagedestroy($img);
 
-        switch($type) {
+        switch ($type) {
             case 'jpg':
             case 'jpeg':
                 imagejpeg($newImg, $newPath, 80);
@@ -199,10 +196,10 @@ class Image
     /**
      * Prepare the format array
      *
-     * @param   array   $format
-     * @return  array
+     * @param array $format
+     * @return array
      */
-    private static function parseFormatArray($format)
+    private static function parseFormatArray(array $format)
     {
         $formats = array();
 
@@ -214,7 +211,7 @@ class Image
         $formats = array_merge(array($format), $formats);
 
         $retval = array();
-        foreach($formats as $name => $item) {
+        foreach ($formats as $name => $item) {
             $format = array();
 
             if ($name === 0) {

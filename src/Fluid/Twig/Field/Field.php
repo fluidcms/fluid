@@ -2,7 +2,8 @@
 
 namespace Fluid\Twig\Field;
 
-use Fluid\Twig\PrintNode\FieldNodePrint, Fluid\Twig\NodeHandler;
+use Fluid\Twig\PrintNode\FieldNodePrint;
+use Fluid\Twig\NodeHandler;
 
 class Field implements FieldInterface
 {
@@ -19,8 +20,7 @@ class Field implements FieldInterface
     /**
      * Get the current order of the field and increment it
      *
-     * @param   mixed   $node
-     * @return  int
+     * @return int
      */
     public static function getOrder()
     {
@@ -70,8 +70,8 @@ class Field implements FieldInterface
     /**
      * Match a Print Node with a FieldArray object and return the FieldArray object ID
      *
-     * @param   mixed   $node
-     * @return  string
+     * @param mixed $node
+     * @return string
      */
     public static function matchNode($node)
     {

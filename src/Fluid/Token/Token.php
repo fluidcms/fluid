@@ -1,6 +1,7 @@
 <?php
 
 namespace Fluid\Token;
+
 use Fluid\Fluid;
 use Fluid\Database;
 
@@ -8,13 +9,15 @@ class Token extends Database
 {
     /**
      * Default timeout of 1 hour
+     *
+     * @var int $timeOut
      */
     private static $timeOut = 3600;
 
     /**
      * Get a token
      *
-     * @return  string
+     * @return string
      */
     public static function get()
     {
@@ -23,10 +26,9 @@ class Token extends Database
 
     /**
      * Create table if it doesn't exists
-     *
-     * @return  void
      */
-    private static function table() {
+    private static function table()
+    {
         $dbh = self::getDatabase();
         $dbh->query("CREATE TABLE IF NOT EXISTS page_tokens (token CHAR(64) PRIMARY KEY, expiration DATETIME)");
     }
@@ -34,7 +36,7 @@ class Token extends Database
     /**
      * Create a token
      *
-     * @return  string
+     * @return string
      */
     public static function create()
     {
@@ -56,8 +58,8 @@ class Token extends Database
     /**
      * Validate a token and delete it
      *
-     * @param   string  $value
-     * @return  bool
+     * @param string $value
+     * @return bool
      */
     public static function validate($value)
     {
@@ -79,8 +81,6 @@ class Token extends Database
 
     /**
      * Delete expired tokens
-     *
-     * @return  void
      */
     private static function deleteExpired()
     {
@@ -91,8 +91,8 @@ class Token extends Database
     /**
      * Generate a random string
      *
-     * @param   int
-     * @return  string
+     * @param int
+     * @return string
      */
     public static function generate($length)
     {

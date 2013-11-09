@@ -4,7 +4,6 @@ class Client implements WebSocketClient\WebSocketClientInterface
 {
     private $client;
 
-
     public function onWelcome(array $data)
     {
     }

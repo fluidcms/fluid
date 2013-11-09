@@ -2,12 +2,11 @@
 
 namespace Fluid\Page;
 
-use Exception,
-    Fluid\Fluid,
-    Fluid\Map\Map,
-    Fluid\Layout\Layout,
-    Fluid\Component\Component,
-    Fluid\File\Image;
+use Exception;
+use Fluid\Fluid;
+use Fluid\Layout\Layout;
+use Fluid\Component\Component;
+use Fluid\File\Image;
 
 class UpdateData
 {
@@ -16,12 +15,12 @@ class UpdateData
     /**
      * Sanitize page data input
      *
-     * @param   Page    $page
-     * @param   array   $data
-     * @throws  Exception
-     * @return  array
+     * @param Page $page
+     * @param array $data
+     * @throws Exception
+     * @return array
      */
-    public static function update(Page $page, $data)
+    public static function update(Page $page, array $data)
     {
         $id = $page->getId();
 
@@ -48,12 +47,11 @@ class UpdateData
     /**
      * Save the data to the file
      *
-     * @param   Page    $page
-     * @param   string  $language
-     * @param   array   $data
-     * @return  void
+     * @param Page $page
+     * @param string $language
+     * @param array $data
      */
-    public static function save(Page $page, $language, $data)
+    public static function save(Page $page, $language, array $data)
     {
         $id = $page->getId();
 
@@ -71,17 +69,17 @@ class UpdateData
     /**
      * Sanitize page data input
      *
-     * @param   Page    $page
-     * @param   string  $language
-     * @param   array   $languages
-     * @param   string  $group
-     * @param   string  $name
-     * @param   mixed   $value
-     * @return  void
+     * @param Page $page
+     * @param string $language
+     * @param array $languages
+     * @param string $group
+     * @param string $name
+     * @param mixed $value
+     * @return void
      */
-    private static function updateUniversal(Page $page, $language, $languages, $group, $name, $value)
+    private static function updateUniversal(Page $page, $language, array $languages, $group, $name, $value)
     {
-        foreach($languages as $otherLanguage) {
+        foreach ($languages as $otherLanguage) {
             if ($otherLanguage !== $language) {
                 $data = $page->getRawData($otherLanguage);
                 $data[$group][$name] = $value;
@@ -93,24 +91,24 @@ class UpdateData
     /**
      * Sanitize page data input
      *
-     * @param   Page    $page
-     * @param   array   $data
-     * @param   array   $definition
-     * @param   string  $language
-     * @param   array   $languages
-     * @return  array
+     * @param Page $page
+     * @param array $data
+     * @param array $definition
+     * @param string $language
+     * @param array $languages
+     * @return array
      */
-    private static function parse(Page $page, $data, $definition, $language, $languages)
+    private static function parse(Page $page, array $data, array $definition, $language, array $languages)
     {
         $output = array();
 
-        foreach($definition as $group => $vars) {
+        foreach ($definition as $group => $vars) {
             if (!isset($data[$group])) {
                 $data[$group] = array();
             }
             $output[$group] = array();
 
-            foreach($vars as $name => $variable) {
+            foreach ($vars as $name => $variable) {
                 if (!isset($data[$group][$name])) {
                     $data[$group][$name] = null;
                 } else if ($data[$group][$name] === '') {
@@ -133,15 +131,15 @@ class UpdateData
     /**
      * Parse a variable
      *
-     * @param   array   $variable
-     * @param   mixed   $value
-     * @return  mixed
+     * @param array $variable
+     * @param mixed $value
+     * @return mixed
      */
-    private static function parseVariable($variable, $value = null)
+    private static function parseVariable(array $variable, $value = null)
     {
         $retval = null;
 
-        switch($variable['type']) {
+        switch ($variable['type']) {
             case 'string':
                 if (!empty($value)) {
                     $retval = self::sanitizeString($value);
@@ -167,9 +165,9 @@ class UpdateData
             case 'array':
                 $retval = array();
                 if (isset($value) && is_array($value) && count($value)) {
-                    foreach($value as $array) {
+                    foreach ($value as $array) {
                         $retArray = array();
-                        foreach($variable['variables'] as $name => $arrayVar) {
+                        foreach ($variable['variables'] as $name => $arrayVar) {
                             $retArray[$name] = self::parseVariable($arrayVar, (!empty($array[$name]) ? $array[$name] : null));
                         }
                         $retval[] = $retArray;
@@ -181,7 +179,7 @@ class UpdateData
                 if (isset($variable['header']) && $variable['header'] === true) {
                     $retval['thead'] = array();
                     if (isset($value['thead']) && is_array($value['thead'])) {
-                        foreach($value['thead'] as $item) {
+                        foreach ($value['thead'] as $item) {
                             $retval['thead'][] = $item;
                         }
                     }
@@ -189,17 +187,17 @@ class UpdateData
                 if (isset($variable['footer']) && $variable['footer'] === true) {
                     $retval['tfoot'] = array();
                     if (isset($value['tfoot']) && is_array($value['tfoot'])) {
-                        foreach($value['tfoot'] as $item) {
+                        foreach ($value['tfoot'] as $item) {
                             $retval['tfoot'][] = $item;
                         }
                     }
                 }
                 $retval['tbody'] = array();
                 if (isset($value['tbody']) && is_array($value['tbody'])) {
-                    foreach($value['tbody'] as $row) {
+                    foreach ($value['tbody'] as $row) {
                         $rowData = array();
                         if (is_array($row)) {
-                            foreach($row as $item) {
+                            foreach ($row as $item) {
                                 $rowData[] = $item;
                             }
                         }
@@ -221,7 +219,7 @@ class UpdateData
                     $newVal = $value;
                     $value = null;
                     if (isset($variable['options']) && is_array($variable['options']) && count($variable['options'])) {
-                        foreach($variable['options'] as $option) {
+                        foreach ($variable['options'] as $option) {
                             if ($option['value'] === $newVal) {
                                 $value = $option['value'];
                                 break;
@@ -250,8 +248,8 @@ class UpdateData
     /**
      * Sanitize a string
      *
-     * @param   string  $value
-     * @return  string
+     * @param string $value
+     * @return string
      */
     private static function sanitizeString($value)
     {
@@ -265,10 +263,10 @@ class UpdateData
     /**
      * Sanitize a content
      *
-     * @param   array   $value
-     * @return  array
+     * @param array $value
+     * @return array
      */
-    private static function sanitizeContent($value)
+    private static function sanitizeContent(array $value)
     {
         $output = array(
             'source' => $value['source'],
@@ -278,8 +276,8 @@ class UpdateData
 
         // Sanitize components
         if (isset($value['components']) && is_array($value['components'])) {
-            foreach($value['components'] as $id => $component) {
-                if (strpos($output['source'], '{'.$id.'}') !== false) {
+            foreach ($value['components'] as $id => $component) {
+                if (strpos($output['source'], '{' . $id . '}') !== false) {
                     if ($component = self::sanitizeComponent($component)) {
                         $output['components'][$id] = $component;
                     }
@@ -300,10 +298,10 @@ class UpdateData
     /**
      * Sanitize component
      *
-     * @param   array   $component
-     * @return  array
+     * @param array $component
+     * @return array
      */
-    private static function sanitizeComponent($component)
+    private static function sanitizeComponent(array $component)
     {
         try {
             if (!isset(self::$components[$component['component']])) {
@@ -311,7 +309,7 @@ class UpdateData
             } else {
                 $definition = self::$components[$component['component']];
             }
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
 
@@ -320,7 +318,7 @@ class UpdateData
             'data' => array()
         );
 
-        foreach($definition->getVariables() as $name => $variable) {
+        foreach ($definition->getVariables() as $name => $variable) {
             $retval['data'][$name] = self::parseVariable($variable, (!empty($component['data'][$name]) ? $component['data'][$name] : null));
         }
 
@@ -330,10 +328,10 @@ class UpdateData
     /**
      * Sanitize image data
      *
-     * @param   array   $value
-     * @return  array
+     * @param array $value
+     * @return array
      */
-    private static function sanitizeImage($value)
+    private static function sanitizeImage(array $value)
     {
         return $value; // TODO: sanitize maybe?
     }
@@ -341,15 +339,15 @@ class UpdateData
     /**
      * Sanitize new image data
      *
-     * @param   array   $value
-     * @return  array
+     * @param array $value
+     * @return array
      */
-    private static function sanitizeNewImage($value)
+    private static function sanitizeNewImage(array $value)
     {
         $retval = array();
         $dir = Fluid::getBranchStorage() . "/files";
 
-        foreach($value as $name => $format) {
+        foreach ($value as $name => $format) {
             $image = array(
                 "src" => preg_replace("!^{$dir}!", '/fluidcms/images', $format['path']),
                 "alt" => "",

@@ -1,6 +1,7 @@
 <?php
 
 namespace Fluid;
+
 use PDO;
 
 class Database
@@ -10,7 +11,7 @@ class Database
     /**
      * Return the database object
      *
-     * @return  PDO
+     * @return PDO
      */
     protected static function getDatabase()
     {
@@ -24,6 +25,6 @@ class Database
             mkdir(dirname($database), 0777, true);
         }
 
-        return self::$dbh = new PDO('sqlite:'.$database);
+        return self::$dbh = new PDO('sqlite:' . $database);
     }
 }

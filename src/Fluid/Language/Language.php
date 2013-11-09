@@ -16,12 +16,12 @@ class Language
     /**
      * Get languages
      *
-     * @return  array
+     * @return array
      */
     public static function getLanguages()
     {
         $output = array();
-        foreach(Config::get('languages') as $language) {
+        foreach (Config::get('languages') as $language) {
             $output[] = array(
                 'language' => $language
             );
@@ -32,9 +32,9 @@ class Language
     /**
      * Validate language
      *
-     * @param   string       $value
-     * @throws  Exception
-     * @return  bool
+     * @param string $value
+     * @throws Exception
+     * @return bool
      */
     public static function validateLanguage($value)
     {
@@ -44,7 +44,7 @@ class Language
 
         $valid = self::getLanguages();
         $found = false;
-        foreach($valid as $haystack) {
+        foreach ($valid as $haystack) {
             if ($haystack['language'] === $value) {
                 $found = true;
                 break;
@@ -61,20 +61,20 @@ class Language
     /**
      * Validate languages
      *
-     * @param   array       $value
-     * @throws  Exception
-     * @return  bool
+     * @param array $value
+     * @throws Exception
+     * @return bool
      */
-    public static function validateLanguages($value)
+    public static function validateLanguages(array $value)
     {
         if (!is_array($value)) {
             throw new Exception("Invalid languages");
         }
 
         $valid = self::getLanguages();
-        foreach($value as $needle) {
+        foreach ($value as $needle) {
             $found = false;
-            foreach($valid as $haystack) {
+            foreach ($valid as $haystack) {
                 if ($haystack['language'] === $needle) {
                     $found = true;
                     break;

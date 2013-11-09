@@ -1,6 +1,7 @@
 <?php
 
 namespace Fluid;
+
 use Fluid\Debug\Log;
 
 /**
@@ -18,12 +19,12 @@ class Git
     /**
      * Execute a command
      *
-     * @param   string  $branch
-     * @param   string  $command
-     * @param   bool    $check
-     * @param   bool    $quiet
-     * @param   bool    $worktreeEnabled
-     * @return  string
+     * @param string $branch
+     * @param string $command
+     * @param bool $check
+     * @param bool $quiet
+     * @param bool $worktreeEnabled
+     * @return string
      */
     private static function command($branch, $command, $check = true, $quiet = false, $worktreeEnabled = true)
     {
@@ -55,8 +56,8 @@ class Git
             Log::add('Git command: ' . $command);
             $handle = popen($command, 'r');
 
-            while(!feof($handle)) {
-                $read = fgets ($handle);
+            while (!feof($handle)) {
+                $read = fgets($handle);
                 echo $read;
             }
 
@@ -77,14 +78,14 @@ class Git
     /**
      * Get remotes repositories
      *
-     * @param   string $branch
-     * @return  array
+     * @param string $branch
+     * @return array
      */
     public static function getRemotes($branch)
     {
         $retval = self::command($branch, "git remote -v");
         $remotes = array();
-        foreach(explode(PHP_EOL, $retval) as $line) {
+        foreach (explode(PHP_EOL, $retval) as $line) {
             preg_match("/([^\\s]*)(.*) (\([a-z]*\))/i", $line, $match);
             if (!empty($match[1]) && !empty($match[2])) {
                 $remotes[$match[1]] = trim($match[2]);
@@ -97,8 +98,8 @@ class Git
     /**
      * Check if remote url is a valid repository
      *
-     * @param   string $url
-     * @return  bool
+     * @param string $url
+     * @return bool
      */
     public static function checkRemoteUrl($url)
     {
@@ -125,8 +126,8 @@ class Git
     /**
      * Get remote branches
      *
-     * @param   string $branch
-     * @return  array
+     * @param string $branch
+     * @return array
      */
     public static function getRemoteBranches($branch)
     {
@@ -135,7 +136,7 @@ class Git
 
         $branches = array();
 
-        foreach(explode(' ', $retval) as $branch) {
+        foreach (explode(' ', $retval) as $branch) {
             if (!empty($branch)) {
                 $branches[] = $branch;
             }
@@ -147,8 +148,8 @@ class Git
     /**
      * Get remote branches
      *
-     * @param   string $branch
-     * @return  array
+     * @param string $branch
+     * @return array
      */
     public static function getBranches($branch)
     {
@@ -160,14 +161,14 @@ class Git
     /**
      * Get local branch name
      *
-     * @param   string $branch
-     * @return  string
+     * @param string $branch
+     * @return string
      */
     public static function getHeadBranch($branch)
     {
         $retval = self::command($branch, 'git branch');
         $branches = explode(PHP_EOL, $retval);
-        foreach($branches as $branch) {
+        foreach ($branches as $branch) {
             if (strpos($branch, '*') === 0) {
                 return trim($branch, '* ');
             }
@@ -178,10 +179,10 @@ class Git
     /**
      * Get all commits for a branch
      *
-     * @param   string  $branch
-     * @param   string  $head
-     * @param   int     $count
-     * @return  array
+     * @param string $branch
+     * @param string|null $head
+     * @param int|null $count
+     * @return array
      */
     public static function getCommits($branch, $head = null, $count = null)
     {
@@ -205,11 +206,11 @@ class Git
         }*/
 
         $retval = self::command($branch, $command);
-        $commits = preg_split("/(commit [a-zA-Z0-9]*)/", $retval, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+        $commits = preg_split("/(commit [a-zA-Z0-9]*)/", $retval, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
         $output = array();
-        foreach($commits as $key => $commit) {
-            if ($key%2 === 0) {
+        foreach ($commits as $key => $commit) {
+            if ($key % 2 === 0) {
                 $commitHash = preg_replace('/^commit ([a-zA-Z0-9]*)$/', '$1', $commit);
             } else if (isset($commitHash)) {
                 // Match author
@@ -229,7 +230,7 @@ class Git
                 }
 
                 // Get message
-                $lines = preg_split('/Date: (.*)'.PHP_EOL.'/', $commit);
+                $lines = preg_split('/Date: (.*)' . PHP_EOL . '/', $commit);
                 $message = trim(end($lines));
 
                 $output[] = array(
@@ -249,14 +250,14 @@ class Git
     /**
      * Fetch all remote branches
      *
-     * @param   string $branch
-     * @return  bool
+     * @param string $branch
+     * @return bool
      */
     public static function fetchAll($branch)
     {
         $fetched = false;
         $remotes = self::getRemotes($branch);
-        foreach($remotes as $remote => $url) {
+        foreach ($remotes as $remote => $url) {
             if (self::checkRemoteUrl($url)) {
                 // Fetch remote
                 self::command($branch, "git fetch {$remote}");
@@ -269,9 +270,9 @@ class Git
     /**
      * Check if local branch is tracking remote branch
      *
-     * @param   string $localBranch
-     * @param   string $remoteBranch
-     * @return  bool
+     * @param string $localBranch
+     * @param string $remoteBranch
+     * @return bool
      */
     public static function isTracking($localBranch, $remoteBranch)
     {
@@ -298,9 +299,9 @@ class Git
     /**
      * Add remote repo to branch
      *
-     * @param   string $branch
-     * @param   string $remote
-     * @return  string
+     * @param string $branch
+     * @param string $remote
+     * @return string
      */
     public static function addRemote($branch, $remote)
     {
@@ -310,9 +311,9 @@ class Git
     /**
      * Add remote repo to branch
      *
-     * @param   string $branch
-     * @param   string $remoteBranch
-     * @return  string
+     * @param string $branch
+     * @param string $remoteBranch
+     * @return string
      */
     public static function checkoutRemote($branch, $remoteBranch)
     {
@@ -322,9 +323,9 @@ class Git
     /**
      * Checkout a branch
      *
-     * @param   string $branch
-     * @param   string $head
-     * @return  string
+     * @param string $branch
+     * @param string $head
+     * @return string
      */
     public static function checkout($branch, $head)
     {
@@ -334,10 +335,10 @@ class Git
     /**
      * Checkout a branch at specific commit
      *
-     * @param   string $branch
-     * @param   string $head
-     * @param   string $commit
-     * @return  string
+     * @param string $branch
+     * @param string $head
+     * @param string $commit
+     * @return string
      */
     public static function checkoutCommit($branch, $head, $commit)
     {
@@ -347,9 +348,9 @@ class Git
     /**
      * Delete a local branch
      *
-     * @param   string $branch
-     * @param   string $head
-     * @return  string
+     * @param string $branch
+     * @param string $head
+     * @return string
      */
     public static function removeBranch($branch, $head)
     {
@@ -359,10 +360,10 @@ class Git
     /**
      * Rename a local branch
      *
-     * @param   string $branch
-     * @param   string $head
-     * @param   string $name
-     * @return  string
+     * @param string $branch
+     * @param string $head
+     * @param string $name
+     * @return string
      */
     public static function renameBranch($branch, $head, $name)
     {
@@ -372,8 +373,8 @@ class Git
     /**
      * Initialize git repo
      *
-     * @param   string $branch
-     * @return  bool
+     * @param string $branch
+     * @return bool
      */
     public static function init($branch)
     {
@@ -388,7 +389,7 @@ class Git
     /**
      * Initialize bare git repo
      *
-     * @return  bool
+     * @return bool
      */
     public static function initBare()
     {
@@ -403,11 +404,11 @@ class Git
     /**
      * Commit.
      *
-     * @param   string $branch
-     * @param   string $msg    The commit message
-     * @param   string $name
-     * @param   string $email
-     * @return  string
+     * @param string $branch
+     * @param string $msg The commit message
+     * @param string $name
+     * @param string $email
+     * @return string
      */
     public static function commit($branch, $msg, $name = null, $email = null)
     {
@@ -420,15 +421,15 @@ class Git
 
         $msg = preg_replace('/[^\s\w\-:]/', '', $msg);
 
-        self::command($branch , 'git add -A');
+        self::command($branch, 'git add -A');
 
-        self::command($branch, 'git config user.email '.escapeshellarg($email));
-        self::command($branch, 'git config user.name '.escapeshellarg($name));
+        self::command($branch, 'git config user.email ' . escapeshellarg($email));
+        self::command($branch, 'git config user.name ' . escapeshellarg($name));
 
         $command = "git commit -m " . escapeshellarg($msg);
 
         $author = "$name <$email>";
-        $command .= " --author=". escapeshellarg($author);
+        $command .= " --author=" . escapeshellarg($author);
 
         return self::command($branch, $command);
 
@@ -437,9 +438,9 @@ class Git
     /**
      * Pull
      *
-     * @param   string $branch
-     * @param   string $remote
-     * @return  string
+     * @param string $branch
+     * @param string $remote
+     * @return string
      */
     public static function pull($branch, $remote = 'master')
     {
@@ -449,8 +450,8 @@ class Git
     /**
      * Push
      *
-     * @param   string $branch
-     * @return  string
+     * @param string $branch
+     * @return string
      */
     public static function push($branch)
     {
@@ -460,8 +461,8 @@ class Git
     /**
      * Status
      *
-     * @param   string $branch
-     * @return  string
+     * @param string $branch
+     * @return string
      */
     public static function status($branch)
     {
@@ -471,8 +472,8 @@ class Git
     /**
      * Clear all changed files
      *
-     * @param   string $branch
-     * @return  string
+     * @param string $branch
+     * @return string
      */
     public static function clean($branch)
     {

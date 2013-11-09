@@ -20,8 +20,7 @@ abstract class Task
     /**
      * Get the timestamp of the last execution
      *
-     * @param   string  $time
-     * @return  void
+     * @param string $time
      */
     public function setExecutionTime($time)
     {

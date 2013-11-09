@@ -1,7 +1,7 @@
 <?php
 
 namespace Fluid\Session;
-use Fluid\Fluid;
+
 use Fluid\Database;
 use Fluid\Token\Token;
 
@@ -9,15 +9,16 @@ class Session extends Database
 {
     /**
      * Default timeout of 1 hour
+     *
+     * @var int $timeOut
      */
     private static $timeOut = 3600;
 
     /**
      * Create table if it doesn't exists
-     *
-     * @return  void
      */
-    private static function table() {
+    private static function table()
+    {
         $dbh = self::getDatabase();
         $dbh->query("CREATE TABLE IF NOT EXISTS sessions (token CHAR(64) PRIMARY KEY, expiration DATETIME)");
     }
@@ -25,7 +26,7 @@ class Session extends Database
     /**
      * Create a session
      *
-     * @return  string
+     * @return string
      */
     public static function create()
     {
@@ -48,8 +49,8 @@ class Session extends Database
     /**
      * Validate a session
      *
-     * @param   string  $value
-     * @return  bool
+     * @param string $value
+     * @return bool
      */
     public static function validate($value)
     {
@@ -71,7 +72,7 @@ class Session extends Database
     /**
      * Delete expired sessions
      *
-     * @return  void
+     * @return void
      */
     private static function deleteExpired()
     {

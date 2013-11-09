@@ -11,8 +11,8 @@ abstract class Cache
     /**
      * Store content to file system cache
      *
-     * @param   mixed $content
-     * @return  void
+     * @param mixed $content
+     * @return null
      */
     public static function storeCache($content)
     {
@@ -29,7 +29,7 @@ abstract class Cache
     /**
      * Get content from file system cache
      *
-     * @return  mixed
+     * @return mixed
      */
     public static function getCache()
     {
@@ -46,7 +46,7 @@ abstract class Cache
     /**
      * Checks if a content exists in the cache
      *
-     * @return  bool
+     * @return bool
      */
     public static function cacheExists()
     {

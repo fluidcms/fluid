@@ -17,17 +17,19 @@ use Fluid\Daemon\Daemon;
  */
 class HTTP
 {
-    private static $request, $method, $input;
+    private static $request;
+    private static $method;
+    private static $input;
 
     /**
      * Route an admin request
      *
-     * @param   string  $request
-     * @param   string  $method
-     * @param   array   $input
-     * @return  mixed
+     * @param string $request
+     * @param string|null $method
+     * @param array|null $input
+     * @return mixed
      */
-    public static function route($request, $method = null, $input = null)
+    public static function route($request, $method = null, array $input = null)
     {
         if (stripos($request, '/fluidcms/') === 0) {
             $request = substr($request, 10);
@@ -74,7 +76,7 @@ class HTTP
     /**
      * Returns the server status and tries to start it if it is shut down
      *
-     * @return  bool
+     * @return bool
      */
     private static function serverStatus()
     {
@@ -84,13 +86,11 @@ class HTTP
                 if (Daemon::isRunning()) {
                     echo json_encode(true);
                     return true;
-                }
-                // Start Daemon
+                } // Start Daemon
                 else if (Daemon::runBackground()) {
                     echo json_encode(true);
                     return true;
-                }
-                // Could not start Daemon
+                } // Could not start Daemon
                 else {
                     echo json_encode(false);
                     return true;
@@ -104,7 +104,7 @@ class HTTP
     /**
      * Create tmp images with provided dimensions, required for fluid (not the cms) layout
      *
-     * @return  bool
+     * @return bool
      */
     private static function tmpImages()
     {
@@ -130,7 +130,7 @@ class HTTP
     /**
      * Route cms files
      *
-     * @return  bool
+     * @return bool
      */
     private static function files()
     {
@@ -139,7 +139,7 @@ class HTTP
             $dir = Config::get('storage');
             $file = preg_replace('!images/!', 'files/', urldecode(self::$request));
 
-            foreach(scandir($dir) as $branch) {
+            foreach (scandir($dir) as $branch) {
                 if ($branch !== '.' && $branch !== '..') {
                     if (file_exists("{$dir}/{$branch}/{$file}")) {
                         new StaticFile("{$dir}/{$branch}/{$file}");
@@ -154,7 +154,7 @@ class HTTP
     /**
      * Upload file to CMS
      *
-     * @return  bool
+     * @return bool
      */
     private static function upload()
     {
@@ -198,7 +198,7 @@ class HTTP
     /**
      * Route public files.
      *
-     * @return  bool
+     * @return bool
      */
     private static function publicFiles()
     {
@@ -217,7 +217,7 @@ class HTTP
     /**
      * Route javascript files.
      *
-     * @return  bool
+     * @return bool
      */
     private static function javascriptFiles()
     {
@@ -237,7 +237,7 @@ class HTTP
     /**
      * Change language script.
      *
-     * @return  bool
+     * @return bool
      */
     private static function changePage()
     {
@@ -245,7 +245,7 @@ class HTTP
             $url = isset($_GET['url']) ? filter_var($_GET['url'], FILTER_SANITIZE_STRING) : '';
             $language = isset($_GET['language']) ? filter_var($_GET['language'], FILTER_SANITIZE_STRING) : 'en-US';
 
-            foreach(Event::trigger('changePage', array($url, $language)) as $retval) {
+            foreach (Event::trigger('changePage', array($url, $language)) as $retval) {
                 $url = $retval;
             }
 
@@ -258,7 +258,7 @@ class HTTP
     /**
      * Route html pages.
      *
-     * @return  bool
+     * @return bool
      */
     private static function htmlPages()
     {
@@ -289,9 +289,7 @@ class HTTP
                 )
             );
             return true;
-        }
-
-        else if (self::$request == 'test') {
+        } else if (self::$request == 'test') {
             View::setTemplatesDir(__DIR__ . "/../Templates/");
             View::setLoader(null);
 

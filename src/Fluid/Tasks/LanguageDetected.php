@@ -1,6 +1,7 @@
 <?php
 
 namespace Fluid\Tasks;
+
 use Fluid;
 use Fluid\WebSocket\Server;
 
@@ -12,7 +13,7 @@ class LanguageDetected extends Fluid\Task implements Fluid\TaskInterface
     /**
      * Init the task
      *
-     * @param   Server $server
+     * @param Server $server
      */
     public function __construct(Server $server)
     {
@@ -21,8 +22,6 @@ class LanguageDetected extends Fluid\Task implements Fluid\TaskInterface
 
     /**
      * Execute the task
-     *
-     * @return  void
      */
     public function execute()
     {
@@ -31,13 +30,12 @@ class LanguageDetected extends Fluid\Task implements Fluid\TaskInterface
     /**
      * Receive message from the task and broadcast it to users
      *
-     * @param   array $data
-     * @return  void
+     * @param array $data
      */
     public function message(array $data)
     {
         foreach ($this->server->getConnections() as $connection => $subscribers) {
-            foreach($subscribers as $subscriber) {
+            foreach ($subscribers as $subscriber) {
                 if ($subscriber['session'] == $data['session']) {
                     $subscriber['topic']->broadcast(json_encode($data['message']));
                 }

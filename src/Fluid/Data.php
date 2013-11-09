@@ -2,9 +2,8 @@
 
 namespace Fluid;
 
-use Fluid\Token\Token,
-    Fluid\Page\Page,
-    Fluid\Map\Map;
+use Fluid\Page\Page;
+use Fluid\Map\Map;
 
 /**
  * Data class
@@ -18,8 +17,8 @@ class Data
     /**
      * Get data for a page
      *
-     * @param   string  $page
-     * @return  array
+     * @param string $page
+     * @return array
      */
     public static function get($page = null)
     {
@@ -68,7 +67,7 @@ class Data
             'page' => $page
         );
 
-        foreach(Event::trigger('data:get', array($data)) as $retval) {
+        foreach (Event::trigger('data:get', array($data)) as $retval) {
             $data = $retval;
         }
 
@@ -78,8 +77,8 @@ class Data
     /**
      * Set the site map
      *
-     * @param   Map $map
-     * @return  void
+     * @param Map $map
+     * @return void
      */
     public static function setMap(Map $map)
     {
@@ -89,7 +88,7 @@ class Data
     /**
      * Get the site map
      *
-     * @return  Map
+     * @return Map
      */
     public static function getMap()
     {
@@ -100,7 +99,7 @@ class Data
      * Get the requested url
      * NOTE: this is private because we only use it here, if we need to make if public, we will have to move it elsewhere
      *
-     * @return  array
+     * @return array
      */
     private static function getRequest()
     {
@@ -131,8 +130,8 @@ class Data
     /**
      * Get all data
      *
-     * @param   Map     $map
-     * @return  array
+     * @param Map $map
+     * @return array
      */
     private static function getData(Map $map)
     {
@@ -145,14 +144,14 @@ class Data
     /**
      * Add keys to sub pages
      *
-     * @param   array   $page
-     * @return  array
+     * @param array $page
+     * @return array
      */
-    private static function processPagesKeys($page)
+    private static function processPagesKeys(array $page)
     {
         if (isset($page['pages']) && is_array($page['pages']) && count($page['pages'])) {
             $newPages = array();
-            foreach($page['pages'] as $key => $childPage) {
+            foreach ($page['pages'] as $key => $childPage) {
                 $newPages[$childPage['page']] = self::processPagesKeys($childPage);
             }
             $page['pages'] = $newPages;
@@ -163,13 +162,13 @@ class Data
     /**
      * Get pages data
      *
-     * @param   array   $pages
-     * @return  array
+     * @param array $pages
+     * @return array
      */
-    private static function getPagesData($pages)
+    private static function getPagesData(array $pages)
     {
         $data = array();
-        foreach($pages as $page) {
+        foreach ($pages as $page) {
             // Get the page data
             $pageData = Page::get($page)->getData();
             $pageData = array_merge($page, $pageData);
@@ -190,11 +189,11 @@ class Data
     /**
      * Get a page
      *
-     * @param   array   $data
-     * @param   string  $page
-     * @return  array
+     * @param array $data
+     * @param string|null $page
+     * @return array
      */
-    private static function getPage($data, $page = null)
+    private static function getPage(array $data, $page = null)
     {
         if (!empty($page)) {
             $page = self::findPage($page, $data['pages']);
@@ -211,18 +210,17 @@ class Data
     /**
      * Find a page
      *
-     * @param   string  $pageId
-     * @param   array   $pages
-     * @param   array   $parents
-     * @return  array
+     * @param string $pageId
+     * @param array $pages
+     * @param array $parents
+     * @return array
      */
-    private static function findPage($pageId, $pages, $parents = array())
+    private static function findPage($pageId, array $pages, array $parents = array())
     {
-        foreach($pages as $page) {
+        foreach ($pages as $page) {
             if (strtolower($page['id']) === strtolower($pageId)) {
                 return array_merge($page, array('parents' => $parents));
-            }
-            else if (isset($page['pages']) && is_array($page['pages']) && count($page['pages'])) {
+            } else if (isset($page['pages']) && is_array($page['pages']) && count($page['pages'])) {
                 $match = self::findPage($pageId, $page['pages'], array_merge($parents, array($page)));
                 if ($match) {
                     return $match;
@@ -236,14 +234,14 @@ class Data
     /**
      * Make the tree of parents for the requested page
      *
-     * @param   array   $page
-     * @return  array
+     * @param array $page
+     * @return array
      */
-    private static function makeParentTree($page)
+    private static function makeParentTree(array $page)
     {
         if (count($page['parents'])) {
             $newParents = array();
-            foreach($page['parents'] as $parent) {
+            foreach ($page['parents'] as $parent) {
                 $newParents[$parent['page']] = $parent;
             }
             $page['parents'] = $newParents;

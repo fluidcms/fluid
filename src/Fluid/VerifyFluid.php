@@ -2,8 +2,6 @@
 
 namespace Fluid;
 
-use PDOException;
-
 /**
  * Init a new project
  *
@@ -14,7 +12,7 @@ class VerifyFluid
     /**
      * Check if we can run Fluid
      *
-     * @return  bool
+     * @return bool
      */
     public static function check()
     {
@@ -34,7 +32,7 @@ class VerifyFluid
     /**
      * Check if the storage folder exists
      *
-     * @return  bool
+     * @return bool
      */
     public static function checkStorage()
     {
@@ -54,12 +52,12 @@ class VerifyFluid
     /**
      * Check if git is initalized
      *
-     * @return  bool
+     * @return bool
      */
     public static function checkGit()
     {
         return (
-            is_dir(Config::get('storage') . '/master/.git')
+        is_dir(Config::get('storage') . '/master/.git')
         );
     }
 }

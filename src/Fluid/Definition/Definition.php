@@ -11,23 +11,21 @@ abstract class Definition
     /**
      * Get the configurations
      *
-     * @param   SimpleXMLElement    $xml
-     * @return  array
+     * @param SimpleXMLElement $xml
+     * @return array
      */
     protected static function getConfig(SimpleXMLElement $xml)
     {
         $config = array();
 
         if (isset($xml->config)) {
-            foreach($xml->config->children() as $setting) {
+            foreach ($xml->config->children() as $setting) {
                 $settingKey = null;
-                foreach($setting->attributes() as $key => $value) {
+                foreach ($setting->attributes() as $key => $value) {
                     $value = (string)$value;
                     if ($key === 'name') {
                         $settingKey = $value;
-                    }
-
-                    else if ($settingKey !== null && $key === 'value') {
+                    } else if ($settingKey !== null && $key === 'value') {
                         $config[$settingKey] = $value;
                         $settingKey = null;
                     }
@@ -41,9 +39,9 @@ abstract class Definition
     /**
      * Get the variables
      *
-     * @param   SimpleXMLElement    $xml
-     * @param   string  $file
-     * @return  array
+     * @param SimpleXMLElement $xml
+     * @param string $file
+     * @return array
      */
     protected static function getVariablesGroups(SimpleXMLElement $xml, $file)
     {
@@ -51,8 +49,8 @@ abstract class Definition
         $extendingGroups = array();
 
         if (isset($xml->extend)) {
-            foreach($xml->extend as $extending) {
-                foreach($extending->attributes() as $key => $value) {
+            foreach ($xml->extend as $extending) {
+                foreach ($extending->attributes() as $key => $value) {
                     if ($key === 'file') {
                         $dir = dirname($file);
                         $filePath = realpath($dir . '/' . (string)$value);
@@ -64,9 +62,9 @@ abstract class Definition
         }
 
         if (isset($xml->group)) {
-            foreach($xml->group as $group) {
+            foreach ($xml->group as $group) {
                 $universal = false;
-                foreach($group->attributes() as $key => $value) {
+                foreach ($group->attributes() as $key => $value) {
                     if ($key === 'name') {
                         $groupName = (string)$value;
                     }
@@ -82,7 +80,7 @@ abstract class Definition
             }
         }
 
-        foreach($extendingGroups as $extendingGroup) {
+        foreach ($extendingGroups as $extendingGroup) {
             $groups = array_merge($extendingGroup, $groups);
         }
 
@@ -92,26 +90,30 @@ abstract class Definition
     /**
      * Parse group items
      *
-     * @param   SimpleXMLElement   $xml
-     * @param   bool    $child
-     * @param   bool    $universal
-     * @return  array
+     * @param SimpleXMLElement $xml
+     * @param bool $child
+     * @param bool $universal
+     * @return array
      */
     protected static function getVariables(SimpleXMLElement $xml, $child = false, $universal = false)
     {
         $variables = array();
 
-        foreach($xml->children() as $item) {
+        foreach ($xml->children() as $item) {
             $itemName = $item->getName();
-            switch($itemName) {
+            switch ($itemName) {
                 // Variable
                 case 'variable':
                     // TODO: use an array here because variables can overlap with the previous item unless they are unset
                     $variableUniversal = $universal;
-                    foreach($item->attributes() as $key => $value) {
-                        switch($key) {
-                            case 'name': $variableName = (string)$value; break;
-                            case 'type': $variableType = (string)$value; break;
+                    foreach ($item->attributes() as $key => $value) {
+                        switch ($key) {
+                            case 'name':
+                                $variableName = (string)$value;
+                                break;
+                            case 'type':
+                                $variableType = (string)$value;
+                                break;
                             case 'universal':
                                 if ((string)$value === 'true' || (string)$value === '1') {
                                     $variableUniversal = true;
@@ -122,11 +124,11 @@ abstract class Definition
                     if (!empty($variableName) && !empty($variableType) && in_array($variableType, self::$variableTypes)) {
                         if ($variableType === 'option') {
                             $variableOptions = array();
-                            foreach($item->children() as $option) {
+                            foreach ($item->children() as $option) {
                                 if ($option->getName() === 'option') {
                                     $name = '';
                                     $value = '';
-                                    foreach($option->attributes() as $key => $value) {
+                                    foreach ($option->attributes() as $key => $value) {
                                         if ($key === 'value') {
                                             $value = (string)$value;
                                         }
@@ -160,9 +162,11 @@ abstract class Definition
                     if (!$child) {
                         // TODO: use an array here because variables can overlap with the previous item unless they are unset
                         $variableUniversal = $universal;
-                        foreach($item->attributes() as $key => $value) {
-                            switch($key) {
-                                case 'name': $variableName = (string)$value; break;
+                        foreach ($item->attributes() as $key => $value) {
+                            switch ($key) {
+                                case 'name':
+                                    $variableName = (string)$value;
+                                    break;
                                 case 'universal':
                                     if ((string)$value === 'true' || (string)$value === '1') {
                                         $variableUniversal = true;
@@ -188,9 +192,11 @@ abstract class Definition
                         'footer' => false,
                         'universal' => $universal
                     );
-                    foreach($item->attributes() as $key => $value) {
-                        switch($key) {
-                            case 'name': $table['name'] = (string)$value; break;
+                    foreach ($item->attributes() as $key => $value) {
+                        switch ($key) {
+                            case 'name':
+                                $table['name'] = (string)$value;
+                                break;
                             case 'header':
                                 if ((string)$value === 'true' || (string)$value === '1') {
                                     $table['header'] = true;
@@ -201,8 +207,12 @@ abstract class Definition
                                     $table['footer'] = true;
                                 }
                                 break;
-                            case 'columns': $table['columns'] = (int)$value; break;
-                            case 'rows': $table['rows'] = (int)$value; break;
+                            case 'columns':
+                                $table['columns'] = (int)$value;
+                                break;
+                            case 'rows':
+                                $table['rows'] = (int)$value;
+                                break;
                             case 'universal':
                                 if ((string)$value === 'true' || (string)$value === '1') {
                                     $table['universal'] = true;
@@ -222,13 +232,23 @@ abstract class Definition
                     // TODO: use an array here because variables can overlap with the previous item unless they are unset
                     // TODO: for variableUniversal and imageName in this case
                     $variableUniversal = $universal;
-                    foreach($item->attributes() as $key => $value) {
-                        switch($key) {
-                            case 'name': $imageName = (string)$value; break;
-                            case 'width': $image['width'] = (string)$value; break;
-                            case 'height': $image['height'] = (string)$value; break;
-                            case 'format': $image['format'] = (string)$value; break;
-                            case 'quality': $image['quality'] = (string)$value; break;
+                    foreach ($item->attributes() as $key => $value) {
+                        switch ($key) {
+                            case 'name':
+                                $imageName = (string)$value;
+                                break;
+                            case 'width':
+                                $image['width'] = (string)$value;
+                                break;
+                            case 'height':
+                                $image['height'] = (string)$value;
+                                break;
+                            case 'format':
+                                $image['format'] = (string)$value;
+                                break;
+                            case 'quality':
+                                $image['quality'] = (string)$value;
+                                break;
                             case 'universal':
                                 if ((string)$value === 'true' || (string)$value === '1') {
                                     $variableUniversal = true;
@@ -240,16 +260,26 @@ abstract class Definition
 
                     // Formats
                     $formats = array();
-                    foreach($item->children() as $format) {
+                    foreach ($item->children() as $format) {
                         if ($format->getName() === 'format') {
                             $thisFormat = array();
-                            foreach($format->attributes() as $key => $value) {
-                                switch($key) {
-                                    case 'name': $formatName = (string)$value; break;
-                                    case 'width': $thisFormat['width'] = (string)$value; break;
-                                    case 'height': $thisFormat['height'] = (string)$value; break;
-                                    case 'format': $thisFormat['format'] = (string)$value; break;
-                                    case 'quality': $thisFormat['quality'] = (string)$value; break;
+                            foreach ($format->attributes() as $key => $value) {
+                                switch ($key) {
+                                    case 'name':
+                                        $formatName = (string)$value;
+                                        break;
+                                    case 'width':
+                                        $thisFormat['width'] = (string)$value;
+                                        break;
+                                    case 'height':
+                                        $thisFormat['height'] = (string)$value;
+                                        break;
+                                    case 'format':
+                                        $thisFormat['format'] = (string)$value;
+                                        break;
+                                    case 'quality':
+                                        $thisFormat['quality'] = (string)$value;
+                                        break;
                                 }
                             }
                             if (empty($thisFormat['quality']) && !empty($image['quality'])) {

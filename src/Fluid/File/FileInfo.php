@@ -2,7 +2,7 @@
 
 namespace Fluid\File;
 
-use Fluid\Fluid, Exception;
+use Exception;
 
 /**
  * Get Info On Uploaded File
@@ -14,10 +14,10 @@ class FileInfo
     /**
      * Get information on a file
      *
-     * @param   array   $file
-     * @return  array
+     * @param array $file
+     * @return array
      */
-    public static function getTmpFileInfo($file)
+    public static function getTmpFileInfo(array $file)
     {
         if (strpos($file['type'], 'image') !== false) {
             $info = self::getImageInfo($file['tmp_name']);
@@ -30,11 +30,11 @@ class FileInfo
     /**
      * Get information on an image
      *
-     * @param   array   $file
-     * @throws  Exception
-     * @return  array
+     * @param array $file
+     * @throws Exception
+     * @return array
      */
-    public static function getImageInfo($file)
+    public static function getImageInfo(array $file)
     {
         if (file_exists($file) && $size = getimagesize($file)) {
             return array(

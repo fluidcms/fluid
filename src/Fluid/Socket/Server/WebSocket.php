@@ -45,7 +45,7 @@ class WebSocket implements WampServerInterface
                 'user_email' => $topicId['user_email'],
                 'topic' => $topic
             );
-            Log::add("User " . $topicId['user_id'] ." subscribed");
+            Log::add("User " . $topicId['user_id'] . " subscribed");
             $topic->broadcast('true');
         }
     }
@@ -116,9 +116,7 @@ class WebSocket implements WampServerInterface
             if (!empty($retval)) {
                 $conn->send('[3,"' . $id . '",' . $retval . ']');
             }
-        }
-
-        else {
+        } else {
             $conn->callError($id, $topic, 'Invalid call')->close();
         }
     }

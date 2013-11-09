@@ -2,7 +2,8 @@
 
 namespace Fluid;
 
-class Init {
+class Init
+{
     private static $allowed = array(
         '/fluidcms/stylesheets/init-1.0.css',
         '/fluidcms/images/preloader.gif',
@@ -11,10 +12,9 @@ class Init {
 
     /**
      * Init Fluid from the web interface
-     *
-     * @return  void
      */
-    public static function init() {
+    public static function init()
+    {
 
         if (!in_array($_SERVER['PHP_SELF'], self::$allowed)) {
             if ($_SERVER['PHP_SELF'] == '/fluidcms/init') {
@@ -32,9 +32,10 @@ class Init {
     /**
      * Trigger the init from ajax
      *
-     * @return  string
+     * @return string
      */
-    public static function triggerInit() {
+    public static function triggerInit()
+    {
         Tasks\Init::execute();
         exit;
     }

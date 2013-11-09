@@ -17,9 +17,9 @@ class FilePreview
     /**
      * Make the preview
      *
-     * @param   File  $file
-     * @throws  DomainException
-     * @return  string
+     * @param File $file
+     * @throws DomainException
+     * @return string
      */
     public static function make(File $file)
     {
@@ -29,9 +29,9 @@ class FilePreview
     /**
      * Make the preview
      *
-     * @param   string  $file
-     * @throws  DomainException
-     * @return  string
+     * @param string $file
+     * @throws DomainException
+     * @return string
      */
     private static function makePreview($file)
     {
@@ -61,7 +61,7 @@ class FilePreview
         } else if ($size['mime'] === "image/gif") {
             $img = imagecreatefromgif($file);
         } else {
-            throw new DomainException('Unknown image type: '.$size['mime']);
+            throw new DomainException('Unknown image type: ' . $size['mime']);
         }
 
         $newImg = imagecreatetruecolor($width, $height);

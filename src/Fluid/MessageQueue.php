@@ -1,8 +1,7 @@
 <?php
 
 namespace Fluid;
-use ZMQ;
-use ZMQContext;
+
 use Exception;
 
 class MessageQueue
@@ -14,7 +13,7 @@ class MessageQueue
     /**
      * Send data to Web Socket Server
      *
-     * @param   array  $data
+     * @param   array $data
      * @return  void
      */
     public static function send($data)
@@ -49,7 +48,7 @@ class MessageQueue
 
         if (is_resource($connection)) {
             fclose($connection);
-            return self::getAvalaiblePort(($port+1), ($loop+1));
+            return self::getAvalaiblePort(($port + 1), ($loop + 1));
         }
 
         file_put_contents(Config::get('storage') . '/' . self::$portFile, json_encode(array("port" => $port)));

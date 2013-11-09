@@ -2,16 +2,20 @@
 
 namespace Fluid\Twig;
 
-use Twig_NodeVisitorInterface, Twig_NodeInterface, Twig_Environment, Twig_Node_Print, Twig_Node_For;
+use Twig_NodeVisitorInterface;
+use Twig_NodeInterface;
+use Twig_Environment;
+use Twig_Node_Print;
+use Twig_Node_For;
 
 class FieldNodeVisitor implements Twig_NodeVisitorInterface
 {
     /**
      * Called before child nodes are visited.
      *
-     * @param   Twig_NodeInterface  $node The node to visit
-     * @param   Twig_Environment    $env  The Twig environment instance
-     * @return  Twig_NodeInterface  The modified node
+     * @param Twig_NodeInterface $node The node to visit
+     * @param Twig_Environment $env The Twig environment instance
+     * @return Twig_NodeInterface  The modified node
      */
     public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
     {
@@ -25,9 +29,9 @@ class FieldNodeVisitor implements Twig_NodeVisitorInterface
     /**
      * Called after child nodes are visited.
      *
-     * @param   Twig_NodeInterface  $node The node to visit
-     * @param   Twig_Environment    $env  The Twig environment instance
-     * @return  Twig_NodeInterface  The modified node
+     * @param Twig_NodeInterface $node The node to visit
+     * @param Twig_Environment $env The Twig environment instance
+     * @return Twig_NodeInterface  The modified node
      */
     public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env)
     {
@@ -42,7 +46,7 @@ class FieldNodeVisitor implements Twig_NodeVisitorInterface
      * Returns the priority for this visitor.
      * Priority should be between -10 and 10 (0 is the default).
      *
-     * @return  integer The priority level
+     * @return integer The priority level
      */
     public function getPriority()
     {

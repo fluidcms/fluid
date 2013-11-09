@@ -1,6 +1,7 @@
 <?php
 
 namespace Fluid\WebSocket;
+
 use Fluid\Event as FluidEvent;
 use Fluid\Requests\WebSocket as WebSocketRequest;
 
@@ -14,7 +15,7 @@ class Events
     /**
      * Bind events to server
      *
-     * @param   Server  $server
+     * @param Server $server
      */
     public function __construct(Server $server)
     {
@@ -27,9 +28,8 @@ class Events
     /**
      * Register a user to events
      *
-     * @param   string  $user
-     * @param   string  $topic
-     * @return  void
+     * @param string $user
+     * @param string $topic
      */
     public static function register($user, $topic)
     {
@@ -41,8 +41,7 @@ class Events
     /**
      * Register a user to events
      *
-     * @param   string  $user
-     * @return  void
+     * @param string $user
      */
     public static function unregister($user)
     {
@@ -54,9 +53,8 @@ class Events
     /**
      * Register a user to events
      *
-     * @param   string  $user
-     * @param   string  $topic
-     * @return  void
+     * @param string $user
+     * @param string $topic
      */
     public function registerUser($user, $topic)
     {
@@ -70,8 +68,7 @@ class Events
     /**
      * Unregister a user from events
      *
-     * @param   string  $user
-     * @return  void
+     * @param string $user
      */
     public function unregisterUser($user)
     {
@@ -81,14 +78,13 @@ class Events
     /**
      * Send a message to the user
      *
-     * @param   string  $user
-     * @param   string  $message
-     * @return  void
+     * @param string $user
+     * @param string $message
      */
     public function sendMessage($user, $message)
     {
         foreach ($this->server->getConnections() as $connection => $subscribers) {
-            foreach($subscribers as $subscriber) {
+            foreach ($subscribers as $subscriber) {
                 if ($subscriber['user_id'] == $user) {
                     $subscriber['topic']->broadcast($message);
                 }
@@ -100,12 +96,12 @@ class Events
     /**
      * Checks if a topic is registered
      *
-     * @param   string  $topic
-     * @return  bool
+     * @param string $topic
+     * @return bool
      */
     private function topicIsRegistered($topic)
     {
-        foreach($this->users as $user) {
+        foreach ($this->users as $user) {
             if (isset($user[$topic])) {
                 return true;
             }
@@ -115,13 +111,11 @@ class Events
 
     /**
      * History change event
-     *
-     * @return  void
      */
     private function onHistoryChange()
     {
         $root = $this;
-        FluidEvent::on('historyChange', function($branch) use($root) {
+        FluidEvent::on('historyChange', function ($branch) use ($root) {
             // Send new map to user
             $root->refreshMap($branch);
         });
@@ -129,13 +123,11 @@ class Events
 
     /**
      * History change event
-     *
-     * @return  void
      */
     private function onMapChange()
     {
         $root = $this;
-        FluidEvent::on('mapChange', function($branch) use($root) {
+        FluidEvent::on('mapChange', function ($branch) use ($root) {
             // Send new map to user
             $root->refreshMap($branch);
         });
@@ -144,8 +136,7 @@ class Events
     /**
      * History change event
      *
-     * @param   string  $branch
-     * @return  void
+     * @param string $branch
      */
     public function refreshMap($branch)
     {
@@ -161,7 +152,7 @@ class Events
                 'data' => $retval
             );
 
-            foreach($this->users as $user => $topics) {
+            foreach ($this->users as $user => $topics) {
                 if (isset($topics['map'])) {
                     $this->sendMessage($user, json_encode($message));
                 }

@@ -7,14 +7,14 @@ class ErrorHandler
     /**
      * Error handler
      *
-     * @param   int $errno
-     * @param   string $errstr
-     * @param   string $errfile
-     * @param   int $errline
-     * @param   array $errcontext
-     * @return  bool
+     * @param int $errno
+     * @param string|null $errstr
+     * @param string|null $errfile
+     * @param int|null $errline
+     * @param array|null $errcontext
+     * @return bool
      */
-    public static function error($errno, $errstr = null, $errfile = null, $errline = null, $errcontext = null)
+    public static function error($errno, $errstr = null, $errfile = null, $errline = null, array $errcontext = null)
     {
         if (0 !== error_reporting()) {
             self::log($errno, $errstr, $errfile, $errline, $errcontext);
@@ -26,7 +26,7 @@ class ErrorHandler
     /**
      * Uncatchable error handler
      *
-     * @return  bool
+     * @return bool
      */
     public static function shutdown()
     {
@@ -42,14 +42,14 @@ class ErrorHandler
     /**
      * Log the error
      *
-     * @param   int $errno
-     * @param   string $errstr
-     * @param   string $errfile
-     * @param   int $errline
-     * @param   array $errcontext
-     * @return  void
+     * @param int $errno
+     * @param string|null $errstr
+     * @param string|null $errfile
+     * @param int|null $errline
+     * @param array|null $errcontext
+     * @return void
      */
-    private static function log($errno, $errstr = null, $errfile = null, $errline = null, $errcontext = null)
+    private static function log($errno, $errstr = null, $errfile = null, $errline = null, array $errcontext = null)
     {
         $msg = "";
 

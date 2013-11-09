@@ -28,7 +28,7 @@ class Layout
         $dir = Config::get('templates') . '/' . Config::get('layouts');
 
         if ($layout !== 'global') {
-            $file = "{$dir}{$layout}/layout.xml";
+            $file = "{$dir}/{$layout}/layout.xml";
         } else {
             $file = "{$dir}/global.xml";
         }

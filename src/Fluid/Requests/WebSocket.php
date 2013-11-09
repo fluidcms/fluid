@@ -2,17 +2,17 @@
 
 namespace Fluid\Requests;
 
-use Fluid\Fluid,
-    Fluid\Event as FluidEvent,
-    Fluid\WebSocket\Events as ServerEvents,
-    Fluid\Language\Language,
-    Fluid\Layout\Layout,
-    Fluid\Map\Map,
-    Fluid\Page\Page,
-    Fluid\File\File,
-    Fluid\Token\Token,
-    Fluid\Component\Component,
-    Fluid\History\History;
+use Fluid\Fluid;
+use Fluid\Event as FluidEvent;
+use Fluid\WebSocket\Events as ServerEvents;
+use Fluid\Language\Language;
+use Fluid\Layout\Layout;
+use Fluid\Map\Map;
+use Fluid\Page\Page;
+use Fluid\File\File;
+use Fluid\Token\Token;
+use Fluid\Component\Component;
+use Fluid\History\History;
 
 class WebSocket
 {
@@ -25,13 +25,13 @@ class WebSocket
     /**
      * Route a request
      *
-     * @param   string  $request
-     * @param   string  $method
-     * @param   array   $input
-     * @param   string  $branch
-     * @param   array   $user
+     * @param string $request
+     * @param string $method
+     * @param array $input
+     * @param string|null $branch
+     * @param array|null $user
      */
-    public function __construct($request, $method, $input = array(), $branch = null, $user = null)
+    public function __construct($request, $method, array $input = array(), $branch = null, array $user = null)
     {
         $this->user = $user;
         $this->branch = $branch;
@@ -55,7 +55,7 @@ class WebSocket
     /**
      * Output a page token.
      *
-     * @return  bool
+     * @return bool
      */
     private function token()
     {
@@ -70,7 +70,7 @@ class WebSocket
     /**
      * Route languages requests.
      *
-     * @return  bool
+     * @return bool
      */
     private function language()
     {
@@ -87,7 +87,7 @@ class WebSocket
     /**
      * Route layouts requests.
      *
-     * @return  bool
+     * @return bool
      */
     private function layout()
     {
@@ -98,8 +98,7 @@ class WebSocket
                     if (empty($match[2])) {
                         echo json_encode(Layout::getLayouts());
                         return true;
-                    }
-                    // Get specific layout
+                    } // Get specific layout
                     else {
                         $layout = trim($match[2], '/ ');
                         $layout = Layout::get($layout);
@@ -114,7 +113,7 @@ class WebSocket
     /**
      * Route layouts requests.
      *
-     * @return  bool
+     * @return bool
      */
     private function component()
     {
@@ -136,7 +135,7 @@ class WebSocket
     /**
      * Route file requests
      *
-     * @return  bool
+     * @return bool
      */
     private function file()
     {
@@ -177,7 +176,7 @@ class WebSocket
     /**
      * Route map requests.
      *
-     * @return  bool
+     * @return bool
      */
     private function map()
     {
@@ -214,8 +213,7 @@ class WebSocket
                             $this->user['email']
                         );
                         echo json_encode($map->getPages());
-                    }
-                    // Edit
+                    } // Edit
                     else {
                         $map = new Map;
                         $map->editPage($this->input);
@@ -249,7 +247,7 @@ class WebSocket
     /**
      * Route history requests.
      *
-     * @return  bool
+     * @return bool
      */
     private function history()
     {
@@ -277,7 +275,7 @@ class WebSocket
     /**
      * Route page requests.
      *
-     * @return  bool
+     * @return bool
      */
     private function page()
     {
@@ -414,7 +412,7 @@ class WebSocket
     /**
      * Route version requests.
      *
-     * @return  bool
+     * @return bool
      */
     private function version()
     {

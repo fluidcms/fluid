@@ -1,6 +1,7 @@
 <?php
 
 namespace Fluid;
+
 use Fluid\Requests\HTTP;
 
 /**
@@ -13,8 +14,8 @@ class Router
     /**
      * Route a request
      *
-     * @param   string  $request
-     * @return  mixed
+     * @param string|null $request
+     * @return mixed
      */
     public static function route($request = null)
     {
@@ -23,8 +24,7 @@ class Router
             if (HTTP::route($request)) {
                 return true;
             }
-        }
-        // Route pages
+        } // Route pages
         else {
             if (null === $request && isset($_SERVER['REQUEST_URI'])) {
                 $request = $_SERVER['REQUEST_URI'];
@@ -47,12 +47,12 @@ class Router
     /**
      * Try to match a request with an array of pages
      *
-     * @param   string  $request
-     * @param   array   $pages
-     * @param   string  $parent
-     * @return  array
+     * @param string $request
+     * @param array $pages
+     * @param string $parent
+     * @return array|bool
      */
-    private static function matchRequest($request, $pages, $parent = '')
+    private static function matchRequest($request, array $pages, $parent = '')
     {
         foreach ($pages as $page) {
             if (isset($page['url']) && $request == $page['url']) {

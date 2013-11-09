@@ -2,10 +2,8 @@
 
 namespace Fluid\File;
 
-use Exception,
-    Fluid\Fluid,
-    Fluid\File\FileInfo,
-    Fluid\File\FilePreview;
+use Exception;
+use Fluid\Fluid;
 
 /**
  * File model
@@ -28,7 +26,7 @@ class File
     /**
      * Init
      *
-     * @param   string  $id
+     * @param string|null $id
      */
     public function __construct($id = null)
     {
@@ -48,7 +46,7 @@ class File
     /**
      * Check if dir exists or create it
      *
-     * @return  bool
+     * @return bool
      */
     public static function checkDir()
     {
@@ -61,8 +59,8 @@ class File
     /**
      * Get a file by id
      *
-     * @param   string  $id
-     * @return  self
+     * @param string $id
+     * @return self
      */
     public static function get($id)
     {
@@ -72,8 +70,8 @@ class File
     /**
      * Get a file's path
      *
-     * @throws  Exception
-     * @return  string
+     * @throws Exception
+     * @return string
      */
     public function getPath()
     {
@@ -83,7 +81,7 @@ class File
 
         self::checkDir();
         $dir = Fluid::getBranchStorage() . "/files/{$this->id}";
-        foreach(scandir($dir) as $file) {
+        foreach (scandir($dir) as $file) {
             if ($file !== '.' && $file !== '..' && is_file("{$dir}/{$file}")) {
                 $this->filePath = "{$dir}/{$file}";
                 return $this->filePath;
@@ -97,7 +95,7 @@ class File
     /**
      * Get a file's info
      *
-     * @return  array
+     * @return array
      */
     public function getInfo()
     {
@@ -116,7 +114,7 @@ class File
     /**
      * Get all files
      *
-     * @return  array
+     * @return array
      */
     public static function getFiles()
     {
@@ -135,7 +133,7 @@ class File
         // Sort by creation date
         $retval = array();
         arsort($sort);
-        foreach($sort as $key => $value) {
+        foreach ($sort as $key => $value) {
             $retval[] = $output[$key];
         }
 
@@ -145,14 +143,14 @@ class File
     /**
      * Scan a file directory for the file and get the file's info
      *
-     * @param   string  $id
-     * @return  array
+     * @param string $id
+     * @return array
      */
     private static function getFileInfo($id)
     {
         $dir = Fluid::getBranchStorage() . "/files/{$id}";
 
-        foreach(scandir($dir) as $file) {
+        foreach (scandir($dir) as $file) {
             if ($file !== '.' && $file !== '..' && is_file("{$dir}/{$file}")) {
                 if ($file = FileInfo::getImageInfo("{$dir}/{$file}")) {
                     return array_merge(
@@ -168,8 +166,8 @@ class File
     /**
      * Delete file
      *
-     * @param   string  $id
-     * @return  bool
+     * @param string $id
+     * @return bool
      */
     public static function delete($id)
     {
@@ -189,7 +187,7 @@ class File
     /**
      * Make an image preview
      *
-     * @return  array
+     * @return array
      */
     public function getPreview()
     {
@@ -202,11 +200,11 @@ class File
     /**
      * Upload file
      *
-     * @param   string  $id
-     * @param   array   $file
-     * @return  array
+     * @param string $id
+     * @param array $file
+     * @return array
      */
-    public static function upload($id, $file)
+    public static function upload($id, array $file)
     {
         self::checkDir();
         if (!$file['error'] && strlen($id) === 8 && self::idIsUnique($id)) {
@@ -230,8 +228,8 @@ class File
     /**
      * Check if file uploaded id is unique
      *
-     * @param   string  $id
-     * @return  bool
+     * @param string $id
+     * @return bool
      */
     public static function idIsUnique($id)
     {

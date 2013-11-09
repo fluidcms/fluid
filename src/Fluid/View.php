@@ -20,11 +20,11 @@ class View
     /**
      * Create a view
      *
-     * @param   string   $file
-     * @param   array    $data
-     * @return  string
+     * @param string $file
+     * @param array $data
+     * @return string
      */
-    public static function create($file, $data = array())
+    public static function create($file, array $data = array())
     {
         return self::render($file, $data);
     }
@@ -32,12 +32,12 @@ class View
     /**
      * Create a view from a Twig macro
      *
-     * @param   string   $macro
-     * @param   string   $file
-     * @param   array    $data
-     * @return  string
+     * @param string $macro
+     * @param string $file
+     * @param array $data
+     * @return string
      */
-    public static function macro($macro, $file, $data = array())
+    public static function macro($macro, $file, array $data = array())
     {
         // TODO: add hook for Twig loader
         // TODO: cache twig loaders in static variables
@@ -48,7 +48,7 @@ class View
 
         $twig = new Twig_Environment($loader);
 
-        $input = '{% import "'.$file.'" as macros %}{{ macros.'.$macro.'(data) }}';
+        $input = '{% import "' . $file . '" as macros %}{{ macros.' . $macro . '(data) }}';
 
         return $twig->render($input, array('data' => $data));
     }
@@ -56,8 +56,7 @@ class View
     /**
      * Extends Twig Loader
      *
-     * @param   TwigLoaderInterface $loader
-     * @return  void
+     * @param TwigLoaderInterface $loader
      */
     public static function setLoader($loader)
     {
@@ -70,7 +69,7 @@ class View
     /**
      * Initialize Twig
      *
-     * @return  string
+     * @return string
      */
     public static function initTwig()
     {
@@ -90,11 +89,11 @@ class View
     /**
      * Render a view
      *
-     * @param   string   $file
-     * @param   array    $data
-     * @return  string
+     * @param string $file
+     * @param array $data
+     * @return string
      */
-    protected static function render($file, $data = array())
+    protected static function render($file, array $data = array())
     {
         // TODO: convert hook for Twig loader (same as macro method)
         // TODO: cache twig loaders in static variables
@@ -108,8 +107,7 @@ class View
     /**
      * Set templates directory
      *
-     * @param   string  $dir
-     * @return  void
+     * @param string $dir
      */
     public static function setTemplatesDir($dir)
     {
@@ -119,7 +117,7 @@ class View
     /**
      * Get templates directory
      *
-     * @return  string
+     * @return string
      */
     public static function getTemplatesDir()
     {

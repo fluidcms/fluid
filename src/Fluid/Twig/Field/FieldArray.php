@@ -2,7 +2,9 @@
 
 namespace Fluid\Twig\Field;
 
-use Fluid\Twig\PrintNode\FieldArrayNodePrint, Fluid\Twig\NodeHandler, Twig_Node_Expression_GetAttr;
+use Fluid\Twig\PrintNode\FieldArrayNodePrint;
+use Fluid\Twig\NodeHandler;
+use Twig_Node_Expression_GetAttr;
 
 class FieldArray implements FieldInterface
 {
@@ -82,8 +84,6 @@ class FieldArray implements FieldInterface
 
     /**
      * Replace default Twig Node Print with Fluid Array Node Print
-     *
-     * @return  void
      */
     private function setNodePrint()
     {
@@ -101,8 +101,8 @@ class FieldArray implements FieldInterface
     /**
      * Match a Print Node with a FieldArray object and return the FieldArray object ID
      *
-     * @param   Twig_Node_Expression_GetAttr    $node
-     * @return  string
+     * @param Twig_Node_Expression_GetAttr $node
+     * @return string
      */
     public static function matchNode(Twig_Node_Expression_GetAttr $node)
     {

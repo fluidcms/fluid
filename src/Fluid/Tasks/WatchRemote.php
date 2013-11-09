@@ -1,6 +1,7 @@
 <?php
 
 namespace Fluid\Tasks;
+
 use Fluid;
 use Fluid\WebSocket\Server;
 
@@ -12,7 +13,7 @@ class WatchRemote extends Fluid\Task implements Fluid\TaskInterface
     /**
      * Init the task
      *
-     * @param   Server $server
+     * @param Server $server
      */
     public function __construct(Server $server)
     {
@@ -21,8 +22,6 @@ class WatchRemote extends Fluid\Task implements Fluid\TaskInterface
 
     /**
      * Execute the task
-     *
-     * @return  void
      */
     public function execute()
     {
@@ -43,8 +42,7 @@ class WatchRemote extends Fluid\Task implements Fluid\TaskInterface
     /**
      * Receive message from the task and broadcast it to users
      *
-     * @param   array $data
-     * @return  void
+     * @param array $data
      */
     public function message(array $data)
     {

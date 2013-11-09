@@ -33,7 +33,7 @@ class Message implements WebSocketClientInterface
      * @param string $event
      * @param array $data
      */
-    public function send($event, $data)
+    public function send($event, array $data)
     {
         $port = Config::get('websocket');
 

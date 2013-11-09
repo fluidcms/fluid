@@ -165,12 +165,12 @@ class Daemon implements DaemonInterface
         $server->create();
 
         // Stop server if inactive for 30 seconds
-        $loop->addPeriodicTimer(30, function() use ($root) {
+        $loop->addPeriodicTimer(30, function () use ($root) {
             // TODO if inactive, stop!
         });
 
         // Execute uptime callback every 10 seconds
-        $loop->addPeriodicTimer(10, function() use ($root) {
+        $loop->addPeriodicTimer(10, function () use ($root) {
             $root->uptimeCallback();
         });
 

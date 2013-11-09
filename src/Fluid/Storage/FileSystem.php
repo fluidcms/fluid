@@ -2,7 +2,7 @@
 
 namespace Fluid\Storage;
 
-use Exception, Fluid\Fluid;
+use Fluid\Fluid;
 
 /**
  * File storage helper class
@@ -16,8 +16,8 @@ abstract class FileSystem extends Cache
     /**
      * Get data from storage
      *
-     * @param   string  $file
-     * @return  array
+     * @param string|null $file
+     * @return array
      */
     public static function load($file = null)
     {
@@ -41,11 +41,10 @@ abstract class FileSystem extends Cache
     /**
      * Save data to storage
      *
-     * @param   array   $content
-     * @param   mixed   $file
-     * @return  void
+     * @param array $content
+     * @param mixed|null $file
      */
-    public static function save($content, $file = null)
+    public static function save(array $content, $file = null)
     {
         if (null === $file) {
             $file = static::$dataFile;
@@ -66,8 +65,7 @@ abstract class FileSystem extends Cache
     /**
      * Set the data file
      *
-     * @param   string
-     * @return  void
+     * @param string
      */
     public static function setDataFile($file)
     {
@@ -77,7 +75,7 @@ abstract class FileSystem extends Cache
     /**
      * Get the data file
      *
-     * @return  string
+     * @return string
      */
     public static function getDataFile()
     {

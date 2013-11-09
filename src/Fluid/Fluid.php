@@ -60,8 +60,8 @@ class Fluid
     /**
      * Turns debug mode on
      *
-     * @param   int $mode
-     * @return  void
+     * @param int $mode
+     * @return void
      */
     public static function debug($mode = self::DEBUG_LOG)
     {
@@ -71,7 +71,7 @@ class Fluid
     /**
      * Get the debug mode
      *
-     * @return  int
+     * @return int
      */
     public static function getDebugMode()
     {
@@ -81,8 +81,8 @@ class Fluid
     /**
      * Get the language of the instance
      *
-     * @param   string $value
-     * @return  string
+     * @param string $value
+     * @return string
      */
     public static function setLanguage($value)
     {
@@ -108,7 +108,7 @@ class Fluid
     /**
      * Get the language of the instance
      *
-     * @return  string
+     * @return string
      */
     public static function getLanguage()
     {
@@ -125,9 +125,8 @@ class Fluid
     /**
      * Set the branch
      *
-     * @param   string $branch
-     * @throws  Exception   Branch does not exists
-     * @return  void
+     * @param string $branch
+     * @throws Exception Branch does not exists
      */
     public static function setBranch($branch)
     {
@@ -136,7 +135,7 @@ class Fluid
         }
 
         if ($branch == self::$branch) {
-            return null;
+            return;
         } else if (is_dir(Config::get('storage') . '/' . $branch)) {
             self::$branch = $branch;
         } else {
@@ -147,7 +146,7 @@ class Fluid
     /**
      * Get the current branch
      *
-     * @return  string
+     * @return string
      */
     public static function getBranch()
     {
@@ -157,7 +156,7 @@ class Fluid
     /**
      * Get the current branch
      *
-     * @return  string
+     * @return string
      */
     public static function getBranchStorage()
     {
@@ -167,8 +166,7 @@ class Fluid
     /**
      * Set the request payload in case you use file_get_contents("php://input") before Fluid
      *
-     * @param   string $value
-     * @return  void
+     * @param string $value
      */
     public static function setRequestPayload($value)
     {
@@ -178,7 +176,7 @@ class Fluid
     /**
      * Get request payload
      *
-     * @return  string
+     * @return string
      */
     public static function getRequestPayload()
     {

@@ -11,8 +11,6 @@ class Autoloader
 {
     /**
      * Register the autoloader
-     *
-     * @return  void
      */
     public static function register()
     {
@@ -22,8 +20,8 @@ class Autoloader
     /**
      * Autoloader
      *
-     * @param   string
-     * @return  mixed
+     * @param string
+     * @return bool|null
      */
     public static function autoload($class)
     {
@@ -33,5 +31,6 @@ class Autoloader
             require_once $file;
             return true;
         }
+        return null;
     }
 }

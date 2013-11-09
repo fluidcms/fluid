@@ -24,13 +24,13 @@ class Component
     /**
      * Component
      *
-     * @param   string  $component
-     * @throws  Exception
+     * @param string $component
+     * @throws Exception
      */
     public function __construct($component)
     {
-        $dir = Config::get('templates') . Config::get('components');
-        $file = "{$dir}{$component}/component.xml";
+        $dir = Config::get('templates') . '/' . Config::get('components');
+        $file = "{$dir}/{$component}/component.xml";
 
         if (!is_file($file)) {
             throw new Exception("Invalid component");
@@ -45,9 +45,9 @@ class Component
     /**
      * Get a component
      *
-     * @param   string  $value
-     * @throws  Exception
-     * @return  self
+     * @param string $value
+     * @throws Exception
+     * @return self
      */
     public static function get($value)
     {
@@ -58,8 +58,7 @@ class Component
     /**
      * Set file
      *
-     * @param   string  $value
-     * @return  void
+     * @param string $value
      */
     public function setFile($value)
     {
@@ -69,8 +68,7 @@ class Component
     /**
      * Set name
      *
-     * @param   string  $value
-     * @return  void
+     * @param string $value
      */
     public function setName($value)
     {
@@ -80,8 +78,7 @@ class Component
     /**
      * Set macro
      *
-     * @param   string  $value
-     * @return  void
+     * @param string $value
      */
     public function setMacro($value)
     {
@@ -91,7 +88,7 @@ class Component
     /**
      * Get macro
      *
-     * @return  string
+     * @return string
      */
     public function getMacro()
     {
@@ -101,8 +98,7 @@ class Component
     /**
      * Set icon
      *
-     * @param   string  $value
-     * @return  void
+     * @param string $value
      */
     public function setIcon($value)
     {
@@ -112,8 +108,7 @@ class Component
     /**
      * Set Variables
      *
-     * @param   string  $value
-     * @return  void
+     * @param string $value
      */
     public function setVariables($value)
     {
@@ -123,7 +118,7 @@ class Component
     /**
      * Set Variables
      *
-     * @return  array
+     * @return array
      */
     public function getVariables()
     {
@@ -133,7 +128,7 @@ class Component
     /**
      * Get XML file
      *
-     * @return  string
+     * @return string
      */
     public function getXMLFile()
     {
@@ -143,7 +138,7 @@ class Component
     /**
      * Get component file
      *
-     * @return  string
+     * @return string
      */
     public function getFile()
     {
@@ -153,7 +148,7 @@ class Component
     /**
      * Return object as array for JSON
      *
-     * @return  array
+     * @return array
      */
     public function toJSON()
     {
@@ -175,29 +170,28 @@ class Component
     /**
      * Get components list
      *
-     * @return  array
+     * @return array
      */
     public static function getComponents()
     {
         $components = array();
-        $dir = Config::get('templates') . Config::get('components');
+        $dir = Config::get('templates') . '/' . Config::get('components');
 
         if (is_dir($dir)) {
             foreach (scandir($dir) as $file) {
                 if ($file === '.' || $file === '..') {
                     continue;
-                } else if (is_dir($dir.$file) && file_exists("{$dir}{$file}/component.xml")) {
+                } else if (is_dir($dir . $file) && file_exists("{$dir}/{$file}/component.xml")) {
                     $components[] = new self($file);
                 }
             }
         }
 
         $output = array();
-        foreach($components as $component) {
+        foreach ($components as $component) {
             $output[] = $component->toJSON();
         }
 
         return $output;
     }
-
 }

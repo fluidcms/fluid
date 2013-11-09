@@ -3,6 +3,7 @@
 namespace Fluid;
 
 use InvalidArgumentException;
+use Closure;
 
 class Event
 {
@@ -11,12 +12,12 @@ class Event
     /**
      * Bind an event.
      *
-     * @param   string      $event
-     * @param   callable    $callback
-     * @throws  InvalidArgumentException
-     * @return  bool
+     * @param string $event
+     * @param callable $callback
+     * @throws InvalidArgumentException
+     * @return bool
      */
-    public static function on($event, $callback)
+    public static function on($event, Closure $callback)
     {
         // Check if event is a string
         if (!is_string($event) || !is_callable($callback)) {
@@ -35,12 +36,12 @@ class Event
     /**
      * Trigger an event
      *
-     * @param   string  $event
-     * @param   array   $arguments
-     * @throws  InvalidArgumentException
-     * @return  array
+     * @param string $event
+     * @param array $arguments
+     * @throws InvalidArgumentException
+     * @return array
      */
-    public static function trigger($event, $arguments = array())
+    public static function trigger($event, array $arguments = array())
     {
         if (!is_string($event) || !is_array($arguments)) {
             throw new InvalidArgumentException();

@@ -1,6 +1,7 @@
 <?php
 
 namespace Fluid\WebSocket;
+
 use Fluid;
 use Fluid\TaskInterface;
 
@@ -24,8 +25,7 @@ class Tasks
     /**
      * Register a task
      *
-     * @param   TaskInterface $task
-     * @return  void
+     * @param TaskInterface $task
      */
     public function register(TaskInterface $task)
     {
@@ -34,14 +34,12 @@ class Tasks
 
     /**
      * Execute all tasks
-     *
-     * @return  void
      */
     public function execute()
     {
         $time = time();
 
-        foreach($this->tasks as $task) {
+        foreach ($this->tasks as $task) {
             $interval = $task[1];
             $task = $task[0];
 
@@ -55,10 +53,9 @@ class Tasks
     /**
      * Receive messages and dispatch it to the tasks
      *
-     * @param   array   $data
-     * @return  void
+     * @param array $data
      */
-    public function message($data)
+    public function message(array $data)
     {
         $data = json_decode($data, true);
         if (isset($this->tasks[$data['task']])) {

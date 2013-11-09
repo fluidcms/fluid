@@ -2,15 +2,15 @@
 
 namespace Fluid\Twig\PrintNode;
 
-use Fluid\Twig\Field\Field, Fluid\Twig\NodeHandler, Twig_Compiler;
+use Fluid\Twig\Field\Field;
+use Twig_Compiler;
 
 class FieldNodePrint extends \Twig_Node_Print
 {
     /**
      * Add an item to a field array
      *
-     * @param   Twig_Compiler  $compiler
-     * @return  void
+     * @param Twig_Compiler $compiler
      */
     public function compile(Twig_Compiler $compiler)
     {

@@ -2,11 +2,10 @@
 
 namespace Fluid\Page;
 
-use Fluid\Page\Page,
-    Fluid\Map\Map,
-    Fluid\Language\Language,
-    Fluid\Layout\Layout,
-    Exception;
+use Fluid\Map\Map;
+use Fluid\Language\Language;
+use Fluid\Layout\Layout;
+use Exception;
 
 /**
  * Validate page
@@ -18,15 +17,15 @@ class Validator
     /**
      * New page validator
      *
-     * @param   string  $page
-     * @param   string  $parent
-     * @param   array   $languages
-     * @param   string  $layout
-     * @param   string  $url
-     * @throws  Exception
-     * @return  bool
+     * @param string $page
+     * @param string $parent
+     * @param array $languages
+     * @param string $layout
+     * @param string $url
+     * @throws Exception
+     * @return bool
      */
-    public static function newPageValidator($page, $parent, $languages, $layout, $url)
+    public static function newPageValidator($page, $parent, array $languages, $layout, $url)
     {
         $map = new Map;
         if (!empty($parent) && !$map->findPage($parent)) {
@@ -39,14 +38,14 @@ class Validator
     /**
      * Page validator
      *
-     * @param   string  $page
-     * @param   array   $languages
-     * @param   string  $layout
-     * @param   string  $url
-     * @throws  Exception
-     * @return  bool
+     * @param string $page
+     * @param array $languages
+     * @param string $layout
+     * @param string $url
+     * @throws Exception
+     * @return bool
      */
-    public static function pageValidator($page, $languages, $layout, $url)
+    public static function pageValidator($page, array $languages, $layout, $url)
     {
         self::page($page);
 
@@ -60,9 +59,9 @@ class Validator
     /**
      * Validate a page name
      *
-     * @param   string      $value
-     * @throws  Exception
-     * @return  bool
+     * @param string $value
+     * @throws Exception
+     * @return bool
      */
     public static function page($value)
     {
@@ -77,9 +76,9 @@ class Validator
     /**
      * Validate a url
      *
-     * @param   string       $value
-     * @throws  Exception
-     * @return  bool
+     * @param string $value
+     * @throws Exception
+     * @return bool
      */
     public static function url($value)
     {

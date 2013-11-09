@@ -30,8 +30,8 @@ class Config
     /**
      * Set config
      *
-     * @param $name
-     * @param $value
+     * @param string $name
+     * @param mixed $value
      */
     public static function set($name, $value)
     {
@@ -41,7 +41,7 @@ class Config
     /**
      * Get config
      *
-     * @param $name
+     * @param string $name
      * @return mixed
      */
     public static function get($name)

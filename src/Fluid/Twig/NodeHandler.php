@@ -7,8 +7,8 @@ class NodeHandler
     /**
      * Get an expression name from a node
      *
-     * @param   mixed   $node
-     * @return    string
+     * @param mixed $node
+     * @return string
      */
     public static function getExpressionName($node)
     {

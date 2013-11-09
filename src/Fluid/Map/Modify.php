@@ -2,7 +2,7 @@
 
 namespace Fluid\Map;
 
-use Fluid\Map\Map, Exception;
+use Exception;
 
 /**
  * Modify the map.
@@ -14,16 +14,16 @@ class Modify
     /**
      * Add a page to the map.
      *
-     * @param   Map         $map
-     * @return  Map
+     * @param Map $map
+     * @return Map
      */
     public static function resetIds(Map $map)
     {
-        $resetIds = function($pages, $parent = null) use (&$resetIds) {
+        $resetIds = function ($pages, $parent = null) use (&$resetIds) {
             $output = array();
-            foreach($pages as $page) {
+            foreach ($pages as $page) {
                 $page['id'] = trim($parent . "/" . $page['page'], "/");
-                if (isset($page['pages']) && is_array($page['pages']) && count($page['pages']))  {
+                if (isset($page['pages']) && is_array($page['pages']) && count($page['pages'])) {
                     $page['pages'] = $resetIds($page['pages'], $page['id']);
                 }
                 $output[] = $page;
@@ -39,18 +39,18 @@ class Modify
     /**
      * Add a page to the map.
      *
-     * @param   Map         $map
-     * @param   int         $index
-     * @param   string      $id
-     * @param   string      $page
-     * @param   array       $languages
-     * @param   string      $layout
-     * @param   string      $url
-     * @param   array       $pages
-     * @throws  Exception
-     * @return  Map
+     * @param Map $map
+     * @param int $index
+     * @param string $id
+     * @param string $page
+     * @param array $languages
+     * @param string $layout
+     * @param string $url
+     * @param array $pages
+     * @throws Exception
+     * @return Map
      */
-    public static function addPage(Map $map, $index, $id, $page, $languages, $layout, $url, $pages = null)
+    public static function addPage(Map $map, $index, $id, $page, array $languages, $layout, $url, array $pages = null)
     {
         $paths = explode("/", preg_replace("/\\/?{$page}$/", '', $id));
 
@@ -79,16 +79,16 @@ class Modify
     /**
      * Edit a page in the map.
      *
-     * @param   Map     $map
-     * @param   string  $id
-     * @param   string  $page
-     * @param   array   $languages
-     * @param   string  $layout
-     * @param   string  $url
-     * @throws  Exception
-     * @return  Map
+     * @param Map $map
+     * @param string $id
+     * @param string $page
+     * @param array $languages
+     * @param string $layout
+     * @param string $url
+     * @throws Exception
+     * @return Map
      */
-    public static function editPage(Map $map, $id, $page, $languages, $layout, $url)
+    public static function editPage(Map $map, $id, $page, array $languages, $layout, $url)
     {
         $map->setPages(self::findAndEditPage($map->getPages(), explode("/", $id), array(
             'page' => $page,
@@ -111,9 +111,9 @@ class Modify
     /**
      * Delete a page from the map.
      *
-     * @param   Map   $map
-     * @param   string      $id
-     * @return  Map
+     * @param Map $map
+     * @param string $id
+     * @return Map
      */
     public static function deletePage(Map $map, $id)
     {
@@ -124,14 +124,14 @@ class Modify
     /**
      * Insert the page into the pages.
      *
-     * @param   array   $pages
-     * @param   array   $paths
-     * @param   int     $index
-     * @param   array   $newPage
-     * @throws  Exception
-     * @return  array
+     * @param array $pages
+     * @param array $paths
+     * @param int $index
+     * @param array $newPage
+     * @throws Exception
+     * @return array
      */
-    private static function insertPageIntoPages($pages, $paths, $index, $newPage)
+    private static function insertPageIntoPages(array $pages, array $paths, $index, array $newPage)
     {
         if (count($paths) && !empty($paths[0])) {
             $needle = reset($paths);
@@ -164,16 +164,16 @@ class Modify
     /**
      * Remove a page from the pages.
      *
-     * @param   array   $pages
-     * @param   array   $paths
-     * @return  array
+     * @param array $pages
+     * @param array $paths
+     * @return array
      */
-    private static function removePageFromPages($pages, $paths)
+    private static function removePageFromPages(array $pages, array $paths)
     {
         $needle = reset($paths);
         $paths = array_slice($paths, 1);
 
-        foreach($pages as $key=>$page) {
+        foreach ($pages as $key => $page) {
             if ($pages[$key]['page'] == $needle) {
                 if (count($paths) && isset($pages[$key]['pages'])) {
                     $pages[$key]['pages'] = self::removePageFromPages($pages[$key]['pages'], $paths);
@@ -192,11 +192,11 @@ class Modify
     /**
      * Delete a page from the map.
      *
-     * @param   Map   $map
-     * @param   string      $id
-     * @param   string      $to
-     * @param   int         $index
-     * @return  Map
+     * @param Map $map
+     * @param string $id
+     * @param string $to
+     * @param int $index
+     * @return Map
      */
     public static function sortPage(Map $map, $id, $to, $index)
     {
@@ -213,16 +213,16 @@ class Modify
     /**
      * Get a page.
      *
-     * @param   array   $pages
-     * @param   array   $paths
-     * @return  array
+     * @param array $pages
+     * @param array $paths
+     * @return array
      */
-    private static function getPage($pages, $paths)
+    private static function getPage(array $pages, array $paths)
     {
         $needle = reset($paths);
         $paths = array_slice($paths, 1);
 
-        foreach($pages as $page) {
+        foreach ($pages as $page) {
             if ($page['page'] == $needle) {
                 if (count($paths) && isset($page['pages'])) {
                     $match = self::getPage($page['pages'], $paths);
@@ -241,17 +241,17 @@ class Modify
     /**
      * Find the page and edit it.
      *
-     * @param   array   $pages
-     * @param   array   $paths
-     * @param   array   $data
-     * @return  array
+     * @param array $pages
+     * @param array $paths
+     * @param array $data
+     * @return array
      */
-    private static function findAndEditPage($pages, $paths, $data)
+    private static function findAndEditPage(array $pages, array $paths, array $data)
     {
         $needle = reset($paths);
         $paths = array_slice($paths, 1);
 
-        foreach($pages as $key=>$page) {
+        foreach ($pages as $key => $page) {
             if ($pages[$key]['page'] == $needle) {
                 if (count($paths) && isset($pages[$key]['pages'])) {
                     $pages[$key]['pages'] = self::findAndEditPage($pages[$key]['pages'], $paths, $data);

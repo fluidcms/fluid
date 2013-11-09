@@ -2,9 +2,9 @@
 
 namespace Fluid\History;
 
-use Fluid\Token\Token,
-    Fluid\Git,
-    Fluid\Fluid;
+use Fluid\Token\Token;
+use Fluid\Git;
+use Fluid\Fluid;
 
 class History
 {
@@ -21,7 +21,7 @@ class History
     /**
      * Get all history steps
      *
-     * @return  array
+     * @return array
      */
     public function getAll()
     {
@@ -31,11 +31,13 @@ class History
         // Get master branch commits
         if ($head !== 'master') {
             $ghostCommits = Git::getCommits($this->branch, 'master', 20);
-            $ghostCommits = array_map(function($commit) { return array_merge($commit, array('ghost' => true)); }, $ghostCommits);
+            $ghostCommits = array_map(function ($commit) {
+                return array_merge($commit, array('ghost' => true));
+            }, $ghostCommits);
         }
 
         $output = array();
-        foreach(array_merge($ghostCommits, Git::getCommits($this->branch, null, 20)) as $commit) {
+        foreach (array_merge($ghostCommits, Git::getCommits($this->branch, null, 20)) as $commit) {
             if (strpos($commit['message'], 'history') === 0) {
                 $output[$commit['commit']] = array(
                     'id' => $commit['commit'],
@@ -54,8 +56,8 @@ class History
     /**
      * Roll back to a commit
      *
-     * @param   string  $id
-     * @return  self
+     * @param string $id
+     * @return self
      */
     public static function rollBack($id)
     {
@@ -75,10 +77,9 @@ class History
     /**
      * Commit a step in history
      *
-     * @param   string  $msg
-     * @param   string  $name
-     * @param   string  $email
-     * @return  void
+     * @param string $msg
+     * @param string $name
+     * @param string $email
      */
     public static function add($msg, $name, $email)
     {

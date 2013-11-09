@@ -2,12 +2,10 @@
 
 namespace Fluid\Page;
 
-use Fluid\Fluid,
-    Fluid\View,
-    Fluid\Layout\Layout,
-    Fluid\Component\Component,
-    Fluid\Page\Page,
-    Fluid\Storage\FileSystem;
+use Fluid\Fluid;
+use Fluid\View;
+use Fluid\Layout\Layout;
+use Fluid\Component\Component;
 
 class ParseData
 {
@@ -16,10 +14,10 @@ class ParseData
     /**
      * Parse json data
      *
-     * @param   Page    $page
-     * @param   Layout  $layout
-     * @param   string  $language
-     * @return  array
+     * @param Page $page
+     * @param Layout $layout
+     * @param string $language
+     * @return array
      */
     public static function parse(Page $page, Layout $layout, $language = null)
     {
@@ -42,15 +40,15 @@ class ParseData
     /**
      * Merge layout definition with page data
      *
-     * @param   array   $layout
-     * @param   array   $data
-     * @return  array
+     * @param array $layout
+     * @param array $data
+     * @return array
      */
-    private static function merge($layout, $data)
+    private static function merge(array $layout, array $data)
     {
         $output = array();
 
-        foreach($layout as $group => $vars) {
+        foreach ($layout as $group => $vars) {
             $output[$group] = self::parseVariables($vars, (!isset($data[$group]) ? array() : $data[$group]));
         }
 
@@ -60,16 +58,16 @@ class ParseData
     /**
      * Parse variables
      *
-     * @param   array   $variables
-     * @param   array   $data
-     * @return  array
+     * @param array $variables
+     * @param array $data
+     * @return array
      */
-    private static function parseVariables($variables, $data)
+    private static function parseVariables(array $variables, array $data)
     {
         $retval = array();
 
-        foreach($variables as $name => $var) {
-            switch($var['type']) {
+        foreach ($variables as $name => $var) {
+            switch ($var['type']) {
                 case 'string':
                     if (isset($data[$name])) {
                         $retval[$name] = (string)$data[$name];
@@ -115,7 +113,7 @@ class ParseData
                 case 'array':
                     $retval[$name] = array();
                     if (isset($data[$name]) && is_array($data[$name]) && count($data[$name])) {
-                        foreach($data[$name] as $arrayValue) {
+                        foreach ($data[$name] as $arrayValue) {
                             $retval[$name][] = self::parseVariables($var['variables'], $arrayValue);
                         }
                     }
@@ -129,21 +127,21 @@ class ParseData
     /**
      * Render a content variable
      *
-     * @param   array   $content
-     * @return  string
+     * @param array $content
+     * @return string
      */
-    private static function renderContent($content)
+    private static function renderContent(array $content)
     {
         $output = $content['source'];
 
         // Components
         if (is_array($content['components'])) {
-            foreach($content['components'] as $id => $component) {
+            foreach ($content['components'] as $id => $component) {
                 $definition = Component::get($component['component']);
                 $data = self::parseVariables($definition->getVariables(), $component['data']);
 
                 $templates = View::getTemplatesDir();
-                $file = substr($definition->getFile(), strlen($templates)-1);
+                $file = substr($definition->getFile(), strlen($templates) - 1);
                 $macro = $definition->getMacro();
 
                 $data = array_merge(array('language' => substr(self::$language, 0, 2)), $data);
@@ -154,26 +152,26 @@ class ParseData
                     $html = View::create($file, $data);
                 }
 
-                $output = str_replace('{'.$id.'}', $html, $output);
+                $output = str_replace('{' . $id . '}', $html, $output);
             }
         }
 
         // Images
         if (is_array($content['images'])) {
-            foreach($content['images'] as $id => $image) {
-                $html = '<img src="'.$image['src'].'"';
+            foreach ($content['images'] as $id => $image) {
+                $html = '<img src="' . $image['src'] . '"';
                 if (!empty($image['width'])) {
-                    $html .= ' width="'.$image['width'].'"';
+                    $html .= ' width="' . $image['width'] . '"';
                 }
                 if (!empty($image['height'])) {
-                    $html .= ' height="'.$image['height'].'"';
+                    $html .= ' height="' . $image['height'] . '"';
                 }
                 if (!empty($image['alt'])) {
-                    $html .= ' alt="'.$image['alt'].'"';
+                    $html .= ' alt="' . $image['alt'] . '"';
                 }
                 $html .= '>';
 
-                $output = str_replace('{'.$id.'}', $html, $output);
+                $output = str_replace('{' . $id . '}', $html, $output);
             }
         }
 

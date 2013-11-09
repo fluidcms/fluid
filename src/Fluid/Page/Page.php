@@ -26,14 +26,14 @@ class Page extends FileSystem
     /**
      * Init
      *
-     * @param   string  $id
-     * @param   string  $page
-     * @param   array   $languages
-     * @param   string  $layout
-     * @param   string  $url
-     * @param   array   $pages
+     * @param string $id
+     * @param string $page
+     * @param array $languages
+     * @param string $layout
+     * @param string $url
+     * @param array $pages
      */
-    public function __construct($id = null, $page = null, $languages = null, $layout = null, $url = null, $pages = null)
+    public function __construct($id = null, $page = null, array $languages = null, $layout = null, $url = null, array $pages = null)
     {
         $this->id = $id;
         $this->page = $page;
@@ -46,9 +46,9 @@ class Page extends FileSystem
     /**
      * Get a page
      *
-     * @param   mixed   $id
-     * @param   string  $language
-     * @return  self
+     * @param mixed $id
+     * @param string $language
+     * @return self
      */
     public static function get($id = null, $language = null)
     {
@@ -68,9 +68,9 @@ class Page extends FileSystem
     /**
      * Get a variable
      *
-     * @param   string  $item
-     * @param   string  $group
-     * @return  array
+     * @param string $item
+     * @param string $group
+     * @return array
      */
     public function getVariable($item, $group = null)
     {
@@ -85,9 +85,8 @@ class Page extends FileSystem
     /**
      * Set the current page language
      *
-     * @param   string  $value
-     * @throws  Exception
-     * @return  void
+     * @param string $value
+     * @throws Exception
      */
     public function setLanguage($value)
     {
@@ -103,7 +102,7 @@ class Page extends FileSystem
     /**
      * Get the current page language
      *
-     * @return  string
+     * @return string
      */
     public function getLanguage()
     {
@@ -113,8 +112,8 @@ class Page extends FileSystem
     /**
      * Get the processed page data
      *
-     * @param   string  $language
-     * @return  array
+     * @param string $language
+     * @return array
      */
     public function getData($language = null)
     {
@@ -123,7 +122,7 @@ class Page extends FileSystem
         }
         try {
             return ParseData::parse($this, Layout::get($this->layout), $language);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             null;
         }
         return array();
@@ -132,8 +131,8 @@ class Page extends FileSystem
     /**
      * Get the raw page data
      *
-     * @param   string  $language
-     * @return  array
+     * @param string $language
+     * @return array
      */
     public function getRawData($language = null)
     {
@@ -158,7 +157,7 @@ class Page extends FileSystem
     /**
      * Get the page id
      *
-     * @return  string
+     * @return string
      */
     public function getId()
     {
@@ -168,7 +167,7 @@ class Page extends FileSystem
     /**
      * Get the page layout
      *
-     * @return  string
+     * @return string
      */
     public function getLayout()
     {
@@ -178,7 +177,7 @@ class Page extends FileSystem
     /**
      * Get the languages
      *
-     * @return  string
+     * @return string
      */
     public function getLanguages()
     {
@@ -188,11 +187,11 @@ class Page extends FileSystem
     /**
      * Update a page's data
      *
-     * @param   array   $data
-     * @throws  Exception
-     * @return  bool
+     * @param array $data
+     * @throws Exception
+     * @return bool
      */
-    public function update($data)
+    public function update(array $data)
     {
         UpdateData::update($this, $data);
     }
@@ -200,15 +199,15 @@ class Page extends FileSystem
     /**
      * Create a page
      *
-     * @param   string  $page
-     * @param   string  $parent
-     * @param   array   $languages
-     * @param   string  $layout
-     * @param   string  $url
-     * @throws  Exception
-     * @return  array
+     * @param string $page
+     * @param string $parent
+     * @param array $languages
+     * @param string $layout
+     * @param string $url
+     * @throws Exception
+     * @return array
      */
-    public static function create($page, $parent, $languages, $layout, $url)
+    public static function create($page, $parent, array $languages, $layout, $url)
     {
         Validator::newPageValidator($page, $parent, $languages, $layout, $url);
 
@@ -231,13 +230,13 @@ class Page extends FileSystem
     /**
      * Delete a page
      *
-     * @throws  Exception
-     * @return  bool
+     * @throws Exception
+     * @return bool
      */
     public function delete()
     {
-        $deletePage = function($path, $name = false) use (&$deletePage) {
-            foreach(scandir($path) as $file) {
+        $deletePage = function ($path, $name = false) use (&$deletePage) {
+            foreach (scandir($path) as $file) {
                 $link = $path . "/" . $file;
                 if ($file == '.' || $file == '..') {
                     continue;
@@ -267,15 +266,15 @@ class Page extends FileSystem
     /**
      * Edit a page's configuration
      *
-     * @param   string  $id
-     * @param   string  $page
-     * @param   array   $languages
-     * @param   string  $layout
-     * @param   string  $url
-     * @throws  Exception
-     * @return  bool
+     * @param string $id
+     * @param string $page
+     * @param array $languages
+     * @param string $layout
+     * @param string $url
+     * @throws Exception
+     * @return bool
      */
-    public static function config($id, $page, $languages, $layout, $url)
+    public static function config($id, $page, array $languages, $layout, $url)
     {
         Validator::pageValidator($page, $languages, $layout, $url);
 
@@ -294,9 +293,7 @@ class Page extends FileSystem
                     $language = substr($match[1], 1);
                     if (!in_array($language, $languages)) {
                         unlink("{$dir}/{$file}");
-                    }
-
-                    // Rename file
+                    } // Rename file
                     else {
                         $existingFiles[] = $language;
                         rename(
@@ -311,14 +308,13 @@ class Page extends FileSystem
                     );
                 }
             }
-
-            // Move files
-        } else {
+        } // Move files
+        else {
             throw new Exception('Unknown directory');
         }
 
         // Create new language files
-        foreach($languages as $language) {
+        foreach ($languages as $language) {
             if (!in_array($language, $existingFiles)) {
                 file_put_contents(
                     "{$dir}/{$page}_{$language}.json",
@@ -333,9 +329,9 @@ class Page extends FileSystem
     /**
      * Move a page
      *
-     * @param   string      $to
-     * @throws  Exception
-     * @return  bool
+     * @param string $to
+     * @throws Exception
+     * @return bool
      */
     public function move($to)
     {
@@ -357,8 +353,8 @@ class Page extends FileSystem
                         mkdir($toDir);
                     }
                     rename(
-                        $fromDir."/".$file,
-                        $toDir."/".$file
+                        $fromDir . "/" . $file,
+                        $toDir . "/" . $file
                     );
                 }
             }
