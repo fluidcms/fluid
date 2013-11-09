@@ -1,7 +1,0 @@
-
-Fluid Web Socket Server Daemon Status
-=====================================
-
-Memory usage: %memory
-Daemon up time: %uptime
-Active connections: %connections

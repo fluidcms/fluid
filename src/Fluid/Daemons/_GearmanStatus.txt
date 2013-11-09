@@ -1,8 +1,0 @@
-
-Fluid Gearman Daemon Status
-===========================
-
-Memory usage: %memory
-Daemon up time: %uptime
-Tasks executed: %amount
-

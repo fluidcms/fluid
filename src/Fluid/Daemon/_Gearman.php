@@ -1,5 +1,7 @@
 <?php
 
+// TODO deprecated
+
 namespace Fluid\Daemons;
 
 use GearmanWorker, Fluid;
