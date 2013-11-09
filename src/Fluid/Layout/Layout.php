@@ -25,7 +25,7 @@ class Layout
      */
     public function __construct($layout)
     {
-        $dir = Config::get('templates') . Config::get('layouts');
+        $dir = Config::get('templates') . '/' . Config::get('layouts');
 
         if ($layout !== 'global') {
             $file = "{$dir}{$layout}/layout.xml";

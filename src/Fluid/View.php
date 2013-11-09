@@ -2,11 +2,10 @@
 
 namespace Fluid;
 
-use Twig_Loader_Filesystem,
-    Twig_Environment,
-    Twig_Loader_Chain,
-    Twig_Loader_String,
-    Fluid\Token\Token;
+use Twig_Loader_Filesystem;
+use Twig_Environment;
+use Twig_Loader_Chain;
+use Twig_Loader_String;
 
 /**
  * View class

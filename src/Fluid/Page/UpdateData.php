@@ -347,7 +347,7 @@ class UpdateData
     private static function sanitizeNewImage($value)
     {
         $retval = array();
-        $dir = Fluid::getBranchStorage() . "files";
+        $dir = Fluid::getBranchStorage() . "/files";
 
         foreach($value as $name => $format) {
             $image = array(

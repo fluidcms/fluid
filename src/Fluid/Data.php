@@ -28,7 +28,7 @@ class Data
         }
 
         // If rendering page for CMS, we change the current branch to the CMS branch and send a signal to the CMS
-        if (isset($_SERVER['QUERY_STRING'])) {
+        /*if (isset($_SERVER['QUERY_STRING'])) {
             parse_str($_SERVER['QUERY_STRING']);
             if (isset($fluidtoken) && isset($fluidbranch) && isset($fluidsession) && Token::validate($fluidtoken)) {
                 Fluid::setBranch($fluidbranch);
@@ -47,7 +47,7 @@ class Data
                     )
                 ));
             }
-        }
+        }*/
 
         $global = self::getData(self::$map);
 

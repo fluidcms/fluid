@@ -161,7 +161,7 @@ class Fluid
      */
     public static function getBranchStorage()
     {
-        return Config::get('storage') . self::$branch . "/";
+        return Config::get('storage') . "/" . self::$branch;
     }
 
     /**

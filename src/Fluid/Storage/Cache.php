@@ -21,7 +21,7 @@ abstract class Cache
         }
 
         file_put_contents(
-            Fluid::getBranchStorage() . "cache/" . static::$cacheKey,
+            Fluid::getBranchStorage() . "/cache/" . static::$cacheKey,
             serialize($content)
         );
     }
@@ -39,7 +39,7 @@ abstract class Cache
 
         return
             unserialize(
-                file_get_contents(Fluid::getBranchStorage() . "cache/" . static::$cacheKey)
+                file_get_contents(Fluid::getBranchStorage() . "/cache/" . static::$cacheKey)
             );
     }
 
@@ -54,7 +54,7 @@ abstract class Cache
             return null;
         }
 
-        if (file_exists(Fluid::getBranchStorage() . "cache/" . static::$cacheKey)) {
+        if (file_exists(Fluid::getBranchStorage() . "/cache/" . static::$cacheKey)) {
             return true;
         }
 

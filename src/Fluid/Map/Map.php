@@ -2,10 +2,9 @@
 
 namespace Fluid\Map;
 
-use Fluid\Fluid,
-    Fluid\Page\Page,
-    Fluid\Storage\FileSystem,
-    Exception;
+use Fluid\Page\Page;
+use Fluid\Storage\FileSystem;
+use Exception;
 
 /**
  * Site structure model

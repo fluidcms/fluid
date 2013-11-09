@@ -257,7 +257,7 @@ class Page extends FileSystem
         };
 
         $deletePage(
-            Fluid::getBranchStorage() . "pages/" . dirname($this->id),
+            Fluid::getBranchStorage() . "/pages/" . dirname($this->id),
             basename($this->id)
         );
 
@@ -282,7 +282,7 @@ class Page extends FileSystem
         $oldName = basename($id);
 
         $dir = preg_replace('!/\.*/!', '/', dirname($id));
-        $dir = Fluid::getBranchStorage() . "pages/" . trim($dir, '/ ');
+        $dir = Fluid::getBranchStorage() . "/pages/" . trim($dir, '/ ');
 
         $existingFiles = array();
         if (is_dir($dir)) {
@@ -341,8 +341,8 @@ class Page extends FileSystem
     {
         $to = trim(str_replace('..', '', $to), '/.');
 
-        $fromDir = Fluid::getBranchStorage() . "pages/" . trim(dirname($this->id), '.');
-        $toDir = Fluid::getBranchStorage() . "pages/" . trim($to, '.');
+        $fromDir = Fluid::getBranchStorage() . "/pages/" . trim(dirname($this->id), '.');
+        $toDir = Fluid::getBranchStorage() . "/pages/" . trim($to, '.');
 
         if (!is_dir($toDir)) {
             mkdir($toDir, 0777, true);

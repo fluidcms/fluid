@@ -52,8 +52,8 @@ class File
      */
     public static function checkDir()
     {
-        if (!is_dir(Fluid::getBranchStorage() . 'files/')) {
-            return mkdir(Fluid::getBranchStorage() . 'files/');
+        if (!is_dir(Fluid::getBranchStorage() . '/files/')) {
+            return mkdir(Fluid::getBranchStorage() . '/files/');
         }
         return true;
     }
@@ -82,7 +82,7 @@ class File
         }
 
         self::checkDir();
-        $dir = Fluid::getBranchStorage() . "files/{$this->id}";
+        $dir = Fluid::getBranchStorage() . "/files/{$this->id}";
         foreach(scandir($dir) as $file) {
             if ($file !== '.' && $file !== '..' && is_file("{$dir}/{$file}")) {
                 $this->filePath = "{$dir}/{$file}";
@@ -123,7 +123,7 @@ class File
         self::checkDir();
         $output = array();
         $sort = array();
-        foreach (scandir(Fluid::getBranchStorage() . 'files') as $id) {
+        foreach (scandir(Fluid::getBranchStorage() . '/files') as $id) {
             if ($id !== '.' && $id !== '..' && strlen($id) === 8 && ctype_alnum($id)) {
                 if ($file = self::getFileInfo($id)) {
                     $output[] = $file;
@@ -150,7 +150,7 @@ class File
      */
     private static function getFileInfo($id)
     {
-        $dir = Fluid::getBranchStorage() . "files/{$id}";
+        $dir = Fluid::getBranchStorage() . "/files/{$id}";
 
         foreach(scandir($dir) as $file) {
             if ($file !== '.' && $file !== '..' && is_file("{$dir}/{$file}")) {
@@ -174,10 +174,10 @@ class File
     public static function delete($id)
     {
         self::checkDir();
-        $dir = scandir(Fluid::getBranchStorage() . 'files/');
+        $dir = scandir(Fluid::getBranchStorage() . '/files/');
         foreach ($dir as $file) {
             if (substr($file, 0, 8) === $id) {
-                unlink(Fluid::getBranchStorage() . 'files/' . $file);
+                unlink(Fluid::getBranchStorage() . '/files/' . $file);
                 return true;
             }
         }
@@ -212,14 +212,14 @@ class File
         if (!$file['error'] && strlen($id) === 8 && self::idIsUnique($id)) {
             $file = FileInfo::getTmpFileInfo($file);
             if ($file['size'] <= 2097152) {
-                if (!is_dir(Fluid::getBranchStorage() . "files")) {
-                    mkdir(Fluid::getBranchStorage() . "files");
+                if (!is_dir(Fluid::getBranchStorage() . "/files")) {
+                    mkdir(Fluid::getBranchStorage() . "/files");
                 }
-                if (!is_dir(Fluid::getBranchStorage() . "files/{$id}")) {
-                    mkdir(Fluid::getBranchStorage() . "files/{$id}");
+                if (!is_dir(Fluid::getBranchStorage() . "/files/{$id}")) {
+                    mkdir(Fluid::getBranchStorage() . "/files/{$id}");
                 }
 
-                rename($file["tmp_name"], Fluid::getBranchStorage() . "files/{$id}/{$file['name']}");
+                rename($file["tmp_name"], Fluid::getBranchStorage() . "/files/{$id}/{$file['name']}");
                 unset($file["tmp_name"]);
                 return $id;
             }
@@ -236,7 +236,7 @@ class File
     public static function idIsUnique($id)
     {
         self::checkDir();
-        $dir = scandir(Fluid::getBranchStorage() . 'files/');
+        $dir = scandir(Fluid::getBranchStorage() . '/files/');
         foreach ($dir as $file) {
             if (substr($file, 0, 8) === $id) {
                 return false;
