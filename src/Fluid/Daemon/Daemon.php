@@ -9,6 +9,7 @@ use Closure;
 use Fluid\Socket\Server;
 use Fluid\Socket\Server\WebSocket;
 use Fluid\Socket\Server\Message;
+use Fluid\Debug\Log;
 use Fluid\Config;
 
 class Daemon implements DaemonInterface
@@ -151,6 +152,9 @@ class Daemon implements DaemonInterface
             return;
         }
 
+        $port = Config::get('websocket');
+        Log::add('Trying to start socket on port ' . $port);
+
         $root = $this;
 
         $server = new Server();
@@ -160,7 +164,7 @@ class Daemon implements DaemonInterface
         // Create WebSocket Server
         $server->add(new WebSocket(), WebSocket::URI);
         // Create Message Server
-        $server->add(new Message(), Message::URI);
+        //$server->add(new Message(), Message::URI);
 
         $server->create();
 

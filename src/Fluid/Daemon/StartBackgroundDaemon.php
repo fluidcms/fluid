@@ -37,8 +37,6 @@ if (is_dir($vendor) && is_file($vendor . "/autoload.php")) {
             }
         }
 
-        trigger_error('caca' . json_encode($argv));
-
         $class = "\\Fluid\\Daemon\\Daemon";
         /** @var Daemon $daemon */
         $daemon = new $class(null, $argv[2]);

@@ -82,19 +82,17 @@ class HTTP
     {
         if (!empty(self::$request) && self::$method === 'POST' && strpos(self::$request, 'server') === 0 && isset(self::$input['session'])) {
             if (Session::validate(self::$input['session'])) {
-                // Daemon is already running
                 if (Daemon::isRunning()) {
+                    // Daemon is already running
                     echo json_encode(true);
-                    return true;
-                } // Start Daemon
-                else if (Daemon::runBackground()) {
+                } else if (Daemon::runBackground()) {
+                    // Start Daemon
                     echo json_encode(true);
-                    return true;
-                } // Could not start Daemon
-                else {
+                } else {
+                    // Could not start Daemon
                     echo json_encode(false);
-                    return true;
                 }
+                return true;
             }
         }
 
@@ -275,12 +273,10 @@ class HTTP
             $url .= "{$_SERVER['SERVER_NAME']}{$_SERVER['REQUEST_URI']}";
             $url = preg_replace("!/fluidcms/(.*)$!i", "/", $url);
 
-            $ports = Config::get('ports');
-
             echo View::create(
                 'master.twig',
                 array(
-                    'websocket_url' => preg_replace('!^https?://([^/]*)!i', "ws://$1:" . $ports['websockets'], $url),
+                    'websocket_url' => preg_replace('!^https?://([^/]*)!i', "ws://$1:80", $url),
                     'user_id' => uniqid(),
                     'site_url' => $url,
                     'branch' => 'develop',
