@@ -1,81 +1,26 @@
 <?php
 
-namespace Fluid\WebSocket;
+namespace Fluid\Socket\Server;
 
 use Ratchet\Wamp\WampServerInterface;
 use Fluid;
-use Fluid\Config;
 use Fluid\Debug\Log;
 use Fluid\Requests\WebSocket as WebSocketRequest;
 use Fluid\WebSocket\Events as ServerEvents;
 use Ratchet;
 use React;
-use React\EventLoop\StreamSelectLoop;
+use Ratchet\ConnectionInterface;
 
 /**
  * WebSocket Server for receiving and sending communications to the local server, remote servers and clients
  * @package Fluid
  */
-class Server implements WampServerInterface
+class WebSocket implements WampServerInterface
 {
-    /** @var int $lastConnection Tiem of the last connedction */
-    private $lastConnection;
-
-    /** @var int $port */
-    private $port;
-
-    /** @var React\Socket\Server $socket */
-    private $socket;
+    const URI = '/fluidcms/websocket';
 
     /** @var array $connections */
     protected $connections = array();
-
-    /**
-     * Init websocket server
-     */
-    public function __construct(StreamSelectLoop $loop)
-    {
-        $this->lastConnection = time();
-
-        Log::line();
-        Log::add("Websocket Server Started");
-
-        $this
-            ->setPort(Config::get('websocket'))
-            ->setSocket(new React\Socket\Server($loop));
-
-        $this->socket->listen($this->port, '0.0.0.0');
-
-        new Ratchet\Server\IoServer(
-            new Ratchet\WebSocket\WsServer(
-                new Ratchet\Wamp\WampServer(
-                    $this
-                )
-            ),
-            $this->socket
-        );
-    }
-
-    /**
-     * Releasing websocket server
-     */
-    public function __destruct()
-    {
-        Log::add("Websocket Server Closed");
-    }
-
-    /**
-     * Determine if the server is inactive
-     *
-     * @return  int
-     */
-    public function isInactive()
-    {
-        if (count($this->connections) === 0 && $this->lastConnection + 1 < time()) {
-            return true;
-        }
-        return false;
-    }
 
     /**
      * Get active connections
@@ -87,7 +32,7 @@ class Server implements WampServerInterface
         return $this->connections;
     }
 
-    public function onSubscribe(Ratchet\ConnectionInterface $conn, $topic)
+    public function onSubscribe(ConnectionInterface $conn, $topic)
     {
         $topicId = json_decode($topic->getId(), true);
 
@@ -105,19 +50,19 @@ class Server implements WampServerInterface
         }
     }
 
-    public function onUnSubscribe(Ratchet\ConnectionInterface $conn, $topic)
+    public function onUnSubscribe(ConnectionInterface $conn, $topic)
     {
         Log::add("User unsubscribed");
         unset($this->connections[$conn->WAMP->sessionId][$topic->getId()]);
     }
 
-    public function onOpen(Ratchet\ConnectionInterface $conn)
+    public function onOpen(ConnectionInterface $conn)
     {
         Log::add("User opened connection " . $conn->WAMP->sessionId);
         $this->connections[$conn->WAMP->sessionId] = array();
     }
 
-    public function onClose(Ratchet\ConnectionInterface $conn)
+    public function onClose(ConnectionInterface $conn)
     {
         Log::add("User closed connection " . $conn->WAMP->sessionId);
 
@@ -133,7 +78,7 @@ class Server implements WampServerInterface
         }
     }
 
-    public function onCall(Ratchet\ConnectionInterface $conn, $id, $topic, array $params)
+    public function onCall(ConnectionInterface $conn, $id, $topic, array $params)
     {
         // Ping
         if (isset($params['ping'])) {
@@ -178,12 +123,12 @@ class Server implements WampServerInterface
         }
     }
 
-    public function onPublish(Ratchet\ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible)
+    public function onPublish(ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible)
     {
         Log::add("User published message");
     }
 
-    public function onError(Ratchet\ConnectionInterface $conn, \Exception $e)
+    public function onError(ConnectionInterface $conn, \Exception $e)
     {
         Log::add("Error");
         if (is_array($this->connections[$conn->WAMP->sessionId])) {
@@ -192,41 +137,4 @@ class Server implements WampServerInterface
         }
         unset($this->connections[$conn->WAMP->sessionId]);
     }
-
-    /**
-     * @param int $port
-     * @return self
-     */
-    public function setPort($port)
-    {
-        $this->port = $port;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPort()
-    {
-        return $this->port;
-    }
-
-    /**
-     * @param \React\Socket\Server $socket
-     * @return self
-     */
-    public function setSocket($socket)
-    {
-        $this->socket = $socket;
-        return $this;
-    }
-
-    /**
-     * @return \React\Socket\Server
-     */
-    public function getSocket()
-    {
-        return $this->socket;
-    }
-
 }
