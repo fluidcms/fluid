@@ -141,7 +141,7 @@ class ParseData
                 $data = self::parseVariables($definition->getVariables(), $component['data']);
 
                 $templates = View::getTemplatesDir();
-                $file = substr($definition->getFile(), strlen($templates) - 1);
+                $file = substr($definition->getFile(), strlen($templates));
                 $macro = $definition->getMacro();
 
                 $data = array_merge(array('language' => substr(self::$language, 0, 2)), $data);
