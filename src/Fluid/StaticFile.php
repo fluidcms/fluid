@@ -4,23 +4,27 @@ namespace Fluid;
 
 /**
  * Output a static file to the browser
- *
- * @package fluid
  */
 class StaticFile
 {
+    /** @var string $file */
     private $file;
+
+    /** @var null|string $fileType */
     private $fileType = '';
+
+    /** @var string $contentType */
     private $contentType = '';
+
+    /** @var string $content */
     private $content = '';
 
     /**
      * Load a static file
      *
-     * @param   string  $file
-     * @param   string  $type
-     * @param   bool    $contentProvided
-     * @return  void
+     * @param string $file
+     * @param string|null $type
+     * @param bool $contentProvided
      */
     public function __construct($file, $type = null, $contentProvided = false)
     {
@@ -44,13 +48,13 @@ class StaticFile
     /**
      * Get file type
      *
-     * @param   string  $file
-     * @return  void
+     * @param string $file
+     * @return string|null
      */
     public static function getFileType($file)
     {
         preg_match(
-            "/.*\.+([txt|js|css|gif|png|jpe?g|pdf|xml|oga|ogg|m4a|ogv|mp4|m4v|webm|svg|svgz|eot|ttf|otf|woff|ico|webp|appcache|manifest|htc|crx|xpi|safariextz|vcf|txt|html|rss|atom|json|ejs]+)$/i",
+            "/.*\\.+([txt|js|css|gif|png|jpe?g|pdf|xml|oga|ogg|m4a|ogv|mp4|m4v|webm|svg|svgz|eot|ttf|otf|woff|ico|webp|appcache|manifest|htc|crx|xpi|safariextz|vcf|txt|html|rss|atom|json|ejs]+)$/i",
             $file,
             $matches
         );
@@ -59,14 +63,14 @@ class StaticFile
             return strtolower($matches[1]);
         }
 
-        return;
+        return null;
     }
 
     /**
      * Get content type string
      *
-     * @param   string  $fileType
-     * @return  string
+     * @param string $fileType
+     * @return string
      */
     public static function getContentType($fileType)
     {
@@ -119,8 +123,6 @@ class StaticFile
 
     /**
      * Output cache control headers
-     *
-     * @return  void
      */
     private function cacheControl()
     {
@@ -160,8 +162,6 @@ class StaticFile
 
     /**
      * Get the content of the file
-     *
-     * @return  void
      */
     private function getFileContent()
     {
@@ -172,8 +172,6 @@ class StaticFile
 
     /**
      * Output file to the browser
-     *
-     * @return  void
      */
     private function output()
     {

@@ -1,14 +1,13 @@
 <?php
 
 namespace Fluid\Requests;
-use Fluid\Events;
+use Fluid\Event;
 use Fluid\Fluid;
 use Fluid\StaticFile;
 use Fluid\Token\Token;
 use Fluid\Session\Session;
 use Fluid\View;
-use Fluid\WebSockets;
-use Fluid\Daemons\WebSocketServer;
+use Fluid\Daemon\Daemon;
 
 /**
  * Route manager requests
@@ -80,13 +79,18 @@ class HTTP
     {
         if (!empty(self::$request) && self::$method === 'POST' && strpos(self::$request, 'server') === 0 && isset(self::$input['session'])) {
             if (Session::validate(self::$input['session'])) {
-                if (WebSocketServer::isRunning()) {
+                // Daemon is already running
+                if (Daemon::isRunning()) {
                     echo json_encode(true);
                     return true;
-                } else if (WebSocketServer::start()) {
+                }
+                // Start Daemon
+                else if (Daemon::runBackground()) {
                     echo json_encode(true);
                     return true;
-                } else {
+                }
+                // Could not start Daemon
+                else {
                     echo json_encode(false);
                     return true;
                 }
@@ -198,9 +202,9 @@ class HTTP
     private static function publicFiles()
     {
         if (!empty(self::$request)) {
-            $file = '/Public/' . trim(self::$request, ' ./');
+            $file = trim(self::$request, ' ./');
             $file = str_replace('..', '', $file);
-            $file = realpath(__DIR__ . "/..{$file}");
+            $file = realpath(__DIR__ . "/../../../public/{$file}");
             if (file_exists($file)) {
                 new StaticFile($file);
                 return true;
@@ -240,7 +244,7 @@ class HTTP
             $url = isset($_GET['url']) ? filter_var($_GET['url'], FILTER_SANITIZE_STRING) : '';
             $language = isset($_GET['language']) ? filter_var($_GET['language'], FILTER_SANITIZE_STRING) : 'en-US';
 
-            foreach(Events::trigger('changePage', array($url, $language)) as $retval) {
+            foreach(Event::trigger('changePage', array($url, $language)) as $retval) {
                 $url = $retval;
             }
 
