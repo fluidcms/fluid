@@ -3,7 +3,7 @@
 namespace Fluid\Requests;
 
 use Fluid\Fluid,
-    Fluid\Events as FluidEvents,
+    Fluid\Event as FluidEvent,
     Fluid\WebSocket\Events as ServerEvents,
     Fluid\Language\Language,
     Fluid\Layout\Layout,
@@ -198,7 +198,7 @@ class WebSocket
                         $this->user['name'],
                         $this->user['email']
                     );
-                    FluidEvents::trigger('mapChange', array('branch' => $this->branch));
+                    FluidEvent::trigger('mapChange', array('branch' => $this->branch));
                     echo json_encode($map->getPages());
                     return true;
 
@@ -226,7 +226,7 @@ class WebSocket
                         );
                         echo json_encode($map->getPages());
                     }
-                    FluidEvents::trigger('mapChange', array('branch' => $this->branch));
+                    FluidEvent::trigger('mapChange', array('branch' => $this->branch));
                     return true;
 
                 case 'DELETE':
@@ -238,7 +238,7 @@ class WebSocket
                         $this->user['email']
                     );
                     echo json_encode($map->getPages());
-                    FluidEvents::trigger('mapChange', array('branch' => $this->branch));
+                    FluidEvent::trigger('mapChange', array('branch' => $this->branch));
                     return true;
             }
         }
@@ -264,7 +264,7 @@ class WebSocket
                     if (isset($match[2])) {
                         $id = trim($match[2], ' /.');
                         $history = History::rollBack($id);
-                        FluidEvents::trigger('historyChange', array('branch' => $this->branch));
+                        FluidEvent::trigger('historyChange', array('branch' => $this->branch));
                         echo json_encode($history->getAll());
                     }
                     return true;

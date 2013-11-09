@@ -1,7 +1,7 @@
 <?php
 
 namespace Fluid\WebSocket;
-use Fluid\Events as FluidEvents;
+use Fluid\Event as FluidEvent;
 use Fluid\Requests\WebSocket as WebSocketRequest;
 
 class Events
@@ -121,7 +121,7 @@ class Events
     private function onHistoryChange()
     {
         $root = $this;
-        FluidEvents::on('historyChange', function($branch) use($root) {
+        FluidEvent::on('historyChange', function($branch) use($root) {
             // Send new map to user
             $root->refreshMap($branch);
         });
@@ -135,7 +135,7 @@ class Events
     private function onMapChange()
     {
         $root = $this;
-        FluidEvents::on('mapChange', function($branch) use($root) {
+        FluidEvent::on('mapChange', function($branch) use($root) {
             // Send new map to user
             $root->refreshMap($branch);
         });
