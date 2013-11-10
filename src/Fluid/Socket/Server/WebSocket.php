@@ -6,7 +6,7 @@ use Ratchet\Wamp\WampServerInterface;
 use Fluid;
 use Fluid\Debug\Log;
 use Fluid\Requests\WebSocket as WebSocketRequest;
-use Fluid\WebSocket\Events as ServerEvents;
+use Fluid\Socket\Events as ServerEvents;
 use Ratchet;
 use React;
 use Ratchet\ConnectionInterface;

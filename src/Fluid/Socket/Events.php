@@ -1,6 +1,6 @@
 <?php
 
-namespace Fluid\WebSocket;
+namespace Fluid\Socket;
 
 use Fluid\Event as FluidEvent;
 use Fluid\Requests\WebSocket as WebSocketRequest;

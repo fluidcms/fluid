@@ -4,7 +4,7 @@ namespace Fluid\Requests;
 
 use Fluid\Fluid;
 use Fluid\Event as FluidEvent;
-use Fluid\WebSocket\Events as ServerEvents;
+use Fluid\Socket\Events as ServerEvents;
 use Fluid\Language\Language;
 use Fluid\Layout\Layout;
 use Fluid\Map\Map;
