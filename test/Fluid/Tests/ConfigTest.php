@@ -1,6 +1,7 @@
 <?php
 
 namespace Fluid\Tests;
+
 use PHPUnit_Framework_TestCase;
 use Fluid\Config;
 

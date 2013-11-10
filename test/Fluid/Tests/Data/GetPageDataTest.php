@@ -2,7 +2,9 @@
 
 namespace Fluid\Tests\Page;
 
-use Fluid, PHPUnit_Framework_TestCase, Fluid\Tests\Helper;
+use Fluid;
+use PHPUnit_Framework_TestCase;
+use Fluid\Tests\Helper;
 
 class GetPageDataTest extends PHPUnit_Framework_TestCase
 {

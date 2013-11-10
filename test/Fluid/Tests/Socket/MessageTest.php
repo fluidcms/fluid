@@ -24,7 +24,7 @@ class MessageTest extends PHPUnit_Framework_TestCase
         });
 
         $result = array();
-        Event::on('test', function($val1, $val2) use (&$result, $loop) {
+        Event::on('test', function ($val1, $val2) use (&$result, $loop) {
             $result['val1'] = $val1;
             $result['val2'] = $val2;
             $loop->stop();

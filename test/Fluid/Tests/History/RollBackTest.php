@@ -2,7 +2,9 @@
 
 namespace Fluid\Tests\History;
 
-use Fluid, PHPUnit_Framework_TestCase, Fluid\Tests\Helper;
+use Fluid;
+use PHPUnit_Framework_TestCase;
+use Fluid\Tests\Helper;
 
 class RollBackTest extends PHPUnit_Framework_TestCase
 {
@@ -44,7 +46,7 @@ class RollBackTest extends PHPUnit_Framework_TestCase
         // Roll back
         $request = array(
             "method" => "PUT",
-            "url" => "history/".$history[1]['id'],
+            "url" => "history/" . $history[1]['id'],
             "data" => array()
         );
 
@@ -63,7 +65,7 @@ class RollBackTest extends PHPUnit_Framework_TestCase
         // Roll forward
         $request = array(
             "method" => "PUT",
-            "url" => "history/".$history[2]['id'],
+            "url" => "history/" . $history[2]['id'],
             "data" => array()
         );
 
@@ -82,7 +84,7 @@ class RollBackTest extends PHPUnit_Framework_TestCase
         // Overwrite forward changes
         $request = array(
             "method" => "PUT",
-            "url" => "history/".$history[1]['id'],
+            "url" => "history/" . $history[1]['id'],
             "data" => array()
         );
 

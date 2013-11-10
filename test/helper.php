@@ -49,7 +49,7 @@ class Helper
             mkdir($dest);
         }
 
-        foreach(scandir($dir) as $file) {
+        foreach (scandir($dir) as $file) {
             if ($file === '.' || $file === '..') {
                 continue;
             } else if (is_file($dir . "/" . $file)) {
@@ -62,7 +62,7 @@ class Helper
 
     public static function deleteDir($dir)
     {
-        foreach(scandir($dir) as $file) {
+        foreach (scandir($dir) as $file) {
             if ($file === '.' || $file === '..') {
                 continue;
             } else if (is_file($dir . "/" . $file)) {
@@ -88,9 +88,9 @@ class Helper
             __DIR__ . "/Fluid/Tests/_files/storage/develop"
         );
 
-        exec("git init ". self::getStorage());
-        exec("git --git-dir=".self::getStorage()."/.git --work-tree=".self::getStorage()." add ".self::getStorage()."/*");
-        exec("git --git-dir=".self::getStorage()."/.git --work-tree=".self::getStorage()." commit -m initial\\ commit");
+        exec("git init " . self::getStorage());
+        exec("git --git-dir=" . self::getStorage() . "/.git --work-tree=" . self::getStorage() . " add " . self::getStorage() . "/*");
+        exec("git --git-dir=" . self::getStorage() . "/.git --work-tree=" . self::getStorage() . " commit -m initial\\ commit");
 
         Fluid::setBranch('develop');
     }
@@ -111,8 +111,8 @@ class Helper
     {
         $dir = __DIR__ . "/Fluid/Tests/_files/storage/master";
 
-        exec("git init ". $dir);
-        exec("git --git-dir=".$dir."/.git --work-tree=".$dir." add ".$dir."/*");
-        exec("git --git-dir=".$dir."/.git --work-tree=".$dir." commit -m initial\\ commit");
+        exec("git init " . $dir);
+        exec("git --git-dir=" . $dir . "/.git --work-tree=" . $dir . " add " . $dir . "/*");
+        exec("git --git-dir=" . $dir . "/.git --work-tree=" . $dir . " commit -m initial\\ commit");
     }
 }

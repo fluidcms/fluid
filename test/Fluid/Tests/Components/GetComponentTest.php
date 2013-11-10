@@ -2,7 +2,9 @@
 
 namespace Fluid\Tests\Components;
 
-use Fluid, PHPUnit_Framework_TestCase, Fluid\Tests\Helper;
+use Fluid;
+use PHPUnit_Framework_TestCase;
+use Fluid\Tests\Helper;
 
 class GetComponentTest extends PHPUnit_Framework_TestCase
 {

@@ -2,7 +2,8 @@
 
 namespace Fluid\Tests;
 
-use Fluid, PHPUnit_Framework_TestCase;
+use Fluid;
+use PHPUnit_Framework_TestCase;
 
 class AutoloaderTest extends PHPUnit_Framework_TestCase
 {

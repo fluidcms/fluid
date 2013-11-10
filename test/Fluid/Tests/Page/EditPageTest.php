@@ -2,11 +2,11 @@
 
 namespace Fluid\Tests\Page;
 
-use Fluid,
-    PHPUnit_Framework_TestCase,
-    Fluid\Tests\Helper,
-    Fluid\Page\Page,
-    Fluid\Map\Map;
+use Fluid;
+use PHPUnit_Framework_TestCase;
+use Fluid\Tests\Helper;
+use Fluid\Page\Page;
+use Fluid\Map\Map;
 
 class EditPageTest extends PHPUnit_Framework_TestCase
 {
