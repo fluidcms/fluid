@@ -10,6 +10,9 @@ use Fluid\WebSocket\Events as ServerEvents;
 use Ratchet;
 use React;
 use Ratchet\ConnectionInterface;
+use Ratchet\Wamp\WampConnection;
+use Ratchet\Wamp\Topic;
+use Exception;
 
 /**
  * WebSocket Server for receiving and sending communications to the local server, remote servers and clients
@@ -22,6 +25,17 @@ class WebSocket implements WampServerInterface
     /** @var array $connections */
     protected $connections = array();
 
+    /** @var int $startTime */
+    private $startTime;
+
+    /** @var bool $hadConnections */
+    private $hadConnections = false;
+
+    function __construct()
+    {
+        $this->startTime = time();
+    }
+
     /**
      * Get active connections
      *
@@ -32,6 +46,40 @@ class WebSocket implements WampServerInterface
         return $this->connections;
     }
 
+    /**
+     * Determin if the server is inactive
+     *
+     * @return bool
+     */
+    public function isInactive()
+    {
+        if ($this->countConnections()) {
+            return false;
+        }
+
+        if ($this->hadConnections) {
+            return true;
+        }
+
+        if ($this->startTime < time() - 30) { // Inactive for 30 seconds
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return int
+     */
+    public function countConnections()
+    {
+        return count($this->connections);
+    }
+
+    /**
+     * @param ConnectionInterface|WampConnection $conn
+     * @param Topic|string $topic
+     */
     public function onSubscribe(ConnectionInterface $conn, $topic)
     {
         $topicId = json_decode($topic->getId(), true);
@@ -50,18 +98,29 @@ class WebSocket implements WampServerInterface
         }
     }
 
+    /**
+     * @param ConnectionInterface|WampConnection $conn
+     * @param Topic|string $topic
+     */
     public function onUnSubscribe(ConnectionInterface $conn, $topic)
     {
         Log::add("User unsubscribed");
         unset($this->connections[$conn->WAMP->sessionId][$topic->getId()]);
     }
 
+    /**
+     * @param ConnectionInterface|WampConnection $conn
+     */
     public function onOpen(ConnectionInterface $conn)
     {
+        $this->hadConnections = true;
         Log::add("User opened connection " . $conn->WAMP->sessionId);
         $this->connections[$conn->WAMP->sessionId] = array();
     }
 
+    /**
+     * @param ConnectionInterface|WampConnection $conn
+     */
     public function onClose(ConnectionInterface $conn)
     {
         Log::add("User closed connection " . $conn->WAMP->sessionId);
@@ -78,6 +137,12 @@ class WebSocket implements WampServerInterface
         }
     }
 
+    /**
+     * @param ConnectionInterface|WampConnection $conn
+     * @param string $id
+     * @param Topic|string $topic
+     * @param array $params
+     */
     public function onCall(ConnectionInterface $conn, $id, $topic, array $params)
     {
         // Ping
@@ -121,12 +186,23 @@ class WebSocket implements WampServerInterface
         }
     }
 
+    /**
+     * @param ConnectionInterface|WampConnection $conn
+     * @param Topic|string $topic
+     * @param string $event
+     * @param array $exclude
+     * @param array $eligible
+     */
     public function onPublish(ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible)
     {
         Log::add("User published message");
     }
 
-    public function onError(ConnectionInterface $conn, \Exception $e)
+    /**
+     * @param ConnectionInterface|WampConnection $conn
+     * @param Exception $e
+     */
+    public function onError(ConnectionInterface $conn, Exception $e)
     {
         Log::add("Error");
         if (is_array($this->connections[$conn->WAMP->sessionId])) {

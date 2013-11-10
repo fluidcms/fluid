@@ -152,8 +152,7 @@ class Daemon implements DaemonInterface
             return;
         }
 
-        $port = Config::get('websocket');
-        Log::add('Starting socket on port ' . $port);
+        Log::add('Starting socket on port ' . Config::get('websocket'));
 
         $root = $this;
 
@@ -162,15 +161,19 @@ class Daemon implements DaemonInterface
         $loop = $server->getLoop();
 
         // Create WebSocket Server
-        $server->add(new WebSocket(), WebSocket::URI);
+        $webSocket = new WebSocket();
+        $server->add($webSocket, WebSocket::URI);
         // Create Message Server
-        //$server->add(new Message(), Message::URI);
+        $server->add(new Message(), Message::URI);
 
         $server->create();
 
-        // Stop server if inactive for 30 seconds
-        $loop->addPeriodicTimer(30, function () use ($root) {
-            // TODO if inactive, stop!
+        // Stop server if inactive
+        $loop->addPeriodicTimer(1, function () use ($loop, $webSocket) {
+            if ($webSocket->isInactive()) {
+                Log::add('Stopping socket on port ' . Config::get('websocket') . ' after inactivity');
+                $loop->stop();
+            }
         });
 
         // Execute uptime callback every 10 seconds
