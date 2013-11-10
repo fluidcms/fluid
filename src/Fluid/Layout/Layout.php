@@ -136,13 +136,13 @@ class Layout
     public static function getLayouts()
     {
         $layouts = array();
-        $dir = Config::get('templates') . Config::get('layouts');
+        $dir = Config::get('templates') . '/' . Config::get('layouts');
 
         if (is_dir($dir)) {
             foreach (scandir($dir) as $file) {
                 if ($file === '.' || $file === '..') {
                     continue;
-                } else if (is_dir($dir.$file) && file_exists("{$dir}{$file}/layout.xml")) {
+                } else if (is_dir("{$dir}/{$file}") && file_exists("{$dir}/{$file}/layout.xml")) {
                     $layouts[] = array(
                         'layout' => $file
                     );

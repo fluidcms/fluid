@@ -30,11 +30,11 @@ class FileInfo
     /**
      * Get information on an image
      *
-     * @param array $file
+     * @param string $file
      * @throws Exception
      * @return array
      */
-    public static function getImageInfo(array $file)
+    public static function getImageInfo($file)
     {
         if (file_exists($file) && $size = getimagesize($file)) {
             return array(

@@ -2,7 +2,6 @@
 
 namespace Fluid\Token;
 
-use Fluid\Fluid;
 use Fluid\Database;
 
 class Token extends Database

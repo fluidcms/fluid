@@ -46,7 +46,7 @@ class EditImageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(143, $retval['data']['Site']['Logo']['NoHeight']['height']);
         $this->assertEquals('/fluidcms/images/0i7ygv3r/Logo.png', $retval['data']['Site']['Logo']['Original']['src']);
 
-        $dir = Fluid\Fluid::getBranchStorage() . "files";
+        $dir = Fluid\Fluid::getBranchStorage() . "/files";
         $this->assertFileExists(preg_replace('!^/fluidcms/images!', $dir, $retval['data']['Site']['Logo']['src']));
         $this->assertFileExists(preg_replace('!^/fluidcms/images!', $dir, $retval['data']['Site']['Logo']['Retina']['src']));
     }
@@ -76,7 +76,7 @@ class EditImageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(86, $retval['data']['Site']['MyArray'][0]['Image']['height']);
         $this->assertEquals('/fluidcms/images/0i7ygv3r/Logo.png', $retval['data']['Site']['MyArray'][0]['Image']['src']);
 
-        $dir = Fluid\Fluid::getBranchStorage() . "files";
+        $dir = Fluid\Fluid::getBranchStorage() . "/files";
         $this->assertFileExists(preg_replace('!^/fluidcms/images!', $dir, $retval['data']['Site']['MyArray'][0]['Image']['src']));
     }
 }

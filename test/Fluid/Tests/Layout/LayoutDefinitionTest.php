@@ -1,6 +1,6 @@
 <?php
 
-namespace Fluid\Tests\History;
+namespace Fluid\Tests\Layout;
 
 use Fluid;
 use PHPUnit_Framework_TestCase;

@@ -95,10 +95,10 @@ class UpdateData
      * @param array $data
      * @param array $definition
      * @param string $language
-     * @param array $languages
+     * @param array|null $languages
      * @return array
      */
-    private static function parse(Page $page, array $data, array $definition, $language, array $languages)
+    private static function parse(Page $page, array $data, array $definition, $language, array $languages = null)
     {
         $output = array();
 
@@ -328,10 +328,10 @@ class UpdateData
     /**
      * Sanitize image data
      *
-     * @param array $value
+     * @param array|null $value
      * @return array
      */
-    private static function sanitizeImage(array $value)
+    private static function sanitizeImage(array $value = null)
     {
         return $value; // TODO: sanitize maybe?
     }

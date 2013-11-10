@@ -41,10 +41,10 @@ abstract class FileSystem extends Cache
     /**
      * Save data to storage
      *
-     * @param array $content
+     * @param string $content
      * @param mixed|null $file
      */
-    public static function save(array $content, $file = null)
+    public static function save($content, $file = null)
     {
         if (null === $file) {
             $file = static::$dataFile;
