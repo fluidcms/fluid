@@ -4,6 +4,7 @@ namespace Fluid\Socket\Server;
 
 use Ratchet\Wamp\WampServerInterface;
 use Fluid;
+use Fluid\Event;
 use Fluid\Debug\Log;
 use Fluid\Requests\WebSocket as WebSocketRequest;
 use Fluid\Socket\Events as ServerEvents;
@@ -114,8 +115,10 @@ class WebSocket implements WampServerInterface
     public function onOpen(ConnectionInterface $conn)
     {
         $this->hadConnections = true;
-        Log::add("User opened connection " . $conn->WAMP->sessionId);
         $this->connections[$conn->WAMP->sessionId] = array();
+
+        Log::add("User opened connection " . $conn->WAMP->sessionId);
+        Event::trigger('websocket:connection:open', array('conn' => $conn));
     }
 
     /**
@@ -123,18 +126,14 @@ class WebSocket implements WampServerInterface
      */
     public function onClose(ConnectionInterface $conn)
     {
-        Log::add("User closed connection " . $conn->WAMP->sessionId);
-
         if (isset($this->connections[$conn->WAMP->sessionId]) && is_array($this->connections[$conn->WAMP->sessionId])) {
             $topic = key($this->connections[$conn->WAMP->sessionId]);
             ServerEvents::unregister($this->connections[$conn->WAMP->sessionId][$topic]['user_id']);
         }
         unset($this->connections[$conn->WAMP->sessionId]);
 
-        // Shut down server if no one is connected
-        if (count($this->connections) == 0) {
-            exit;
-        }
+        Log::add("User closed connection " . $conn->WAMP->sessionId);
+        Event::trigger('websocket:connection:close', array('conn' => $conn));
     }
 
     /**

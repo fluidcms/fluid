@@ -6,6 +6,7 @@ use Fluid;
 use React;
 use Ratchet;
 use Closure;
+use Fluid\Event;
 use Fluid\Socket\Server;
 use Fluid\Socket\Server\WebSocket;
 use Fluid\Socket\Server\Message;
@@ -169,17 +170,22 @@ class Daemon implements DaemonInterface
         $server->create();
 
         // Stop server if inactive
-        $loop->addPeriodicTimer(1, function () use ($loop, $webSocket) {
+        $stopSocket = function() use ($loop, $webSocket) {
             if ($webSocket->isInactive()) {
-                Log::add('Stopping socket on port ' . Config::get('websocket') . ' after inactivity');
+                Log::add('Stopping socket after inactivity');
                 $loop->stop();
             }
-        });
+        };
+
+        Event::on('websocket:connection:close', $stopSocket);
+        $loop->addPeriodicTimer(1, $stopSocket);
 
         // Execute uptime callback every 10 seconds
-        $loop->addPeriodicTimer(10, function () use ($root) {
-            $root->uptimeCallback();
-        });
+        if (is_callable($this->uptimeCallback)) {
+            $loop->addPeriodicTimer(10, function () use ($root) {
+                $root->uptimeCallback();
+            });
+        }
 
         file_put_contents(Config::get('storage') . '/' . self::LOCK_FILE, $this->instanceId);
         $server->run();

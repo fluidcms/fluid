@@ -19,9 +19,11 @@ if (file_exists($vendor . "/autoload.php")) {
 
 require_once __DIR__ . '/helper.php';
 
-Fluid\Fluid::setConfig('languages', array('en-US', 'de-DE'));
-Fluid\Fluid::setConfig('storage', __DIR__ . '/Fluid/Tests/_files/storage/');
-Fluid\Fluid::setConfig('templates', __DIR__ . '/Fluid/Tests/_files/templates');
-Fluid\Fluid::setConfig('layouts', 'layouts');
-Fluid\Fluid::setConfig('components', 'components');
+Fluid\Config::setAll(array(
+    'languages' => array('en-US', 'de-DE'),
+    'storage' => __DIR__ . '/Fluid/Tests/_files/storage/',
+    'templates' => __DIR__ . '/Fluid/Tests/_files/templates',
+    'layouts' => 'layouts',
+    'components' => 'components'
+));
 
