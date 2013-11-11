@@ -1,0 +1,27 @@
+<div class="header">
+ <a data-action="addPage" class="icon-button plus">Page</a>
+</div>
+
+<a class="global <% if (current === 'global') { %>current<% } %>">Global</a>
+
+<ul class="map mapSortable">
+    <% function PagesList(pages, current) { %>
+    <% $.each(pages.models, function() { %>
+    <li data-id="<%= this.get('id') %>" data-page="<%= this.get('page') %>">
+        <div></div>
+        <span>
+            <a data-id="<%= this.get('id') %>" <% if (this.get('id') === current) { %>class="current"<% } %>>
+                <%= this.get('page') %>
+            </a>
+        </span>
+        <ul class="pages mapSortable">
+            <% if (typeof this.get('pages') !== 'undefined') { %>
+            <%= PagesList(this.get('pages'), current) %>
+            <% } %>
+        </ul>
+    </li>
+    <% }) %>
+    <% } %>
+
+    <%= PagesList(pages, current) %>
+</ul>

@@ -8,7 +8,7 @@ define(
 
             previousAppNav: null,
 
-            template: new EJS({url: 'javascripts/fluid/templates/page/page.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+            template: new EJS({url: ' javascripts/templates/page/page.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
             initialize: function (attrs) {
                 var root = this;
@@ -45,7 +45,7 @@ define(
 
             render: function () {
                 var root = this;
-                var variables = new EJS({url: 'javascripts/fluid/templates/variables/variables.ejs?' + (new Date()).getTime()});  // !! Remove for production
+                var variables = new EJS({url: ' javascripts/templates/variables/variables.ejs?' + (new Date()).getTime()});  // !! Remove for production
 
                 if (this.rendered === true) {
                     var scroll = this.$el.find("div.main").scrollTop();
@@ -94,7 +94,7 @@ define(
 
             contentCM: function(e) {
                 e.preventDefault();
-                new ContextMenu({url: 'javascripts/fluid/templates/variables/contentcm.ejs', parent: this, event: e}).render({languages: this.languages});
+                new ContextMenu({url: ' javascripts/templates/variables/contentcm.ejs', parent: this, event: e}).render({languages: this.languages});
             },
 
             copyLang: function(target, e) {

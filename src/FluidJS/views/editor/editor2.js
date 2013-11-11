@@ -84,7 +84,7 @@ define([
 
         componentContextMenu: function (e) {
             e.preventDefault();
-            new ContextMenu({url: 'javascripts/fluid/templates/editor/componentcm.ejs', parent: this, event: e}).render();
+            new ContextMenu({url: ' javascripts/templates/editor/componentcm.ejs', parent: this, event: e}).render();
         },
 
         save: function() {

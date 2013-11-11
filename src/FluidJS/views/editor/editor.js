@@ -11,7 +11,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
 
         className: 'editor',
 
-        template: new EJS({url: 'javascripts/fluid/templates/editor/editor.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+        template: new EJS({url: ' javascripts/templates/editor/editor.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         data: null,
         html: null,
@@ -79,7 +79,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/editor/helper', 'views/helpers/co
 
         componentContextMenu: function (e) {
             e.preventDefault();
-            new ContextMenu({url: 'javascripts/fluid/templates/editor/componentcm.ejs', parent: this, event: e}).render();
+            new ContextMenu({url: ' javascripts/templates/editor/componentcm.ejs', parent: this, event: e}).render();
         },
 
         hide: function() {

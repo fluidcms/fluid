@@ -7,7 +7,7 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
             'change select': 'changeLanguage'
         },
 
-        template: new EJS({url: 'javascripts/fluid/templates/toolbar/toolbar.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+        template: new EJS({url: ' javascripts/templates/toolbar/toolbar.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
             this.languages = attrs.languages;

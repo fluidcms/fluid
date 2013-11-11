@@ -1,0 +1,9 @@
+<ul>
+    <% languages.each(function(item) { %>
+    <li>
+        <a data-action="copyLang" data-lang="<%= item.get('language') %>">
+            <%= fluidLanguage.variables.contentcm.copy.replace('%lang', fluidLanguage.languages[item.get('language').substr(0,2)]) %>
+        </a>
+    </li>
+    <% }); %>
+</ul>

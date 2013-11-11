@@ -4,7 +4,7 @@ define(
         return Backbone.View.extend($.extend({}, VariablesView, {
             changed: false,
 
-            template: new EJS({url: 'javascripts/fluid/templates/components/component.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+            template: new EJS({url: ' javascripts/templates/components/component.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
             initialize: function (attrs) {
                 this.app = attrs.app;
@@ -36,7 +36,7 @@ define(
 
             render: function () {
                 var root = this;
-                var variables = new EJS({url: 'javascripts/fluid/templates/variables/variables.ejs?' + (new Date()).getTime()});  // !! Remove for production
+                var variables = new EJS({url: ' javascripts/templates/variables/variables.ejs?' + (new Date()).getTime()});  // !! Remove for production
 
                 if (this.rendered === true) {
                     var scroll = this.$el.find("div.main").scrollTop();

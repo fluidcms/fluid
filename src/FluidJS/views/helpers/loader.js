@@ -2,7 +2,7 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
     return Backbone.View.extend({
         className: "loader",
 
-        template: new EJS({url: 'javascripts/fluid/templates/helpers/loader.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+        template: new EJS({url: ' javascripts/templates/helpers/loader.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
             this.render();

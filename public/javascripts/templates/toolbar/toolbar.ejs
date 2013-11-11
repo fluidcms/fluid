@@ -1,0 +1,17 @@
+<div>
+    <a data-action="preview" class="toolbar-button preview <% if (editing === false) { %>current<% } %>">Preview</a>
+    <% if (currentPage !== null) { %>
+        <a data-action="edit" class="toolbar-button edit <% if (editing === true) { %>current<% } %>">Edit</a>
+    <% } %>
+</div>
+
+<div>
+    <a data-action="reload" class="reload">Reload</a>
+    <select>
+        <% languages.each(function(item, key) { %>
+        <option value="<%= item.get('language') %>" <% if(item.get('language') === language) { %>selected<% } %>>
+            <%= fluidLanguage['languages'][item.get('language').substring(0,2)] %>
+        </option>
+        <% }); %>
+    </select>
+</div>

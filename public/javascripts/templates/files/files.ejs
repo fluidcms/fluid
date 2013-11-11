@@ -1,0 +1,18 @@
+<input id="fileUploader" type="file" accept="image/jpeg,image/png,image/gif" multiple>
+
+<div class="header">
+    <label class="no-class" for="fileUploader">
+        <a data-action="addFile" class="icon-button plus"><!-- File -->Image</a>
+    </label>
+</div>
+
+<ul class="files">
+    <% files.each(function(file, key) { %>
+
+    <li data-id="<%= file.get('id') %>" data-name="<%= file.get('name') %>">
+        <img src="data:image/gif;base64,R0lGODdhAQABAIAAAOTm5AAAACwAAAAAAQABAAACAkQBADs=" width="<%= file.get('preview').width %>" height="<%= file.get('preview').height %>" alt="" style="opacity: .1;">
+        <span><%= file.get('name') %></span>
+    </li>
+
+    <% }); %>
+</ul>

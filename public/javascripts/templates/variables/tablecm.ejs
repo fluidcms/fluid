@@ -1,0 +1,12 @@
+<ul>
+    <% if (body) { %>
+    <li><a data-action="tableInsertRowBefore">Insert Row Before</a></li>
+    <li><a data-action="tableInsertRowAfter">Insert Row After</a></li>
+    <% } %>
+    <li><a data-action="tableInsertColumnBefore">Insert Column Before</a></li>
+    <li><a data-action="tableInsertColumnAfter">Insert Column After</a></li>
+    <% if (body) { %>
+    <li><a data-action="tableDeleteRow">Delete Row</a></li>
+    <% } %>
+    <li><a data-action="tableDeleteColumn">Delete Column</a></li>
+</ul>

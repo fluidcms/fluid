@@ -60,8 +60,22 @@ module.exports = function(grunt) {
                     'public/javascripts/vendor/requirejs-2.1.9.min.js': ['bower_components/requirejs/require.js'],
                     'public/javascripts/vendor/when-2.5.1.min.js': ['bower_components/when/when.js'],
                     'public/javascripts/vendor/text-2.0.10.min.js': ['bower_components/text/text.js'],
-                    'public/javascripts/vendor/autobahnjs-0.8.0.min.js': ['src/FluidJS/vendor/autobahnjs.js']
+                    'public/javascripts/vendor/autobahnjs-0.8.0.min.js': ['src/FluidJS/vendor/autobahnjs.js'],
+                    'public/javascripts/vendor/ejs-1.0.0.min.js': ['src/FluidJS/vendor/ejs.js']
                 }
+            }
+        },
+
+        copy: {
+            main: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'src/FluidJS/templates/',
+                        src: ['**'],
+                        dest: 'public/javascripts/templates'
+                    }
+                ]
             }
         }
     });
@@ -70,7 +84,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
     // Default task.
-    grunt.registerTask('default', ['clean', 'requirejs', 'uglify']);
+    grunt.registerTask('default', ['clean', 'requirejs', 'uglify', 'copy']);
 };

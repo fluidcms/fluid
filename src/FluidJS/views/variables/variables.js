@@ -116,7 +116,7 @@ define(['jquery-ui', 'views/editor/editor', 'views/helpers/contextmenu', 'views/
 
         arrayContextMenu: function(e) {
             e.preventDefault();
-            new ContextMenu({url: 'javascripts/fluid/templates/variables/arraycm.ejs', parent: this, event: e}).render();
+            new ContextMenu({url: ' javascripts/templates/variables/arraycm.ejs', parent: this, event: e}).render();
         },
 
         deleteArray: function(e) {

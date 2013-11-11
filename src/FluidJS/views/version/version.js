@@ -7,7 +7,7 @@ define(['backbone', 'ejs', 'views/helpers/modal'], function (Backbone, EJS, Moda
 
         className: "version",
 
-        template: new EJS({url: 'javascripts/fluid/templates/version/version.ejs' + '?' + new Date().getTime()}),
+        template: new EJS({url: ' javascripts/templates/version/version.ejs' + '?' + new Date().getTime()}),
 
         initialize: function (attrs) {
             $("#content").before(this.$el);
@@ -75,7 +75,7 @@ define(['backbone', 'ejs', 'views/helpers/modal'], function (Backbone, EJS, Moda
             "keypress :input": "submit"
         }, Modal.events),
 
-        template: new EJS({url: 'javascripts/fluid/templates/version/commit-modal.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+        template: new EJS({url: ' javascripts/templates/version/commit-modal.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
             this.version = attrs.version;

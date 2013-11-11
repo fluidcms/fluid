@@ -15,7 +15,7 @@ define(
 
             dropbox: {},
 
-            template: new EJS({url: 'javascripts/fluid/templates/map/map.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+            template: new EJS({url: ' javascripts/templates/map/map.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
             initialize: function (attrs) {
                 var root = this;
@@ -128,7 +128,7 @@ define(
 
             contextmenu: function (e) {
                 e.preventDefault();
-                new ContextMenu({url: 'javascripts/fluid/templates/map/contextmenu.ejs', parent: this, event: e}).render();
+                new ContextMenu({url: ' javascripts/templates/map/contextmenu.ejs', parent: this, event: e}).render();
             },
 
             addPage: function (e) {
@@ -170,7 +170,7 @@ define(
 
         // TODO: rename to page config
         var PageView = Backbone.View.extend($.extend({}, Modal, {
-            template: new EJS({url: 'javascripts/fluid/templates/map/page.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+            template: new EJS({url: ' javascripts/templates/map/page.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
             initialize: function (attrs) {
                 this.languages = attrs.languages;

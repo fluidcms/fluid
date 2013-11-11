@@ -1,0 +1,121 @@
+<%
+var renderVariable = function(variable, data) {
+    if (variable.type == 'string') { %>
+        <div class="data string"><% if (typeof data !== 'undefined') { %><%= data %><% } %></div>
+    <% } else if (variable.type == 'content') { %>
+        <div class="data content"><% if (typeof data !== 'undefined') { %><%= data %><% } %></div>
+    <% } else if (variable.type == 'option') { %>
+        <div class="data option">
+            <select>
+                <% $.each(variable.options, function(key, item) { %>
+                <option value="<%= item['value'] %>" <% if (typeof data !== 'undefined' && data == item['value']) { %>selected<% } %>><%= item['name'] %></option>
+                <% }); %>
+            </select>
+        </div>
+    <% } else if (variable.type == 'bool') { %>
+        <div class="data bool">
+            <label class="checkbox"><input type="checkbox" value="1" <% if (typeof data !== 'undefined' && data == true || data == 'true') { %>checked<% } %>></label>
+        </div>
+    <% } else if (variable.type == 'table') { %>
+        <div class="data table">
+            <table>
+                <% if (variable.header) { %>
+                <thead>
+                <tr>
+                    <% if (typeof data === 'undefined' || data === null || typeof data.thead === 'undefined' || data.thead === null) { %>
+                    <td contenteditable="true"></td>
+                    <% } else { %>
+                        <% $.each(data.thead, function(key, value) { %>
+                        <td contenteditable="true"><%= value %></td>
+                        <% }); %>
+                    <% } %>
+                </tr>
+                </thead>
+                <% } %>
+                <tbody>
+                <% if (typeof data === 'undefined' || data === null || typeof data.tbody === 'undefined' || data.tbody === null) { %>
+                <tr>
+                    <td contenteditable="true"></td>
+                </tr>
+                <% } else { %>
+                    <% $.each(data.tbody, function(key, row) { %>
+                    <tr>
+                        <% $.each(row, function(key, value) { %>
+                        <td contenteditable="true"><%= value %></td>
+                        <% }); %>
+                    </tr>
+                    <% }); %>
+                <% } %>
+                </tbody>
+                <% if (variable.footer) { %>
+                <tfoot>
+                <tr>
+                    <% if (typeof data === 'undefined' || data === null || typeof data.tfoot === 'undefined' || data.tfoot === null) { %>
+                    <td contenteditable="true"></td>
+                    <% } else { %>
+                        <% $.each(data.tfoot, function(key, value) { %>
+                        <td contenteditable="true"><%= value %></td>
+                        <% }); %>
+                    <% } %>
+                </tr>
+                </tfoot>
+                <% } %>
+            </table>
+        </div>
+    <% } else if (variable.type == 'image') { %>
+        <div class="data image">
+        <%
+            var width = parseInt(typeof variable.width !== 'undefined' ? variable.width : 0);
+            var height = parseInt(typeof variable.height !== 'undefined' ? variable.height : 0);
+
+            if (typeof variable.formats !== 'undefined' && width === 0 && height === 0) {
+                $.each(variable.formats, function(formatkey, format) {
+                    if (typeof format.width !== 'undefined' && parseInt(format.width) > width) {
+                        width = parseInt(format.width);
+                        height = parseInt(typeof format.height !== 'undefined' ? format.height : "");
+                        if (width !== 0 || height !== 0) {
+                            return false;
+                        }
+                    }
+                });
+            }
+        %>
+
+        <% if (typeof data !== 'undefined') { %>
+            <%= data %>
+        <% } else { %>
+            <img src="images/imgtmp-<%= width === 0 ? 3000 : width %>px-<%= height === 0 ? 200 : height %>px.gif"
+                 width="<%= width === 0 ? 3000 : "" %>"
+                height="<%= height === 0 ? 200 : "" %>"
+                alt="">
+        <% } %>
+        </div>
+    <% } else { %>
+        <div class="data"></div>
+    <% }
+};
+%>
+
+<% $.each(definition, function(key, item) { %>
+    <% if (item.type == 'array') { %>
+        <div data-array="<%= key %>">
+            <div class="label array" data-action="addArrayItem"><%= key %></div>
+            <% if (typeof data[key] !== 'undefined' && data[key] !== null) { $.each(data[key], function(arrayKey, arrayItem) { %>
+            <div class="array-item">
+                <span class="key"><%= (arrayKey + 1) %></span>
+                <% $.each(item.variables, function(arrayVariableName, arrayVariable) { %>
+                    <div data-array-item="<%= arrayVariableName %>">
+                        <div class="label"><%= arrayVariableName %></div>
+                        <% renderVariable(arrayVariable, arrayItem[arrayVariableName]) %>
+                    </div>
+                <% }); %>
+            </div>
+            <% }); } %>
+        </div>
+    <% } else { %>
+        <div data-item="<%= key %>" data-type="<%= item.type %>">
+            <div class="label"><%= key %></div>
+            <% renderVariable(item, data[key]) %>
+        </div>
+    <% } %>
+<% }); %>

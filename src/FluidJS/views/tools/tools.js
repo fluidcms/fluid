@@ -14,7 +14,7 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
 
         editorElement: null,
 
-        template: new EJS({url: 'javascripts/fluid/templates/tools/tools.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+        template: new EJS({url: ' javascripts/templates/tools/tools.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
         },

@@ -1,0 +1,43 @@
+<ul class="tabs">
+    <li><a data-action="text">Text</a></li>
+</ul>
+<div class="text">
+    <div class="row">
+        <select data-role="tag" <% if (!textEnabled) { %>disabled<% } %>>
+            <option value="h1">Header 1</option>
+            <option value="h2">Header 2</option>
+            <option value="h3">Header 3</option>
+            <option value="h4">Header 4</option>
+            <option value="h5">Header 5</option>
+            <option value="h6">Header 6</option>
+            <option value="p" selected>Paragraph</option>
+        </select>
+    </div>
+    <div class="row">
+        <div class="group">
+            <a data-role="bold" <% if (!textEnabled) { %>data-disabled<% } %>></a>
+            <a data-role="italic" <% if (!textEnabled) { %>data-disabled<% } %>></a>
+            <a data-role="underline" <% if (!textEnabled) { %>data-disabled<% } %>></a>
+            <a data-role="strikeThrough" <% if (!textEnabled) { %>data-disabled<% } %>></a>
+        </div>
+        <div class="group">
+            <a data-role="anchor" <% if (!textEnabled) { %>data-disabled<% } %>>Link</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="group">
+            <a data-role="ul" <% if (!textEnabled) { %>data-disabled<% } %>></a>
+            <a data-role="ol" <% if (!textEnabled) { %>data-disabled<% } %>></a>
+        </div>
+        <div class="group">
+            <a data-role="alignLeft" <% if (!textEnabled) { %>data-disabled<% } %>></a>
+            <a data-role="alignCenter" <% if (!textEnabled) { %>data-disabled<% } %>></a>
+            <a data-role="alignRight" <% if (!textEnabled) { %>data-disabled<% } %>></a>
+            <a data-role="justifyLeft" <% if (!textEnabled) { %>data-disabled<% } %>></a>
+        </div>
+        <div class="group">
+            <a data-role="indentLeft" <% if (!textEnabled) { %>data-disabled<% } %>></a>
+            <a data-role="indentRight" <% if (!textEnabled) { %>data-disabled<% } %>></a>
+        </div>
+    </div>
+</div>

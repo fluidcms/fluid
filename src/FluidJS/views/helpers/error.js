@@ -2,7 +2,7 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
     return Backbone.View.extend({
         className: "error",
 
-        template: new EJS({url: 'javascripts/fluid/templates/helpers/error.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+        template: new EJS({url: ' javascripts/templates/helpers/error.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
             this.msg = attrs.msg;

@@ -5,7 +5,7 @@ define(['backbone', 'ejs', 'jquery-ui'], function (Backbone, EJS, jUI) {
 
         className: 'components',
 
-        template: new EJS({url: 'javascripts/fluid/templates/components/components.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+        template: new EJS({url: ' javascripts/templates/components/components.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
             this.collection.on('reset', this.render, this);

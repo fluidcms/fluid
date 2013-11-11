@@ -44,7 +44,7 @@ define([
             if ($(e.currentTarget).parents('tbody').length) {
                 body = true;
             }
-            new ContextMenu({url: 'javascripts/fluid/templates/variables/tablecm.ejs', parent: this, event: e}).render({body: body});
+            new ContextMenu({url: ' javascripts/templates/variables/tablecm.ejs', parent: this, event: e}).render({body: body});
         },
 
         tableInsertRowBefore: function(target) {

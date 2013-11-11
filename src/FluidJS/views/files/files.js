@@ -5,7 +5,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/help
             "copy :input": "copied"
         }, Modal.events),
 
-        template: new EJS({url: 'javascripts/fluid/templates/files/copymodal.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+        template: new EJS({url: ' javascripts/templates/files/copymodal.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
             this.content = attrs.content;
@@ -35,8 +35,8 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/help
 
         className: 'files',
 
-        template: new EJS({url: 'javascripts/fluid/templates/files/files.ejs?' + (new Date()).getTime()}),  // !! Remove for production
-        fileTemplate: new EJS({url: 'javascripts/fluid/templates/files/file.ejs'}),  // !! Remove for production
+        template: new EJS({url: ' javascripts/templates/files/files.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+        fileTemplate: new EJS({url: ' javascripts/templates/files/file.ejs'}),  // !! Remove for production
 
         initialize: function (attrs) {
             var root = this;
@@ -93,7 +93,7 @@ define(['backbone', 'ejs', 'jquery-ui', 'views/helpers/contextmenu', 'views/help
         contextmenu: function (e) {
             e.preventDefault();
             if ($(e.currentTarget).attr('data-block') !== 'true') {
-                var contextMenu = new ContextMenu({url: 'javascripts/fluid/templates/files/filecm.ejs', parent: this, event: e}).render();
+                var contextMenu = new ContextMenu({url: ' javascripts/templates/files/filecm.ejs', parent: this, event: e}).render();
             }
         },
 

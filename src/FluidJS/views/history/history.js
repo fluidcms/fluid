@@ -8,7 +8,7 @@ define(['backbone', 'ejs'], function (Backbone, EJS) {
 
         dropbox: {},
 
-        template: new EJS({url: 'javascripts/fluid/templates/history/history.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+        template: new EJS({url: ' javascripts/templates/history/history.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
             this.collection.on('reset', this.render, this);

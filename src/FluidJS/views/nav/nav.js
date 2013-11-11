@@ -2,7 +2,7 @@ define(['backbone', 'ejs', 'qtip'], function (Backbone, EJS, qTip) {
     return Backbone.View.extend({
         id: "nav",
 
-        template: new EJS({url: 'javascripts/fluid/templates/nav/nav.ejs?' + (new Date()).getTime()}),  // !! Remove for production
+        template: new EJS({url: ' javascripts/templates/nav/nav.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
         initialize: function (attrs) {
             this.items = [

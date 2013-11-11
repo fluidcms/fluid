@@ -8,7 +8,7 @@
             'autobahnjs': 'vendor/autobahnjs-0.8.0.min',
             'async': 'vendor/async-0.2.5.min',
             'backbone': 'vendor/backbone-1.1.0.min',
-            'ejs': 'vendor/ejs-0.8.4.min',
+            'ejs': 'vendor/ejs-1.0.0.min',
             'jquery': 'vendor/jquery-2.0.3.min',
             'qtip': 'vendor/jquery-qtip-2.1.1.min',
             'jquery-ui': 'vendor/jquery-ui-1.10.3.min',
