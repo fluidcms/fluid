@@ -7,6 +7,8 @@ use WebSocketClient\WebSocketClientInterface;
 use React\EventLoop\Factory;
 use Fluid\Config;
 use React\EventLoop\StreamSelectLoop;
+use Fluid\Debug\Log;
+use Ratchet\Wamp\Topic;
 
 /**
  * Class Message
@@ -39,6 +41,7 @@ class Message implements WebSocketClientInterface
 
         if (!$this->run) {
             $this->setLoop(Factory::create());
+            $this->run = false;
         }
 
         $this->setEvent($event)->setData($data);
@@ -61,10 +64,24 @@ class Message implements WebSocketClientInterface
      */
     public function onWelcome(array $data)
     {
-        $this->client->publish('message', json_encode(array(
-            'event' => $this->getEvent(),
-            'data' => $this->getData()
-        )));
+        $loop = $this->getLoop();
+
+        $this->client->call(
+            'message',
+            array($this->getEvent(), $this->getData()),
+            function($response) use ($loop) {
+                $loop->stop();
+            }
+        );
+
+        Log::add('Message client sent event ' . $this->getEvent());
+
+        if (!$this->run) {
+            // Timeout after 10 seconds
+            $loop->addPeriodicTimer(10, function () use ($loop) {
+                $loop->stop();
+            });
+        }
     }
 
     /**
@@ -73,6 +90,11 @@ class Message implements WebSocketClientInterface
      */
     public function onEvent($topic, $message)
     {
+        Log::add('Message client received confirmation');
+
+        if (!$this->run) {
+            $this->getLoop()->stop();
+        }
     }
 
     /**

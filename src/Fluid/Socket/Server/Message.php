@@ -9,6 +9,7 @@ use Ratchet\Wamp\WampServerInterface;
 use Ratchet\Wamp\Topic;
 use Ratchet\Server\IoConnection;
 use Fluid\Event;
+use Fluid\Debug\Log;
 
 class Message implements WampServerInterface
 {
@@ -42,8 +43,11 @@ class Message implements WampServerInterface
      */
     public function onSubscribe(ConnectionInterface $conn, $topic)
     {
+        Log::add('Message socket subscribe');
+
         if (!$this->isAllowed($conn)) {
             $conn->close();
+            return;
         }
     }
 
@@ -53,6 +57,7 @@ class Message implements WampServerInterface
      */
     public function onUnSubscribe(ConnectionInterface $conn, $topic)
     {
+        Log::add('Message socket unsubscribe');
     }
 
     /**
@@ -60,8 +65,12 @@ class Message implements WampServerInterface
      */
     public function onOpen(ConnectionInterface $conn)
     {
+        Log::add('Message socket connection');
+
         if (!$this->isAllowed($conn)) {
+            Log::add('Connection to message socket server was declined');
             $conn->close();
+            return;
         }
     }
 
@@ -70,6 +79,7 @@ class Message implements WampServerInterface
      */
     public function onClose(ConnectionInterface $conn)
     {
+        Log::add('Message socket close');
     }
 
     /**
@@ -80,8 +90,25 @@ class Message implements WampServerInterface
      */
     public function onCall(ConnectionInterface $conn, $id, $topic, array $params)
     {
-        if (!$this->isAllowed($conn)) {
+        Log::add('Message socket call');
+
+        if (!$this->isAllowed($conn) || $topic->getId() !== 'message') {
             $conn->close();
+            return;
+        }
+
+        if (isset($params[0]) && is_array($params[1])) {
+            $event = $params[0];
+            $args = $params[1];
+
+            $conn->send(json_encode(array(
+                3,
+                $id,
+                array('true')
+            )));
+
+            Event::trigger($event, $args);
+            Log::add('Message socket received event ' . $event);
         }
     }
 
@@ -94,13 +121,11 @@ class Message implements WampServerInterface
      */
     public function onPublish(ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible)
     {
+        Log::add('Message socket publish');
+
         if (!$this->isAllowed($conn) || $topic->getId() !== 'message') {
             $conn->close();
-        }
-
-        $event = json_decode($event, true);
-        if (isset($event['event'], $event['data'])) {
-            Event::trigger($event['event'], $event['data']);
+            return;
         }
     }
 
@@ -110,5 +135,6 @@ class Message implements WampServerInterface
      */
     public function onError(ConnectionInterface $conn, Exception $e)
     {
+        Log::add('Message socket error');
     }
 }

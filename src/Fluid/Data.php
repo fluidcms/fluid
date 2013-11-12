@@ -4,6 +4,8 @@ namespace Fluid;
 
 use Fluid\Page\Page;
 use Fluid\Map\Map;
+use Fluid\Token\Token;
+use Fluid\Socket\Message;
 
 /**
  * Data class
@@ -27,26 +29,24 @@ class Data
         }
 
         // If rendering page for CMS, we change the current branch to the CMS branch and send a signal to the CMS
-        /*if (isset($_SERVER['QUERY_STRING'])) {
+        if (isset($_SERVER['QUERY_STRING'])) {
             parse_str($_SERVER['QUERY_STRING']);
             if (isset($fluidtoken) && isset($fluidbranch) && isset($fluidsession) && Token::validate($fluidtoken)) {
                 Fluid::setBranch($fluidbranch);
 
-                MessageQueue::send(array(
-                    'task' => 'RequestedData',
-                    'data' => array(
-                        'session' => $fluidsession,
-                        'message' => array(
-                            'target' => 'data_request',
-                            'data' => array(
-                                'language' => Fluid::getLanguage(),
-                                'page' => $page
-                            )
+                $message = new Message;
+                $message->send('data:get', array(
+                    'session' => $fluidsession,
+                    'message' => array(
+                        'target' => 'data_request',
+                        'data' => array(
+                            'language' => Fluid::getLanguage(),
+                            'page' => $page
                         )
                     )
                 ));
             }
-        }*/
+        }
 
         $global = self::getData(self::$map);
 
