@@ -43,8 +43,6 @@ class Message implements WampServerInterface
      */
     public function onSubscribe(ConnectionInterface $conn, $topic)
     {
-        Log::add('Message socket subscribe');
-
         if (!$this->isAllowed($conn)) {
             $conn->close();
             return;
@@ -57,7 +55,6 @@ class Message implements WampServerInterface
      */
     public function onUnSubscribe(ConnectionInterface $conn, $topic)
     {
-        Log::add('Message socket unsubscribe');
     }
 
     /**
@@ -65,8 +62,6 @@ class Message implements WampServerInterface
      */
     public function onOpen(ConnectionInterface $conn)
     {
-        Log::add('Message socket connection');
-
         if (!$this->isAllowed($conn)) {
             Log::add('Connection to message socket server was declined');
             $conn->close();
@@ -79,7 +74,6 @@ class Message implements WampServerInterface
      */
     public function onClose(ConnectionInterface $conn)
     {
-        Log::add('Message socket close');
     }
 
     /**
@@ -90,8 +84,6 @@ class Message implements WampServerInterface
      */
     public function onCall(ConnectionInterface $conn, $id, $topic, array $params)
     {
-        Log::add('Message socket call');
-
         if (!$this->isAllowed($conn) || $topic->getId() !== 'message') {
             $conn->close();
             return;
@@ -121,8 +113,6 @@ class Message implements WampServerInterface
      */
     public function onPublish(ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible)
     {
-        Log::add('Message socket publish');
-
         if (!$this->isAllowed($conn) || $topic->getId() !== 'message') {
             $conn->close();
             return;
@@ -135,6 +125,5 @@ class Message implements WampServerInterface
      */
     public function onError(ConnectionInterface $conn, Exception $e)
     {
-        Log::add('Message socket error');
     }
 }

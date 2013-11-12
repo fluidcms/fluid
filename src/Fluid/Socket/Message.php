@@ -8,7 +8,6 @@ use React\EventLoop\Factory;
 use Fluid\Config;
 use React\EventLoop\StreamSelectLoop;
 use Fluid\Debug\Log;
-use Ratchet\Wamp\Topic;
 
 /**
  * Class Message
@@ -65,16 +64,16 @@ class Message implements WebSocketClientInterface
     public function onWelcome(array $data)
     {
         $loop = $this->getLoop();
+        $event = $this->getEvent();
 
         $this->client->call(
             'message',
             array($this->getEvent(), $this->getData()),
-            function($response) use ($loop) {
+            function($response) use ($loop, $event) {
+                Log::add('Message client successfully sent event ' . $event);
                 $loop->stop();
             }
         );
-
-        Log::add('Message client sent event ' . $this->getEvent());
 
         if (!$this->run) {
             // Timeout after 10 seconds
@@ -90,11 +89,6 @@ class Message implements WebSocketClientInterface
      */
     public function onEvent($topic, $message)
     {
-        Log::add('Message client received confirmation');
-
-        if (!$this->run) {
-            $this->getLoop()->stop();
-        }
     }
 
     /**
