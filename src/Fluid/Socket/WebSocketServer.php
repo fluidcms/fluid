@@ -1,6 +1,5 @@
 <?php
-
-namespace Fluid\Socket\Server;
+namespace Fluid\Socket;
 
 use Ratchet\Wamp\WampServerInterface;
 use Fluid;
@@ -17,11 +16,15 @@ use Exception;
 
 /**
  * WebSocket Server for receiving and sending communications to the local server, remote servers and clients
+ *
  * @package Fluid
  */
-class WebSocket implements WampServerInterface
+class WebSocketServer implements WampServerInterface
 {
     const URI = '/fluidcms/websocket';
+
+    /** @var WebSocketServer $server */
+    private static $server;
 
     /** @var array $connections */
     protected $connections = array();
@@ -34,7 +37,9 @@ class WebSocket implements WampServerInterface
 
     function __construct()
     {
+        self::$server = $this;
         $this->startTime = time();
+        Fluid\Socket\WebSocketServerEvents::register();
     }
 
     /**
@@ -77,24 +82,52 @@ class WebSocket implements WampServerInterface
         return count($this->connections);
     }
 
+
+    /**
+     * Alias of _subscribe
+     *
+     * @param string $userId
+     * @param string $topic
+     */
+    public static function subscribe($userId, $topic)
+    {
+        self::$server->_subscribe($userId, $topic);
+    }
+
+    /**
+     * Subscribe a user to a topic, users are subscribed based on their actions server side and do not subscribe to
+     * topics client side
+     *
+     * @param string $userId
+     * @param string $topic
+     */
+    public function _subscribe($userId, $topic)
+    {
+        foreach ($this->getConnections() as $sessionId => $connection) {
+            if (isset($connection['user_id']) && $userId === $connection['user_id']) {
+                $connection['topics'][] = $topic;
+            }
+        }
+    }
+
     /**
      * @param ConnectionInterface|WampConnection $conn
      * @param Topic|string $topic
      */
     public function onSubscribe(ConnectionInterface $conn, $topic)
     {
-        $topicId = json_decode($topic->getId(), true);
+        $data = json_decode($topic->getId(), true);
 
         if (!array_key_exists($topic->getId(), $this->connections[$conn->WAMP->sessionId])) {
-            $this->connections[$conn->WAMP->sessionId][$topic->getId()] = array(
-                'session' => $topicId['session'],
-                'branch' => $topicId['branch'],
-                'user_id' => $topicId['user_id'],
-                'user_name' => $topicId['user_name'],
-                'user_email' => $topicId['user_email'],
-                'topic' => $topic
+            $this->connections[$conn->WAMP->sessionId] = array(
+                'session' => $data['session'],
+                'branch' => $data['branch'],
+                'user_id' => $data['user_id'],
+                'user_name' => $data['user_name'],
+                'user_email' => $data['user_email'],
+                'topics' => array()
             );
-            Log::add("User " . $topicId['user_id'] . " subscribed");
+            Log::add("User {$data['user_id']} subscribed ({$data['user_name']} <{$data['user_email']}>)");
             $topic->broadcast('true');
         }
     }
@@ -106,7 +139,7 @@ class WebSocket implements WampServerInterface
     public function onUnSubscribe(ConnectionInterface $conn, $topic)
     {
         Log::add("User unsubscribed");
-        unset($this->connections[$conn->WAMP->sessionId][$topic->getId()]);
+        unset($this->connections[$conn->WAMP->sessionId]);
     }
 
     /**
@@ -158,20 +191,20 @@ class WebSocket implements WampServerInterface
             is_string($params['method']) &&
             is_array($params['data'])
         ) {
-            $topic = json_decode($topic, true);
+            $data = json_decode($topic, true);
 
-            Log::add("User " . $topic['user_id'] . " called method " . $params['method'] . " " . $params['url']);
+            Log::add("User {$data['user_id']} called method {$params['method']} {$params['url']}");
 
             ob_start();
             new WebSocketRequest(
                 $params['url'],
                 $params['method'],
                 $params['data'],
-                $topic['branch'],
+                $data['branch'],
                 array(
-                    'id' => $topic['user_id'],
-                    'name' => $topic['user_name'],
-                    'email' => $topic['user_email']
+                    'id' => $data['user_id'],
+                    'name' => $data['user_name'],
+                    'email' => $data['user_email']
                 )
             );
             $retval = ob_get_contents();

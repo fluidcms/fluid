@@ -3,8 +3,7 @@
 namespace Fluid\Requests;
 
 use Fluid\Fluid;
-use Fluid\Event as FluidEvent;
-use Fluid\Socket\Events as ServerEvents;
+use Fluid\Event;
 use Fluid\Language\Language;
 use Fluid\Layout\Layout;
 use Fluid\Map\Map;
@@ -13,7 +12,9 @@ use Fluid\File\File;
 use Fluid\Token\Token;
 use Fluid\Component\Component;
 use Fluid\History\History;
+use Fluid\Socket\WebSocketServer;
 
+// TODO move and refactor this class to make more sense
 class WebSocket
 {
     private $request;
@@ -181,7 +182,7 @@ class WebSocket
     private function map()
     {
         if (!empty($this->request) && preg_match('{^(map)(/.*)?$}', $this->request, $match)) {
-            ServerEvents::register($this->user['id'], 'map');
+            WebSocketServer::subscribe($this->user['id'], 'map');
 
             switch ($this->method) {
                 case 'GET':
@@ -197,8 +198,11 @@ class WebSocket
                         $this->user['name'],
                         $this->user['email']
                     );
-                    FluidEvent::trigger('mapChange', array('branch' => $this->branch));
                     echo json_encode($map->getPages());
+                    Event::trigger('map:change', array(
+                        'branch' => $this->branch,
+                        'map' => $map
+                    ));
                     return true;
 
                 case 'PUT':
@@ -224,7 +228,12 @@ class WebSocket
                         );
                         echo json_encode($map->getPages());
                     }
-                    FluidEvent::trigger('mapChange', array('branch' => $this->branch));
+                    if (isset($pages)) {
+                        Event::trigger('map:change', array(
+                            'branch' => $this->branch,
+                            'map' => $map
+                        ));
+                    }
                     return true;
 
                 case 'DELETE':
@@ -235,8 +244,11 @@ class WebSocket
                         $this->user['name'],
                         $this->user['email']
                     );
-                    echo json_encode($map->getPages());
-                    FluidEvent::trigger('mapChange', array('branch' => $this->branch));
+                    echo json_encode($pages = $map->getPages());
+                    Event::trigger('map:change', array(
+                        'branch' => $this->branch,
+                        'map' => $map
+                    ));
                     return true;
             }
         }
@@ -262,7 +274,7 @@ class WebSocket
                     if (isset($match[2])) {
                         $id = trim($match[2], ' /.');
                         $history = History::rollBack($id);
-                        FluidEvent::trigger('historyChange', array('branch' => $this->branch));
+                        Event::trigger('history:change', array('branch' => $this->branch, 'history' => $history));
                         echo json_encode($history->getAll());
                     }
                     return true;

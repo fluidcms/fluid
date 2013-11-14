@@ -3,8 +3,8 @@
 namespace Fluid\Tests\Socket;
 
 use PHPUnit_Framework_TestCase;
-use Fluid\Socket\Server;
-use Fluid\Socket\Server\WebSocket as WebSocketServer;
+use Fluid\Daemon\Server;
+use Fluid\Socket\WebSocketServer;
 
 class WebSocketTest extends PHPUnit_Framework_TestCase
 {

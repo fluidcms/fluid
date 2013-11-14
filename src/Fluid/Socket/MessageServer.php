@@ -1,6 +1,5 @@
 <?php
-
-namespace Fluid\Socket\Server;
+namespace Fluid\Socket;
 
 use Exception;
 use Ratchet\ConnectionInterface;
@@ -11,7 +10,7 @@ use Ratchet\Server\IoConnection;
 use Fluid\Event;
 use Fluid\Debug\Log;
 
-class Message implements WampServerInterface
+class MessageServer implements WampServerInterface
 {
     const URI = '/fluidcms/message';
 

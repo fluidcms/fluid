@@ -1,6 +1,10 @@
 <?php
+namespace Fluid\Socket;
 
-class Client implements WebSocketClient\WebSocketClientInterface
+use WebSocketClient;
+use WebSocketClient\WebSocketClientInterface;
+
+class MasterClient implements WebSocketClientInterface
 {
     private $client;
 

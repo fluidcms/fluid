@@ -4,9 +4,9 @@ namespace Fluid\Tests\Socket;
 
 use PHPUnit_Framework_TestCase;
 use Fluid\Event;
-use Fluid\Socket\Server;
+use Fluid\Daemon\Server;
 use Fluid\Socket\Message;
-use Fluid\Socket\Server\Message as MessageServer;
+use Fluid\Socket\MessageServer;
 
 class MessageTest extends PHPUnit_Framework_TestCase
 {

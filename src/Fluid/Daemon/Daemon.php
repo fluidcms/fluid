@@ -7,9 +7,8 @@ use React;
 use Ratchet;
 use Closure;
 use Fluid\Event;
-use Fluid\Socket\Server;
-use Fluid\Socket\Server\WebSocket;
-use Fluid\Socket\Server\Message;
+use Fluid\Socket\WebSocketServer;
+use Fluid\Socket\MessageServer;
 use Fluid\Debug\Log;
 use Fluid\Config;
 
@@ -162,10 +161,10 @@ class Daemon implements DaemonInterface
         $loop = $server->getLoop();
 
         // Create WebSocket Server
-        $webSocket = new WebSocket();
-        $server->add($webSocket, WebSocket::URI);
+        $webSocket = new WebSocketServer();
+        $server->add($webSocket, WebSocketServer::URI);
         // Create Message Server
-        $server->add(new Message(), Message::URI);
+        $server->add(new MessageServer(), MessageServer::URI);
 
         $server->create();
 

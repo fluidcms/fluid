@@ -5,6 +5,9 @@ namespace Fluid\WebSocket;
 use Fluid;
 use Fluid\TaskInterface;
 
+/**
+ * @deprecated
+ */
 class Tasks
 {
     private $server;

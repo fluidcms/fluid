@@ -1,5 +1,4 @@
 <?php
-
 namespace Fluid\Socket;
 
 use WebSocketClient;
@@ -50,7 +49,7 @@ class Message implements WebSocketClientInterface
             $this->getLoop(),
             '127.0.0.1',
             $port,
-            Server\Message::URI
+            MessageServer::URI
         ));
 
         if (!$this->run) {
@@ -69,7 +68,7 @@ class Message implements WebSocketClientInterface
         $this->client->call(
             'message',
             array($this->getEvent(), $this->getData()),
-            function($response) use ($loop, $event) {
+            function() use ($loop, $event) {
                 Log::add('Message client successfully sent event ' . $event);
                 $loop->stop();
             }

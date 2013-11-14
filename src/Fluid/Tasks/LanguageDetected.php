@@ -5,7 +5,7 @@ namespace Fluid\Tasks;
 use Fluid;
 use Fluid\WebSocket\Server;
 
-class LanguageDetected extends Fluid\Task implements Fluid\TaskInterface
+class LanguageDetected extends Fluid\Task implements Fluid\TaskInterface, Fluid\Socket\MessageInterface
 {
     protected $interval = 0;
     private $server;

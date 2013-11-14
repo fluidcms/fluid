@@ -1,6 +1,5 @@
 <?php
-
-namespace Fluid\Socket;
+namespace Fluid\Daemon;
 
 use Symfony\Component\Routing\RouteCollection;
 use React\Socket\Server as Reactor;
