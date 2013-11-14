@@ -6,7 +6,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
 
         clean: {
-            release: 'public/javascripts'
+            dist: ['public/javascripts']
         },
 
         requirejs: {
@@ -36,13 +36,34 @@ module.exports = function(grunt) {
                     ]
                 }
             }
+        },
+
+        copy: {
+            src: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'src/FluidJS/',
+                        src: ['**'],
+                        dest: 'public/javascripts'
+                    }
+                ]
+            }
         }
     });
 
     // Load tasks from NPM
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
-    // Default task.
-    grunt.registerTask('default', ['clean', 'requirejs']);
+    grunt.registerTask('develop', [
+        'clean:dist',
+        'copy:src'
+    ]);
+
+    grunt.registerTask('default', [
+        'clean:dist',
+        'requirejs'
+    ]);
 };
