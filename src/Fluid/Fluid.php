@@ -1,5 +1,4 @@
 <?php
-
 namespace Fluid;
 
 use Exception;
@@ -8,11 +7,12 @@ use Fluid\Socket\Message;
 
 /**
  * The fluid class
- *
  * @package fluid
  */
 class Fluid
 {
+    const VERSION = '0.0.1';
+
     const DEBUG_OFF = 0;
     const DEBUG_LOG = 1;
 
@@ -25,6 +25,18 @@ class Fluid
     private static $requestFromControlPannel = false;
 
     private static $debugMode = self::DEBUG_OFF;
+
+    private static $self;
+
+    /**
+     * @param array|null $config
+     * @param string|null $language The language of the instance
+     */
+    public function __construct(array $config = null, $language = null)
+    {
+        self::$self = $this;
+        self::init($config, $language);
+    }
 
     /**
      * Initialize Fluid
@@ -62,11 +74,12 @@ class Fluid
      * Turns debug mode on
      *
      * @param int $mode
-     * @return void
+     * @return self
      */
     public static function debug($mode = self::DEBUG_LOG)
     {
         self::$debugMode = $mode;
+        return null !== self::$self ? self::$self : new self;
     }
 
     /**
@@ -83,7 +96,7 @@ class Fluid
      * Get the language of the instance
      *
      * @param string $value
-     * @return string
+     * @return self
      */
     public static function setLanguage($value)
     {
@@ -97,6 +110,7 @@ class Fluid
         }
 
         self::$language = $value;
+        return null !== self::$self ? self::$self : new self;
     }
 
     /**
@@ -121,6 +135,7 @@ class Fluid
      *
      * @param string $branch
      * @throws Exception Branch does not exists
+     * @return self;
      */
     public static function setBranch($branch)
     {
@@ -129,12 +144,14 @@ class Fluid
         }
 
         if ($branch == self::$branch) {
-            return;
+            null;
         } else if (is_dir(Config::get('storage') . '/' . $branch)) {
             self::$branch = $branch;
         } else {
             throw new Exception("Branch does not exists.");
         }
+
+        return null !== self::$self ? self::$self : new self;
     }
 
     /**
@@ -161,10 +178,12 @@ class Fluid
      * Set the request payload in case you use file_get_contents("php://input") before Fluid
      *
      * @param string $value
+     * @return self
      */
     public static function setRequestPayload($value)
     {
         self::$requestPayload = $value;
+        return null !== self::$self ? self::$self : new self;
     }
 
     /**

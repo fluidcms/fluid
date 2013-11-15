@@ -1,5 +1,7 @@
 <?php
 
+// TODO move elsewhere because this is mostly for the javascript app
+
 return array(
     // Languages
     'languages' => array(
