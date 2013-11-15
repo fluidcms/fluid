@@ -6,7 +6,8 @@ module.exports = function(grunt) {
     grunt.initConfig({
 
         clean: {
-            dist: ['public/javascripts']
+            dist: ['public/javascripts'],
+            build: ['src/FluidJS']
         },
 
         requirejs: {
@@ -48,6 +49,16 @@ module.exports = function(grunt) {
                         dest: 'public/javascripts'
                     }
                 ]
+            },
+            dist: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'public/javascripts/',
+                        src: ['**'],
+                        dest: 'src/FluidJS'
+                    }
+                ]
             }
         }
     });
@@ -60,6 +71,13 @@ module.exports = function(grunt) {
     grunt.registerTask('develop', [
         'clean:dist',
         'copy:src'
+    ]);
+
+    grunt.registerTask('build', [
+        'clean:build',
+        'copy:dist',
+        'clean:dist',
+        'requirejs'
     ]);
 
     grunt.registerTask('default', [
