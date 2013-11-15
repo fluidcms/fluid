@@ -4,6 +4,7 @@ namespace Fluid;
 
 use Exception;
 use Fluid\Branch\Branch;
+use Fluid\Socket\Message;
 
 /**
  * The fluid class
@@ -88,17 +89,10 @@ class Fluid
     {
         // If page is loading from control pannel, send language to control pannel
         if (self::$requestFromControlPannel) {
-            MessageQueue::send(array(
-                'task' => 'LanguageDetected',
-                'data' => array(
-                    'session' => self::$requestFromControlPannel,
-                    'message' => array(
-                        'target' => 'language_detected',
-                        'data' => array(
-                            'language' => $value
-                        )
-                    )
-                )
+            $message = new Message;
+            $message->send('language:changed', array(
+                'session' => self::$requestFromControlPannel,
+                'language' => $value
             ));
         }
 

@@ -37,13 +37,8 @@ class Data
                 $message = new Message;
                 $message->send('data:get', array(
                     'session' => $fluidsession,
-                    'message' => array(
-                        'target' => 'data_request',
-                        'data' => array(
-                            'language' => Fluid::getLanguage(),
-                            'page' => $page
-                        )
-                    )
+                    'language' => Fluid::getLanguage(),
+                    'page' => $page
                 ));
             }
         }

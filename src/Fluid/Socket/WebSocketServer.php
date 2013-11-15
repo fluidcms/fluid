@@ -6,7 +6,6 @@ use Fluid;
 use Fluid\Event;
 use Fluid\Debug\Log;
 use Fluid\Requests\WebSocket as WebSocketRequest;
-use Fluid\Socket\Events as ServerEvents;
 use Ratchet;
 use React;
 use Ratchet\ConnectionInterface;
@@ -82,6 +81,37 @@ class WebSocketServer implements WampServerInterface
         return count($this->connections);
     }
 
+    /**
+     * Alias of _sendToSession
+     *
+     * @param string $session
+     * @param mixed $message
+     */
+    public static function sendToSession($session, $message)
+    {
+        self::$server->_sendToSession($session, $message);
+    }
+
+    /**
+     * Send message to user using his session token
+     *
+     * @param string $session
+     * @param mixed $message
+     */
+    public function _sendToSession($session, $message)
+    {
+        if (is_array($message)) {
+            $message = json_encode($message);
+        }
+
+        foreach ($this->getConnections() as $connection) {
+            if (isset($connection['session']) && $session === $connection['session']) {
+                /** @var Topic $connection */
+                $connection = $connection['connection'];
+                $connection->broadcast($message);
+            }
+        }
+    }
 
     /**
      * Alias of _subscribe
@@ -103,7 +133,7 @@ class WebSocketServer implements WampServerInterface
      */
     public function _subscribe($userId, $topic)
     {
-        foreach ($this->getConnections() as $sessionId => $connection) {
+        foreach ($this->getConnections() as $connection) {
             if (isset($connection['user_id']) && $userId === $connection['user_id']) {
                 $connection['topics'][] = $topic;
             }
@@ -120,6 +150,7 @@ class WebSocketServer implements WampServerInterface
 
         if (!array_key_exists($topic->getId(), $this->connections[$conn->WAMP->sessionId])) {
             $this->connections[$conn->WAMP->sessionId] = array(
+                'connection' => $topic,
                 'session' => $data['session'],
                 'branch' => $data['branch'],
                 'user_id' => $data['user_id'],
@@ -159,10 +190,6 @@ class WebSocketServer implements WampServerInterface
      */
     public function onClose(ConnectionInterface $conn)
     {
-        if (isset($this->connections[$conn->WAMP->sessionId]) && is_array($this->connections[$conn->WAMP->sessionId])) {
-            $topic = key($this->connections[$conn->WAMP->sessionId]);
-            ServerEvents::unregister($this->connections[$conn->WAMP->sessionId][$topic]['user_id']);
-        }
         unset($this->connections[$conn->WAMP->sessionId]);
 
         Log::add("User closed connection " . $conn->WAMP->sessionId);
@@ -237,10 +264,6 @@ class WebSocketServer implements WampServerInterface
     public function onError(ConnectionInterface $conn, Exception $e)
     {
         Log::add("Error");
-        if (is_array($this->connections[$conn->WAMP->sessionId])) {
-            $topic = key($this->connections[$conn->WAMP->sessionId]);
-            ServerEvents::unregister($this->connections[$conn->WAMP->sessionId][$topic]['user_id']);
-        }
         unset($this->connections[$conn->WAMP->sessionId]);
     }
 }
