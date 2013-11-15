@@ -29,32 +29,45 @@ class Message implements WebSocketClientInterface
     /** @var StreamSelectLoop $loop */
     private $loop;
 
-    /**
-     * @param string $event
-     * @param array $data
-     */
-    public function send($event, array $data)
+    public function __construct()
     {
-        $port = Config::get('websocket');
-
         if (!$this->run) {
             $this->setLoop(Factory::create());
             $this->run = false;
         }
+    }
 
-        $this->setEvent($event)->setData($data);
-
-        $this->setClient(new WebSocketClient(
-            $this,
-            $this->getLoop(),
-            '127.0.0.1',
-            $port,
-            MessageServer::URI
-        ));
-
+    /**
+     * @return $this
+     */
+    public function run()
+    {
         if (!$this->run) {
             $this->getLoop()->run();
         }
+
+        return $this;
+    }
+
+    /**
+     * @param string $event
+     * @param array $data
+     * @return $this
+     */
+    public static function send($event, array $data)
+    {
+        $message = new self();
+        return $message
+            ->setEvent($event)
+            ->setData($data)
+            ->setClient(new WebSocketClient(
+                $message,
+                $message->getLoop(),
+                '127.0.0.1',
+                Config::get('websocket'),
+                MessageServer::URI
+            ))
+            ->run();
     }
 
     /**
@@ -92,10 +105,12 @@ class Message implements WebSocketClientInterface
 
     /**
      * @param WebSocketClient $client
+     * @return self
      */
     public function setClient(WebSocketClient $client)
     {
         $this->client = $client;
+        return $this;
     }
 
     /**

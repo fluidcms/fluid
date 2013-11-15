@@ -1,5 +1,4 @@
 <?php
-
 namespace Fluid;
 
 use Fluid\Page\Page;
@@ -9,7 +8,6 @@ use Fluid\Socket\Message;
 
 /**
  * Data class
- *
  * @package fluid
  */
 class Data
@@ -28,19 +26,15 @@ class Data
             self::$map = new Map();
         }
 
-        // If rendering page for CMS, we change the current branch to the CMS branch and send a signal to the CMS
-        if (isset($_SERVER['QUERY_STRING'])) {
-            parse_str($_SERVER['QUERY_STRING']);
-            if (isset($fluidtoken) && isset($fluidbranch) && isset($fluidsession) && Token::validate($fluidtoken)) {
-                Fluid::setBranch($fluidbranch);
-
-                $message = new Message;
-                $message->send('data:get', array(
-                    'session' => $fluidsession,
-                    'language' => Fluid::getLanguage(),
-                    'page' => $page
-                ));
-            }
+        // If rendering page for control pannel, we change the current branch to the control pannel branch
+        // and send a signal to the control pannel
+        Fluid::checkIfIsAdmin();
+        if (Fluid::isAdmin()) {
+            Message::send('data:get', array(
+                'session' => Fluid::getSession(),
+                'language' => Fluid::getLanguage(),
+                'page' => $page
+            ));
         }
 
         $global = self::getData(self::$map);

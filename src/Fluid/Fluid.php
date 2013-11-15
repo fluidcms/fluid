@@ -4,6 +4,7 @@ namespace Fluid;
 use Exception;
 use Fluid\Branch\Branch;
 use Fluid\Socket\Message;
+use Fluid\Token\Token;
 
 /**
  * The fluid class
@@ -22,10 +23,17 @@ class Fluid
     private static $storage;
     private static $language = 'en-US';
     private static $requestPayload;
-    private static $requestFromControlPannel = false;
 
+    /** @var bool|null $controlPannel */
+    private static $controlPannel = null;
+
+    /** @var string $controlPannel */
+    private static $controlPannelSession;
+
+    /** @var int $debugMode */
     private static $debugMode = self::DEBUG_OFF;
 
+    /** @var Fluid $self */
     private static $self;
 
     /**
@@ -43,6 +51,7 @@ class Fluid
      *
      * @param array|null $config
      * @param string|null $language The language of the instance
+     * @return self
      */
     public static function init(array $config = null, $language = null)
     {
@@ -55,19 +64,14 @@ class Fluid
             self::$language = $language;
         }
 
-        // Validate token and change branch
-        if (isset($_SERVER['QUERY_STRING'])) {
-            parse_str($_SERVER['QUERY_STRING'], $queryString);
-            if (isset($queryString['fluidbranch']) && isset($queryString['fluidtoken']) && Token\Token::validate($queryString['fluidtoken'])) {
-                self::$requestFromControlPannel = $queryString['fluidsession'];
-                self::setBranch($queryString['fluidbranch'], true);
-            }
-        }
+        self::checkIfIsAdmin();
 
         // Set View Templates Directory
         if (null === View::getTemplatesDir()) {
             View::setTemplatesDir(Config::get('templates'));
         }
+
+        return null !== self::$self ? self::$self : new self;
     }
 
     /**
@@ -93,6 +97,50 @@ class Fluid
     }
 
     /**
+     * Check if fluid was loaded from the control pannel
+     */
+    public static function checkIfIsAdmin()
+    {
+        if (isset($_SERVER['QUERY_STRING'])) {
+            parse_str($_SERVER['QUERY_STRING'], $queryString);
+            if (
+                isset($queryString['fluidbranch']) &&
+                isset($queryString['fluidtoken']) &&
+                isset($queryString['fluidsession']) &&
+                Token::validate($queryString['fluidtoken'])
+            ) {
+                self::$controlPannel = true;
+                self::$controlPannelSession = $queryString['fluidsession'];
+                self::setBranch($queryString['fluidbranch'], true);
+            }
+        }
+    }
+
+    /**
+     * Check if fluid was loaded from the control pannel
+     *
+     * @return bool
+     */
+    public static function isAdmin()
+    {
+        if (null === self::$controlPannel) {
+            self::checkIfIsAdmin();
+        }
+
+        return self::$controlPannel;
+    }
+
+    /**
+     * Get the control pannel user's session
+     *
+     * @return bool
+     */
+    public static function getSession()
+    {
+        return self::$controlPannelSession;
+    }
+
+    /**
      * Get the language of the instance
      *
      * @param string $value
@@ -101,10 +149,9 @@ class Fluid
     public static function setLanguage($value)
     {
         // If page is loading from control pannel, send language to control pannel
-        if (self::$requestFromControlPannel) {
-            $message = new Message;
-            $message->send('language:changed', array(
-                'session' => self::$requestFromControlPannel,
+        if (self::isAdmin()) {
+            Message::send('language:changed', array(
+                'session' => self::getSession(),
                 'language' => $value
             ));
         }
