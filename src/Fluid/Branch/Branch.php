@@ -35,15 +35,15 @@ class Branch
 
         if (!is_dir($storage . '/' . $branch . "/.git")) {
 
-            Log::add($storage . $branch . "/.git" . " does not exists");
-            Log::add('Checking if dir ' . $storage . $branch . " exists");
+            Log::add($storage . '/' . $branch . "/.git" . " does not exists");
+            Log::add('Checking if dir ' . $storage . '/' . $branch . " exists");
 
-            if (!is_dir($storage . $branch)) {
-                Log::add($storage . $branch . " does not exists");
-                if (mkdir($storage . $branch, 0777, true)) {
-                    Log::add("Created " . $storage . $branch . "");
+            if (!is_dir($storage . '/' . $branch)) {
+                Log::add($storage . '/' . $branch . " does not exists");
+                if (mkdir($storage . '/' . $branch, 0777, true)) {
+                    Log::add("Created " . $storage . '/' . $branch . "");
                 } else {
-                    Log::add("Failed creating " . $storage . $branch . "");
+                    Log::add("Failed creating " . $storage . '/' . $branch . "");
                 }
             }
             Git::init($branch);
@@ -106,6 +106,11 @@ class Branch
     public function initialCommit()
     {
         $gitIgnoreFile = Config::get("storage") . '/' . $this->branch . "/.gitignore";
+
+        if (!is_dir(dirname($gitIgnoreFile))) {
+            mkdir(dirname($gitIgnoreFile), 0777, true);
+        }
+
         $gitIgnoreContent = <<<TEXT
 .DS_Store
 ._*
