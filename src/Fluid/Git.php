@@ -28,7 +28,7 @@ class Git
      */
     private static function command($branch, $command, $check = true, $quiet = false, $worktreeEnabled = true)
     {
-        $dir = Config::get("storage") . $branch;
+        $dir = Config::get("storage") . '/' . $branch;
         $dir = preg_replace('!/{2,}!', '/', $dir);
         $dir = rtrim($dir, '/');
 
