@@ -1,4 +1,4 @@
-<fluid-layout xmlns="https://fluidcms.net/schemas/template" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<fluid-layout-interface xmlns="https://fluidcms.net/schemas/template" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:schemaLocation="https://fluidcms.net/schemas/template https://fluidcms.net/schemas/template.xsd">
 
     <group name="Header">
@@ -6,4 +6,4 @@
         <variable name="Description" type="string" />
         <image name="Logo"/>
     </group>
-</fluid-layout>
+</fluid-layout-interface>

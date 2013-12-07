@@ -22,7 +22,7 @@ require_once __DIR__ . '/helper.php';
 Fluid\Config::setAll(array(
     'languages' => array('en-US', 'de-DE'),
     'storage' => __DIR__ . '/Fluid/Tests/_files/storage/',
-    'templates' => __DIR__ . '/Fluid/Tests/_files/templates',
+    'configs' => __DIR__ . '/Fluid/Tests/_files/templates',
     'layouts' => 'layouts',
     'components' => 'components'
 ));

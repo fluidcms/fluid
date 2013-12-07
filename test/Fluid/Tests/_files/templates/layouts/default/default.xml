@@ -2,6 +2,7 @@
                 xsi:schemaLocation="https://fluidcms.net/schemas/template https://fluidcms.net/schemas/template.xsd">
 
     <config>
+        <setting name="name" value="Default Layout" />
         <setting name="file" value="default.twig" />
         <setting name="entries" value="entry.xml" />
     </config>

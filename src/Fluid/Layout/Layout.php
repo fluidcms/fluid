@@ -1,9 +1,9 @@
 <?php
-
 namespace Fluid\Layout;
 
 use Exception;
-use Fluid\Fluid;
+use DOMDocument;
+use DOMElement;
 use Fluid\Config;
 
 /**
@@ -131,21 +131,52 @@ class Layout
     /**
      * Get layouts
      *
-     * @return  array
+     * @param string|null $dir
+     * @return array
      */
-    public static function getLayouts()
+    public static function getLayouts($dir = null)
     {
         $layouts = array();
-        $dir = Config::get('templates') . '/' . Config::get('layouts');
+        $origin = Config::get('configs') . '/layouts';
+
+        if (null === $dir) {
+            $dir = $origin;
+        }
 
         if (is_dir($dir)) {
             foreach (scandir($dir) as $file) {
                 if ($file === '.' || $file === '..') {
                     continue;
-                } else if (is_dir("{$dir}/{$file}") && file_exists("{$dir}/{$file}/layout.xml")) {
-                    $layouts[] = array(
-                        'layout' => $file
-                    );
+                } elseif (is_dir("{$dir}/{$file}")) {
+                    $layouts = array_merge($layouts, self::getLayouts("{$dir}/{$file}"));
+                } elseif (is_file("{$dir}/{$file}") && substr($file, strlen($file)-4) === '.xml') {
+                    $dom = new DOMDocument;
+                    $dom->loadXML(file_get_contents("{$dir}/{$file}"));
+                    if ($dom->documentElement->tagName === 'fluid-layout') {
+
+                        $layoutName = null;
+                        /** @var \DOMElement $element */
+                        foreach($dom->getElementsByTagName('config') as $element) {
+                            if ($element->hasChildNodes()) {
+                                foreach($element->childNodes as $setting) {
+                                    if ($setting instanceof DOMElement && $setting->tagName === 'setting') {
+                                        $name = $setting->getAttribute('name');
+                                        $value = $setting->getAttribute('value');
+                                        if ($name === 'name') {
+                                            $layoutName = $value;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        $layout = substr("{$dir}/{$file}", strlen($origin) + 1, -4);
+                        $layouts[] = array(
+                            'layout' => $layout,
+                            'name' => $layoutName !== null ? $layoutName : $layout
+                        );
+                    }
                 }
             }
         }

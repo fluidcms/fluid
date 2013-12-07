@@ -33,7 +33,9 @@ class LayoutTest extends PHPUnit_Framework_TestCase
 
         $retval = json_decode($retval, true);
 
-        $this->assertEquals('default', $retval[0]['layout']);
-        $this->assertEquals('home', $retval[1]['layout']);
+        $this->assertEquals('default/default', $retval[0]['layout']);
+        $this->assertEquals('Default Layout', $retval[0]['name']);
+        $this->assertEquals('home', $retval[2]['layout']);
+        $this->assertEquals('Home Page', $retval[2]['name']);
     }
 }
