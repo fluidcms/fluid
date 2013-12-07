@@ -51,6 +51,6 @@ class Config
             return $GLOBALS["fluid.{$name}"];
         }
 
-        return self::$configs[$name];
+        return isset(self::$configs[$name]) ? self::$configs[$name] : null;
     }
 }

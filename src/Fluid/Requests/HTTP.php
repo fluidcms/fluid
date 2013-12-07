@@ -137,11 +137,13 @@ class HTTP
             $dir = Config::get('storage');
             $file = preg_replace('!images/!', 'files/', urldecode(self::$request));
 
-            foreach (scandir($dir) as $branch) {
-                if ($branch !== '.' && $branch !== '..') {
-                    if (file_exists("{$dir}/{$branch}/{$file}")) {
-                        new StaticFile("{$dir}/{$branch}/{$file}");
-                        return true;
+            if (is_dir($dir)) {
+                foreach (scandir($dir) as $branch) {
+                    if ($branch !== '.' && $branch !== '..') {
+                        if (file_exists("{$dir}/{$branch}/{$file}")) {
+                            new StaticFile("{$dir}/{$branch}/{$file}");
+                            return true;
+                        }
                     }
                 }
             }

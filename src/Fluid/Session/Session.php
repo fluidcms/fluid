@@ -20,7 +20,9 @@ class Session extends Database
     private static function table()
     {
         $dbh = self::getDatabase();
-        $dbh->query("CREATE TABLE IF NOT EXISTS sessions (token CHAR(64) PRIMARY KEY, expiration DATETIME)");
+        if ($dbh) {
+            $dbh->query("CREATE TABLE IF NOT EXISTS sessions (token CHAR(64) PRIMARY KEY, expiration DATETIME)");
+        }
     }
 
     /**
@@ -36,14 +38,18 @@ class Session extends Database
 
         $dbh = self::getDatabase();
 
-        $sth = $dbh->prepare("INSERT INTO sessions (token, expiration) VALUES (:token, :expiration);");
+        if ($dbh) {
+            $sth = $dbh->prepare("INSERT INTO sessions (token, expiration) VALUES (:token, :expiration);");
 
-        $sth->execute(array(
-            ':token' => $token,
-            ':expiration' => date('Y-m-d H:i:s', time() + self::$timeOut)
-        ));
+            $sth->execute(array(
+                ':token' => $token,
+                ':expiration' => date('Y-m-d H:i:s', time() + self::$timeOut)
+            ));
 
-        return $token;
+            return $token;
+        }
+
+        return null;
     }
 
     /**
@@ -58,13 +64,15 @@ class Session extends Database
 
         $dbh = self::getDatabase();
 
-        self::deleteExpired();
+        if ($dbh) {
+            self::deleteExpired();
 
-        $sth = $dbh->prepare("SELECT token FROM sessions WHERE token=:token AND expiration>date('now');");
-        $sth->execute(array(':token' => $value));
+            $sth = $dbh->prepare("SELECT token FROM sessions WHERE token=:token AND expiration>date('now');");
+            $sth->execute(array(':token' => $value));
 
-        if ($sth->fetch()) {
-            return true;
+            if ($sth->fetch()) {
+                return true;
+            }
         }
         return false;
     }
@@ -77,6 +85,8 @@ class Session extends Database
     private static function deleteExpired()
     {
         $dbh = self::getDatabase();
-        $dbh->query("DELETE FROM sessions WHERE expiration<date('now');");
+        if ($dbh) {
+            $dbh->query("DELETE FROM sessions WHERE expiration<date('now');");
+        }
     }
 }

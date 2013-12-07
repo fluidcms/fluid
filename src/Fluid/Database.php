@@ -19,12 +19,18 @@ class Database
             return self::$dbh;
         }
 
-        $database = Config::get('storage') . "/data";
+        $storage = Config::get('storage');
 
-        if (!is_dir(dirname($database))) {
-            mkdir(dirname($database), 0777, true);
+        if ($storage) {
+            $database = Config::get('storage') . "/data";
+
+            if (!is_dir(dirname($database))) {
+                mkdir(dirname($database), 0777, true);
+            }
+
+            return self::$dbh = new PDO('sqlite:' . $database);
         }
 
-        return self::$dbh = new PDO('sqlite:' . $database);
+        return null;
     }
 }
