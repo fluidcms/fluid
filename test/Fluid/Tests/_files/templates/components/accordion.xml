@@ -3,8 +3,8 @@
 
     <config>
         <setting name="name" value="Accordion" />
-        <setting name="icon" value="icon.png" />
-        <setting name="file" value="accordion.twig" />
+        <setting name="icon" value="images/accordion.png" />
+        <setting name="file" value="components/accordion.twig" />
         <setting name="macro" value="accordion"/>
     </config>
 

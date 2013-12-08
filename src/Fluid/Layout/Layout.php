@@ -20,15 +20,15 @@ class Layout
     /**
      * Layout
      *
-     * @param   string  $layout
+     * @param   string $layout
      * @throws  Exception
      */
     public function __construct($layout)
     {
-        $dir = Config::get('templates') . '/' . Config::get('layouts');
+        $dir = Config::get('configs') . '/layouts';
 
         if ($layout !== 'global') {
-            $file = "{$dir}/{$layout}/layout.xml";
+            $file = "{$dir}/{$layout}.xml";
         } else {
             $file = "{$dir}/global.xml";
         }
@@ -45,7 +45,7 @@ class Layout
     /**
      * Get a layout
      *
-     * @param   string  $layout
+     * @param   string $layout
      * @return  self
      */
     public static function get($layout)
@@ -66,7 +66,7 @@ class Layout
     /**
      * Set file
      *
-     * @param   string  $value
+     * @param   string $value
      * @return  void
      */
     public function setFile($value)
@@ -87,7 +87,7 @@ class Layout
     /**
      * Set layout definition
      *
-     * @param   string  $value
+     * @param   string $value
      * @return  void
      */
     public function setDefinition($value)
@@ -98,7 +98,7 @@ class Layout
     /**
      * Set Variables
      *
-     * @param   string  $value
+     * @param   string $value
      * @deprecated  use setDefinition instead
      * @return  void
      */
@@ -149,16 +149,16 @@ class Layout
                     continue;
                 } elseif (is_dir("{$dir}/{$file}")) {
                     $layouts = array_merge($layouts, self::getLayouts("{$dir}/{$file}"));
-                } elseif (is_file("{$dir}/{$file}") && substr($file, strlen($file)-4) === '.xml') {
+                } elseif (is_file("{$dir}/{$file}") && substr($file, strlen($file) - 4) === '.xml') {
                     $dom = new DOMDocument;
                     $dom->loadXML(file_get_contents("{$dir}/{$file}"));
                     if ($dom->documentElement->tagName === 'fluid-layout') {
 
                         $layoutName = null;
                         /** @var \DOMElement $element */
-                        foreach($dom->getElementsByTagName('config') as $element) {
+                        foreach ($dom->getElementsByTagName('config') as $element) {
                             if ($element->hasChildNodes()) {
-                                foreach($element->childNodes as $setting) {
+                                foreach ($element->childNodes as $setting) {
                                     if ($setting instanceof DOMElement && $setting->tagName === 'setting') {
                                         $name = $setting->getAttribute('name');
                                         $value = $setting->getAttribute('value');
@@ -187,7 +187,7 @@ class Layout
     /**
      * Validate layout
      *
-     * @param   array       $value
+     * @param   array $value
      * @throws  Exception
      * @return  bool
      */
@@ -199,7 +199,7 @@ class Layout
 
         $valid = self::getLayouts();
         $found = false;
-        foreach($valid as $haystack) {
+        foreach ($valid as $haystack) {
             if ($haystack['layout'] === $value) {
                 $found = true;
                 break;
@@ -211,4 +211,5 @@ class Layout
         }
 
         return true;
-    }}
+    }
+}

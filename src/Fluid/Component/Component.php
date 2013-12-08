@@ -4,7 +4,8 @@ namespace Fluid\Component;
 
 use Exception;
 use Fluid\Config;
-use Fluid\Fluid;
+use DOMDocument;
+use DOMElement;
 
 /**
  * Component model
@@ -29,8 +30,8 @@ class Component
      */
     public function __construct($component)
     {
-        $dir = Config::get('templates') . '/' . Config::get('components');
-        $file = "{$dir}/{$component}/component.xml";
+        $dir = Config::get('configs') . '/components';
+        $file = "{$dir}/{$component}.xml";
 
         if (!is_file($file)) {
             throw new Exception("Invalid component");
@@ -170,28 +171,35 @@ class Component
     /**
      * Get components list
      *
+     * @param string|null $dir
      * @return array
      */
-    public static function getComponents()
+    public static function getComponents($dir = null)
     {
         $components = array();
-        $dir = Config::get('templates') . '/' . Config::get('components');
+        $origin = Config::get('configs') . '/components';
+
+        if (null === $dir) {
+            $dir = $origin;
+        }
 
         if (is_dir($dir)) {
             foreach (scandir($dir) as $file) {
                 if ($file === '.' || $file === '..') {
                     continue;
-                } else if (is_dir("{$dir}/{$file}") && is_file("{$dir}/{$file}/component.xml")) {
-                    $components[] = new self($file);
+                } elseif (is_dir("{$dir}/{$file}")) {
+                    $components = array_merge($components, self::getComponents("{$dir}/{$file}"));
+                } elseif (is_file("{$dir}/{$file}") && substr($file, strlen($file) - 4) === '.xml') {
+
+                    $dom = new DOMDocument;
+                    $dom->loadXML(file_get_contents("{$dir}/{$file}"));
+                    if ($dom->documentElement->tagName === 'fluid-component') {
+                        $components[] = new self(substr("{$dir}/{$file}", strlen($origin)+1, -4));
+                    }
                 }
             }
         }
 
-        $output = array();
-        foreach ($components as $component) {
-            $output[] = $component->toJSON();
-        }
-
-        return $output;
+        return $components;
     }
 }

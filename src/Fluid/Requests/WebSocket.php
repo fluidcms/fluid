@@ -124,7 +124,9 @@ class WebSocket
                     // Get all
                     if (empty($match[2])) {
                         $components = Component::getComponents();
-                        echo json_encode($components);
+                        echo json_encode(array_map(function (Component $component) {
+                            return $component->toJSON();
+                        }, $components));
                         return true;
                     }
                     break;

@@ -3,8 +3,8 @@
 
     <config>
         <setting name="name" value="Table" />
-        <setting name="icon" value="icon.png" />
-        <setting name="file" value="table.twig" />
+        <setting name="icon" value="images/table.png" />
+        <setting name="file" value="components/table.twig" />
     </config>
 
     <table name="Table" header="true" footer="true" columns="3" rows="4"/>

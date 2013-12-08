@@ -6,7 +6,7 @@
         <setting name="file" value="home.twig"/>
     </config>
 
-    <extend file="../master.xml"/>
+    <extend file="master.xml"/>
 
     <group name="Content">
         <variable name="Title" type="string"/>
