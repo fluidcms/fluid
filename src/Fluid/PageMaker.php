@@ -22,7 +22,7 @@ class PageMaker
     {
         $layout = Layout::get($page['layout']);
 
-        $view = View::create(Config::get('layouts') . "/{$page['layout']}/" . $layout->getFile(), $data);
+        $view = View::create($layout->getFile(), $data);
 
         new StaticFile($view, 'html', true);
     }
