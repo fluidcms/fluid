@@ -26,7 +26,7 @@ class AddTest extends PHPUnit_Framework_TestCase
             "data" => array(
                 "index" => 0,
                 "languages" => array('en-US', 'de-DE'),
-                "layout" => "default",
+                "layout" => "default/default",
                 "page" => "My Blog",
                 "url" => "/blog/",
                 "parent" => ""

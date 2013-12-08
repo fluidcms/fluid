@@ -121,7 +121,9 @@ class WebSocketServer implements WampServerInterface
      */
     public static function subscribe($userId, $topic)
     {
-        self::$server->_subscribe($userId, $topic);
+        if (self::$server instanceof WebSocketServer) {
+            self::$server->_subscribe($userId, $topic);
+        }
     }
 
     /**

@@ -22,8 +22,7 @@ require_once __DIR__ . '/helper.php';
 Fluid\Config::setAll(array(
     'languages' => array('en-US', 'de-DE'),
     'storage' => __DIR__ . '/Fluid/Tests/_files/storage/',
-    'configs' => __DIR__ . '/Fluid/Tests/_files/templates',
-    'layouts' => 'layouts',
-    'components' => 'components'
+    'configs' => __DIR__ . '/Fluid/Tests/_files/definitions',
+    'twig_templates' =>  __DIR__ . '/Fluid/Tests/_files/twig_views',
 ));
 

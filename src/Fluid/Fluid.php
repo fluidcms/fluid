@@ -68,7 +68,7 @@ class Fluid
 
         // Set View Templates Directory
         if (null === View::getTemplatesDir()) {
-            View::setTemplatesDir(Config::get('templates'));
+            View::setTemplatesDir(Config::get('twig_templates'));
         }
 
         return null !== self::$self ? self::$self : new self;

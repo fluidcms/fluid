@@ -122,7 +122,7 @@ class View
     public static function getTemplatesDir()
     {
         if (null === self::$templatesDir) {
-            self::setTemplatesDir(Config::get('templates'));
+            self::setTemplatesDir(Config::get('twig_templates'));
         }
 
         return self::$templatesDir;

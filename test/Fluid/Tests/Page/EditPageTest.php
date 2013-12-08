@@ -156,7 +156,7 @@ class EditPageTest extends PHPUnit_Framework_TestCase
 
         $data['Content']['Content']['source'] = "Hello World {PkPUah3bme2qvkTK} {H7inutVo} {3o7367Wy}";
         $data['Content']['Content']['components']['3o7367Wy'] = array(
-            "component" => "table2",
+            "component" => "table2/table2",
             "data" => array(
                 "Rows" => array(
                     array(

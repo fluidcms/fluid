@@ -143,7 +143,7 @@ class Component
      */
     public function getFile()
     {
-        return realpath(dirname($this->xmlFile) . "/{$this->file}");
+        return $this->file;
     }
 
     /**

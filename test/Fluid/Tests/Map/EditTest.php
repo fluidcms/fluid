@@ -27,7 +27,7 @@ class EditTest extends PHPUnit_Framework_TestCase
                 "id" => "home page/products",
                 "page" => "our products",
                 "languages" => array('en-US', 'de-DE'),
-                "layout" => "default",
+                "layout" => "default/default",
                 "url" => "/our_products/"
             )
         );
