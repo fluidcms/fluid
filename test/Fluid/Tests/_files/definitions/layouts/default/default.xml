@@ -1,16 +1,16 @@
 <fluid-layout xmlns="https://fluidcms.net/schemas/template" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:schemaLocation="https://fluidcms.net/schemas/template https://fluidcms.net/schemas/template.xsd">
+              xsi:schemaLocation="https://fluidcms.net/schemas/template https://fluidcms.net/schemas/template.xsd">
 
     <config>
-        <setting name="name" value="Default Layout" />
-        <setting name="file" value="default.twig" />
-        <setting name="entries" value="entry.xml" />
+        <setting name="name" value="Default Layout"/>
+        <setting name="file" value="default.twig"/>
+        <setting name="entries" value="entry.xml"/>
     </config>
 
-    <extend file="../master.xml" />
+    <extend file="../master.xml"/>
 
     <group name="Header">
-        <variable name="Title" type="string" />
-        <variable name="Content" type="content" />
+        <variable name="Title" type="string"/>
+        <variable name="Content" type="content"/>
     </group>
 </fluid-layout>

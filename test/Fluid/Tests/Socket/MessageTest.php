@@ -1,5 +1,4 @@
 <?php
-
 namespace Fluid\Tests\Socket;
 
 use PHPUnit_Framework_TestCase;

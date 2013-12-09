@@ -1,5 +1,4 @@
 <?php
-
 namespace Fluid\Tests\Map;
 
 use Fluid;

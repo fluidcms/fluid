@@ -1,6 +1,5 @@
 <?php
-
-namespace Fluid\Tests\Components;
+namespace Fluid\Tests\Token;
 
 use Fluid;
 use PHPUnit_Framework_TestCase;
