@@ -27,14 +27,13 @@ class Message implements WebSocketClientInterface
     private $run = false;
 
     /** @var StreamSelectLoop $loop */
-    private $loop;
+    private static $loop;
+
+    /** @var StreamSelectLoop $_loop */
+    private $_loop;
 
     public function __construct()
     {
-        if (!$this->run) {
-            $this->setLoop(Factory::create());
-            $this->run = false;
-        }
     }
 
     /**
@@ -42,7 +41,7 @@ class Message implements WebSocketClientInterface
      */
     public function run()
     {
-        if (!$this->run) {
+        if (!self::$loop) {
             $this->getLoop()->run();
         }
 
@@ -151,13 +150,10 @@ class Message implements WebSocketClientInterface
 
     /**
      * @param StreamSelectLoop $loop
-     * @return self
      */
-    public function setLoop($loop)
+    public static function setLoop($loop)
     {
-        $this->run = true;
-        $this->loop = $loop;
-        return $this;
+        self::$loop = $loop;
     }
 
     /**
@@ -165,6 +161,12 @@ class Message implements WebSocketClientInterface
      */
     public function getLoop()
     {
-        return $this->loop;
+        if (self::$loop) {
+            return self::$loop;
+        } elseif ($this->_loop) {
+            return $this->_loop;
+        } else {
+            return $this->_loop = Factory::create();
+        }
     }
 }
