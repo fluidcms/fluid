@@ -67,8 +67,8 @@ class Session extends Database
         if ($dbh) {
             self::deleteExpired();
 
-            $sth = $dbh->prepare("SELECT token FROM sessions WHERE token=:token AND expiration>date('now');");
-            $sth->execute(array(':token' => $value));
+            $sth = $dbh->prepare("SELECT token FROM sessions WHERE token=:token AND expiration>:datetime;");
+            $sth->execute(array(':token' => $value, ':datetime' => date('Y-m-d H:i:s')));
 
             if ($sth->fetch()) {
                 return true;
@@ -86,7 +86,7 @@ class Session extends Database
     {
         $dbh = self::getDatabase();
         if ($dbh) {
-            $dbh->query("DELETE FROM sessions WHERE expiration<date('now');");
+            $dbh->query("DELETE FROM sessions WHERE expiration<'".date('Y-m-d H:i:s')."';");
         }
     }
 }
