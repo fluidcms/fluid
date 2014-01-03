@@ -8,11 +8,12 @@ Desktop.ini
 *.scssc
 .sass-cache
 compass_app_log.txt
-/.idea
-/phpunit.xml
-/composer.lock
-/composer.phar
+.idea
+.vagrant
+phpunit.xml
+composer.lock
+composer.phar
 /vendor
+/bower_components
 /node_modules
 /npm-debug.log
-/bower_components

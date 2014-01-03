@@ -12,6 +12,7 @@
         }
     ],
     "require": {
+        "php": ">=5.4.0",
         "twig/twig": "1.*",
         "cboden/ratchet": "0.3.*",
         "guzzle/guzzle": "3.7.*",
