@@ -2,6 +2,7 @@
 
 namespace Fluid\Definition;
 
+use Exception;
 use SimpleXMLElement;
 
 abstract class Definition
@@ -41,6 +42,7 @@ abstract class Definition
      *
      * @param SimpleXMLElement $xml
      * @param string $file
+     * @throws \Exception
      * @return array
      */
     protected static function getVariablesGroups(SimpleXMLElement $xml, $file)
@@ -54,6 +56,9 @@ abstract class Definition
                     if ($key === 'file') {
                         $dir = dirname($file);
                         $filePath = realpath($dir . '/' . (string)$value);
+                        if (!file_exists($filePath)) {
+                            throw new Exception('Layout file: ' . $dir . '/' . (string)$value . ' does not exists');
+                        }
                         $fileXmlElement = new SimpleXMLElement($filePath, null, true);
                         $extendingGroups[] = self::getVariablesGroups($fileXmlElement, $filePath);
                     }
