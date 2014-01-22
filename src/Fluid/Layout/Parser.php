@@ -18,15 +18,8 @@ class Parser extends Definition
         $xmlFile = $layout->getXMLFile();
         $xmlObject = new SimpleXMLElement($xmlFile, null, true);
 
-        $config = self::getConfig($xmlObject);
-        $variables = self::getVariablesGroups($xmlObject, $xmlFile);
-
-        if (isset($config['file'])) {
-            $layout->setFile($config['file']);
-        }
-
-        $layout->setVariables($variables);
-
+        $layout->setConfig(new Config(self::getConfig($xmlObject)));
+        $layout->setDefinition(self::getVariablesGroups($xmlObject, $xmlFile));
         return $layout;
     }
 

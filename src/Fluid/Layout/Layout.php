@@ -4,7 +4,7 @@ namespace Fluid\Layout;
 use Exception;
 use DOMDocument;
 use DOMElement;
-use Fluid\Config;
+use Fluid\Layout\Config;
 
 /**
  * Layout model
@@ -13,40 +13,36 @@ use Fluid\Config;
  */
 class Layout
 {
+    /** @var string $xmlFile */
     private $xmlFile;
-    private $file;
+
+    /** @var array $definition */
     private $definition;
+
+    /** @var \Fluid\Layout\Config $config */
+    private $config;
 
     /**
      * Layout
      *
-     * @param   string $layout
-     * @throws  Exception
+     * @param string $layout
+     * @throws Exception
      */
     public function __construct($layout)
     {
-        $dir = Config::get('configs') . '/layouts';
-
-        if ($layout !== 'global') {
-            $file = "{$dir}/{$layout}.xml";
-        } else {
-            $file = "{$dir}/global.xml";
+        $xmlFile = \Fluid\Config::get('configs') . "/layouts/{$layout}.xml";
+        if (!file_exists($xmlFile)) {
+            throw new InvalidLayoutException();
         }
-
-        if (!is_file($file)) {
-            throw new Exception("Invalid layout");
-        }
-
-        $this->xmlFile = $file;
-
-        Parser::parse($this);
+        $this->setXmlFile($xmlFile);
     }
 
     /**
      * Get a layout
      *
-     * @param   string $layout
-     * @return  self
+     * @param string $layout
+     * @deprecated
+     * @return self
      */
     public static function get($layout)
     {
@@ -54,78 +50,67 @@ class Layout
     }
 
     /**
-     * Get XML file
-     *
-     * @return  string
-     */
-    public function getXMLFile()
-    {
-        return $this->xmlFile;
-    }
-
-    /**
-     * Set file
-     *
-     * @param   string $value
-     * @return  void
-     */
-    public function setFile($value)
-    {
-        $this->file = $value;
-    }
-
-    /**
-     * Get file
-     *
-     * @return  string
-     */
-    public function getFile()
-    {
-        return $this->file;
-    }
-
-    /**
      * Set layout definition
      *
-     * @param   string $value
-     * @return  void
+     * @param array $definition
+     * @return $this
      */
-    public function setDefinition($value)
+    public function setDefinition($definition)
     {
-        $this->definition = $value;
-    }
-
-    /**
-     * Set Variables
-     *
-     * @param   string $value
-     * @deprecated  use setDefinition instead
-     * @return  void
-     */
-    public function setVariables($value)
-    {
-        $this->setDefinition($value);
+        $this->definition = $definition;
+        return $this;
     }
 
     /**
      * Get layout definition
      *
-     * @return  array
+     * @return array
      */
     public function getDefinition()
     {
+        if (null === $this->definition) {
+            Parser::parse($this);
+        }
         return $this->definition;
     }
 
     /**
-     * Get Variables
-     *
-     * @deprecated  use getDefinition instead
-     * @return  array
+     * @param \Fluid\Layout\Config $config
+     * @return $this
      */
-    public function getVariables()
+    public function setConfig(Config $config)
     {
-        return $this->getDefinition();
+        $this->config = $config;
+        return $this;
+    }
+
+    /**
+     * @return \Fluid\Layout\Config
+     */
+    public function getConfig()
+    {
+        if (null === $this->config) {
+            Parser::parse($this);
+        }
+        return $this->config;
+    }
+
+    /**
+     * @param string $xmlFile
+     * @return $this
+     */
+    public function setXmlFile($xmlFile)
+    {
+        $this->xmlFile = $xmlFile;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getXmlFile()
+    {
+        return $this->xmlFile;
     }
 
     /**
@@ -133,11 +118,12 @@ class Layout
      *
      * @param string|null $dir
      * @return array
+     * TODO move to repository
      */
     public static function getLayouts($dir = null)
     {
         $layouts = array();
-        $origin = Config::get('configs') . '/layouts';
+        $origin = \Fluid\Config::get('configs') . '/layouts';
 
         if (null === $dir) {
             $dir = $origin;

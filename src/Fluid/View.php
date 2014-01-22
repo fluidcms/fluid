@@ -2,10 +2,8 @@
 
 namespace Fluid;
 
-use Twig_Loader_Filesystem;
-use Twig_Environment;
-use Twig_Loader_Chain;
-use Twig_Loader_String;
+use Fluid\Map\Map;
+use Fluid\Layout\Layout;
 
 /**
  * View class
@@ -14,117 +12,89 @@ use Twig_Loader_String;
  */
 class View
 {
-    protected static $loader;
-    protected static $templatesDir;
+    /** @var \Fluid\Fluid */
+    private $fluid;
+
+    /** @var \Fluid\Map\Map */
+    private $map;
+
+    /** @var \Fluid\Layout\Layout */
+    private $layout;
 
     /**
-     * Create a view
-     *
-     * @param string $file
+     * @param \Fluid\Fluid $fluid
+     * @param \Fluid\Map\Map $map
+     * @param \Fluid\Layout\Layout $layout
+     */
+    public function __construct(Fluid $fluid, Map $map, Layout $layout)
+    {
+        $this->setFluid($fluid);
+        $this->setMap($map);
+        $this->setLayout($layout);
+    }
+
+    /**
+     * @param array $page
      * @param array $data
      * @return string
      */
-    public static function create($file, array $data = array())
+    public function load(array $page, array $data)
     {
-        return self::render($file, $data);
+        $file = $this->getLayout()->getConfig()->getFile();
+        return $this->getFluid()->getTemplateEngine()->render($file, $data, $this->getLayout()->getConfig());
     }
 
     /**
-     * Create a view from a Twig macro
-     *
-     * @param string $macro
-     * @param string $file
-     * @param array $data
-     * @return string
+     * @param \Fluid\Fluid $fluid
+     * @return $this
      */
-    public static function macro($macro, $file, array $data = array())
+    public function setFluid(Fluid $fluid)
     {
-        // TODO: add hook for Twig loader
-        // TODO: cache twig loaders in static variables
-        $loader = new Twig_Loader_Chain(array(
-            new Twig_Loader_Filesystem(self::getTemplatesDir()),
-            new Twig_Loader_String()
-        ));
-
-        $twig = new Twig_Environment($loader);
-
-        $input = '{% import "' . $file . '" as macros %}{{ macros.' . $macro . '(data) }}';
-
-        return $twig->render($input, array('data' => $data));
+        $this->fluid = $fluid;
+        return $this;
     }
 
     /**
-     * Extends Twig Loader
-     *
-     * @param TwigLoaderInterface $loader
+     * @return \Fluid\Fluid
      */
-    public static function setLoader($loader)
+    public function getFluid()
     {
-        if (null !== $loader && !$loader instanceof TwigLoaderInterface) {
-            trigger_error("Argument 1 passed to Fluid\\View::setLoader() must implement interface Fluid\\TwigLoaderInterface", E_USER_ERROR);
-        }
-        self::$loader = $loader;
+        return $this->fluid;
     }
 
     /**
-     * Initialize Twig
-     *
-     * @return string
+     * @param \Fluid\Layout\Layout $layout
+     * @return $this
      */
-    public static function initTwig()
+    public function setLayout(Layout $layout)
     {
-        // TODO: make Twig hook event based
-        // TODO: cache twig loaders in static variables
-
-        if (null !== self::$loader) {
-            return call_user_func(array(self::$loader, 'loader'));
-        }
-
-        return array(
-            $loader = new Twig_Loader_Filesystem(self::$templatesDir),
-            new Twig_Environment($loader)
-        );
+        $this->layout = $layout;
+        return $this;
     }
 
     /**
-     * Render a view
-     *
-     * @param string $file
-     * @param array $data
-     * @return string
+     * @return \Fluid\Layout\Layout
      */
-    protected static function render($file, array $data = array())
+    public function getLayout()
     {
-        // TODO: convert hook for Twig loader (same as macro method)
-        // TODO: cache twig loaders in static variables
-
-        list($loader, $twig) = static::initTwig();
-
-        $template = $twig->loadTemplate($file);
-        return $template->render($data);
+        return $this->layout;
     }
 
     /**
-     * Set templates directory
-     *
-     * @param string $dir
+     * @param \Fluid\Map\Map $map
+     * @return $this
      */
-    public static function setTemplatesDir($dir)
+    public function setMap(Map $map)
     {
-        self::$templatesDir = $dir;
+        $this->map = $map;
+        return $this;
     }
 
     /**
-     * Get templates directory
-     *
-     * @return string
+     * @return \Fluid\Map\Map
      */
-    public static function getTemplatesDir()
+    public function getMap()
     {
-        if (null === self::$templatesDir) {
-            self::setTemplatesDir(Config::get('twig_templates'));
-        }
-
-        return self::$templatesDir;
+        return $this->map;
     }
 }

@@ -61,16 +61,24 @@ class HTTP
             }
         }
 
-        return (
-            self::serverStatus() ||
-            self::tmpImages() ||
-            self::files() ||
-            self::upload() ||
-            self::publicFiles() ||
-            self::javascriptFiles() ||
-            self::changePage() ||
-            self::htmlPages()
-        );
+        if ($response = self::serverStatus()) {
+            return $response;
+        } elseif ($response = self::tmpImages()) {
+            return $response;
+        } elseif ($response = self::files()) {
+            return $response;
+        } elseif ($response = self::upload()) {
+            return $response;
+        } elseif ($response = self::publicFiles()) {
+            return $response;
+        } elseif ($response = self::javascriptFiles()) {
+            return $response;
+        } elseif ($response = self::changePage()) {
+            return $response;
+        } elseif ($response = self::htmlPages()) {
+            return $response;
+        }
+        return null;
     }
 
     /**
@@ -84,15 +92,14 @@ class HTTP
             if (Session::validate(self::$input['session'])) {
                 if (Daemon::isRunning()) {
                     // Daemon is already running
-                    echo json_encode(true);
+                    return json_encode(true);
                 } else if (Daemon::runBackground()) {
                     // Start Daemon
-                    echo json_encode(true);
+                    return json_encode(true);
                 } else {
                     // Could not start Daemon
-                    echo json_encode(false);
+                    return json_encode(false);
                 }
-                return true;
             }
         }
 
@@ -249,8 +256,7 @@ class HTTP
                 $url = $retval;
             }
 
-            echo json_encode($url);
-            return true;
+            return json_encode($url);
         }
         return false;
     }
@@ -258,14 +264,11 @@ class HTTP
     /**
      * Route html pages.
      *
-     * @return bool
+     * @return bool|string
      */
     private static function htmlPages()
     {
         if (self::$request == '' || self::$request == 'files') {
-            View::setTemplatesDir(__DIR__ . "/../Templates/");
-            View::setLoader(null);
-
             if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) {
                 $url = 'https://';
             } else {
@@ -275,26 +278,15 @@ class HTTP
             $url .= "{$_SERVER['SERVER_NAME']}{$_SERVER['REQUEST_URI']}";
             $url = preg_replace("!/fluidcms/(.*)$!i", "/", $url);
 
-            echo View::create(
-                'master.twig',
-                array(
-                    'websocket_url' => preg_replace('!^https?://([^/]*)!i', "ws://$1:80", $url),
-                    'user_id' => uniqid(),
-                    'site_url' => $url,
-                    'branch' => 'develop',
-                    'session' => Session::create(),
-                    'language' => require __DIR__ . "/../Locale/en-US.php"
-                )
-            );
-            return true;
-        } else if (self::$request == 'test') {
-            View::setTemplatesDir(__DIR__ . "/../Templates/");
-            View::setLoader(null);
+            $GLOBALS['websocket_url'] = preg_replace('!^https?://([^/]*)!i', "ws://$1:80", $url);
+            $GLOBALS['user_id'] = uniqid();
+            $GLOBALS['site_url'] = $url;
+            $GLOBALS['branch'] = 'develop';
+            $GLOBALS['session'] = Session::create();
+            $GLOBALS['language'] = require __DIR__ . "/../Locale/en-US.php";
 
-            echo View::create('test.twig');
-            return true;
+            return require __DIR__ . "/../Templates/app.php";
         }
-
         return false;
     }
 }

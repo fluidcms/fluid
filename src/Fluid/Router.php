@@ -1,7 +1,8 @@
 <?php
-
 namespace Fluid;
 
+use Fluid\Map\Map;
+use Fluid\Layout\Layout;
 use Fluid\Requests\HTTP;
 
 /**
@@ -11,37 +12,72 @@ use Fluid\Requests\HTTP;
  */
 class Router
 {
+    /** @var \Fluid\Fluid $fluid */
+    private $fluid;
+
+    /** @var string $pathname */
+    private $pathname;
+
+    /**
+     * @param \Fluid\Fluid $fluid
+     * @param null|string $pathname
+     */
+    public function __construct(Fluid $fluid, $pathname = null)
+    {
+        $this->setFluid($fluid);
+        $this->setPathname($pathname);
+    }
+
     /**
      * Route a request
      *
-     * @param string|null $request
+     * @param string|null $pathname
      * @return mixed
      */
-    public static function route($request = null)
+    public function dispatch($pathname = null)
     {
-        // Route requests
-        if (stripos($request, '/fluidcms/') === 0) {
-            if (HTTP::route($request)) {
-                return true;
+        if (null !== $pathname) {
+            $this->setPathname($pathname);
+        } else {
+            $pathname = $this->getPathname();
+        }
+
+        if (stripos($pathname, '/fluidcms/') === 0) {
+            // Route admin requests
+            if ($response = HTTP::route($pathname)) {
+                die($response);
+                return $response;
             }
-        } // Route pages
-        else {
-            if (null === $request && isset($_SERVER['REQUEST_URI'])) {
-                $request = $_SERVER['REQUEST_URI'];
+        } else {
+            // Route pages
+            if (null === $pathname && isset($_SERVER['REQUEST_URI'])) {
+                $pathname = $_SERVER['REQUEST_URI'];
             }
 
-            $request = '/' . ltrim($request, '/');
+            $pathname = '/' . ltrim($pathname, '/');
 
-            $map = new Map\Map;
-            $page = self::matchRequest($request, $map->getPages());
+            $map = new Map;
+            $page = self::matchRequest($pathname, $map->getPages());
 
             if (isset($page) && false !== $page) {
-                Data::setMap($map);
-                return PageMaker::create($page, Data::get($page['id']));
+                return $this->view($map, $page);
             }
         }
 
         return Fluid::NOT_FOUND;
+    }
+
+    /**
+     * @param \Fluid\Map\Map $map
+     * @param array $page
+     * @return string
+     */
+    private function view(Map $map, array $page)
+    {
+        Data::setMap($map);
+        $data = Data::get($page['id']);
+        $layout = new Layout($page['layout']);
+        return (new View($this->getFluid(), $map, $layout))->load($page, $data);
     }
 
     /**
@@ -66,5 +102,41 @@ class Router
             }
         }
         return false;
+    }
+
+    /**
+     * @param \Fluid\Fluid $fluid
+     * @return $this
+     */
+    public function setFluid(Fluid $fluid)
+    {
+        $this->fluid = $fluid;
+        return $this;
+    }
+
+    /**
+     * @return \Fluid\Fluid
+     */
+    public function getFluid()
+    {
+        return $this->fluid;
+    }
+
+    /**
+     * @param null|string $pathname
+     * @return $this
+     */
+    public function setPathname($pathname = null)
+    {
+        $this->pathname = $pathname;
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getPathname()
+    {
+        return $this->pathname;
     }
 }

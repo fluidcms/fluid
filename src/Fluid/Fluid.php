@@ -13,10 +13,8 @@ use Fluid\Token\Token;
 class Fluid
 {
     const VERSION = '0.0.1';
-
     const DEBUG_OFF = 0;
     const DEBUG_LOG = 1;
-
     const NOT_FOUND = '404';
 
     private static $branch;
@@ -36,6 +34,9 @@ class Fluid
     /** @var Fluid $self */
     private static $self;
 
+    /** @var null|\Fluid\TemplateEngineInterface $templateEngine */
+    private $templateEngine;
+
     /**
      * @param array|null $config
      * @param string|null $language The language of the instance
@@ -44,6 +45,7 @@ class Fluid
     {
         self::$self = $this;
         self::init($config, $language);
+        $this->setTemplateEngine(new TemplateEngine);
     }
 
     /**
@@ -65,12 +67,6 @@ class Fluid
         }
 
         self::checkIfIsAdmin();
-
-        // Set View Templates Directory
-        if (null === View::getTemplatesDir()) {
-            View::setTemplatesDir(Config::get('twig_templates'));
-        }
-
         return null !== self::$self ? self::$self : new self;
     }
 
@@ -241,5 +237,23 @@ class Fluid
     public static function getRequestPayload()
     {
         return self::$requestPayload;
+    }
+
+    /**
+     * @param null|\Fluid\TemplateEngineInterface $templateEngine
+     * @return $this
+     */
+    public function setTemplateEngine(TemplateEngineInterface $templateEngine = null)
+    {
+        $this->templateEngine = $templateEngine;
+        return $this;
+    }
+
+    /**
+     * @return null|\Fluid\TemplateEngineInterface
+     */
+    public function getTemplateEngine()
+    {
+        return $this->templateEngine;
     }
 }
