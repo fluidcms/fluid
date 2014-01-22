@@ -45,7 +45,6 @@ class Router
         if (stripos($pathname, '/fluidcms/') === 0) {
             // Route admin requests
             if ($response = HTTP::route($pathname)) {
-                die($response);
                 return $response;
             }
         } else {

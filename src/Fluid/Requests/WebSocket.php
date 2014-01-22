@@ -313,7 +313,7 @@ class WebSocket
                         $page = Page::get(null, $language);
                         $output = array(
                             'data' => $page->getRawData(),
-                            'layoutDefinition' => Layout::get('global')->getVariables()
+                            'layoutDefinition' => (new Layout('global'))->getDefinition()
                         );
                     } else {
                         $map = new Map;
@@ -324,7 +324,7 @@ class WebSocket
                                 $mapPage,
                                 array(
                                     'data' => $page->getRawData(),
-                                    'layoutDefinition' => Layout::get($page->getLayout())->getVariables()
+                                    'layoutDefinition' => (new Layout($page->getLayout()))->getDefinition()
                                 )
                             );
                         }

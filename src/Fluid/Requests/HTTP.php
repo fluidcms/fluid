@@ -252,7 +252,10 @@ class HTTP
             $url = isset($_GET['url']) ? filter_var($_GET['url'], FILTER_SANITIZE_STRING) : '';
             $language = isset($_GET['language']) ? filter_var($_GET['language'], FILTER_SANITIZE_STRING) : 'en-US';
 
-            foreach (Event::trigger('changePage', array($url, $language)) as $retval) {
+            if (empty($url)) {
+                $url = '/';
+            }
+            foreach (Event::trigger('page:change', array($url, $language)) as $retval) {
                 $url = $retval;
             }
 
