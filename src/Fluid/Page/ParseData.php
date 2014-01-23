@@ -76,7 +76,7 @@ class ParseData
                     }
                     break;
                 case 'content':
-                    if (isset($data[$name])) {
+                    if (isset($data[$name]) && is_array($data[$name])) {
                         $retval[$name] = self::renderContent($data[$name]);
                     } else {
                         $retval[$name] = '';

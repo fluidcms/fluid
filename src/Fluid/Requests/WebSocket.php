@@ -103,7 +103,7 @@ class WebSocket
                     else {
                         $layout = trim($match[2], '/ ');
                         $layout = Layout::get($layout);
-                        echo json_encode($layout->getVariables());
+                        echo json_encode($layout->getDefinition());
                         return true;
                     }
             }
@@ -362,13 +362,13 @@ class WebSocket
                             $mapPage,
                             array(
                                 'data' => $page->getRawData(),
-                                'layoutDefinition' => Layout::get($page->getLayout())->getVariables()
+                                'layoutDefinition' => Layout::get($page->getLayout())->getDefinition()
                             )
                         );
                     } else {
                         $output = array(
                             'data' => $page->getRawData(),
-                            'layoutDefinition' => Layout::get('global')->getVariables()
+                            'layoutDefinition' => Layout::get('global')->getDefinition()
                         );
                     }
 
