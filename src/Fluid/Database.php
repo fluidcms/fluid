@@ -22,11 +22,11 @@ class Database
         $storage = Config::get('storage');
 
         if ($storage) {
-            $database = Config::get('storage') . "/data";
-
-            if (!is_dir(dirname($database))) {
-                mkdir(dirname($database), 0777, true);
+            if (!is_dir(dirname($storage))) {
+                mkdir(dirname($storage), 0777, true);
             }
+
+            $database = realpath($storage) . DIRECTORY_SEPARATOR . 'data';
 
             return self::$dbh = new PDO('sqlite:' . $database);
         }
