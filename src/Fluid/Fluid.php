@@ -98,7 +98,12 @@ class Fluid
     public static function checkIfIsAdmin()
     {
         if (isset($_SERVER['QUERY_STRING'])) {
-            parse_str($_SERVER['QUERY_STRING'], $queryString);
+            if (!empty($_SERVER['QUERY_STRING'])) {
+                parse_str($_SERVER['QUERY_STRING'], $queryString);
+            } elseif (strpos($_SERVER['REQUEST_URI'], '?') !== false) {
+                $parts = explode('?', $_SERVER['REQUEST_URI'], 2);
+                parse_str($parts[1], $queryString);
+            }
             if (
                 isset($queryString['fluidbranch']) &&
                 isset($queryString['fluidtoken']) &&
