@@ -148,8 +148,10 @@ class UpdateData
                 }
                 break;
             case 'content':
-                if (!empty($value)) {
+                if (!empty($value) && is_array($value)) {
                     $retval = self::sanitizeContent($value);
+                } elseif (!empty($value) && is_string($value)) {
+                    $retval = array('source' => (string)$value, 'components' => null, 'images' => null);
                 } else {
                     $retval = array('source' => '', 'components' => null, 'images' => null);
                 }

@@ -78,6 +78,12 @@ class ParseData
                 case 'content':
                     if (isset($data[$name]) && is_array($data[$name])) {
                         $retval[$name] = self::renderContent($data[$name]);
+                    } elseif (isset($data[$name]) && is_string($data[$name])) {
+                        $retval[$name] = self::renderContent([
+                            'source' => $data[$name],
+                            'components' => null,
+                            'images' => null
+                        ]);
                     } else {
                         $retval[$name] = '';
                     }
