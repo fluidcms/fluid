@@ -1,14 +1,18 @@
 <?php
 namespace Fluid\Tests;
 
-use Fluid;
 use PHPUnit_Framework_TestCase;
+use Fluid\Autoloader;
 
 class AutoloaderTest extends PHPUnit_Framework_TestCase
 {
     public function testAutoload()
     {
-        $this->assertNull(Fluid\Autoloader::autoload('Foo'), 'Fluid\\Autoloader::autoload() is trying to load classes outside of the Fluid namespace');
-        $this->assertNotNull(Fluid\Autoloader::autoload('Fluid\\Fluid'), 'Fluid\Autoloader::autoload() failed to autoload the Fluid\\Fluid class');
+        $declared = get_declared_classes();
+        $declaredCount = count($declared);
+        Autoloader::autoload('FooBarClass');
+        $this->assertEquals($declaredCount, count(get_declared_classes()), 'Fluid\\Autoloader::autoload() is trying to load classes outside of the Fluid namespace');
+        Autoloader::autoload('Fluid\\Fluid');
+        $this->assertTrue(in_array('Fluid\\Fluid', get_declared_classes()), 'Fluid\\Autoloader::autoload() failed to autoload the Fluid\\Fluid class');
     }
 }

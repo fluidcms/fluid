@@ -1,6 +1,6 @@
 <?php
 
-date_default_timezone_set("America/Montreal");
+date_default_timezone_set(@date_default_timezone_get());
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
@@ -17,12 +17,12 @@ if (file_exists($vendor . "/autoload.php")) {
     }
 }
 
-require_once __DIR__ . '/helper.php';
+Fluid\Autoloader::register();
 
-Fluid\Config::setAll(array(
-    'languages' => array('en-US', 'de-DE'),
-    'storage' => __DIR__ . '/Fluid/Tests/_files/storage/',
-    'configs' => __DIR__ . '/Fluid/Tests/_files/definitions',
-    'twig_templates' =>  __DIR__ . '/Fluid/Tests/_files/twig_views',
-));
-
+spl_autoload_register(function ($class) {
+    $class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
+    $class = preg_replace('/^Fluid/', 'Fluid/Tests/_includes', $class);
+    if (file_exists(__DIR__ . DIRECTORY_SEPARATOR . $class . '.php')) {
+        require_once __DIR__ . DIRECTORY_SEPARATOR . $class . '.php';
+    }
+});

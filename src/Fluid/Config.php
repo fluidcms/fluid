@@ -1,56 +1,148 @@
 <?php
-
 namespace Fluid;
 
 /**
  * Class Config
+ *
  * @package Fluid
  */
 class Config
 {
-    /** @var array $configs */
-    private static $configs = array();
+    /**
+     * @var string
+     */
+    private $storage;
 
     /**
-     * @param array $configs
+     * @var string
      */
-    public static function setAll(array $configs)
+    private $structure;
+
+    /**
+     * @var array
+     */
+    private $languages;
+
+    /**
+     * @var string
+     */
+    private $language;
+
+    /**
+     * @var string
+     */
+    private $branch = 'master';
+
+    /**
+     * @var string
+     */
+    private $log;
+
+    /**
+     * @param string $branch
+     * @return $this
+     */
+    public function setBranch($branch)
     {
-        self::$configs = $configs;
+        $this->branch = $branch;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBranch()
+    {
+        return $this->branch;
+    }
+
+    /**
+     * @param string $language
+     * @return $this
+     */
+    public function setLanguage($language)
+    {
+        $this->language = $language;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLanguage()
+    {
+        return $this->language;
+    }
+
+    /**
+     * @param array $languages
+     * @return $this
+     */
+    public function setLanguages($languages)
+    {
+        $this->languages = $languages;
+        return $this;
     }
 
     /**
      * @return array
      */
-    public static function getAll()
+    public function getLanguages()
     {
-        return self::$configs;
+        return $this->languages;
     }
 
     /**
-     * Set config
-     *
-     * @param string $name
-     * @param mixed $value
+     * @param string $storage
+     * @return $this
      */
-    public static function set($name, $value)
+    public function setStorage($storage)
     {
-        self::$configs[$name] = $value;
+        $this->storage = $storage;
+        return $this;
     }
 
     /**
-     * Get config
-     *
-     * @param string $name
-     * @return mixed
+     * @return string
      */
-    public static function get($name)
+    public function getStorage()
     {
-        // Unit Tests config override
-        if (isset($GLOBALS["fluid.{$name}"])) {
-            return $GLOBALS["fluid.{$name}"];
-        }
+        return $this->storage;
+    }
 
-        return isset(self::$configs[$name]) ? self::$configs[$name] : null;
+    /**
+     * @param string $structure
+     * @return $this
+     */
+    public function setStructure($structure)
+    {
+        $this->structure = $structure;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStructure()
+    {
+        return $this->structure;
+    }
+
+    /**
+     * @param string $log
+     * @return $this
+     */
+    public function setLog($log)
+    {
+        $this->log = $log;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLog()
+    {
+        return $this->log;
     }
 }
