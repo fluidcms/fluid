@@ -4,7 +4,7 @@
 http_path = "/"
 http_fonts_path = ""
 css_dir = "public/stylesheets"
-sass_dir = "src/FluidSCSS"
+sass_dir = "scss"
 images_dir = "public/images"
 javascripts_dir = "public/javascripts"
 output_style = :compressed

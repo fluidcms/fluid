@@ -7,15 +7,15 @@ module.exports = function(grunt) {
 
         clean: {
             dist: ['public/javascripts'],
-            build: ['src/FluidJS']
+            build: ['javascripts']
         },
 
         requirejs: {
             compile: {
                 options: {
                     baseUrl: '.',
-                    appDir: 'src/FluidJS',
-                    mainConfigFile: 'src/FluidJS/fluid-0.0.1.min.js',
+                    appDir: 'javascripts',
+                    mainConfigFile: 'javascripts/fluid-0.0.1.min.js',
                     findNestedDependencies: true,
                     removeCombined: true,
                     dir: 'public/javascripts',
@@ -44,7 +44,7 @@ module.exports = function(grunt) {
                 files: [
                     {
                         expand: true,
-                        cwd: 'src/FluidJS/',
+                        cwd: 'javascripts/',
                         src: ['**'],
                         dest: 'public/javascripts'
                     }
@@ -56,7 +56,7 @@ module.exports = function(grunt) {
                         expand: true,
                         cwd: 'public/javascripts/',
                         src: ['**'],
-                        dest: 'src/FluidJS'
+                        dest: 'javascripts'
                     }
                 ]
             }
