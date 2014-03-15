@@ -1,26 +1,24 @@
 <?php
 namespace Fluid;
 
-use Exception;
-use Fluid\Branch\Branch;
-use Fluid\Socket\Message;
-use Fluid\Token\Token;
+use Fluid\Map\Map;
 
 /**
  * The fluid class
+ *
  * @package fluid
  */
 class Fluid
 {
-    const VERSION = '0.0.1';
+    const VERSION = '1.0.0';
+
     const DEBUG_OFF = 0;
     const DEBUG_LOG = 1;
-    const NOT_FOUND = '404';
 
-    private static $branch;
-    private static $storage;
-    private static $language = 'en-US';
-    private static $requestPayload;
+    //private $branch;
+    //private $storage;
+    //private static $language = 'en-US';
+    //private static $requestPayload;
 
     /** @var bool|null $controlPannel */
     private static $controlPannel = null;
@@ -28,58 +26,46 @@ class Fluid
     /** @var string $controlPannel */
     private static $controlPannelSession;
 
-    /** @var int $debugMode */
-    private static $debugMode = self::DEBUG_OFF;
+    /**
+     * @var int
+     */
+    private $debugMode = self::DEBUG_OFF;
 
-    /** @var Fluid $self */
-    private static $self;
-
-    /** @var null|\Fluid\TemplateEngineInterface $templateEngine */
+    /**
+     * @var TemplateEngineInterface
+     */
     private $templateEngine;
 
     /**
-     * @param array|null $config
-     * @param string|null $language The language of the instance
+     * @var ConfigInterface
      */
-    public function __construct(array $config = null, $language = null)
-    {
-        self::$self = $this;
-        self::init($config, $language);
-        $this->setTemplateEngine(new TemplateEngine);
-    }
+    private $config;
 
     /**
-     * Initialize Fluid
-     *
-     * @param array|null $config
-     * @param string|null $language The language of the instance
-     * @return self
+     * @var Map
      */
-    public static function init(array $config = null, $language = null)
-    {
-        if (null !== $config) {
-            Config::setAll($config);
-        }
-        self::$branch = 'master';
-        self::$storage = Config::get('storage');
-        if (null !== $language) {
-            self::$language = $language;
-        }
+    private $map;
 
-        self::checkIfIsAdmin();
-        return null !== self::$self ? self::$self : new self;
+    public function __construct()
+    {
+        $this->setConfig(new Config);
+        $this->setTemplateEngine(new TemplateEngine);
     }
 
     /**
      * Turns debug mode on
      *
      * @param int $mode
-     * @return self
+     * @return $this
+     * @throws Exception\InvalidDebugModeException
      */
-    public static function debug($mode = self::DEBUG_LOG)
+    public function debug($mode = self::DEBUG_LOG)
     {
-        self::$debugMode = $mode;
-        return null !== self::$self ? self::$self : new self;
+        if ($mode !== self::DEBUG_LOG && $mode !== self::DEBUG_OFF) {
+            throw new Exception\InvalidDebugModeException;
+        }
+        $this->debugMode = $mode;
+        return $this;
     }
 
     /**
@@ -87,165 +73,13 @@ class Fluid
      *
      * @return int
      */
-    public static function getDebugMode()
+    public function getDebugMode()
     {
-        return self::$debugMode;
+        return $this->debugMode;
     }
 
     /**
-     * Check if fluid was loaded from the control pannel
-     */
-    public static function checkIfIsAdmin()
-    {
-        if (isset($_SERVER['QUERY_STRING'])) {
-            if (!empty($_SERVER['QUERY_STRING'])) {
-                parse_str($_SERVER['QUERY_STRING'], $queryString);
-            } elseif (strpos($_SERVER['REQUEST_URI'], '?') !== false) {
-                $parts = explode('?', $_SERVER['REQUEST_URI'], 2);
-                parse_str($parts[1], $queryString);
-            }
-            if (
-                isset($queryString['fluidbranch']) &&
-                isset($queryString['fluidtoken']) &&
-                isset($queryString['fluidsession']) &&
-                Token::validate($queryString['fluidtoken'])
-            ) {
-                self::$controlPannel = true;
-                self::$controlPannelSession = $queryString['fluidsession'];
-                self::setBranch($queryString['fluidbranch'], true);
-            }
-        }
-    }
-
-    /**
-     * Check if fluid was loaded from the control pannel
-     *
-     * @return bool
-     */
-    public static function isAdmin()
-    {
-        if (null === self::$controlPannel) {
-            self::checkIfIsAdmin();
-        }
-
-        return self::$controlPannel;
-    }
-
-    /**
-     * Get the control pannel user's session
-     *
-     * @return bool
-     */
-    public static function getSession()
-    {
-        return self::$controlPannelSession;
-    }
-
-    /**
-     * Get the language of the instance
-     *
-     * @param string $value
-     * @return self
-     */
-    public static function setLanguage($value)
-    {
-        // If page is loading from control pannel, send language to control pannel
-        if (self::isAdmin()) {
-            Message::send('language:changed', array(
-                'session' => self::getSession(),
-                'language' => $value
-            ));
-        }
-
-        self::$language = $value;
-        return null !== self::$self ? self::$self : new self;
-    }
-
-    /**
-     * Get the language of the instance
-     *
-     * @return string
-     */
-    public static function getLanguage()
-    {
-        // Set language
-        if (null === self::$language) {
-            $languages = Config::get('languages');
-            $language = reset($languages);
-            self::setLanguage($language);
-        }
-
-        return self::$language;
-    }
-
-    /**
-     * Set the branch
-     *
-     * @param string $branch
-     * @throws Exception Branch does not exists
-     * @return self;
-     */
-    public static function setBranch($branch)
-    {
-        if (!Branch::exists($branch)) {
-            Branch::init($branch);
-        }
-
-        if ($branch == self::$branch) {
-            null;
-        } else if (is_dir(Config::get('storage') . '/' . $branch)) {
-            self::$branch = $branch;
-        } else {
-            throw new Exception("Branch does not exists.");
-        }
-
-        return null !== self::$self ? self::$self : new self;
-    }
-
-    /**
-     * Get the current branch
-     *
-     * @return string
-     */
-    public static function getBranch()
-    {
-        return self::$branch;
-    }
-
-    /**
-     * Get the current branch
-     *
-     * @return string
-     */
-    public static function getBranchStorage()
-    {
-        return Config::get('storage') . "/" . self::$branch;
-    }
-
-    /**
-     * Set the request payload in case you use file_get_contents("php://input") before Fluid
-     *
-     * @param string $value
-     * @return self
-     */
-    public static function setRequestPayload($value)
-    {
-        self::$requestPayload = $value;
-        return null !== self::$self ? self::$self : new self;
-    }
-
-    /**
-     * Get request payload
-     *
-     * @return string
-     */
-    public static function getRequestPayload()
-    {
-        return self::$requestPayload;
-    }
-
-    /**
-     * @param null|\Fluid\TemplateEngineInterface $templateEngine
+     * @param null|TemplateEngineInterface $templateEngine
      * @return $this
      */
     public function setTemplateEngine(TemplateEngineInterface $templateEngine = null)
@@ -255,10 +89,59 @@ class Fluid
     }
 
     /**
-     * @return null|\Fluid\TemplateEngineInterface
+     * @return null|TemplateEngineInterface
      */
     public function getTemplateEngine()
     {
         return $this->templateEngine;
+    }
+
+    /**
+     * @param ConfigInterface $config
+     * @return $this
+     */
+    public function setConfig(ConfigInterface $config)
+    {
+        $this->config = $config;
+        return $this;
+    }
+
+    /**
+     * @return ConfigInterface
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * @param Map $map
+     * @return $this
+     */
+    public function setMap(Map $map)
+    {
+        $this->map = $map;
+        return $this;
+    }
+
+    /**
+     * @return Map
+     */
+    public function getMap()
+    {
+        if (null === $this->map) {
+            $this->createMap();
+        }
+
+        return $this->map;
+    }
+
+    /**
+     * @return $this
+     */
+    public function createMap()
+    {
+        $this->setMap(new Map);
+        return $this;
     }
 }

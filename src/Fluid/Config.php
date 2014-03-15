@@ -6,7 +6,7 @@ namespace Fluid;
  *
  * @package Fluid
  */
-class Config
+class Config implements ConfigInterface
 {
     /**
      * @var string

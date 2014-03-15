@@ -1,22 +1,19 @@
 <?php
-
 namespace Fluid\Map;
 
-use Fluid\Page\Page;
-use Fluid\Storage\FileSystem;
 use Exception;
 use InvalidArgumentException;
 
 /**
- * Site structure model
+ * Map Entity
  *
  * @package fluid
  */
-class Map extends FileSystem
+class Map
 {
-    protected static $dataFile = 'map.json';
-    protected static $cacheKey = "map";
-
+    /**
+     * @var \Fluid\Page\PageRepository
+     */
     private $pages;
 
     /**

@@ -21,7 +21,7 @@ Fluid\Autoloader::register();
 
 spl_autoload_register(function ($class) {
     $class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
-    $class = preg_replace('/^Fluid/', 'Fluid/Tests/_includes', $class);
+    $class = preg_replace('/^Fluid\/Tests/', 'Fluid/Tests/_includes', $class);
     if (file_exists(__DIR__ . DIRECTORY_SEPARATOR . $class . '.php')) {
         require_once __DIR__ . DIRECTORY_SEPARATOR . $class . '.php';
     }

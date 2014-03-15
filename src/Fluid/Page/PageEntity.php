@@ -1,47 +1,219 @@
 <?php
-
 namespace Fluid\Page;
 
 use Exception;
 use Fluid\Fluid;
 use Fluid\Config;
 use Fluid\Layout\Layout;
-use Fluid\Storage\FileSystem;
+use Fluid\Variable\VariableRepository;
 
 /**
- * Page model
+ * Page Entity
  *
  * @package fluid
  */
-class Page extends FileSystem
+class PageEntity
 {
+    /**
+     * @var string
+     */
     private $id;
-    private $page;
-    private $language;
-    private $languages;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var array
+     */
+    private $languages = [];
+
+    /**
+     * @var string
+     */
     private $layout;
+
+    /**
+     * @var string
+     */
     private $url;
+
+    /**
+     * @var PageRepository
+     */
     private $pages;
+
+    /**
+     * @var VariableRepository
+     */
+    private $variables;
 
     /**
      * Init
      *
-     * @param string $id
-     * @param string $page
-     * @param array $languages
-     * @param string $layout
-     * @param string $url
-     * @param array $pages
+     * @param array $attributes
      */
-    public function __construct($id = null, $page = null, array $languages = null, $layout = null, $url = null, array $pages = null)
+    public function __construct(array $attributes = [])
+    {
+        if (isset($attributes['id'])) {
+            $this->setId($attributes['id']);
+        }
+        if (isset($attributes['name'])) {
+            $this->setName($attributes['name']);
+        }
+        if (isset($attributes['languages'])) {
+            $this->setLanguages($attributes['languages']);
+        }
+        if (isset($attributes['layout'])) {
+            $this->setLayout($attributes['layout']);
+        }
+        if (isset($attributes['url'])) {
+            $this->setUrl($attributes['url']);
+        }
+        if (isset($attributes['pages'])) {
+            $this->setPages(new PageRepository($attributes['pages']));
+        } else {
+            $this->setPages(new PageRepository);
+        }
+        if (isset($attributes['variables'])) {
+            $this->setVariables(new VariableRepository($attributes['variables']));
+        } else {
+            $this->setVariables(new VariableRepository);
+        }
+    }
+
+    /**
+     * @param string $id
+     * @return $this
+     */
+    public function setId($id)
     {
         $this->id = $id;
-        $this->page = $page;
-        $this->languages = $languages;
-        $this->layout = $layout;
-        $this->url = $url;
-        $this->pages = $pages;
+        return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param array $languages
+     * @return $this
+     */
+    public function setLanguages($languages)
+    {
+        $this->languages = $languages;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLanguages()
+    {
+        return $this->languages;
+    }
+
+    /**
+     * @param string $layout
+     * @return $this
+     */
+    public function setLayout($layout)
+    {
+        $this->layout = $layout;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLayout()
+    {
+        return $this->layout;
+    }
+
+    /**
+     * @param string $name
+     * @return $this
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param PageRepository $pages
+     * @return $this
+     */
+    public function setPages(PageRepository $pages)
+    {
+        $this->pages = $pages;
+        return $this;
+    }
+
+    /**
+     * @return PageRepository
+     */
+    public function getPages()
+    {
+        return $this->pages;
+    }
+
+    /**
+     * @param string $url
+     * @return $this
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param VariableRepository $variables
+     * @return $this
+     */
+    public function setVariables(VariableRepository $variables)
+    {
+        $this->variables = $variables;
+        return $this;
+    }
+
+    /**
+     * @return \Fluid\Variable\VariableRepository
+     */
+    public function getVariables()
+    {
+        return $this->variables;
+    }
+
+    /////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////
 
     /**
      * Get a page
@@ -50,7 +222,7 @@ class Page extends FileSystem
      * @param string $language
      * @return self
      */
-    public static function get($id = null, $language = null)
+    public static function ____get($id = null, $language = null)
     {
         if (is_array($id)) {
             $obj = new self($id['id'], $id['page'], $id['languages'], $id['layout'], $id['url'], (isset($id['pages']) ? $id['pages'] : null));
@@ -72,7 +244,7 @@ class Page extends FileSystem
      * @param string $group
      * @return array
      */
-    public function getVariable($item, $group = null)
+    public function ___getVariable($item, $group = null)
     {
         $data = $this->getRawData();
         if (null !== $group) {
@@ -88,7 +260,7 @@ class Page extends FileSystem
      * @param string $value
      * @throws Exception
      */
-    public function setLanguage($value)
+    public function ___setLanguage($value)
     {
         $languages = Config::get("languages");
         if (in_array($value, $languages)) {
@@ -104,7 +276,7 @@ class Page extends FileSystem
      *
      * @return string
      */
-    public function getLanguage()
+    public function ___getLanguage()
     {
         return $this->language;
     }
@@ -115,7 +287,7 @@ class Page extends FileSystem
      * @param string $language
      * @return array
      */
-    public function getData($language = null)
+    public function ___getData($language = null)
     {
         if (empty($this->layout)) {
             $this->layout = 'global';
@@ -134,7 +306,7 @@ class Page extends FileSystem
      * @param string $language
      * @return array
      */
-    public function getRawData($language = null)
+    public function ___getRawData($language = null)
     {
         $id = $this->getId();
         if (null === $language) {
@@ -155,43 +327,13 @@ class Page extends FileSystem
     }
 
     /**
-     * Get the page id
-     *
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Get the page layout
-     *
-     * @return string
-     */
-    public function getLayout()
-    {
-        return $this->layout;
-    }
-
-    /**
-     * Get the languages
-     *
-     * @return string
-     */
-    public function getLanguages()
-    {
-        return $this->languages;
-    }
-
-    /**
      * Update a page's data
      *
      * @param array $data
      * @throws Exception
      * @return bool
      */
-    public function update(array $data)
+    public function ____update(array $data)
     {
         UpdateData::update($this, $data);
     }
@@ -207,7 +349,7 @@ class Page extends FileSystem
      * @throws Exception
      * @return array
      */
-    public static function create($page, $parent, array $languages, $layout, $url)
+    public static function ____create($page, $parent, array $languages, $layout, $url)
     {
         Validator::newPageValidator($page, $parent, $languages, $layout, $url);
 
@@ -233,7 +375,7 @@ class Page extends FileSystem
      * @throws Exception
      * @return bool
      */
-    public function delete()
+    public function _____delete()
     {
         $deletePage = function ($path, $name = false) use (&$deletePage) {
             foreach (scandir($path) as $file) {
@@ -274,7 +416,7 @@ class Page extends FileSystem
      * @throws Exception
      * @return bool
      */
-    public static function config($id, $page, array $languages, $layout, $url)
+    public static function _____config($id, $page, array $languages, $layout, $url)
     {
         Validator::pageValidator($page, $languages, $layout, $url);
 
@@ -333,7 +475,7 @@ class Page extends FileSystem
      * @throws Exception
      * @return bool
      */
-    public function move($to)
+    public function _____move($to)
     {
         $to = trim(str_replace('..', '', $to), '/.');
 
