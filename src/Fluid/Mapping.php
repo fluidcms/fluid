@@ -27,7 +27,10 @@ class Mapping implements MappingInterface
         $xmlElement = $this->getXmlElement();
 
         if (isset($xmlElement->config)) {
-            foreach ($xmlElement->config->children() as $setting) {
+            /** @var SimpleXMLElement $element */
+            $element = $xmlElement->config;
+            /** @var SimpleXMLElement $setting */
+            foreach ($element->children() as $setting) {
                 $settingKey = null;
                 foreach ($setting->attributes() as $key => $value) {
                     $value = (string)$value;

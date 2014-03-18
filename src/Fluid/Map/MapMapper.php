@@ -3,7 +3,6 @@ namespace Fluid\Map;
 
 use Fluid\MappingInterface;
 use Fluid\StorageInterface;
-use Fluid\Page\PageRepository;
 use Fluid\XmlMappingLoaderInterface;
 
 class MapMapper
@@ -33,10 +32,12 @@ class MapMapper
 
     /**
      * @param MapEntity $map
+     * @return MapEntity
      */
     public function map(MapEntity $map)
     {
         $this->mapObject($map, $this->getStorage()->load(self::DATA_FILENAME));
+        return $map;
     }
 
     /**
@@ -44,24 +45,32 @@ class MapMapper
      * @param array $data
      * @return MapEntity
      */
-    protected function mapObject(MapEntity $map, array $data)
+    public function mapObject(MapEntity $map, array $data)
     {
         $mapping = $this->getXmlMappingLoader()->load(self::MAPPING_FILENAME);
         $map->getConfig()->set($mapping->getConfig());
         $this->mapXmlObject($map, $mapping);
 
-        if (isset($data['pages'])) {
-            $map->getPages()->addPage($data['pages']);
+        if (is_array($data['pages'])) {
+            foreach ($data['pages'] as $page) {
+                $map->getPages()->addPage($page);
+            }
         }
         return $map;
     }
 
-    protected function mapXmlObject(MapEntity $map, MappingInterface $mapping)
+    /**
+     * @param MapEntity $map
+     * @param MappingInterface $mapping
+     */
+    public function mapXmlObject(MapEntity $map, MappingInterface $mapping)
     {
         $content = $mapping->getContent();
-        if (is_array($content['page'])) {
-            foreach ($content['page'] as $page) {
-                $map->getPages()->addPage($page);
+        if (is_array($content)) {
+            foreach ($content as $item) {
+                if (isset($item['name']) && $item['name'] === 'page') {
+                    $map->getPages()->addPageMapping($item);
+                }
             }
         }
     }

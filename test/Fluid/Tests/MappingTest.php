@@ -55,7 +55,7 @@ class MappingTest extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('name', $content[0][0]);
         $this->assertArrayHasKey('attributes', $content[0][0]);
         $this->assertEquals('setting', $content[0][0]['name']);
-
-        echo '';
+        $this->assertArrayHasKey('name', $content[0][0]['attributes']);
+        $this->assertEquals('template', $content[0][0]['attributes']['name']);
     }
 }

@@ -141,11 +141,8 @@ class Fluid
      */
     public function createMap()
     {
-        $map = new MapEntity;
-        $mapMapper = new MapMapper($this->getStorage(), $this->getXmlMappingLoader());
-        $map->setMapper($mapMapper);
-        $mapMapper->map($map);
-        return $this->setMap(new MapEntity);
+        $mapper = new MapMapper($this->getStorage(), $this->getXmlMappingLoader());
+        return $this->setMap($mapper->map(new MapEntity($mapper)));
     }
 
     /**

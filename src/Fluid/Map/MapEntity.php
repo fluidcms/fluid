@@ -31,9 +31,10 @@ class MapEntity
     /**
      * Init
      */
-    public function __construct()
+    public function __construct(MapMapper $mapper)
     {
-        $this->setPages(new PageRepository);
+        $this->setMapper($mapper);
+        $this->setPages(new PageRepository(null, $mapper->getStorage(), $mapper->getXmlMappingLoader()));
         $this->setConfig(new MapConfig($this));
     }
 
