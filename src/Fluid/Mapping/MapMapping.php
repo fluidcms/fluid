@@ -1,13 +1,20 @@
 <?php
-
-namespace Fluid\Definition;
+namespace Fluid\Mapping;
 
 use Exception;
 use SimpleXMLElement;
 
-abstract class Definition
+class MapMapping
 {
-    private static $variableTypes = array('string', 'content', 'option', 'components', 'bool', 'date');
+    /**
+     * @var array
+     */
+    private $variableTypes = ['string', 'content', 'option', 'components', 'bool', 'date'];
+
+    public function __construct()
+    {
+
+    }
 
     /**
      * Get the configurations

@@ -3,16 +3,22 @@ namespace Fluid\Map;
 
 use Exception;
 use InvalidArgumentException;
+use Fluid\Page\PageRepository;
 
 /**
  * Map Entity
  *
  * @package fluid
  */
-class Map
+class MapEntity
 {
     /**
-     * @var \Fluid\Page\PageRepository
+     * @var MapMapper
+     */
+    private $mapper;
+
+    /**
+     * @var PageRepository
      */
     private $pages;
 
@@ -21,14 +27,59 @@ class Map
      */
     public function __construct()
     {
+        $this->setPages(new PageRepository);
     }
+
+    public function findPage($page)
+    {
+        return $this->getPages()->find($page);
+    }
+
+    /**
+     * @param PageRepository $pages
+     * @return $this
+     */
+    public function setPages(PageRepository $pages)
+    {
+        $this->pages = $pages;
+        return $this;
+    }
+
+    /**
+     * @return PageRepository
+     */
+    public function getPages()
+    {
+        return $this->pages;
+    }
+
+    /**
+     * @param MapMapper $mapper
+     * @return $this
+     */
+    public function setMapper(MapMapper $mapper)
+    {
+        $this->mapper = $mapper;
+        return $this;
+    }
+
+    /**
+     * @return MapMapper
+     */
+    public function getMapper()
+    {
+        return $this->mapper;
+    }
+
+
+    /////////////////////
 
     /**
      * Get pages
      *
      * @return array
      */
-    public function getPages()
+    public function ___getPages()
     {
         if (null === $this->pages) {
             $this->pages = self::load();
@@ -42,7 +93,7 @@ class Map
      * @param array $value
      * @return void
      */
-    public function setPages(array $value)
+    public function ___setPages(array $value)
     {
         $this->pages = $value;
     }
@@ -54,7 +105,7 @@ class Map
      * @throws Exception
      * @return array
      */
-    public function createPage(array $attrs)
+    public function ___createPage(array $attrs)
     {
         if (!is_int($attrs['index'])) {
             throw new InvalidArgumentException;
@@ -74,7 +125,7 @@ class Map
      * @param string $id
      * @return array
      */
-    public function findPage($id)
+    public function __findPage($id)
     {
         $find = function($paths, $pages) use (&$find) {
             $needle = reset($paths);

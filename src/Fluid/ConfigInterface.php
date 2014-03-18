@@ -53,15 +53,15 @@ interface ConfigInterface
     public function getStorage();
 
     /**
-     * @param string $structure
+     * @param string $mapping
      * @return $this
      */
-    public function setStructure($structure);
+    public function setMapping($mapping);
 
     /**
      * @return string
      */
-    public function getStructure();
+    public function getMapping();
 
     /**
      * @param string $log

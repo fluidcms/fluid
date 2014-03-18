@@ -16,7 +16,7 @@ class Config implements ConfigInterface
     /**
      * @var string
      */
-    private $structure;
+    private $mapping;
 
     /**
      * @var array
@@ -111,21 +111,21 @@ class Config implements ConfigInterface
     }
 
     /**
-     * @param string $structure
+     * @param string $mapping
      * @return $this
      */
-    public function setStructure($structure)
+    public function setMapping($mapping)
     {
-        $this->structure = $structure;
+        $this->mapping = $mapping;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getStructure()
+    public function getMapping()
     {
-        return $this->structure;
+        return $this->mapping;
     }
 
     /**

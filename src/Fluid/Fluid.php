@@ -1,7 +1,8 @@
 <?php
 namespace Fluid;
 
-use Fluid\Map\Map;
+use Fluid\Map\MapEntity;
+use Fluid\Map\MapMapper;
 
 /**
  * The fluid class
@@ -14,17 +15,6 @@ class Fluid
 
     const DEBUG_OFF = 0;
     const DEBUG_LOG = 1;
-
-    //private $branch;
-    //private $storage;
-    //private static $language = 'en-US';
-    //private static $requestPayload;
-
-    /** @var bool|null $controlPannel */
-    private static $controlPannel = null;
-
-    /** @var string $controlPannel */
-    private static $controlPannelSession;
 
     /**
      * @var int
@@ -42,9 +32,19 @@ class Fluid
     private $config;
 
     /**
-     * @var Map
+     * @var MapEntity
      */
     private $map;
+
+    /**
+     * @var StorageInterface
+     */
+    private $storage;
+
+    /**
+     * @var XmlMappingLoaderInterface
+     */
+    private $xmlMappingLoader;
 
     public function __construct()
     {
@@ -115,17 +115,17 @@ class Fluid
     }
 
     /**
-     * @param Map $map
+     * @param MapEntity $map
      * @return $this
      */
-    public function setMap(Map $map)
+    public function setMap(MapEntity $map)
     {
         $this->map = $map;
         return $this;
     }
 
     /**
-     * @return Map
+     * @return MapEntity
      */
     public function getMap()
     {
@@ -141,7 +141,70 @@ class Fluid
      */
     public function createMap()
     {
-        $this->setMap(new Map);
+        $map = new MapEntity;
+        $mapMapper = new MapMapper($this->getStorage(), $this->getXmlMappingLoader());
+        $map->setMapper($mapMapper);
+        $mapMapper->map($map);
+        return $this->setMap(new MapEntity);
+    }
+
+    /**
+     * @param StorageInterface $storage
+     * @return $this
+     */
+    public function setStorage(StorageInterface $storage)
+    {
+        $this->storage = $storage;
         return $this;
+    }
+
+    /**
+     * @return StorageInterface
+     */
+    public function getStorage()
+    {
+        if (null === $this->storage) {
+            $this->createStorage();
+        }
+
+        return $this->storage;
+    }
+
+    /**
+     * @return $this
+     */
+    public function createStorage()
+    {
+        return $this->setStorage(new Storage($this));
+    }
+
+    /**
+     * @param XmlMappingLoaderInterface $xmlMappingLoader
+     * @return $this
+     */
+    public function setXmlMappingLoader(XmlMappingLoaderInterface $xmlMappingLoader)
+    {
+        $this->xmlMappingLoader = $xmlMappingLoader;
+        return $this;
+    }
+
+    /**
+     * @return XmlMappingLoaderInterface
+     */
+    public function getXmlMappingLoader()
+    {
+        if (null === $this->xmlMappingLoader) {
+            $this->createXmlMappingLoader();
+        }
+
+        return $this->xmlMappingLoader;
+    }
+
+    /**
+     * @return $this
+     */
+    public function createXmlMappingLoader()
+    {
+        return $this->setXmlMappingLoader(new XmlMappingLoader($this));
     }
 }
