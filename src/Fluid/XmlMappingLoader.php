@@ -32,10 +32,10 @@ class XmlMappingLoader implements XMLMappingLoaderInterface
     public function load($filename)
     {
         $file = $this->getConfig()->getMapping() . DIRECTORY_SEPARATOR . $filename;
-        if (!file_exists($file)) {
-            throw new Exception\InvalidMappingPathException;
+        if (file_exists($file)) {
+            return new Mapping(new SimpleXMLElement($file, null, true));
         }
-        return new Mapping(new SimpleXMLElement($file, null, true));
+        return new Mapping();
     }
 
     /**

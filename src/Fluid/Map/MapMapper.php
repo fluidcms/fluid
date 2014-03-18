@@ -31,11 +31,14 @@ class MapMapper
     }
 
     /**
-     * @param MapEntity $map
+     * @param MapEntity|null $map
      * @return MapEntity
      */
-    public function map(MapEntity $map)
+    public function map(MapEntity $map = null)
     {
+        if (null === $map) {
+            $map = new MapEntity($this);
+        }
         $this->mapObject($map, $this->getStorage()->load(self::DATA_FILENAME));
         return $map;
     }
@@ -45,7 +48,7 @@ class MapMapper
      * @param array $data
      * @return MapEntity
      */
-    public function mapObject(MapEntity $map, array $data)
+    public function mapObject(MapEntity $map, array $data = null)
     {
         $mapping = $this->getXmlMappingLoader()->load(self::MAPPING_FILENAME);
         $map->getConfig()->set($mapping->getConfig());

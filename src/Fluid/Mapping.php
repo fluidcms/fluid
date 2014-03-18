@@ -52,7 +52,10 @@ class Mapping implements MappingInterface
      */
     public function getContent()
     {
-        return $this->getChilds($this->getXmlElement());
+        if ($this->getXmlElement() instanceof SimpleXMLElement) {
+            return $this->getChilds($this->getXmlElement());
+        }
+        return [];
     }
 
     /**

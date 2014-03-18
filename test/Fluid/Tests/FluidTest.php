@@ -12,9 +12,10 @@ class FluidTest extends PHPUnit_Framework_TestCase
     public function testSettersAndGetters()
     {
         $fluid = new Fluid;
+        $fluid->getConfig()->setStorage(sys_get_temp_dir());
         $this->assertInstanceOf('\Fluid\Config', $fluid->getConfig());
         $this->assertInstanceOf('\Fluid\TemplateEngine', $fluid->getTemplateEngine());
-        $this->assertInstanceOf('\Fluid\Map\Map', $fluid->getMap());
+        $this->assertInstanceOf('\Fluid\Map\MapEntity', $fluid->getMap());
 
         $fluid->setConfig(new ConfigMock);
         $this->assertInstanceOf('\Fluid\Tests\Mock\ConfigMock', $fluid->getConfig());

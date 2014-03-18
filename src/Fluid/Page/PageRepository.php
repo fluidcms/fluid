@@ -3,6 +3,7 @@ namespace Fluid\Page;
 
 use Fluid\StorageInterface;
 use Fluid\XmlMappingLoaderInterface;
+use Fluid\Exception\MissingMappingAttributeException;
 
 /**
  * Class PageRepository
@@ -76,7 +77,7 @@ class PageRepository
     /**
      * @param array $mapping
      * @return PageEntity
-     * @throws \InvalidArgumentException
+     * @throws MissingMappingAttributeException
      */
     public function addPageMapping(array $mapping)
     {
@@ -85,7 +86,7 @@ class PageRepository
             $path = $this->getPath() . '/';
         }
         if (!isset($mapping['attributes']['name'])) {
-            throw new \InvalidArgumentException;
+            throw new MissingMappingAttributeException('Pages in map mapping requires a name attribute');
         }
         $path .= $mapping['attributes']['name'];
         $page = $this->find($path);

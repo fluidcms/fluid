@@ -1,6 +1,6 @@
 <fluid-mapping xmlns="https://fluidcms.net/schemas/template" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xsi:schemaLocation="https://fluidcms.net/schemas/template https://fluidcms.net/schemas/template.xsd">
-    <page id="home-page">
+    <page name="home-page">
         <setting name="template" value="home" />
         <setting name="allow-childs" value="false" />
         <setting name="url" value="/" />
