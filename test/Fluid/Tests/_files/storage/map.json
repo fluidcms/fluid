@@ -1,0 +1,45 @@
+[
+    {
+        "name": "home-page",
+        "url": "\/",
+        "template": "home",
+        "languages": [
+            "en-US",
+            "de-DE"
+        ]
+    },
+    {
+        "name": "contact",
+        "url": "\/contact\/",
+        "template": "default",
+        "languages": [
+            "en-US"
+        ]
+    },
+    {
+        "name": "services",
+        "url": "\/services\/",
+        "template": "default",
+        "languages": [
+            "en-US"
+        ]
+    },
+    {
+        "name": "products",
+        "url": "\/products\/",
+        "template": "default",
+        "languages": [
+            "en-US"
+        ],
+        "pages": [
+            {
+                "name": "awesome",
+                "url": "\/products\/awesome\/",
+                "template": "default",
+                "languages": [
+                    "en-US"
+                ]
+            }
+        ]
+    }
+]

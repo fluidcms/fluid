@@ -1,27 +1,24 @@
 <?php
-
 namespace Fluid\Tests;
-
-use Fluid\Fluid;
 
 class Helper
 {
     public static function init()
     {
-        if (is_dir(__DIR__ . "/Fluid/Tests/_files/storage/develop")) {
-            self::deleteDir(__DIR__ . "/Fluid/Tests/_files/storage/develop");
-        }
-        if (is_dir(__DIR__ . "/Fluid/Tests/_files/storage/master")) {
-            self::deleteDir(__DIR__ . "/Fluid/Tests/_files/storage/master");
-        }
-        if (file_exists(__DIR__ . "/Fluid/Tests/_files/storage/data")) {
-            unlink(__DIR__ . "/Fluid/Tests/_files/storage/data");
-        }
+        self::destroy();
     }
 
     public static function destroy()
     {
-        self::init();
+        if (is_dir(self::getStorage() . "/develop")) {
+            self::deleteDir(self::getStorage() . "/develop");
+        }
+        if (is_dir(self::getStorage() . "/master")) {
+            self::deleteDir(self::getStorage() . "/master");
+        }
+        if (file_exists(self::getStorage() . "/data")) {
+            unlink(self::getStorage() . "/data");
+        }
     }
 
     public static function getUser()
@@ -35,18 +32,18 @@ class Helper
 
     public static function getFixtureDir()
     {
-        return __DIR__ . "/Fluid/Tests/_files";
+        return realpath(__DIR__ . "/../_files");
     }
 
-    public static function getStorage()
+    public static function getStorage($dir = null)
     {
-        return self::getFixtureDir() . "/storage/develop";
+        return sys_get_temp_dir() . "/FluidUnitTests/storage" . ($dir !== null ? "/{$dir}" : null);
     }
 
     public static function copyDir($dir, $dest)
     {
         if (!is_dir($dest)) {
-            mkdir($dest);
+            mkdir($dest, 0777, true);
         }
 
         foreach (scandir($dir) as $file) {
@@ -77,39 +74,39 @@ class Helper
 
     public static function createDevelop()
     {
-        if (is_dir(__DIR__ . "/Fluid/Tests/_files/storage/develop")) {
-            self::deleteDir(__DIR__ . "/Fluid/Tests/_files/storage/develop");
+        if (is_dir(self::getStorage() . "/develop")) {
+            self::deleteDir(self::getStorage() . "/develop");
         }
 
         self::createMaster();
 
         self::copyDir(
-            __DIR__ . "/Fluid/Tests/_files/storage/master",
-            __DIR__ . "/Fluid/Tests/_files/storage/develop"
+            self::getStorage() . "/master",
+            self::getStorage() . "/develop"
         );
 
-        exec("git init " . self::getStorage());
-        exec("git --git-dir=" . self::getStorage() . "/.git --work-tree=" . self::getStorage() . " add " . self::getStorage() . "/*");
-        exec("git --git-dir=" . self::getStorage() . "/.git --work-tree=" . self::getStorage() . " commit -m initial\\ commit");
+        $dir = self::getStorage() . "/develop";
 
-        Fluid::setBranch('develop');
+        exec("git init " . $dir);
+        exec("git --git-dir=" . $dir . "/.git --work-tree=" . $dir . " add " . $dir . "/*");
+        exec("git --git-dir=" . $dir . "/.git --work-tree=" . $dir . " commit -m initial\\ commit");
     }
 
     public static function createMaster()
     {
-        if (is_dir(__DIR__ . "/Fluid/Tests/_files/storage/master")) {
-            self::deleteDir(__DIR__ . "/Fluid/Tests/_files/storage/master");
+        if (is_dir(self::getStorage() . "/master")) {
+            self::deleteDir(self::getStorage() . "/master");
         }
 
         self::copyDir(
-            __DIR__ . "/Fluid/Tests/_files/storage/default",
-            __DIR__ . "/Fluid/Tests/_files/storage/master"
+            self::getFixtureDir() . "/storage",
+            self::getStorage() . "/master"
         );
     }
 
     public static function commitMaster()
     {
-        $dir = __DIR__ . "/Fluid/Tests/_files/storage/master";
+        $dir = self::getStorage() . "/master";
 
         exec("git init " . $dir);
         exec("git --git-dir=" . $dir . "/.git --work-tree=" . $dir . " add " . $dir . "/*");

@@ -19,11 +19,6 @@ class PageEntity
     /**
      * @var string
      */
-    private $id;
-
-    /**
-     * @var string
-     */
     private $name;
 
     /**
@@ -77,6 +72,8 @@ class PageEntity
      */
     public function set($attributes, $value = null)
     {
+        $config = $this->getConfig();
+
         if (is_string($attributes)) {
             $attributes = [$attributes => $value];
         }
@@ -84,30 +81,18 @@ class PageEntity
         foreach ($attributes as $key => $value) {
             if ($key === 'name') {
                 $this->setName($value);
-            } elseif ($key === 'pages') {
+            } elseif ($key === 'pages' && $config->allowChilds()) {
                 $this->getPages()->addPages($value);
             } elseif ($key === 'variables') {
                 $this->getVariables()->addVariables($value);
+            } elseif ($key === 'url' && empty($config->getUrl())) {
+                $config->setUrl($value);
+            } elseif ($key === 'template' && empty($config->getTemplate())) {
+                $this->getConfig()->setTemplate($value);
+            } elseif ($key === 'languages' && empty($config->getLanguages())) {
+                $this->getConfig()->setLanguages($value);
             }
         }
-    }
-
-    /**
-     * @param string $id
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

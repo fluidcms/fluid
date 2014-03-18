@@ -16,7 +16,7 @@ class PageConfig
     /**
      * @var bool
      */
-    private $allowChilds;
+    private $allowChilds = true;
 
     /**
      * @var string

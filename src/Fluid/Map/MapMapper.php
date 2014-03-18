@@ -54,8 +54,8 @@ class MapMapper
         $map->getConfig()->set($mapping->getConfig());
         $this->mapXmlObject($map, $mapping);
 
-        if (is_array($data['pages'])) {
-            foreach ($data['pages'] as $page) {
+        if (is_array($data)) {
+            foreach ($data as $page) {
                 $map->getPages()->addPage($page);
             }
         }

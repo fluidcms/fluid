@@ -4,6 +4,7 @@ namespace Fluid\Page;
 use Fluid\StorageInterface;
 use Fluid\XmlMappingLoaderInterface;
 use Fluid\Exception\MissingMappingAttributeException;
+use Fluid\Exception\InvalidDataException;
 
 /**
  * Class PageRepository
@@ -58,17 +59,23 @@ class PageRepository
      */
     public function find($path)
     {
-        $path = explode('/', $path);
+        if (!strstr($path, '/')) {
+            $path = [$path];
+        } else {
+            $path = explode('/', $path);
+        }
+
         if (isset($path[0]) && isset($this->pages[$path[0]])) {
+            $page = $this->pages[$path[0]];
             array_shift($path);
             if (count($path)) {
-                if ($this->pages[$path[0]] instanceof PageEntity) {
-                    return $this->pages[$path[0]]->getPages()->find(implode('/', $path));
+                if ($page instanceof PageEntity) {
+                    return $page->getPages()->find(implode('/', $path));
                 } else {
                     return null;
                 }
             } else {
-                return $this->pages[$path[0]];
+                return $page;
             }
         }
         return null;
@@ -92,7 +99,7 @@ class PageRepository
         $page = $this->find($path);
 
         if (!isset($page)) {
-            $page = $this->addPage(['name' => $mapping['attributes']['name']]);
+            $page = $this->addPage(['name' => $mapping['attributes']['name']], false);
         }
 
         foreach ($mapping as $element) {
@@ -104,7 +111,6 @@ class PageRepository
                 $page->getPages()->addPageMapping($element);
             }
         }
-        echo '';
 
         $this->getMapper()->mapXmlObject($page, $mapping);
 
@@ -113,14 +119,25 @@ class PageRepository
 
     /**
      * @param array $data
+     * @param bool $search
      * @return PageEntity
+     * @throws InvalidDataException
      */
-    public function addPage(array $data)
+    public function addPage(array $data, $search = true)
     {
-        $page = new PageEntity($this->getStorage(), $this->getXmlMappingLoader(), $this->getMapper());
-        $this->pages[$data['name']] = $page;
-        $page->set($data);
-        return $page;
+        if (isset($data['name'])) {
+            if ($search) {
+                $page = $this->find($data['name']);
+            }
+            if (!isset($page)) {
+                $page = new PageEntity($this->getStorage(), $this->getXmlMappingLoader(), $this->getMapper());
+            }
+
+            $this->pages[$data['name']] = $page;
+            $page->set($data);
+            return $page;
+        }
+        throw new InvalidDataException();
     }
 
     /**
