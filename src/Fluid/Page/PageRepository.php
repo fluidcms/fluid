@@ -90,9 +90,21 @@ class PageRepository
         }
         $path .= $mapping['attributes']['name'];
         $page = $this->find($path);
+
         if (!isset($page)) {
             $page = $this->addPage(['name' => $mapping['attributes']['name']]);
         }
+
+        foreach ($mapping as $element) {
+            if (isset($element['name']) && $element['name'] === 'setting') {
+                if (isset($element['attributes']['name']) && isset($element['attributes']['value'])) {
+                    $page->getConfig()->set($element['attributes']['name'], isset($element['attributes']['value']));
+                }
+            } elseif (isset($element['name']) && $element['name'] === 'page') {
+                $page->getPages()->addPageMapping($element);
+            }
+        }
+        echo '';
 
         $this->getMapper()->mapXmlObject($page, $mapping);
 
@@ -100,12 +112,15 @@ class PageRepository
     }
 
     /**
-     * @param array $page
+     * @param array $data
      * @return PageEntity
      */
-    public function addPage(array $page)
+    public function addPage(array $data)
     {
-        return new PageEntity();
+        $page = new PageEntity($this->getStorage(), $this->getXmlMappingLoader(), $this->getMapper());
+        $this->pages[$data['name']] = $page;
+        $page->set($data);
+        return $page;
     }
 
     /**

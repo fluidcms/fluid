@@ -5,4 +5,15 @@
         <setting name="allow-childs" value="false" />
         <setting name="url" value="/" />
     </page>
+    <page name="contact">
+        <setting name="template" value="contact"/>
+        <setting name="allow-childs" value="true"/>
+        <setting name="child-templates" value="contact,contact-form"/>
+        <setting name="url" value="/contact"/>
+        <page name="form">
+            <setting name="template" value="contact-form"/>
+            <setting name="allow-childs" value="false"/>
+            <setting name="url" value="/contact/form"/>
+        </page>
+    </page>
 </fluid-mapping>

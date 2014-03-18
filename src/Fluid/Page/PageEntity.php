@@ -6,6 +6,8 @@ use Fluid\Fluid;
 use Fluid\Config;
 use Fluid\Layout\Layout;
 use Fluid\Variable\VariableRepository;
+use Fluid\StorageInterface;
+use Fluid\XmlMappingLoaderInterface;
 
 /**
  * Page Entity
@@ -25,21 +27,6 @@ class PageEntity
     private $name;
 
     /**
-     * @var array
-     */
-    private $languages = [];
-
-    /**
-     * @var string
-     */
-    private $layout;
-
-    /**
-     * @var string
-     */
-    private $url;
-
-    /**
      * @var PageRepository
      */
     private $pages;
@@ -50,36 +37,58 @@ class PageEntity
     private $variables;
 
     /**
-     * Init
-     *
-     * @param array $attributes
+     * @var StorageInterface
      */
-    public function __construct(array $attributes = [])
+    private $storage;
+
+    /**
+     * @var XmlMappingLoaderInterface
+     */
+    private $xmlMappingLoader;
+
+    /**
+     * @var PageMapper
+     */
+    private $pageMapper;
+
+    /**
+     * @var PageConfig
+     */
+    private $config;
+
+    /**
+     * @param StorageInterface $storage
+     * @param XmlMappingLoaderInterface $xmlMappingLoader
+     * @param PageMapper $pageMapper
+     */
+    public function __construct(StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, PageMapper $pageMapper)
     {
-        if (isset($attributes['id'])) {
-            $this->setId($attributes['id']);
+        $this->setStorage($storage);
+        $this->setXmlMappingLoader($xmlMappingLoader);
+        $this->setPageMapper($pageMapper);
+        $this->setConfig(new PageConfig($this));
+        $this->setPages(new PageRepository($storage, $xmlMappingLoader, $pageMapper));
+        $this->setVariables(new VariableRepository);
+    }
+
+    /**
+     * @param array|string $attributes
+     * @param mixed|null $value
+     */
+    public function set($attributes, $value = null)
+    {
+        if (is_string($attributes)) {
+            $attributes = [$attributes => $value];
         }
-        if (isset($attributes['name'])) {
-            $this->setName($attributes['name']);
-        }
-        if (isset($attributes['languages'])) {
-            $this->setLanguages($attributes['languages']);
-        }
-        if (isset($attributes['layout'])) {
-            $this->setLayout($attributes['layout']);
-        }
-        if (isset($attributes['url'])) {
-            $this->setUrl($attributes['url']);
-        }
-        if (isset($attributes['pages'])) {
-            $this->setPages(new PageRepository($attributes['pages']));
-        } else {
-            $this->setPages(new PageRepository);
-        }
-        if (isset($attributes['variables'])) {
-            $this->setVariables(new VariableRepository($attributes['variables']));
-        } else {
-            $this->setVariables(new VariableRepository);
+
+        foreach ($attributes as $key => $value) {
+            if ($key === 'name') {
+                $this->setName($value);
+            } elseif ($key === 'pages') {
+                $this->getPages()->addPages($value);
+            } elseif ($key === 'variables') {
+                $this->getVariables()->addVariables($value);
+            }
         }
     }
 
@@ -102,47 +111,12 @@ class PageEntity
     }
 
     /**
-     * @param array $languages
-     * @return $this
-     */
-    public function setLanguages($languages)
-    {
-        $this->languages = $languages;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getLanguages()
-    {
-        return $this->languages;
-    }
-
-    /**
-     * @param string $layout
-     * @return $this
-     */
-    public function setLayout($layout)
-    {
-        $this->layout = $layout;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLayout()
-    {
-        return $this->layout;
-    }
-
-    /**
      * @param string $name
      * @return $this
      */
     public function setName($name)
     {
+        $this->getPages()->setPath($name);
         $this->name = $name;
         return $this;
     }
@@ -174,24 +148,6 @@ class PageEntity
     }
 
     /**
-     * @param string $url
-     * @return $this
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
      * @param VariableRepository $variables
      * @return $this
      */
@@ -202,12 +158,85 @@ class PageEntity
     }
 
     /**
-     * @return \Fluid\Variable\VariableRepository
+     * @return VariableRepository
      */
     public function getVariables()
     {
         return $this->variables;
     }
+
+    /**
+     * @param PageMapper $pageMapper
+     * @return $this
+     */
+    public function setPageMapper(PageMapper $pageMapper)
+    {
+        $this->pageMapper = $pageMapper;
+        return $this;
+    }
+
+    /**
+     * @return PageMapper
+     */
+    public function getPageMapper()
+    {
+        return $this->pageMapper;
+    }
+
+    /**
+     * @param StorageInterface $storage
+     * @return $this
+     */
+    public function setStorage(StorageInterface $storage)
+    {
+        $this->storage = $storage;
+        return $this;
+    }
+
+    /**
+     * @return StorageInterface
+     */
+    public function getStorage()
+    {
+        return $this->storage;
+    }
+
+    /**
+     * @param XmlMappingLoaderInterface $xmlMappingLoader
+     * @return $this
+     */
+    public function setXmlMappingLoader(XmlMappingLoaderInterface $xmlMappingLoader)
+    {
+        $this->xmlMappingLoader = $xmlMappingLoader;
+        return $this;
+    }
+
+    /**
+     * @return XmlMappingLoaderInterface
+     */
+    public function getXmlMappingLoader()
+    {
+        return $this->xmlMappingLoader;
+    }
+
+    /**
+     * @param PageConfig $config
+     * @return $this
+     */
+    public function setConfig(PageConfig $config)
+    {
+        $this->config = $config;
+        return $this;
+    }
+
+    /**
+     * @return PageConfig
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
 
     /////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////
