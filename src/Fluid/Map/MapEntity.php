@@ -4,6 +4,7 @@ namespace Fluid\Map;
 use Exception;
 use InvalidArgumentException;
 use Fluid\Page\PageRepository;
+use Fluid\Page\PageEntity;
 
 /**
  * Map Entity
@@ -18,6 +19,11 @@ class MapEntity
     private $mapper;
 
     /**
+     * @var MapConfig
+     */
+    private $config;
+
+    /**
      * @var PageRepository
      */
     private $pages;
@@ -28,8 +34,13 @@ class MapEntity
     public function __construct()
     {
         $this->setPages(new PageRepository);
+        $this->setConfig(new MapConfig($this));
     }
 
+    /**
+     * @param $page
+     * @return PageEntity
+     */
     public function findPage($page)
     {
         return $this->getPages()->find($page);
@@ -69,6 +80,24 @@ class MapEntity
     public function getMapper()
     {
         return $this->mapper;
+    }
+
+    /**
+     * @param MapConfig $config
+     * @return $this
+     */
+    public function setConfig(MapConfig $config)
+    {
+        $this->config = $config;
+        return $this;
+    }
+
+    /**
+     * @return MapConfig
+     */
+    public function getConfig()
+    {
+        return $this->config;
     }
 
 

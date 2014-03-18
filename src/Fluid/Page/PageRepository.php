@@ -24,6 +24,7 @@ class PageRepository
 
     /**
      * @param $name
+     * @return PageEntity
      */
     public function find($name)
     {

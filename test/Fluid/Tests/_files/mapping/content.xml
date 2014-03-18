@@ -1,0 +1,24 @@
+<fluid-mapping xmlns="https://fluidcms.net/schemas/template" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="https://fluidcms.net/schemas/template https://fluidcms.net/schemas/template.xsd">
+    <page id="home-page">
+        <setting name="template" value="home"/>
+        <setting name="allow-childs" value="false"/>
+        <setting name="url" value="/"/>
+    </page>
+
+    <page id="contact">
+        <setting name="template" value="contact"/>
+        <setting name="allow-childs" value="true"/>
+        <setting name="child-templates" value="contact,contact-form"/>
+        <setting name="url" value="/contact"/>
+        <page id="contact/form">
+            <setting name="template" value="contact-form"/>
+            <setting name="allow-childs" value="false"/>
+            <setting name="url" value="/contact/form"/>
+        </page>
+    </page>
+
+    <group name="Content">
+        <variable type="string" name="Title"/>
+    </group>
+</fluid-mapping>

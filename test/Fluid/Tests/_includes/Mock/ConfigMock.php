@@ -37,11 +37,11 @@ class ConfigMock implements ConfigInterface
     {
     }
 
-    public function setStructure($structure)
+    public function setMapping($mapping)
     {
     }
 
-    public function getStructure()
+    public function getMapping()
     {
     }
 

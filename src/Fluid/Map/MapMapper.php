@@ -46,11 +46,24 @@ class MapMapper
      */
     protected function mapObject(MapEntity $map, array $data)
     {
-        $this->getXmlMappingLoader()->load(self::MAPPING_FILENAME);
+        $mapping = $this->getXmlMappingLoader()->load(self::MAPPING_FILENAME);
+        $map->getConfig()->set($mapping->getConfig());
+        $this->mapXmlObject($map, $mapping);
+
         if (isset($data['pages'])) {
-            $map->setPages(new PageRepository($data['pages']));
+            $map->getPages()->addPage($data['pages']);
         }
         return $map;
+    }
+
+    protected function mapXmlObject(MapEntity $map, MappingInterface $mapping)
+    {
+        $content = $mapping->getContent();
+        if (is_array($content['page'])) {
+            foreach ($content['page'] as $page) {
+                $map->getPages()->addPage($page);
+            }
+        }
     }
 
     /**
