@@ -52,7 +52,11 @@ class Request
      */
     private function createUri()
     {
-        return $this->setUri($_SERVER['REQUEST_URI']);
+        $uri = $_SERVER['REQUEST_URI'];
+        if ($pos = strpos($uri, '?')) {
+            $uri = substr($uri, 0, $pos);
+        }
+        return $this->setUri($uri);
     }
 
     /**
