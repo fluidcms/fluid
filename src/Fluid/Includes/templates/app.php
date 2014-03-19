@@ -16,8 +16,8 @@
         var fluidUserEmail = "gavroche.bull@gmail.com";
         var fluidLanguage = <?= json_encode($GLOBALS['language']) ?>;
     </script>
-    <script src="../../../../public/javascripts/vendor/autobahnjs-0.8.0.min.js"></script>
-    <script data-main="javascripts/fluid-0.0.1.min.js" src="../../../../public/javascripts/vendor/requirejs-2.1.9.min.js"></script>
+    <script src="../../../../public/javascripts/vendor/autobahnjs-0.9.2.min.js"></script>
+    <script data-main="javascripts/fluid-0.1.0.min.js" src="../../../../public/javascripts/vendor/requirejs-2.1.11.min.js"></script>
 </head>
 <body>
 <div id="main">
