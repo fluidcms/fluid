@@ -1,6 +1,8 @@
 <?php
 namespace Fluid;
 
+use Closure;
+
 class Router
 {
     const DEFAULT_IMAGES_PATH = '/images/';
@@ -45,11 +47,13 @@ class Router
         $uri = $this->getRequest()->getUri();
 
         if (stripos($uri, $this->getAdminPath()) === 0) {
-            die('admin page');
-            // Route admin requests
-            //if ($response = HTTP::route($pathname)) {
-            //    return $response;
-            //}
+            /** @var Closure $routes */
+            $routes = require __DIR__ . DIRECTORY_SEPARATOR . 'Routes.php';
+            $routes = $routes();
+            /** @var Closure[] $routes */
+            if (isset($routes[$uri])) {
+                return $routes[$uri]();
+            }
         } elseif (stripos($uri, $this->getImagesPath()) === 0) {
             die('images');
         } elseif (stripos($uri, $this->getFilesPath()) === 0) {
