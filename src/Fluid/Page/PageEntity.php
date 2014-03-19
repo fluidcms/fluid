@@ -67,7 +67,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
         $this->setPageMapper($pageMapper);
         $this->setConfig(new PageConfig($this));
         $this->setPages(new PageCollection($storage, $xmlMappingLoader, $pageMapper));
-        $this->setVariables(new VariableCollection);
+        $this->setVariables(new VariableCollection($this, $storage, $xmlMappingLoader));
     }
 
     /**

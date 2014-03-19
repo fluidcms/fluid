@@ -1,53 +1,61 @@
 <?php
 namespace Fluid;
 
-use Fluid\Map\Map;
-use Fluid\Layout\Layout;
-use Fluid\Requests\HTTP;
-
-/**
- * Route requests to pages.
- *
- * @package fluid
- */
 class Router
 {
-    /** @var \Fluid\Fluid $fluid */
-    private $fluid;
-
-    /** @var string $pathname */
-    private $pathname;
+    const DEFAULT_IMAGES_PATH = '/images/';
+    const DEFAULT_FILES_PATH = '/files/';
+    const DEFAULT_ADMIN_PATH = '/admin/';
 
     /**
-     * @param \Fluid\Fluid $fluid
-     * @param null|string $pathname
+     * @var string
      */
-    public function __construct(Fluid $fluid, $pathname = null)
+    private $imagesPath = self::DEFAULT_IMAGES_PATH;
+
+    /**
+     * @var string
+     */
+    private $filesPath = self::DEFAULT_FILES_PATH;
+
+    /**
+     * @var string
+     */
+    private $adminPath = self::DEFAULT_ADMIN_PATH;
+
+    /**
+     * @var Request
+     */
+    private $request;
+
+    /**
+     * @param Request $request
+     */
+    public function __construct(Request $request)
     {
-        $this->setFluid($fluid);
-        $this->setPathname($pathname);
+        $this->setRequest($request);
     }
 
     /**
      * Route a request
      *
-     * @param string|null $pathname
      * @return mixed
      */
-    public function dispatch($pathname = null)
+    public function dispatch()
     {
-        if (null !== $pathname) {
-            $this->setPathname($pathname);
-        } else {
-            $pathname = $this->getPathname();
-        }
+        $uri = $this->getRequest()->getUri();
 
-        if (stripos($pathname, '/fluidcms/') === 0) {
+        if (stripos($uri, $this->getAdminPath()) === 0) {
+            die('admin page');
             // Route admin requests
-            if ($response = HTTP::route($pathname)) {
-                return $response;
-            }
+            //if ($response = HTTP::route($pathname)) {
+            //    return $response;
+            //}
+        } elseif (stripos($uri, $this->getImagesPath()) === 0) {
+            die('images');
+        } elseif (stripos($uri, $this->getFilesPath()) === 0) {
+            die('files');
         } else {
+            die('try pages');
             // Route pages
             if (null === $pathname && isset($_SERVER['REQUEST_URI'])) {
                 $pathname = $_SERVER['REQUEST_URI'];
@@ -63,7 +71,7 @@ class Router
             }
         }
 
-        return Fluid::NOT_FOUND;
+        return null;
     }
 
     /**
@@ -104,38 +112,74 @@ class Router
     }
 
     /**
-     * @param \Fluid\Fluid $fluid
+     * @param Request $request
      * @return $this
      */
-    public function setFluid(Fluid $fluid)
+    public function setRequest(Request $request)
     {
-        $this->fluid = $fluid;
+        $this->request = $request;
         return $this;
     }
 
     /**
-     * @return \Fluid\Fluid
+     * @return Request
      */
-    public function getFluid()
+    public function getRequest()
     {
-        return $this->fluid;
+        return $this->request;
     }
 
     /**
-     * @param null|string $pathname
+     * @param string $adminPath
      * @return $this
      */
-    public function setPathname($pathname = null)
+    public function setAdminPath($adminPath)
     {
-        $this->pathname = $pathname;
+        $this->adminPath = $adminPath;
         return $this;
     }
 
     /**
-     * @return null|string
+     * @return string
      */
-    public function getPathname()
+    public function getAdminPath()
     {
-        return $this->pathname;
+        return $this->adminPath;
+    }
+
+    /**
+     * @param string $filesPath
+     * @return $this
+     */
+    public function setFilesPath($filesPath)
+    {
+        $this->filesPath = $filesPath;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilesPath()
+    {
+        return $this->filesPath;
+    }
+
+    /**
+     * @param string $imagesPath
+     * @return $this
+     */
+    public function setImagesPath($imagesPath)
+    {
+        $this->imagesPath = $imagesPath;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImagesPath()
+    {
+        return $this->imagesPath;
     }
 }

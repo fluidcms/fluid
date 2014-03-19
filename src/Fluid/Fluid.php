@@ -11,7 +11,7 @@ use Fluid\Map\MapMapper;
  */
 class Fluid
 {
-    const VERSION = '1.0.0';
+    const VERSION = '0.1.0';
 
     const DEBUG_OFF = 0;
     const DEBUG_LOG = 1;
@@ -45,6 +45,16 @@ class Fluid
      * @var XmlMappingLoaderInterface
      */
     private $xmlMappingLoader;
+
+    /**
+     * @var Request
+     */
+    private $request;
+
+    /**
+     * @var Router
+     */
+    private $router;
 
     public function __construct()
     {
@@ -203,5 +213,81 @@ class Fluid
     public function createXmlMappingLoader()
     {
         return $this->setXmlMappingLoader(new XmlMappingLoader($this));
+    }
+
+    /**
+     * @param Request $request
+     * @return $this
+     */
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
+        return $this;
+    }
+
+    /**
+     * @return Request
+     */
+    public function getRequest()
+    {
+        if (null === $this->request) {
+            $this->createRequest();
+        }
+
+        return $this->request;
+    }
+
+    /**
+     * @return Request
+     */
+    public function request()
+    {
+        return $this->getRequest();
+    }
+
+    /**
+     * @return $this
+     */
+    public function createRequest()
+    {
+        return $this->setRequest(new Request($this));
+    }
+
+    /**
+     * @param Router $router
+     * @return $this
+     */
+    public function setRouter(Router $router)
+    {
+        $this->router = $router;
+        return $this;
+    }
+
+    /**
+     * @return Router
+     */
+    public function getRouter()
+    {
+        if (null === $this->router) {
+            $this->createRouter();
+        }
+
+        return $this->router;
+    }
+
+    /**
+     * @return Router
+     */
+    public function router()
+    {
+        return $this->getRouter();
+    }
+
+    /**
+     * @return $this
+     */
+    public function createRouter()
+    {
+        return $this->setRouter(new Router($this->getRequest()));
     }
 }
