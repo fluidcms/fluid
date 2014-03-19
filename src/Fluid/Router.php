@@ -6,9 +6,15 @@ use Closure;
 class Router
 {
     const PUBLIC_FILES_PATH = '/../../public';
+    const DEVELOP_JAVASCRIPTS_PATH = '/../../javascripts';
     const DEFAULT_IMAGES_PATH = '/images/';
     const DEFAULT_FILES_PATH = '/files/';
     const DEFAULT_ADMIN_PATH = '/admin/';
+
+    /**
+     * @var bool
+     */
+    private $useDevelopJavascript = false;
 
     /**
      * @var string
@@ -55,7 +61,13 @@ class Router
             if (isset($routes[$uri])) {
                 return $routes[$uri]();
             } else {
-                $file = realpath(__DIR__ . DIRECTORY_SEPARATOR . self::PUBLIC_FILES_PATH) . preg_replace('{^/admin}', '', $uri);
+                $file = preg_replace('{^' . rtrim($this->getAdminPath(), '/') . '}', '', $uri);
+                $dir = realpath(__DIR__ . DIRECTORY_SEPARATOR . self::PUBLIC_FILES_PATH);
+                if ($this->useDevelopJavascript() && stripos(substr($file, 1), basename(self::DEVELOP_JAVASCRIPTS_PATH)) === 0) {
+                    $file = preg_replace('{^/' . basename(self::DEVELOP_JAVASCRIPTS_PATH) . '}', '', $file);
+                    $dir = realpath(__DIR__ . DIRECTORY_SEPARATOR . self::DEVELOP_JAVASCRIPTS_PATH);
+                }
+                $file = $dir . $file;
                 if (file_exists($file)) {
                     return new StaticFile($file);
                 }
@@ -191,5 +203,31 @@ class Router
     public function getImagesPath()
     {
         return $this->imagesPath;
+    }
+
+    /**
+     * @param bool $useDevelopJavascript
+     * @return $this
+     */
+    public function setUseDevelopJavascript($useDevelopJavascript)
+    {
+        $this->useDevelopJavascript = $useDevelopJavascript;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getUseDevelopJavascript()
+    {
+        return $this->useDevelopJavascript;
+    }
+
+    /**
+     * @return bool
+     */
+    public function useDevelopJavascript()
+    {
+        return $this->getUseDevelopJavascript();
     }
 }
