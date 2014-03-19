@@ -11,7 +11,7 @@ class VariableCollection extends Collection
     /**
      * @var array
      */
-    private $items = [];
+    protected $items = [];
 
     /**
      * @var PageEntity
