@@ -21,6 +21,11 @@ class Request
     private $params = [];
 
     /**
+     * @var CookieInterface
+     */
+    private $cookie;
+
+    /**
      * @param string $uri
      * @return $this
      */
@@ -97,5 +102,35 @@ class Request
             }
         }
         return $this->setParams($params);
+    }
+
+    /**
+     * @param CookieInterface $cookie
+     * @return $this
+     */
+    public function setCookie(CookieInterface $cookie)
+    {
+        $this->cookie = $cookie;
+        return $this;
+    }
+
+    /**
+     * @return CookieInterface
+     */
+    public function getCookie()
+    {
+        if (null === $this->cookie) {
+            $this->createCookie();
+        }
+
+        return $this->cookie;
+    }
+
+    /**
+     * @return $this
+     */
+    public function createCookie()
+    {
+        return $this->setCookie(new Cookie);
     }
 }

@@ -5,6 +5,7 @@ use Closure;
 
 class Router
 {
+    const PUBLIC_FILES_PATH = '/../../public';
     const DEFAULT_IMAGES_PATH = '/images/';
     const DEFAULT_FILES_PATH = '/files/';
     const DEFAULT_ADMIN_PATH = '/admin/';
@@ -49,10 +50,15 @@ class Router
         if (stripos($uri, $this->getAdminPath()) === 0) {
             /** @var Closure $routes */
             $routes = require __DIR__ . DIRECTORY_SEPARATOR . 'Routes.php';
-            $routes = $routes();
+            $routes = $routes($this->getRequest(), $this->getRequest()->getCookie());
             /** @var Closure[] $routes */
             if (isset($routes[$uri])) {
                 return $routes[$uri]();
+            } else {
+                $file = realpath(__DIR__ . DIRECTORY_SEPARATOR . self::PUBLIC_FILES_PATH) . preg_replace('{^/admin}', '', $uri);
+                if (file_exists($file)) {
+                    return new StaticFile($file);
+                }
             }
         } elseif (stripos($uri, $this->getImagesPath()) === 0) {
             die('images');

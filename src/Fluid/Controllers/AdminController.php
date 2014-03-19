@@ -1,13 +1,20 @@
 <?php
 namespace Fluid\Controllers;
 
-class AdminController
+use Fluid\Controller;
+use Fluid\Session\SessionEntity;
+
+class AdminController extends Controller
 {
     /**
      * @return string
      */
     public function index()
     {
-        die('admin controller');
+        $session = $this->cookie->get(SessionEntity::COOKIE_NAME);
+        if ($session === null) {
+            return (new LoginController($this->getRequest(), $this->getCookie()))->index();
+        }
+        return null;
     }
 }

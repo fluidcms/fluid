@@ -8,6 +8,7 @@ use Fluid\User\UserEntity;
 
 class SessionEntity
 {
+    const COOKIE_NAME = 'fluid_session';
     const EXPIRATION_TIME = 'PT1H';
 
     /**
