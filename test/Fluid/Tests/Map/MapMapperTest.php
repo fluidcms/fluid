@@ -34,7 +34,18 @@ class MapMapperTest extends PHPUnit_Framework_TestCase
         $fluid->getConfig()->setStorage(Helper::getStorage());
         $fluid->getConfig()->setMapping(__DIR__ . "/../_files/mapping");
         $mapMapper = new MapMapper(new Storage($fluid), new XmlMappingLoader($fluid));
-        $map = $mapMapper->map();
+        $pages = $mapMapper->map()->getPages();
+
+        $this->assertArrayHasKey('home-page', $pages);
+        $this->assertArrayHasKey('contact', $pages);
+        $this->assertArrayHasKey('services', $pages);
+        $this->assertArrayHasKey('products', $pages);
+        $this->assertCount(4, $pages);
+
+        /** @var \Fluid\Page\PageEntity $page */
+        $page = $pages['home-page'];
+        $pageConfig = $page->getConfig();
+
 
         echo '';
     }

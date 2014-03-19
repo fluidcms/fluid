@@ -1,16 +1,17 @@
 <?php
 namespace Fluid\Page;
 
+use Fluid\Collection;
 use Fluid\StorageInterface;
 use Fluid\XmlMappingLoaderInterface;
 use Fluid\Exception\MissingMappingAttributeException;
 use Fluid\Exception\InvalidDataException;
 
 /**
- * Class PageRepository
+ * Class PageCollection
  * @package Fluid\Page
  */
-class PageRepository
+class PageCollection extends Collection
 {
     /**
      * @var string
@@ -20,7 +21,7 @@ class PageRepository
     /**
      * @var PageEntity[]
      */
-    private $pages = [];
+    protected $items = [];
 
     /**
      * @var StorageInterface
@@ -65,8 +66,8 @@ class PageRepository
             $path = explode('/', $path);
         }
 
-        if (isset($path[0]) && isset($this->pages[$path[0]])) {
-            $page = $this->pages[$path[0]];
+        if (isset($path[0]) && isset($this->items[$path[0]])) {
+            $page = $this->items[$path[0]];
             array_shift($path);
             if (count($path)) {
                 if ($page instanceof PageEntity) {
@@ -133,7 +134,7 @@ class PageRepository
                 $page = new PageEntity($this->getStorage(), $this->getXmlMappingLoader(), $this->getMapper());
             }
 
-            $this->pages[$data['name']] = $page;
+            $this->items[$data['name']] = $page;
             $page->set($data);
             return $page;
         }

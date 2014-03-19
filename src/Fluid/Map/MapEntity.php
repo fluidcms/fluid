@@ -3,7 +3,7 @@ namespace Fluid\Map;
 
 use Exception;
 use InvalidArgumentException;
-use Fluid\Page\PageRepository;
+use Fluid\Page\PageCollection;
 use Fluid\Page\PageEntity;
 
 /**
@@ -24,7 +24,7 @@ class MapEntity
     private $config;
 
     /**
-     * @var PageRepository
+     * @var PageCollection
      */
     private $pages;
 
@@ -34,7 +34,7 @@ class MapEntity
     public function __construct(MapMapper $mapper)
     {
         $this->setMapper($mapper);
-        $this->setPages(new PageRepository($mapper->getStorage(), $mapper->getXmlMappingLoader()));
+        $this->setPages(new PageCollection($mapper->getStorage(), $mapper->getXmlMappingLoader()));
         $this->setConfig(new MapConfig($this));
     }
 
@@ -48,17 +48,17 @@ class MapEntity
     }
 
     /**
-     * @param PageRepository $pages
+     * @param PageCollection $pages
      * @return $this
      */
-    public function setPages(PageRepository $pages)
+    public function setPages(PageCollection $pages)
     {
         $this->pages = $pages;
         return $this;
     }
 
     /**
-     * @return PageRepository
+     * @return PageCollection
      */
     public function getPages()
     {

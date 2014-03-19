@@ -5,7 +5,7 @@ use Exception;
 use Fluid\Fluid;
 use Fluid\Config;
 use Fluid\Layout\Layout;
-use Fluid\Variable\VariableRepository;
+use Fluid\Variable\VariableCollection;
 use Fluid\StorageInterface;
 use Fluid\XmlMappingLoaderInterface;
 
@@ -22,12 +22,12 @@ class PageEntity
     private $name;
 
     /**
-     * @var PageRepository
+     * @var PageCollection
      */
     private $pages;
 
     /**
-     * @var VariableRepository
+     * @var VariableCollection
      */
     private $variables;
 
@@ -62,8 +62,8 @@ class PageEntity
         $this->setXmlMappingLoader($xmlMappingLoader);
         $this->setPageMapper($pageMapper);
         $this->setConfig(new PageConfig($this));
-        $this->setPages(new PageRepository($storage, $xmlMappingLoader, $pageMapper));
-        $this->setVariables(new VariableRepository);
+        $this->setPages(new PageCollection($storage, $xmlMappingLoader, $pageMapper));
+        $this->setVariables(new VariableCollection);
     }
 
     /**
@@ -115,17 +115,17 @@ class PageEntity
     }
 
     /**
-     * @param PageRepository $pages
+     * @param PageCollection $pages
      * @return $this
      */
-    public function setPages(PageRepository $pages)
+    public function setPages(PageCollection $pages)
     {
         $this->pages = $pages;
         return $this;
     }
 
     /**
-     * @return PageRepository
+     * @return PageCollection
      */
     public function getPages()
     {
@@ -133,17 +133,17 @@ class PageEntity
     }
 
     /**
-     * @param VariableRepository $variables
+     * @param VariableCollection $variables
      * @return $this
      */
-    public function setVariables(VariableRepository $variables)
+    public function setVariables(VariableCollection $variables)
     {
         $this->variables = $variables;
         return $this;
     }
 
     /**
-     * @return VariableRepository
+     * @return VariableCollection
      */
     public function getVariables()
     {
