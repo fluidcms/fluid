@@ -29,18 +29,21 @@ class PageMapper
     /**
      * @param PageEntity $page
      * @param array $mapping
+     * @return PageEntity
      */
     public function mapXmlObject(PageEntity $page, array $mapping)
     {
-
-        /*$content = $mapping->getContent();
-        if (is_array($content)) {
-            foreach ($content as $item) {
-                if (isset($item['name']) && $item['name'] === 'page') {
-                    $map->getPages()->addPageMapping($item);
+        foreach ($mapping as $element) {
+            if (isset($element['name']) && $element['name'] === 'setting') {
+                if (isset($element['attributes']['name']) && isset($element['attributes']['value'])) {
+                    $page->getConfig()->set($element['attributes']['name'], isset($element['attributes']['value']) ? $element['attributes']['value'] : null);
                 }
+            } elseif (isset($element['name']) && $element['name'] === 'page') {
+                $page->getPages()->addPageMapping($element);
             }
-        }*/
+        }
+
+        return $page;
     }
 
     /**

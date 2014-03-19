@@ -103,16 +103,6 @@ class PageCollection extends Collection
             $page = $this->addPage(['name' => $mapping['attributes']['name']], false);
         }
 
-        foreach ($mapping as $element) {
-            if (isset($element['name']) && $element['name'] === 'setting') {
-                if (isset($element['attributes']['name']) && isset($element['attributes']['value'])) {
-                    $page->getConfig()->set($element['attributes']['name'], isset($element['attributes']['value']));
-                }
-            } elseif (isset($element['name']) && $element['name'] === 'page') {
-                $page->getPages()->addPageMapping($element);
-            }
-        }
-
         $this->getMapper()->mapXmlObject($page, $mapping);
 
         return $page;

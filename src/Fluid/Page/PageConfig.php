@@ -31,7 +31,7 @@ class PageConfig
     /**
      * @var array
      */
-    private $languages;
+    private $languages = [];
 
     /**
      * @param PageEntity $page

@@ -8,6 +8,9 @@ use ArrayIterator;
 
 abstract class Collection implements Countable, IteratorAggregate, ArrayAccess
 {
+    /**
+     * @var array
+     */
     protected $items;
 
     /**

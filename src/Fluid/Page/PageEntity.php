@@ -2,6 +2,10 @@
 namespace Fluid\Page;
 
 use Exception;
+use Countable;
+use IteratorAggregate;
+use ArrayAccess;
+use ArrayIterator;
 use Fluid\Fluid;
 use Fluid\Config;
 use Fluid\Layout\Layout;
@@ -14,7 +18,7 @@ use Fluid\XmlMappingLoaderInterface;
  *
  * @package fluid
  */
-class PageEntity
+class PageEntity implements Countable, IteratorAggregate, ArrayAccess
 {
     /**
      * @var string
@@ -220,6 +224,63 @@ class PageEntity
     public function getConfig()
     {
         return $this->config;
+    }
+
+    /**
+     * @return int
+     */
+    public function count()
+    {
+        //return count($this->items);
+    }
+
+    /**
+     * @return ArrayIterator
+     */
+    public function getIterator()
+    {
+        //return new ArrayIterator($this->items);
+    }
+
+    /**
+     * @param int $offset
+     * @return bool
+     */
+    public function offsetExists($offset)
+    {
+        if ($offset === 'pages') {
+            return true;
+        }
+        //return isset($this->items[$offset]);
+    }
+
+    /**
+     * @param int $offset
+     * @return mixed
+     */
+    public function offsetGet($offset)
+    {
+        if ($offset === 'pages') {
+            return $this->getPages();
+        }
+        //return $this->items[$offset];
+    }
+
+    /**
+     * @param int $offset
+     * @param mixed $value
+     */
+    public function offsetSet($offset, $value)
+    {
+        //$this->items[$offset] = $value;
+    }
+
+    /**
+     * @param int $offset
+     */
+    public function offsetUnset($offset)
+    {
+        //unset($this->items[$offset]);
     }
 
 
