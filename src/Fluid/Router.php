@@ -38,11 +38,35 @@ class Router
     private $request;
 
     /**
+     * @var Closure[]
+     */
+    private $routes = [];
+
+    /**
      * @param Request $request
      */
     public function __construct(Request $request)
     {
         $this->setRequest($request);
+    }
+
+    /**
+     * @param string $method
+     * @param string $uri
+     * @param Closure $callback
+     * @return $this
+     */
+    public function respond($method, $uri, $callback = null)
+    {
+        if (null === $callback && is_callable($uri)) {
+            $callback = $uri;
+            $uri = $method;
+            $method = null;
+        }
+
+        $this->routes[$method][$uri] = $callback;
+
+        return $this;
     }
 
     /**
@@ -55,14 +79,19 @@ class Router
         $uri = $this->getRequest()->getUri();
 
         if (stripos($uri, $this->getAdminPath()) === 0) {
+            $uri = preg_replace('{^' . rtrim($this->getAdminPath(), '/') . '}', '', $uri);
+
             /** @var Closure $routes */
             $routes = require __DIR__ . DIRECTORY_SEPARATOR . 'Routes.php';
-            $routes = $routes($this->getRequest(), $this->getRequest()->getCookie());
-            /** @var Closure[] $routes */
-            if (isset($routes[$uri])) {
-                return $routes[$uri]();
+            $routes($this, $this->getRequest(), $this->getRequest()->getCookie());
+
+            $method = $this->request->getMethod();
+            if (isset($this->routes[$method][$uri])) {
+                return $this->routes[$method][$uri]();
+            } elseif (isset($this->routes[null][$uri])) {
+                return $this->routes[null][$uri]();
             } else {
-                $file = preg_replace('{^' . rtrim($this->getAdminPath(), '/') . '}', '', $uri);
+                $file = $uri;
                 $dir = realpath(__DIR__ . DIRECTORY_SEPARATOR . self::PUBLIC_FILES_PATH);
                 if ($this->useDevelop() && stripos(substr($file, 1), basename(self::DEVELOP_JAVASCRIPTS_PATH)) === 0) {
                     $file = preg_replace('{^/' . basename(self::DEVELOP_JAVASCRIPTS_PATH) . '}', '', $file);
@@ -81,6 +110,7 @@ class Router
         } elseif (stripos($uri, $this->getFilesPath()) === 0) {
             die('files');
         } else {
+            return null;
             die('try pages');
             // Route pages
             if (null === $pathname && isset($_SERVER['REQUEST_URI'])) {

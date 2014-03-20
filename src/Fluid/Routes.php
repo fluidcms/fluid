@@ -6,11 +6,8 @@ namespace Fluid;
  * @param CookieInterface $cookie
  * @return array
  */
-return function (Request $request, CookieInterface $cookie) {
-    return [
-        '/admin/' =>
-            function () use ($request, $cookie) {
-                return (new Controllers\AdminController($request, $cookie))->index();
-            },
-    ];
+return function (Router $router, Request $request, CookieInterface $cookie) {
+    $router->respond('/', function () use ($request, $cookie) {
+        return (new Controllers\AdminController($request, $cookie))->index();
+    });
 };

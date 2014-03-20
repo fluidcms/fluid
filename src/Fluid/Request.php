@@ -10,6 +10,11 @@ class Request
 {
     const HTTP_NOT_FOUND = 404;
 
+    const METHOD_GET = 'GET';
+    const METHOD_POST = 'POST';
+    const METHOD_PUT = 'PUT';
+    const METHOD_DELETE = 'DELETE';
+
     /**
      * @var string
      */
@@ -19,6 +24,11 @@ class Request
      * @var array
      */
     private $params = [];
+
+    /**
+     * @var string
+     */
+    private $method;
 
     /**
      * @var CookieInterface
@@ -136,5 +146,42 @@ class Request
     public function createCookie()
     {
         return $this->setCookie(new Cookie);
+    }
+
+    /**
+     * @param string $method
+     * @return $this
+     */
+    public function setMethod($method)
+    {
+        if (
+            $method === self::METHOD_GET ||
+            $method === self::METHOD_DELETE ||
+            $method === self::METHOD_POST ||
+            $method === self::METHOD_PUT
+        ) {
+            $this->method = $method;
+        }
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMethod()
+    {
+        if (null === $this->method) {
+            $this->createMethod();
+        }
+
+        return $this->method;
+    }
+
+    /**
+     * @return $this
+     */
+    public function createMethod()
+    {
+        $this->setMethod($_SERVER['REQUEST_METHOD']);
     }
 }

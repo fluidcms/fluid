@@ -6,11 +6,27 @@ define([
 ], function (Backbone, Marionette, EJS, Template) {
     return Marionette.Layout.extend({
         initialize: function(options) {
+            this.controller = options.controller;
+            this.session = options.session;
         },
 
         template: new EJS({text: Template}),
 
-        className: 'login box'
+        className: 'login box',
+
+        events: {
+            "submit form": "submitForm"
+        },
+
+        ui: {
+            email: "[name=email]",
+            password: "[name=password]"
+        },
+
+        submitForm: function(e) {
+            e.preventDefault();
+            this.session.testCredentials(this.ui.email.val(), this.ui.password.val());
+        }
 
 
         /*events: {
