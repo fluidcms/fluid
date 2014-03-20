@@ -17,3 +17,4 @@ composer.phar
 /bower_components
 /node_modules
 /npm-debug.log
+/stylesheets/*

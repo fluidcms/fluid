@@ -6,8 +6,6 @@ define(['backbone', 'marionette', 'views/login/login'], function (Backbone, Mari
 
         login: function () {
             this.app.mainRegion.show(new LoginView);
-            //new LoginView({region: this.app.mainRegion}).render();
-//            alert('hello world');
         }
     });
 });

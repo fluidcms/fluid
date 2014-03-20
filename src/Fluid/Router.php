@@ -7,6 +7,7 @@ class Router
 {
     const PUBLIC_FILES_PATH = '/../../public';
     const DEVELOP_JAVASCRIPTS_PATH = '/../../javascripts';
+    const DEVELOP_STYLESHEETS_PATH = '/../../stylesheets';
     const DEFAULT_IMAGES_PATH = '/images/';
     const DEFAULT_FILES_PATH = '/files/';
     const DEFAULT_ADMIN_PATH = '/admin/';
@@ -14,7 +15,7 @@ class Router
     /**
      * @var bool
      */
-    private $useDevelopJavascript = false;
+    private $useDevelop = false;
 
     /**
      * @var string
@@ -63,9 +64,12 @@ class Router
             } else {
                 $file = preg_replace('{^' . rtrim($this->getAdminPath(), '/') . '}', '', $uri);
                 $dir = realpath(__DIR__ . DIRECTORY_SEPARATOR . self::PUBLIC_FILES_PATH);
-                if ($this->useDevelopJavascript() && stripos(substr($file, 1), basename(self::DEVELOP_JAVASCRIPTS_PATH)) === 0) {
+                if ($this->useDevelop() && stripos(substr($file, 1), basename(self::DEVELOP_JAVASCRIPTS_PATH)) === 0) {
                     $file = preg_replace('{^/' . basename(self::DEVELOP_JAVASCRIPTS_PATH) . '}', '', $file);
                     $dir = realpath(__DIR__ . DIRECTORY_SEPARATOR . self::DEVELOP_JAVASCRIPTS_PATH);
+                } elseif ($this->useDevelop() && stripos(substr($file, 1), basename(self::DEVELOP_STYLESHEETS_PATH)) === 0) {
+                    $file = preg_replace('{^/' . basename(self::DEVELOP_STYLESHEETS_PATH) . '}', '', $file);
+                    $dir = realpath(__DIR__ . DIRECTORY_SEPARATOR . self::DEVELOP_STYLESHEETS_PATH);
                 }
                 $file = $dir . $file;
                 if (file_exists($file)) {
@@ -206,28 +210,28 @@ class Router
     }
 
     /**
-     * @param bool $useDevelopJavascript
+     * @param bool $useDevelop
      * @return $this
      */
-    public function setUseDevelopJavascript($useDevelopJavascript)
+    public function setUseDevelop($useDevelop)
     {
-        $this->useDevelopJavascript = $useDevelopJavascript;
+        $this->useDevelop = $useDevelop;
         return $this;
     }
 
     /**
      * @return bool
      */
-    public function getUseDevelopJavascript()
+    public function getUseDevelop()
     {
-        return $this->useDevelopJavascript;
+        return $this->useDevelop;
     }
 
     /**
      * @return bool
      */
-    public function useDevelopJavascript()
+    public function useDevelop()
     {
-        return $this->getUseDevelopJavascript();
+        return $this->getUseDevelop();
     }
 }
