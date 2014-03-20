@@ -1,13 +1,20 @@
+@import "styles/globals/lib";
 @import "styles/globals/base";
-@import "styles/helpers/loader";
+@import "styles/globals/layouts";
+@import "styles/globals/styles";
+
+@import "styles/components/loader";
+@import "styles/components/context-menu";
+@import "styles/components/modal-window";
+@import "styles/components/tooltip";
+
+@import "styles/sections/login";
 @import "styles/sections/pannel";
 @import "styles/sections/main";
-@import "styles/helpers/context-menu";
-@import "styles/helpers/modal-window";
-@import "styles/helpers/tooltip";
 @import "styles/sections/variables";
 @import "styles/sections/editor";
 @import "styles/sections/toolbar";
+
 @import "styles/pannels/map";
 @import "styles/pannels/files";
 @import "styles/pannels/version";

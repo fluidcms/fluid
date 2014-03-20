@@ -1,0 +1,10 @@
+/* Table of Content
+==================================================
+  # Box Shadow */
+
+/* # Box Shadow
+================================================== */
+.box-shadow {
+  background: #3b3b3b;
+  @include box-shadow(0 0 5px rgba(0, 0, 0, .75));
+}

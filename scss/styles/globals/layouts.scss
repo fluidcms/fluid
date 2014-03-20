@@ -1,0 +1,32 @@
+@import "compass/css3/box";
+
+/* Table of Content
+==================================================
+  # Box Layout */
+
+/* # Box Layout
+================================================== */
+.box-layout {
+  min-width: 100%;
+  min-height: 100%;
+  @include display-box;
+  @include box-align(center);
+  @include box-pack(center);
+  .box {
+    @extend .box-shadow;
+    width: 50rem;
+    padding: 4rem;
+    label {
+      color: white;
+      margin: 0;
+    }
+    input[type="text"], input[type="password"] {
+      width: 50rem;
+    }
+    hr {
+      margin: 2rem 0;
+      border: none;
+      border-bottom: 1px solid rgba(white, .2);
+    }
+  }
+}

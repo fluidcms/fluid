@@ -8,7 +8,9 @@ define([
         initialize: function(options) {
         },
 
-        template: new EJS({text: Template})
+        template: new EJS({text: Template}),
+
+        className: 'login box'
 
 
         /*events: {
