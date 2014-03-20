@@ -92,6 +92,20 @@ class Request
     }
 
     /**
+     * @param array|null $mask
+     * @return array
+     */
+    public function params(array $mask = null)
+    {
+        $params = $this->getParams();
+        $retval = [];
+        foreach ($mask as $key) {
+            $retval[$key] = isset($params[$key]) ? $params[$key] : null;
+        }
+        return $retval;
+    }
+
+    /**
      * @return $this
      */
     private function createParams()
