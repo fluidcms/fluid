@@ -9,11 +9,7 @@
     <script data-main="javascripts/offline-0.1.0.min.js" src="javascripts/vendor/requirejs-2.1.11.min.js"></script>
 </head>
 <body>
-    <div class="box">
-        <form action="">
-
-        </form>
-        <button>Create account</button>
+    <div id="main">
     </div>
 </body>
 </html>
