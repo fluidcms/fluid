@@ -3,15 +3,13 @@ define(['backbone'], function (Backbone) {
         url: window.location.rootpath + 'session',
 
         testCredentials: function(email, password) {
-            $.ajax({
+            return $.ajax({
                 url: this.url,
                 type: "POST",
                 data: {
                     email: email,
                     password: password
                 }
-            }).done(function(response) {
-                console.log(response);
             });
         }
     });

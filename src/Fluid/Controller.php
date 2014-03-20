@@ -9,17 +9,24 @@ abstract class Controller
     protected $request;
 
     /**
+     * @var Response
+     */
+    protected $response;
+
+    /**
      * @var CookieInterface
      */
     protected $cookie;
 
     /**
      * @param Request $request
+     * @param Response $response
      * @param CookieInterface $cookie
      */
-    public function __construct(Request $request, CookieInterface $cookie)
+    public function __construct(Request $request, Response $response, CookieInterface $cookie)
     {
         $this->setRequest($request);
+        $this->setResponse($response);
         $this->setCookie($cookie);
     }
 
@@ -74,5 +81,23 @@ abstract class Controller
     public function getRequest()
     {
         return $this->request;
+    }
+
+    /**
+     * @param Response $response
+     * @return $this
+     */
+    public function setResponse(Response $response)
+    {
+        $this->response = $response;
+        return $this;
+    }
+
+    /**
+     * @return Response
+     */
+    public function getResponse()
+    {
+        return $this->response;
     }
 }

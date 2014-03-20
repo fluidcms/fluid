@@ -64,7 +64,7 @@ class Router
             $method = null;
         }
 
-        $this->routes[$method][$uri] = $callback;
+        $this->routes[$uri][$method] = $callback;
 
         return $this;
     }
@@ -72,24 +72,32 @@ class Router
     /**
      * Route a request
      *
-     * @return mixed
+     * @return null|Response
      */
     public function dispatch()
     {
         $uri = $this->getRequest()->getUri();
+        $found = false;
+        $response = new Response;
 
         if (stripos($uri, $this->getAdminPath()) === 0) {
             $uri = preg_replace('{^' . rtrim($this->getAdminPath(), '/') . '}', '', $uri);
 
             /** @var Closure $routes */
             $routes = require __DIR__ . DIRECTORY_SEPARATOR . 'Routes.php';
-            $routes($this, $this->getRequest(), $this->getRequest()->getCookie());
+            $routes($this, $this->getRequest(), $response, $this->getRequest()->getCookie());
 
             $method = $this->request->getMethod();
-            if (isset($this->routes[$method][$uri])) {
-                return $this->routes[$method][$uri]();
-            } elseif (isset($this->routes[null][$uri])) {
-                return $this->routes[null][$uri]();
+            if (isset($this->routes[$uri])) {
+                if (isset($this->routes[$uri][$method])) {
+                    $found = true;
+                    $body = $this->routes[$uri][$method]();
+                } elseif (isset($this->routes[$uri][null])) {
+                    $found = true;
+                    $body = $this->routes[$uri][null]();
+                } else {
+                    $response->setCode(Response::RESPONSE_CODE_METHOD_NOT_ALLOWED);
+                }
             } else {
                 $file = $uri;
                 $dir = realpath(__DIR__ . DIRECTORY_SEPARATOR . self::PUBLIC_FILES_PATH);
@@ -102,12 +110,16 @@ class Router
                 }
                 $file = $dir . $file;
                 if (file_exists($file)) {
-                    return new StaticFile($file);
+                    $found = true;
+                    $response->code(Response::RESPONSE_CODE_OK);
+                    new StaticFile($file);
                 }
             }
         } elseif (stripos($uri, $this->getImagesPath()) === 0) {
+            $found = true;
             die('images');
         } elseif (stripos($uri, $this->getFilesPath()) === 0) {
+            $found = true;
             die('files');
         } else {
             return null;
@@ -127,6 +139,12 @@ class Router
             }
         }
 
+        if ($found) {
+            if (!empty($body)) {
+                $response->setBody($body);
+            }
+            return $response;
+        }
         return null;
     }
 

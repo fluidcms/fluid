@@ -6,12 +6,12 @@ namespace Fluid;
  * @param CookieInterface $cookie
  * @return array
  */
-return function (Router $router, Request $request, CookieInterface $cookie) {
+return function (Router $router, Request $request, Response $response, CookieInterface $cookie) {
     $router
-        ->respond('/', function () use ($request, $cookie) {
-            return (new Controllers\AdminController($request, $cookie))->index();
+        ->respond('/', function () use ($request, $response, $cookie) {
+            return (new Controllers\AdminController($request, $response, $cookie))->index();
         })
-        ->respond('POST', '/session', function () use ($request, $cookie) {
-            return (new Controllers\SessionController($request, $cookie))->create();
+        ->respond('POST', '/session', function () use ($request, $response, $cookie) {
+            return (new Controllers\SessionController($request, $response, $cookie))->create();
         });
 };

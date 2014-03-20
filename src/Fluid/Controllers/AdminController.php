@@ -13,7 +13,7 @@ class AdminController extends Controller
     {
         $session = $this->cookie->get(SessionEntity::COOKIE_NAME);
         if ($session === null) {
-            return (new LoginController($this->getRequest(), $this->getCookie()))->index();
+            return (new LoginController($this->getRequest(), $this->getResponse(), $this->getCookie()))->index();
         }
         return null;
     }

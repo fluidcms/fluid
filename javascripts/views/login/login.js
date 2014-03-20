@@ -25,7 +25,14 @@ define([
 
         submitForm: function(e) {
             e.preventDefault();
-            this.session.testCredentials(this.ui.email.val(), this.ui.password.val());
+            this.session.testCredentials(
+                    this.ui.email.val(),
+                    this.ui.password.val()
+                ).done(function(response) {
+                    console.log(response);
+                }).fail(function() {
+                    alert( "error" );
+                })
         }
 
 
