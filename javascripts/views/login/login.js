@@ -15,7 +15,8 @@ define([
         className: 'login box',
 
         events: {
-            "submit form": "submitForm"
+            "submit form": "submitForm",
+            "click button[data-action=createAccount]": "createAccount"
         },
 
         ui: {
@@ -24,6 +25,7 @@ define([
         },
 
         submitForm: function(e) {
+            var root = this;
             e.preventDefault();
             this.session.testCredentials(
                     this.ui.email.val(),
@@ -31,22 +33,16 @@ define([
                 ).done(function(response) {
                     console.log(response);
                 }).fail(function() {
-                    alert( "error" );
+                    root.showError();
                 })
-        }
-
-
-        /*events: {
-        },*/
-
-        //template: new EJS({text: Template}),
-
-        /*initialize: function (options) {
         },
 
-        render: function () {
-            this.$el.html(this.template.render({}));
-            return this;
-        }*/
+        showError: function() {
+            alert('Wrong email or password');
+        },
+
+        createAccount: function() {
+            this.controller.createAccount()
+        }
     });
 });

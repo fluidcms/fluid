@@ -4,7 +4,18 @@
 @import "compass/css3/box-shadow";
 @import "compass/css3/images";
 
-/* #Reset
+/* Table of Content
+==================================================
+  # Reset
+  # Basic Styles
+  # Typography
+  # Links
+  # Buttons
+  # Big Buttons
+  # Forms
+  # Errors */
+
+/* # Reset
 ================================================== */
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
   margin: 0;
@@ -27,7 +38,7 @@ ol, ul {
   list-style: none;
 }
 
-/* #Basic Styles
+/* # Basic Styles
 ================================================== */
 body {
   background: #383838 url('../images/background.gif');
@@ -46,10 +57,10 @@ body {
   height: 0px;
 }
 
-/* #Typography
+/* # Typography
 ================================================== */
 
-/* #Links
+/* # Links
 ================================================== */
 .link-button {
   color: white;
@@ -106,7 +117,7 @@ body {
   background-position: 0 -32px;
 }
 
-/* #Buttons
+/* # Buttons
 ================================================== */
 .button,
 button,
@@ -170,7 +181,7 @@ input::-moz-focus-inner {
   padding: 0;
 }
 
-/* #Big Buttons
+/* # Big Buttons
 ================================================== */
 .button-big {
   display: inline-block;
@@ -202,9 +213,8 @@ input::-moz-focus-inner {
 }
 
 
-/* #Forms
+/* # Forms
 ================================================== */
-
 input[type="text"],
 input[type="number"],
 input[type="password"],
@@ -324,6 +334,18 @@ label.checkbox {
     background-position: 0 -64px;
     &:checked {
       background-position: -18px -64px;
+    }
+  }
+}
+
+/* # Errors
+================================================== */
+div.errors {
+  ul {
+    margin-bottom: 1rem;
+    li {
+      color: red;
+      font-size: 1rem;
     }
   }
 }
