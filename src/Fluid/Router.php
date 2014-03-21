@@ -98,10 +98,10 @@ class Router
             if (isset($this->routes[$uri])) {
                 if (isset($this->routes[$uri][$method])) {
                     $found = true;
-                    $body = $this->routes[$uri][$method]();
+                    $this->routes[$uri][$method]();
                 } elseif (isset($this->routes[$uri][null])) {
                     $found = true;
-                    $body = $this->routes[$uri][null]();
+                    $this->routes[$uri][null]();
                 } else {
                     $response->setCode(Response::RESPONSE_CODE_METHOD_NOT_ALLOWED);
                 }
@@ -147,9 +147,6 @@ class Router
         }
 
         if ($found) {
-            if (!empty($body)) {
-                $response->setBody($body);
-            }
             return $response;
         }
         return null;

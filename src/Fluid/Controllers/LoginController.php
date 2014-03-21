@@ -11,6 +11,6 @@ class LoginController extends Controller
      */
     public function index()
     {
-        return $this->loadView('login');
+        $this->response->body($this->loadView('login'));
     }
 }

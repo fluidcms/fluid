@@ -15,6 +15,5 @@ class SessionController extends Controller
             die('found ya');
         }
         $this->response->code(Response::RESPONSE_CODE_BAD_REQUEST)->json(false);
-        return null;
     }
 }

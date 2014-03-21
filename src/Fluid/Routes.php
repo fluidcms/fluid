@@ -10,12 +10,12 @@ namespace Fluid;
 return function (Router $router, Request $request, Response $response, StorageInterface $storage, CookieInterface $cookie) {
     $router
         ->respond('/', function () use ($request, $response, $storage, $cookie) {
-            return (new Controllers\AdminController($request, $response, $storage, $cookie))->index();
+            (new Controllers\AdminController($request, $response, $storage, $cookie))->index();
         })
         ->respond('POST', '/session', function () use ($request, $response, $storage, $cookie) {
-            return (new Controllers\SessionController($request, $response, $storage, $cookie))->create();
+            (new Controllers\SessionController($request, $response, $storage, $cookie))->create();
         })
         ->respond('POST', '/user', function () use ($request, $response, $storage, $cookie) {
-            return (new Controllers\UserController($request, $response, $storage, $cookie))->create();
+            (new Controllers\UserController($request, $response, $storage, $cookie))->create();
         });
 };

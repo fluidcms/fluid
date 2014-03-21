@@ -18,8 +18,10 @@ if (file_exists($vendor . "/autoload.php")) {
 }
 
 spl_autoload_register(function ($class) {
+    $class = ltrim($class, '\\');
     $prefix = 'Fluid\\Tests';
-    if (strpos($class, 'Fluid\\Tests') === 0) {
+    if (strpos($class, $prefix) === 0) {
+        die('JELLO');
         $class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
         $class = 'Fluid' . DIRECTORY_SEPARATOR . 'Tests' . DIRECTORY_SEPARATOR . '_includes' . substr($class, strlen($prefix));
         $file = __DIR__ . DIRECTORY_SEPARATOR . $class . '.php';

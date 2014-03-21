@@ -57,7 +57,7 @@ class UserCollection implements Countable, IteratorAggregate, ArrayAccess
             $this->getUserMapper()->mapCollection($this);
         }
         $retval = [];
-        if (count($params)) {
+        if (count($params) && is_array($this->users)) {
             foreach ($this->users as $user) {
                 $match = true;
                 foreach ($params as $key => $param) {
