@@ -17,12 +17,16 @@ if (file_exists($vendor . "/autoload.php")) {
     }
 }
 
-Fluid\Autoloader::register();
-
 spl_autoload_register(function ($class) {
-    $class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
-    $class = preg_replace('/^Fluid\/Tests/', 'Fluid/Tests/_includes', $class);
-    if (file_exists(__DIR__ . DIRECTORY_SEPARATOR . $class . '.php')) {
-        require_once __DIR__ . DIRECTORY_SEPARATOR . $class . '.php';
+    $prefix = 'Fluid\\Tests';
+    if (strpos($class, 'Fluid\\Tests') === 0) {
+        $class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
+        $class = 'Fluid' . DIRECTORY_SEPARATOR . 'Tests' . DIRECTORY_SEPARATOR . '_includes' . substr($class, strlen($prefix));
+        $file = __DIR__ . DIRECTORY_SEPARATOR . $class . '.php';
+        if (file_exists($file)) {
+            require_once $file;
+        }
     }
 });
+
+Fluid\Autoloader::register();
