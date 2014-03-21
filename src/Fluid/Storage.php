@@ -79,6 +79,21 @@ class Storage implements StorageInterface
     }
 
     /**
+     * @param string $filename
+     * @param array $data
+     * @return bool
+     */
+    public function saveData($filename, array $data)
+    {
+        $file = $this->createFile($filename, false);
+        $result = file_put_contents($file, json_encode($data));
+        if ($result === false) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * @param Fluid $fluid
      * @return $this
      */
@@ -112,49 +127,5 @@ class Storage implements StorageInterface
     public function getConfig()
     {
         return $this->config;
-    }
-
-    /**
-     * Save data to storage
-     *
-     * @param string $content
-     * @param mixed|null $file
-     */
-    public static function save($content, $file = null)
-    {
-        if (null === $file) {
-            $file = static::$dataFile;
-        }
-
-        $dir = Fluid::getBranchStorage() . '/' . dirname($file);
-        if (!is_dir($dir)) {
-            mkdir($dir);
-        }
-
-        $file = Fluid::getBranchStorage() . '/' . $file;
-
-        file_put_contents($file, $content);
-
-        //self::storeCache($content);
-    }
-
-    /**
-     * Set the data file
-     *
-     * @param string
-     */
-    public static function setDataFile($file)
-    {
-        static::$dataFile = $file;
-    }
-
-    /**
-     * Get the data file
-     *
-     * @return string
-     */
-    public static function getDataFile()
-    {
-        return static::$dataFile;
     }
 }

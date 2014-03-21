@@ -43,6 +43,35 @@ class UserEntity
     }
 
     /**
+     * @param array|null $attributes
+     * @return bool|array
+     */
+    public function validate(array $attributes = null)
+    {
+        $errors = [];
+        if (null === $attributes) {
+            $attributes = [
+                'email' => $this->getEmail(),
+                'name' => $this->getName(),
+                'password' => $this->getPassword()
+            ];
+        }
+        if (empty($attributes['email'])) {
+            $errors['email'] = 'email';
+        }
+        if (empty($attributes['name'])) {
+            $errors['name'] = 'name';
+        }
+        if (empty($attributes['password'])) {
+            $errors['password'] = 'password';
+        }
+        if (count($errors)) {
+            return $errors;
+        }
+        return true;
+    }
+
+    /**
      * @param array|string $attributes
      * @param mixed|null $value
      * @return $this

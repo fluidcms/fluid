@@ -24,7 +24,7 @@ class UserController extends Controller
                 ->setPassword($params['password'])
                 ->setName($params['name']);
 
-            $userCollection->save($user);
+            $userCollection->persist($user);
         }
 
         $this->response->code(Response::RESPONSE_CODE_BAD_REQUEST)->json(['errors' => $validation]);

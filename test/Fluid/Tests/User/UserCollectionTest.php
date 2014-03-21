@@ -84,4 +84,36 @@ class UserCollectionTest extends PHPUnit_Framework_TestCase
         $user = $users->findOneBy(['email' => 'not existant']);
         $this->assertNull($user);
     }
+
+    public function testSaveUser()
+    {
+        $fluid = new Fluid;
+        $fluid->getConfig()->setStorage(Helper::getStorage());
+        $users = new UserCollection($fluid->getStorage());
+        $user = $users->findOneBy(['id' => 1]);
+        $user->setEmail('newemail');
+        $users->save($user);
+
+        $users = new UserCollection($fluid->getStorage());
+        $user = $users->findOneBy(['id' => 1]);
+        $this->assertEquals('newemail', $user->getEmail());
+    }
+
+    public function testSave()
+    {
+        $fluid = new Fluid;
+        $fluid->getConfig()->setStorage(Helper::getStorage());
+        $users = new UserCollection($fluid->getStorage());
+        $user = $users->findOneBy(['id' => 1]);
+        $user->setEmail('newemail');
+        $user = $users->findOneBy(['id' => 2]);
+        $user->setEmail('newemail2');
+        $users->save();
+
+        $users = new UserCollection($fluid->getStorage());
+        $user = $users->findOneBy(['id' => 1]);
+        $this->assertEquals('newemail', $user->getEmail());
+        $user = $users->findOneBy(['id' => 2]);
+        $this->assertEquals('newemail2', $user->getEmail());
+    }
 }

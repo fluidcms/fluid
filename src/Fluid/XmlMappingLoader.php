@@ -3,7 +3,7 @@ namespace Fluid;
 
 use SimpleXMLElement;
 
-class XmlMappingLoader implements XMLMappingLoaderInterface
+class XmlMappingLoader implements XmlMappingLoaderInterface
 {
     /**
      * @var Fluid

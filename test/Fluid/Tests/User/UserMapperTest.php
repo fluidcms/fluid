@@ -48,4 +48,20 @@ class UserMapperTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('test2@test2.com', $user->getEmail());
         $this->assertNotEmpty($user->getPassword());
     }
+
+    public function testPersist()
+    {
+        $fluid = new Fluid;
+        $fluid->getConfig()->setStorage(Helper::getStorage());
+        $userMapper = new UserMapper($storage = new Storage($fluid));
+
+        $users = new UserCollection($storage, $userMapper);
+        $userMapper->mapCollection($users);
+
+        $data = ['fake data'];
+        $userMapper->persist($users, $data);
+        $file = Helper::getStorage('data') . DIRECTORY_SEPARATOR . UserMapper::DATA_FILENAME;
+        $fileContent = json_decode(file_get_contents($file), true);
+        $this->assertEquals($data, $fileContent);
+    }
 }

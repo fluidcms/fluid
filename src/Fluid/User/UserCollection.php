@@ -89,6 +89,35 @@ class UserCollection implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
+     * @param UserEntity $user
+     */
+    public function save(UserEntity $user = null)
+    {
+        if (null === $this->users) {
+            $this->getUserMapper()->mapCollection($this);
+        }
+
+        if (null === $user) {
+            $data = [];
+            foreach ($this->users as $user) {
+                $data[$user->getId()] = [
+                    'email' => $user->getEmail(),
+                    'name' => $user->getName(),
+                    'password' => $user->getPassword()
+                ];
+            }
+        } else {
+            $data = $this->getUserMapper()->getCollectionData($this);
+            $data[$user->getId()] = [
+                'email' => $user->getEmail(),
+                'name' => $user->getName(),
+                'password' => $user->getPassword()
+            ];
+        }
+        $this->getUserMapper()->persist($this, $data);
+    }
+
+    /**
      * @param UserMapper $userMapper
      * @return $this
      */
