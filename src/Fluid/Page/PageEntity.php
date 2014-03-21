@@ -73,6 +73,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
     /**
      * @param array|string $attributes
      * @param mixed|null $value
+     * @return $this
      */
     public function set($attributes, $value = null)
     {
@@ -97,6 +98,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
                 $this->getConfig()->setLanguages($value);
             }
         }
+        return $this;
     }
 
     /**

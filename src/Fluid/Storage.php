@@ -5,6 +5,8 @@ use Fluid\Exception\PermissionDeniedException;
 
 class Storage implements StorageInterface
 {
+    const DATA_DIR_NAME = 'data';
+
     /**
      * @var Fluid
      */
@@ -26,20 +28,24 @@ class Storage implements StorageInterface
 
     /**
      * @param string $filename
+     * @param bool $useBranch
      * @return string|bool
      * @throws PermissionDeniedException
      */
-    protected function createFile($filename)
+    protected function createFile($filename, $useBranch = true)
     {
-        if (file_exists($file = $this->getConfig()->getStorage() .
-            DIRECTORY_SEPARATOR . $this->getConfig()->getBranch() .
-            DIRECTORY_SEPARATOR . $filename)) {
+        if ($useBranch) {
+            $dir = $this->getConfig()->getStorage() . DIRECTORY_SEPARATOR . $this->getConfig()->getBranch();
+        } else {
+            $dir = $this->getConfig()->getStorage() . DIRECTORY_SEPARATOR . self::DATA_DIR_NAME;
+        }
+
+        if (file_exists($file = $dir . DIRECTORY_SEPARATOR . $filename)) {
             return realpath($file);
         }
 
-        $branch = $this->getConfig()->getStorage() . DIRECTORY_SEPARATOR . $this->getConfig()->getBranch();
-        if (!file_exists($branch)) {
-            if (!mkdir($branch, 0777, true)) {
+        if (!file_exists($dir)) {
+            if (!mkdir($dir, 0777, true)) {
                 throw new PermissionDeniedException('You do not have read/write permssions on the storage directory');
             }
         }
@@ -56,9 +62,19 @@ class Storage implements StorageInterface
      * @param string $filename
      * @return array
      */
-    public function load($filename)
+    public function loadBranchData($filename)
     {
-        $file = $this->createFile($filename);
+        $file = $this->createFile($filename, true);
+        return json_decode(file_get_contents($file), true);
+    }
+
+    /**
+     * @param string $filename
+     * @return array
+     */
+    public function loadData($filename)
+    {
+        $file = $this->createFile($filename, false);
         return json_decode(file_get_contents($file), true);
     }
 

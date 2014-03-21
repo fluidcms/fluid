@@ -5,6 +5,8 @@ use Fluid\StorageInterface;
 
 class UserMapper
 {
+    const DATA_FILENAME = 'users.json';
+
     /**
      * @var StorageInterface
      */
@@ -20,10 +22,19 @@ class UserMapper
 
     /**
      * @param UserCollection $userCollection
+     * @return UserCollection
      */
     public function mapCollection(UserCollection $userCollection)
     {
+        $data = $this->getStorage()->loadData(self::DATA_FILENAME);
 
+        if (isset($data) && is_array($data)) {
+            foreach ($data as $id => $userData) {
+                $userCollection->add((new UserEntity)->setId($id)->set($userData));
+            }
+        }
+
+        return $userCollection;
     }
 
     /**

@@ -3,5 +3,6 @@ namespace Fluid;
 
 interface StorageInterface
 {
-    public function load($filename);
+    public function loadBranchData($filename);
+    public function loadData($filename);
 }

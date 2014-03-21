@@ -37,6 +37,16 @@ class UserCollection implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
+     * @param UserEntity $user
+     * @return UserEntity
+     */
+    public function add(UserEntity $user)
+    {
+        $this->users[] = $user;
+        return $user;
+    }
+
+    /**
      * @param array $params
      * @return null|UserEntity
      */

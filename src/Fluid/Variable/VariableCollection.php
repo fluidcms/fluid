@@ -1,17 +1,20 @@
 <?php
 namespace Fluid\Variable;
 
-use Fluid\Collection;
+use Countable;
+use IteratorAggregate;
+use ArrayAccess;
+use ArrayIterator;
 use Fluid\StorageInterface;
 use Fluid\XmlMappingLoaderInterface;
 use Fluid\Page\PageEntity;
 
-class VariableCollection extends Collection
+class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
 {
     /**
      * @var array
      */
-    protected $items = [];
+    protected $variables = [];
 
     /**
      * @var PageEntity
@@ -101,5 +104,56 @@ class VariableCollection extends Collection
     public function getXmlMappingLoader()
     {
         return $this->xmlMappingLoader;
+    }
+
+    /**
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->variables);
+    }
+
+    /**
+     * @return ArrayIterator
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->variables);
+    }
+
+    /**
+     * @param int $offset
+     * @return bool
+     */
+    public function offsetExists($offset)
+    {
+        return isset($this->variables[$offset]);
+    }
+
+    /**
+     * @param int $offset
+     * @return mixed
+     */
+    public function offsetGet($offset)
+    {
+        return $this->variables[$offset];
+    }
+
+    /**
+     * @param int $offset
+     * @param mixed $value
+     */
+    public function offsetSet($offset, $value)
+    {
+        $this->variables[$offset] = $value;
+    }
+
+    /**
+     * @param int $offset
+     */
+    public function offsetUnset($offset)
+    {
+        unset($this->variables[$offset]);
     }
 }

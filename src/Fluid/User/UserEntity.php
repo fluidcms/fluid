@@ -43,6 +43,30 @@ class UserEntity
     }
 
     /**
+     * @param array|string $attributes
+     * @param mixed|null $value
+     * @return $this
+     */
+    public function set($attributes, $value = null)
+    {
+        if (is_string($attributes)) {
+            $attributes = [$attributes => $value];
+        }
+
+        foreach ($attributes as $key => $value) {
+            if ($key === 'email') {
+                $this->setEmail($value);
+            } elseif ($key === 'name') {
+                $this->setName($value);
+            } elseif ($key === 'password') {
+                $this->setPassword($value);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @param string $email
      * @return $this
      */

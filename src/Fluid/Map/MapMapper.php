@@ -39,7 +39,7 @@ class MapMapper
         if (null === $map) {
             $map = new MapEntity($this);
         }
-        $this->mapObject($map, $this->getStorage()->load(self::DATA_FILENAME));
+        $this->mapObject($map, $this->getStorage()->loadBranchData(self::DATA_FILENAME));
         return $map;
     }
 

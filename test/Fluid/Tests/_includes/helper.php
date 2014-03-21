@@ -17,7 +17,7 @@ class Helper
             self::deleteDir(self::getStorage() . "/master");
         }
         if (file_exists(self::getStorage() . "/data")) {
-            unlink(self::getStorage() . "/data");
+            self::deleteDir(self::getStorage() . "/data");
         }
     }
 
@@ -70,6 +70,18 @@ class Helper
         }
 
         rmdir($dir);
+    }
+
+    public static function createData()
+    {
+        if (is_dir(self::getStorage() . "/data")) {
+            self::deleteDir(self::getStorage() . "/data");
+        }
+
+        self::copyDir(
+            self::getFixtureDir() . "/data",
+            self::getStorage() . "/data"
+        );
     }
 
     public static function createDevelop()
