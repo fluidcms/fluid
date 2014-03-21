@@ -1,26 +1,24 @@
 <?php
 namespace Fluid\Tests\Page;
 
-use Fluid;
+use Fluid\Fluid;
+use Fluid\Storage;
+use Fluid\XmlMappingLoader;
 use Fluid\Page\PageEntity;
+use Fluid\Page\PageMapper;
 
 class PageEntityTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstruct()
     {
-        $pageEntity = new PageEntity();
-        $this->assertEquals(null, $pageEntity->getId());
-        $this->assertEquals(null, $pageEntity->getLayout());
-        $this->assertEquals(null, $pageEntity->getName());
-        $this->assertEquals(null, $pageEntity->getUrl());
-        $this->assertInternalType('array', $pageEntity->getLanguages());
-        $this->assertInstanceOf('Fluid\Page\PageRepository', $pageEntity->getPages());
-        $this->assertInstanceOf('Fluid\Page\VariableRepository', $pageEntity->getVariables());
-
-        $pageEntity = new PageEntity([
-            'id' => 'my_page',
-            'layout' => 'my_layout',
-        ]);
-
+        $fluid = new Fluid;
+        $page = new PageEntity(
+            $storage = new Storage($fluid),
+            $xmlMappingLoader = new XmlMappingLoader($fluid),
+            new PageMapper($storage, $xmlMappingLoader)
+        );
+        $this->assertEquals(null, $page->getName());
+        $this->assertInstanceOf('Fluid\Page\PageCollection', $page->getPages());
+        $this->assertInstanceOf('Fluid\Variable\VariableCollection', $page->getVariables());
     }
 }
