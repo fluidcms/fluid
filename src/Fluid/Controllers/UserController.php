@@ -14,7 +14,7 @@ class UserController extends Controller
         $params = $this->request->params(['name', 'email', 'password']);
         $userCollection = new UserCollection($this->getStorage());
         if ($userCollection->findOneBy(['email' => $params['email']])) {
-            $this->response->code(Response::RESPONSE_CODE_BAD_REQUEST)->json(['errors' => 'email_exists']);
+            $this->response->code(Response::RESPONSE_CODE_BAD_REQUEST)->json(['errors' => ['email_exists' => 'email_exists']]);
             return null;
 
         }
@@ -23,9 +23,10 @@ class UserController extends Controller
 
         if ($validation === true) {
             $user->setEmail($params['email'])
-                ->setPassword($params['password'])
+                ->createPasswordHash($params['password'])
                 ->setName($params['name']);
 
+            $userCollection->create($user);
             $userCollection->save($user);
             $this->response->json($user->toArray());
             return;

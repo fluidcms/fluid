@@ -10,9 +10,12 @@ class SessionController extends Controller
 {
     public function create()
     {
-        $params = $this->request->params(['email', 'passwords']);
-        if ($user = (new UserCollection($this->getStorage()))->findBy($params)) {
-            die('found ya');
+        $params = $this->request->params(['email', 'password']);
+        if ($user = (new UserCollection($this->getStorage()))->findOneBy(['email' => $params['email']])) {
+            if ($user->testPassword($params['password'])) {
+                $this->response->json(true);
+                return;
+            }
         }
         $this->response->code(Response::RESPONSE_CODE_BAD_REQUEST)->json(false);
     }

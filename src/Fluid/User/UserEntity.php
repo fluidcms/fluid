@@ -40,6 +40,11 @@ class UserEntity
      */
     public function toArray()
     {
+        return [
+            'id' => $this->getId(),
+            'email' => $this->getEmail(),
+            'name' => $this->getName()
+        ];
     }
 
     /**
@@ -183,6 +188,33 @@ class UserEntity
     public function getPassword()
     {
         return $this->password;
+    }
+
+    /**
+     * @param string $password
+     * @return string
+     */
+    public function hashPassword($password)
+    {
+        return password_hash($password, PASSWORD_BCRYPT);
+    }
+
+    /**
+     * @param string $password
+     * @return $this
+     */
+    public function createPasswordHash($password)
+    {
+        return $this->setPassword($this->hashPassword($password));
+    }
+
+    /**
+     * @param string $password
+     * @return bool
+     */
+    public function testPassword($password)
+    {
+        return password_verify($password, $this->getPassword());
     }
 
     /**

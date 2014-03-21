@@ -44,8 +44,8 @@ define([
                 success: function() {
                     window.location.reload();
                 },
-                error: function(response) {
-                    root.showErrors(response.errors);
+                error: function(model, response) {
+                    root.showErrors(response.responseJSON.errors);
                 }
             });
             return true;

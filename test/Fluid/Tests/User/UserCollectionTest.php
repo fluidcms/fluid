@@ -47,6 +47,17 @@ class UserCollectionTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Fluid\User\UserEntity', $users[0]);
     }
 
+    public function testCreate()
+    {
+        $fluid = new Fluid;
+        $fluid->getConfig()->setStorage(Helper::getStorage());
+        $users = new UserCollection($fluid->getStorage());
+
+        $user = $users->create(new UserEntity);
+        $this->assertInstanceOf('Fluid\User\UserEntity', $users[2]);
+        $this->assertEquals(3, $user->getId());
+    }
+
     public function testFindBy()
     {
         $fluid = new Fluid;

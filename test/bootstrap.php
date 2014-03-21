@@ -21,12 +21,13 @@ spl_autoload_register(function ($class) {
     $class = ltrim($class, '\\');
     $prefix = 'Fluid\\Tests';
     if (strpos($class, $prefix) === 0) {
-        die('JELLO');
         $class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
         $class = 'Fluid' . DIRECTORY_SEPARATOR . 'Tests' . DIRECTORY_SEPARATOR . '_includes' . substr($class, strlen($prefix));
         $file = __DIR__ . DIRECTORY_SEPARATOR . $class . '.php';
         if (file_exists($file)) {
             require_once $file;
+        } else {
+            die($file); // TODO remove this, it should not even happen!
         }
     }
 });
