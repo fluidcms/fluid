@@ -67,6 +67,24 @@ class UserEntity
     }
 
     /**
+     * @param $attribute
+     * @return mixed|null
+     */
+    public function get($attribute)
+    {
+        if ($attribute === 'id') {
+            return $this->getId();
+        } elseif ($attribute === 'email') {
+            return $this->getEmail();
+        } elseif ($attribute === 'name') {
+            return $this->getName();
+        } elseif ($attribute === 'password') {
+            return $this->getPassword();
+        }
+        return null;
+    }
+
+    /**
      * @param string $email
      * @return $this
      */

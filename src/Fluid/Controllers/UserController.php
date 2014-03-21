@@ -13,7 +13,7 @@ class UserController extends Controller
     {
         $params = $this->request->params(['name', 'email', 'passwords']);
         $userCollection = new UserCollection($this->getStorage());
-        if ($userCollection->findBy(['email' => $params['email']])) {
+        if ($userCollection->findOneBy(['email' => $params['email']])) {
             $this->response->code(Response::RESPONSE_CODE_BAD_REQUEST)->json(['errors' => 'email_exists']);
             return null;
         }

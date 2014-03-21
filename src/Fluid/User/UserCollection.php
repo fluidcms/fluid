@@ -48,14 +48,44 @@ class UserCollection implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @param array $params
-     * @return null|UserEntity
+     * @param bool $findOne
+     * @return null|UserEntity[]|array
      */
-    public function findBy(array $params)
+    public function findBy(array $params, $findOne = false)
     {
         if (null === $this->users) {
             $this->getUserMapper()->mapCollection($this);
         }
+        $retval = [];
+        if (count($params)) {
+            foreach ($this->users as $user) {
+                $match = true;
+                foreach ($params as $key => $param) {
+                    $haystack = $user->get($key);
+                    if ($haystack != $param) {
+                        $match = false;
+                    }
+                }
+                if ($match === true && $findOne) {
+                    return $user;
+                } elseif ($match === true) {
+                    $retval[] = $user;
+                }
+            }
+        }
+        if (count($retval)) {
+            return $retval;
+        }
         return null;
+    }
+
+    /**
+     * @param array $params
+     * @return null|UserEntity
+     */
+    public function findOneBy(array $params)
+    {
+        return $this->findBy($params, true);
     }
 
     /**
@@ -110,6 +140,9 @@ class UserCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     public function count()
     {
+        if (null === $this->users) {
+            $this->getUserMapper()->mapCollection($this);
+        }
         return count($this->users);
     }
 
@@ -118,6 +151,9 @@ class UserCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     public function getIterator()
     {
+        if (null === $this->users) {
+            $this->getUserMapper()->mapCollection($this);
+        }
         return new ArrayIterator($this->users);
     }
 
@@ -127,6 +163,9 @@ class UserCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     public function offsetExists($offset)
     {
+        if (null === $this->users) {
+            $this->getUserMapper()->mapCollection($this);
+        }
         return isset($this->users[$offset]);
     }
 
@@ -136,6 +175,9 @@ class UserCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     public function offsetGet($offset)
     {
+        if (null === $this->users) {
+            $this->getUserMapper()->mapCollection($this);
+        }
         return $this->users[$offset];
     }
 
@@ -145,6 +187,9 @@ class UserCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
+        if (null === $this->users) {
+            $this->getUserMapper()->mapCollection($this);
+        }
         $this->users[$offset] = $value;
     }
 
@@ -153,6 +198,9 @@ class UserCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     public function offsetUnset($offset)
     {
+        if (null === $this->users) {
+            $this->getUserMapper()->mapCollection($this);
+        }
         unset($this->users[$offset]);
     }
 }
