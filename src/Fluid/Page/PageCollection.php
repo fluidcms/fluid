@@ -1,7 +1,10 @@
 <?php
 namespace Fluid\Page;
 
-use Fluid\Collection;
+use Countable;
+use IteratorAggregate;
+use ArrayAccess;
+use ArrayIterator;
 use Fluid\StorageInterface;
 use Fluid\XmlMappingLoaderInterface;
 use Fluid\Exception\MissingMappingAttributeException;
@@ -11,7 +14,7 @@ use Fluid\Exception\InvalidDataException;
  * Class PageCollection
  * @package Fluid\Page
  */
-class PageCollection extends Collection
+class PageCollection implements Countable, IteratorAggregate, ArrayAccess
 {
     /**
      * @var string
@@ -21,7 +24,7 @@ class PageCollection extends Collection
     /**
      * @var PageEntity[]
      */
-    protected $items = [];
+    protected $pages = [];
 
     /**
      * @var StorageInterface
@@ -66,8 +69,8 @@ class PageCollection extends Collection
             $path = explode('/', $path);
         }
 
-        if (isset($path[0]) && isset($this->items[$path[0]])) {
-            $page = $this->items[$path[0]];
+        if (isset($path[0]) && isset($this->pages[$path[0]])) {
+            $page = $this->pages[$path[0]];
             array_shift($path);
             if (count($path)) {
                 if ($page instanceof PageEntity) {
@@ -124,7 +127,7 @@ class PageCollection extends Collection
                 $page = new PageEntity($this->getStorage(), $this->getXmlMappingLoader(), $this->getMapper());
             }
 
-            $this->items[$data['name']] = $page;
+            $this->pages[$data['name']] = $page;
             $page->set($data);
             return $page;
         }
@@ -215,5 +218,56 @@ class PageCollection extends Collection
     public function getMapper()
     {
         return $this->mapper;
+    }
+
+    /**
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->pages);
+    }
+
+    /**
+     * @return ArrayIterator
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->pages);
+    }
+
+    /**
+     * @param int $offset
+     * @return bool
+     */
+    public function offsetExists($offset)
+    {
+        return isset($this->pages[$offset]);
+    }
+
+    /**
+     * @param int $offset
+     * @return mixed
+     */
+    public function offsetGet($offset)
+    {
+        return $this->pages[$offset];
+    }
+
+    /**
+     * @param int $offset
+     * @param mixed $value
+     */
+    public function offsetSet($offset, $value)
+    {
+        $this->pages[$offset] = $value;
+    }
+
+    /**
+     * @param int $offset
+     */
+    public function offsetUnset($offset)
+    {
+        unset($this->pages[$offset]);
     }
 }

@@ -18,7 +18,6 @@ define(['backbone'], function (Backbone) {
                     return errors;
                 }
             }
-            return true;
         }
     });
 });

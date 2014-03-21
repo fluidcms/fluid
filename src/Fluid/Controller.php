@@ -19,14 +19,21 @@ abstract class Controller
     protected $cookie;
 
     /**
+     * @var StorageInterface
+     */
+    protected $storage;
+
+    /**
      * @param Request $request
      * @param Response $response
+     * @param StorageInterface $storage
      * @param CookieInterface $cookie
      */
-    public function __construct(Request $request, Response $response, CookieInterface $cookie)
+    public function __construct(Request $request, Response $response, StorageInterface $storage, CookieInterface $cookie)
     {
         $this->setRequest($request);
         $this->setResponse($response);
+        $this->setStorage($storage);
         $this->setCookie($cookie);
     }
 
@@ -99,5 +106,23 @@ abstract class Controller
     public function getResponse()
     {
         return $this->response;
+    }
+
+    /**
+     * @param StorageInterface $storage
+     * @return $this
+     */
+    public function setStorage(StorageInterface $storage)
+    {
+        $this->storage = $storage;
+        return $this;
+    }
+
+    /**
+     * @return StorageInterface
+     */
+    public function getStorage()
+    {
+        return $this->storage;
     }
 }

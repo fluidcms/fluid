@@ -288,6 +288,6 @@ class Fluid
      */
     public function createRouter()
     {
-        return $this->setRouter(new Router($this->getRequest()));
+        return $this->setRouter(new Router($this, $this->getRequest()));
     }
 }

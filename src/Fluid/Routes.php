@@ -4,14 +4,18 @@ namespace Fluid;
 /**
  * @param Request $request
  * @param CookieInterface $cookie
+ * @param StorageInterface $storage
  * @return array
  */
-return function (Router $router, Request $request, Response $response, CookieInterface $cookie) {
+return function (Router $router, Request $request, Response $response, StorageInterface $storage, CookieInterface $cookie) {
     $router
-        ->respond('/', function () use ($request, $response, $cookie) {
-            return (new Controllers\AdminController($request, $response, $cookie))->index();
+        ->respond('/', function () use ($request, $response, $storage, $cookie) {
+            return (new Controllers\AdminController($request, $response, $storage, $cookie))->index();
         })
-        ->respond('POST', '/session', function () use ($request, $response, $cookie) {
-            return (new Controllers\SessionController($request, $response, $cookie))->create();
+        ->respond('POST', '/session', function () use ($request, $response, $storage, $cookie) {
+            return (new Controllers\SessionController($request, $response, $storage, $cookie))->create();
+        })
+        ->respond('POST', '/user', function () use ($request, $response, $storage, $cookie) {
+            return (new Controllers\UserController($request, $response, $storage, $cookie))->create();
         });
 };

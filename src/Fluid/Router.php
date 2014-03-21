@@ -33,6 +33,11 @@ class Router
     private $adminPath = self::DEFAULT_ADMIN_PATH;
 
     /**
+     * @var Fluid
+     */
+    private $fluid;
+
+    /**
      * @var Request
      */
     private $request;
@@ -43,10 +48,12 @@ class Router
     private $routes = [];
 
     /**
+     * @param Fluid $fluid
      * @param Request $request
      */
-    public function __construct(Request $request)
+    public function __construct(Fluid $fluid, Request $request)
     {
+        $this->setFluid($fluid);
         $this->setRequest($request);
     }
 
@@ -85,7 +92,7 @@ class Router
 
             /** @var Closure $routes */
             $routes = require __DIR__ . DIRECTORY_SEPARATOR . 'Routes.php';
-            $routes($this, $this->getRequest(), $response, $this->getRequest()->getCookie());
+            $routes($this, $this->getRequest(), $response, $this->getFluid()->getStorage(), $this->getRequest()->getCookie());
 
             $method = $this->request->getMethod();
             if (isset($this->routes[$uri])) {
@@ -281,5 +288,23 @@ class Router
     public function useDevelop()
     {
         return $this->getUseDevelop();
+    }
+
+    /**
+     * @param Fluid $fluid
+     * @return $this
+     */
+    public function setFluid(Fluid $fluid)
+    {
+        $this->fluid = $fluid;
+        return $this;
+    }
+
+    /**
+     * @return Fluid
+     */
+    public function getFluid()
+    {
+        return $this->fluid;
     }
 }
