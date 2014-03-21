@@ -2,8 +2,9 @@ define([
     'backbone',
     'marionette',
     'ejs',
-    'text!templates/login/login.ejs'
-], function (Backbone, Marionette, EJS, Template) {
+    'text!templates/login/login.ejs',
+    'components/errors'
+], function (Backbone, Marionette, EJS, Template, ErrorsComponent) {
     return Marionette.Layout.extend({
         initialize: function(options) {
             this.controller = options.controller;
@@ -19,6 +20,10 @@ define([
             "click button[data-action=createAccount]": "createAccount"
         },
 
+        regions: {
+            errors: "errors"
+        },
+
         ui: {
             email: "[name=email]",
             password: "[name=password]"
@@ -31,14 +36,14 @@ define([
                     this.ui.email.val(),
                     this.ui.password.val()
                 ).done(function(response) {
-                    console.log(response);
+                    alert('Login');
                 }).fail(function() {
                     root.showError();
                 })
         },
 
         showError: function() {
-            alert('Wrong email or password');
+            this.errors.show(new ErrorsComponent({text: ['Wrong email or password']}));
         },
 
         createAccount: function() {

@@ -2,6 +2,7 @@
 namespace Fluid\User;
 
 use Fluid\Session\SessionCollection;
+use Fluid\StorageInterface;
 
 class UserEntity
 {
@@ -30,9 +31,18 @@ class UserEntity
      */
     private $name = null;
 
-    public function __construct()
+    /**
+     * @var StorageInterface
+     */
+    private $storage;
+
+    /**
+     * @param StorageInterface $storage
+     */
+    public function __construct(StorageInterface $storage)
     {
-        $this->setSessions(new SessionCollection);
+        $this->setStorage($storage);
+        $this->setSessions(new SessionCollection($storage, $this));
     }
 
     /**
@@ -233,5 +243,23 @@ class UserEntity
     public function getSessions()
     {
         return $this->sessions;
+    }
+
+    /**
+     * @param StorageInterface $storage
+     * @return $this
+     */
+    public function setStorage(StorageInterface $storage)
+    {
+        $this->storage = $storage;
+        return $this;
+    }
+
+    /**
+     * @return StorageInterface
+     */
+    public function getStorage()
+    {
+        return $this->storage;
     }
 }

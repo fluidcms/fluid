@@ -18,7 +18,6 @@ if (file_exists($vendor . "/autoload.php")) {
 }
 
 spl_autoload_register(function ($class) {
-    $class = ltrim($class, '\\');
     $prefix = 'Fluid\\Tests';
     if (strpos($class, $prefix) === 0) {
         $class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
@@ -26,8 +25,6 @@ spl_autoload_register(function ($class) {
         $file = __DIR__ . DIRECTORY_SEPARATOR . $class . '.php';
         if (file_exists($file)) {
             require_once $file;
-        } else {
-            die($file); // TODO remove this, it should not even happen!
         }
     }
 });
