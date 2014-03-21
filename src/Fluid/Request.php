@@ -23,7 +23,7 @@ class Request
     /**
      * @var array
      */
-    private $params = [];
+    private $params;
 
     /**
      * @var string
