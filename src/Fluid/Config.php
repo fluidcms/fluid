@@ -1,13 +1,20 @@
 <?php
 namespace Fluid;
 
+use Serializable;
+
 /**
  * Class Config
  *
  * @package Fluid
  */
-class Config implements ConfigInterface
+class Config implements ConfigInterface, Serializable
 {
+    /**
+     * @var string
+     */
+    private $adminPath = '/admin/';
+
     /**
      * @var string
      */
@@ -167,5 +174,57 @@ class Config implements ConfigInterface
     public function getLog()
     {
         return $this->log;
+    }
+
+    /**
+     * @param string $adminPath
+     * @return $this
+     */
+    public function setAdminPath($adminPath)
+    {
+        $this->adminPath = $adminPath;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAdminPath()
+    {
+        return $this->adminPath;
+    }
+
+    /**
+     * @return string
+     */
+    public function serialize()
+    {
+        return serialize([
+            'adminPath' => $this->getAdminPath(),
+            'storage' => $this->getStorage(),
+            'mapping' => $this->getMapping(),
+            'languages' => $this->getLanguages(),
+            'language' => $this->getLanguage(),
+            'branch' => $this->getBranch(),
+            'websocketPort' => $this->getWebsocketPort(),
+            'log' => $this->getLog()
+        ]);
+    }
+
+    /**
+     * @param string $serialized
+     * @return void
+     */
+    public function unserialize($serialized)
+    {
+        $config = unserialize($serialized);
+        $this->setAdminPath($config['adminPath']);
+        $this->setStorage($config['storage']);
+        $this->setMapping($config['mapping']);
+        $this->setLanguages($config['languages']);
+        $this->setLanguage($config['language']);
+        $this->setBranch($config['branch']);
+        $this->setWebsocketPort($config['websocketPort']);
+        $this->setLog($config['log']);
     }
 }

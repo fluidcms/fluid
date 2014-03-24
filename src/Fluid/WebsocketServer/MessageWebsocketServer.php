@@ -1,5 +1,5 @@
 <?php
-namespace Fluid\Socket;
+namespace Fluid\WebsocketServer;
 
 use Exception;
 use Ratchet\ConnectionInterface;
@@ -10,9 +10,9 @@ use Ratchet\Server\IoConnection;
 use Fluid\Event;
 use Fluid\Debug\Log;
 
-class MessageServer implements WampServerInterface
+class MessageWebsocketServer implements WampServerInterface
 {
-    const URI = '/fluidcms/message';
+    const URI = 'message';
 
     /**
      * Check if incoming connection is allowed, for message system, only localhost connections are allowed

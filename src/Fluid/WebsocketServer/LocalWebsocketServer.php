@@ -1,5 +1,5 @@
 <?php
-namespace Fluid\Socket;
+namespace Fluid\WebsocketServer;
 
 use Ratchet\Wamp\WampServerInterface;
 use Fluid;
@@ -18,9 +18,9 @@ use Exception;
  *
  * @package Fluid
  */
-class WebSocketServer implements WampServerInterface
+class LocalWebSocketServer implements WampServerInterface
 {
-    const URI = '/fluidcms/websocket';
+    const URI = 'websocket';
 
     /** @var WebSocketServer $server */
     private static $server;
@@ -38,7 +38,27 @@ class WebSocketServer implements WampServerInterface
     {
         self::$server = $this;
         $this->startTime = time();
-        Fluid\Socket\WebSocketServerEvents::register();
+
+        // User loads data from a page
+        Event::on('data:get', function($session, $language, $page) {
+            WebSocketServer::sendToSession($session, array(
+                'target' => 'data_request',
+                'data' => array(
+                    'language' => $language,
+                    'page' => $page
+                )
+            ));
+        });
+
+        // User loads data from a page
+        Event::on('language:changed', function($session, $language) {
+            WebSocketServer::sendToSession($session, array(
+                'target' => 'language_detected',
+                'data' => array(
+                    'language' => $language
+                )
+            ));
+        });
     }
 
     /**

@@ -1,13 +1,14 @@
 <?php
-
 namespace Fluid;
 
 use InvalidArgumentException;
-use Closure;
 
 class Event
 {
-    private static $listeners = array();
+    /**
+     * @var array
+     */
+    private static $listeners = [];
 
     /**
      * Bind an event.
@@ -17,7 +18,7 @@ class Event
      * @throws InvalidArgumentException
      * @return bool
      */
-    public static function on($event, Closure $callback)
+    public static function on($event, callable $callback)
     {
         // Check if event is a string
         if (!is_string($event) || !is_callable($callback)) {
@@ -25,7 +26,7 @@ class Event
         }
 
         if (!isset(self::$listeners[$event])) {
-            self::$listeners[$event] = array();
+            self::$listeners[$event] = [];
         }
 
         self::$listeners[$event][] = $callback;
@@ -41,13 +42,13 @@ class Event
      * @throws InvalidArgumentException
      * @return array
      */
-    public static function trigger($event, array $arguments = array())
+    public static function trigger($event, array $arguments = [])
     {
         if (!is_string($event) || !is_array($arguments)) {
             throw new InvalidArgumentException();
         }
 
-        $retval = array();
+        $retval = [];
 
         if (isset(self::$listeners[$event])) {
             foreach (self::$listeners[$event] as $listener) {

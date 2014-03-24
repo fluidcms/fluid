@@ -84,4 +84,15 @@ interface ConfigInterface
      * @return string
      */
     public function getLog();
+
+    /**
+     * @return string
+     */
+    public function serialize();
+
+    /**
+     * @param string $serialized
+     * @return void
+     */
+    public function unserialize($serialized);
 }
