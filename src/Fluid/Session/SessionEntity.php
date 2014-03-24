@@ -4,6 +4,7 @@ namespace Fluid\Session;
 use DateTime;
 use DateInterval;
 use Fluid\Token;
+use Fluid\User\UserCollection;
 use Fluid\User\UserEntity;
 
 class SessionEntity
@@ -31,11 +32,67 @@ class SessionEntity
      */
     private $expirationDate = null;
 
-    public function __construct()
+    /**
+     * @var UserCollection
+     */
+    private $userCollection;
+
+    /**
+     * @param UserCollection $userCollection
+     * @param UserEntity|null $user
+     */
+    public function __construct(UserCollection $userCollection, UserEntity $user = null)
     {
+        $this->setUserCollection($userCollection);
         $this->createToken();
         $this->createExpirationDate();
+        if (null !== $user) {
+            $this->setUser($user);
+        }
     }
+
+    /**
+     * @param array|string $attributes
+     * @param mixed|null $value
+     * @return $this
+     */
+    public function set($attributes, $value = null)
+    {
+        if (is_string($attributes)) {
+            $attributes = [$attributes => $value];
+        }
+
+        foreach ($attributes as $key => $value) {
+            if ($key === 'user_id') {
+                $this->setUser($this->getUserCollection()->find($value));
+            } elseif ($key === 'name') {
+                $this->setName($value);
+            } elseif ($key === 'password') {
+                $this->setPassword($value);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param $attribute
+     * @return mixed|null
+     */
+    public function get($attribute)
+    {
+        if ($attribute === 'id') {
+            return $this->getId();
+        } elseif ($attribute === 'email') {
+            return $this->getEmail();
+        } elseif ($attribute === 'name') {
+            return $this->getName();
+        } elseif ($attribute === 'password') {
+            return $this->getPassword();
+        }
+        return null;
+    }
+
 
     /**
      * @param \DateTime|null $expirationDate
@@ -152,5 +209,23 @@ class SessionEntity
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @param UserCollection $userCollection
+     * @return $this
+     */
+    public function setUserCollection(UserCollection $userCollection)
+    {
+        $this->userCollection = $userCollection;
+        return $this;
+    }
+
+    /**
+     * @return UserCollection
+     */
+    public function getUserCollection()
+    {
+        return $this->userCollection;
     }
 }

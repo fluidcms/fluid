@@ -70,6 +70,15 @@ class UserCollection implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
+     * @param mixed $id
+     * @return null|UserEntity
+     */
+    public function find($id)
+    {
+        return $this->findOneBy(['id' => $id]);
+    }
+
+    /**
      * @param array $params
      * @param bool $findOne
      * @return null|UserEntity[]|array

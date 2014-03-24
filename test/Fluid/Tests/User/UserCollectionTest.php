@@ -43,7 +43,7 @@ class UserCollectionTest extends PHPUnit_Framework_TestCase
     public function testAdd()
     {
         $users = new UserCollection(new Storage(new Fluid));
-        $users->add(new UserEntity);
+        $users->add(new UserEntity($users->getStorage(), $users));
         $this->assertInstanceOf('Fluid\User\UserEntity', $users[0]);
     }
 
@@ -53,9 +53,20 @@ class UserCollectionTest extends PHPUnit_Framework_TestCase
         $fluid->getConfig()->setStorage(Helper::getStorage());
         $users = new UserCollection($fluid->getStorage());
 
-        $user = $users->create(new UserEntity);
+        $user = $users->create(new UserEntity($users->getStorage(), $users));
         $this->assertInstanceOf('Fluid\User\UserEntity', $users[2]);
         $this->assertEquals(3, $user->getId());
+    }
+
+    public function testFind()
+    {
+        $fluid = new Fluid;
+        $fluid->getConfig()->setStorage(Helper::getStorage());
+        $users = new UserCollection($fluid->getStorage());
+
+        $user = $users->findBy(['id' => 1]);
+        $this->assertInstanceOf('Fluid\User\UserEntity', $user[0]);
+        $this->assertEquals('test@test.com', $user[0]->getEmail());
     }
 
     public function testFindBy()

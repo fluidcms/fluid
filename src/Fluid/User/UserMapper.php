@@ -41,7 +41,7 @@ class UserMapper
 
         if (isset($data) && is_array($data)) {
             foreach ($data as $id => $userData) {
-                $userCollection->add((new UserEntity)->setId($id)->set($userData));
+                $userCollection->add((new UserEntity($this->getStorage(), $userCollection))->setId($id)->set($userData));
             }
         }
 

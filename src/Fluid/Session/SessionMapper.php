@@ -2,6 +2,7 @@
 namespace Fluid\Session;
 
 use Fluid\StorageInterface;
+use Fluid\User\UserCollection;
 
 class SessionMapper
 {
@@ -23,11 +24,18 @@ class SessionMapper
     private $collectionsData;
 
     /**
-     * @param StorageInterface $storage
+     * @var UserCollection
      */
-    public function __construct(StorageInterface $storage)
+    private $userCollection;
+
+    /**
+     * @param StorageInterface $storage
+     * @param UserCollection $userCollection
+     */
+    public function __construct(StorageInterface $storage, UserCollection $userCollection)
     {
         $this->setStorage($storage);
+        $this->setUserCollection($userCollection);
     }
 
     /**
@@ -40,8 +48,11 @@ class SessionMapper
         $data = $this->collectionsData[spl_object_hash($sessionCollection)] = $this->getStorage()->loadData(self::DATA_FILENAME);
 
         if (isset($data) && is_array($data)) {
-            foreach ($data as $id => $userData) {
-                $sessionCollection->add((new SessionEntity())->set($userData));
+            foreach ($data as $id => $sessionData) {
+                $sessionCollection->add((new SessionEntity(
+                    $this->getUserCollection(),
+                    $this->getUserCollection()->find($sessionData['user_id'])
+                ))->set($sessionData));
             }
         }
 
@@ -87,5 +98,23 @@ class SessionMapper
     public function getStorage()
     {
         return $this->storage;
+    }
+
+    /**
+     * @param UserCollection $userCollection
+     * @return $this
+     */
+    public function setUserCollection(UserCollection $userCollection)
+    {
+        $this->userCollection = $userCollection;
+        return $this;
+    }
+
+    /**
+     * @return UserCollection
+     */
+    public function getUserCollection()
+    {
+        return $this->userCollection;
     }
 }

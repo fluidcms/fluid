@@ -37,12 +37,19 @@ class UserEntity
     private $storage;
 
     /**
-     * @param StorageInterface $storage
+     * @var UserCollection
      */
-    public function __construct(StorageInterface $storage)
+    private $userCollection;
+
+    /**
+     * @param StorageInterface $storage
+     * @param UserCollection $userCollection
+     */
+    public function __construct(StorageInterface $storage, UserCollection $userCollection)
     {
         $this->setStorage($storage);
-        $this->setSessions(new SessionCollection($storage, $this));
+        $this->setUserCollection($userCollection);
+        $this->setSessions(new SessionCollection($storage, $userCollection, $this));
     }
 
     /**
@@ -261,5 +268,23 @@ class UserEntity
     public function getStorage()
     {
         return $this->storage;
+    }
+
+    /**
+     * @param UserCollection $userCollection
+     * @return $this
+     */
+    public function setUserCollection(UserCollection $userCollection)
+    {
+        $this->userCollection = $userCollection;
+        return $this;
+    }
+
+    /**
+     * @return UserCollection
+     */
+    public function getUserCollection()
+    {
+        return $this->userCollection;
     }
 }
