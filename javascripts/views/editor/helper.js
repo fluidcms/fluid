@@ -1,4 +1,4 @@
-define(['sanitize'], function (Sanitize) {
+define(['lib/sanitize'], function (Sanitize) {
     // !!!!!!!!
     // !!!!!!!!
     // TODO: Move all of this in the editor view

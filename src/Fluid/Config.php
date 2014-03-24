@@ -34,6 +34,11 @@ class Config implements ConfigInterface
     private $branch = 'master';
 
     /**
+     * @var int
+     */
+    private $websocketPort = 8080;
+
+    /**
      * @var string
      */
     private $log;
@@ -126,6 +131,24 @@ class Config implements ConfigInterface
     public function getMapping()
     {
         return $this->mapping;
+    }
+
+    /**
+     * @param int $websocketPort
+     * @return $this
+     */
+    public function setWebsocketPort($websocketPort)
+    {
+        $this->websocketPort = $websocketPort;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWebsocketPort()
+    {
+        return $this->websocketPort;
     }
 
     /**

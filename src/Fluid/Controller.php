@@ -4,6 +4,16 @@ namespace Fluid;
 abstract class Controller
 {
     /**
+     * @var Fluid
+     */
+    protected $fluid;
+
+    /**
+     * @var Router
+     */
+    protected $router;
+
+    /**
      * @var Request
      */
     protected $request;
@@ -24,13 +34,17 @@ abstract class Controller
     protected $storage;
 
     /**
+     * @param Fluid $fluid
+     * @param Router $router
      * @param Request $request
      * @param Response $response
      * @param StorageInterface $storage
      * @param CookieInterface $cookie
      */
-    public function __construct(Request $request, Response $response, StorageInterface $storage, CookieInterface $cookie)
+    public function __construct(Fluid $fluid, Router $router, Request $request, Response $response, StorageInterface $storage, CookieInterface $cookie)
     {
+        $this->setFluid($fluid);
+        $this->setRouter($router);
         $this->setRequest($request);
         $this->setResponse($response);
         $this->setStorage($storage);
@@ -38,13 +52,19 @@ abstract class Controller
     }
 
     /**
-     * @param $view
+     * @param string $view
+     * @param array $data
      * @return null|string
      */
-    protected function loadView($view)
+    protected function loadView($view, array $data = null)
     {
         $file = __DIR__ . "/Includes/templates/{$view}.php";
         if (file_exists($file)) {
+            if (null !== $data) {
+                foreach ($data as $key => $value) {
+                    $GLOBALS[$key] = $value;
+                }
+            }
             ob_start();
             require $file;
             $contents = ob_get_contents();
@@ -52,6 +72,42 @@ abstract class Controller
             return $contents;
         }
         return null;
+    }
+
+    /**
+     * @param Fluid $fluid
+     * @return $this
+     */
+    public function setFluid(Fluid $fluid)
+    {
+        $this->fluid = $fluid;
+        return $this;
+    }
+
+    /**
+     * @return Fluid
+     */
+    public function getFluid()
+    {
+        return $this->fluid;
+    }
+
+    /**
+     * @param Router $router
+     * @return $this
+     */
+    public function setRouter(Router $router)
+    {
+        $this->router = $router;
+        return $this;
+    }
+
+    /**
+     * @return Router
+     */
+    public function getRouter()
+    {
+        return $this->router;
     }
 
     /**

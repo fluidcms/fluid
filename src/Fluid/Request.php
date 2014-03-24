@@ -21,6 +21,11 @@ class Request
     private $uri;
 
     /**
+     * @var string
+     */
+    private $url;
+
+    /**
      * @var array
      */
     private $params;
@@ -67,6 +72,37 @@ class Request
             $uri = substr($uri, 0, $pos);
         }
         return $this->setUri($uri);
+    }
+
+    /**
+     * @param string $url
+     * @return $this
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        if (null === $this->url) {
+            $this->createUrl();
+        }
+
+        return $this->url;
+    }
+
+    /**
+     * @return $this
+     */
+    private function createUrl()
+    {
+        $url = $_SERVER['SERVER_NAME'];
+        return $this->setUrl($url);
     }
 
     /**

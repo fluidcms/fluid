@@ -45,6 +45,14 @@ class ConfigMock implements ConfigInterface
     {
     }
 
+    public function setWebsocketPort($websocketPort)
+    {
+    }
+
+    public function getWebsocketPort()
+    {
+    }
+
     public function setLog($log)
     {
     }

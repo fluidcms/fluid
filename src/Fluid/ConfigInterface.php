@@ -64,6 +64,17 @@ interface ConfigInterface
     public function getMapping();
 
     /**
+     * @param int $websocketPort
+     * @return $this
+     */
+    public function setWebsocketPort($websocketPort);
+
+    /**
+     * @return int
+     */
+    public function getWebsocketPort();
+
+    /**
      * @param string $log
      * @return $this
      */

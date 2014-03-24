@@ -92,7 +92,7 @@ class Router
 
             /** @var Closure $routes */
             $routes = require __DIR__ . DIRECTORY_SEPARATOR . 'Routes.php';
-            $routes($this, $this->getRequest(), $response, $this->getFluid()->getStorage(), $this->getRequest()->getCookie());
+            $routes($this->getFluid(), $this, $this->getRequest(), $response, $this->getFluid()->getStorage(), $this->getRequest()->getCookie());
 
             $method = $this->request->getMethod();
             if (isset($this->routes[$uri])) {

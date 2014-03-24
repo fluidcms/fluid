@@ -21,11 +21,19 @@ class AdminController extends Controller
         if ($session instanceof SessionEntity && !$session->isExpired()) {
             $user = $session->getUser();
             if ($user instanceof UserEntity) {
-                echo 'Logged in';
+                $this->response->body($this->loadView('app', [
+                    'session' => $session,
+                    'branch' => $this->fluid->getConfig()->getBranch(),
+                    'path' => $this->router->getAdminPath(),
+                    'websocket' => 'ws://' . $this->request->getUrl() . ':' . $this->fluid->getConfig()->getWebsocketPort() . $this->router->getAdminPath(),
+                    'user' => $user,
+                    'language' => $this->fluid->getConfig()->getLanguage(),
+                    'languages' => $this->fluid->getConfig()->getLanguages()
+                ]));
                 return;
             }
         }
         $this->cookie->delete(SessionEntity::COOKIE_NAME);
-        (new LoginController($this->getRequest(), $this->getResponse(), $this->getStorage(), $this->getCookie()))->index();
+        (new LoginController($this->getFluid(), $this->getRouter(), $this->getRequest(), $this->getResponse(), $this->getStorage(), $this->getCookie()))->index();
     }
 }
