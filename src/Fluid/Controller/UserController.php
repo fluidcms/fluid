@@ -1,5 +1,5 @@
 <?php
-namespace Fluid\Controllers;
+namespace Fluid\Controller;
 
 use Fluid\Controller;
 use Fluid\Response;
@@ -18,7 +18,7 @@ class UserController extends Controller
             return null;
 
         }
-        $user = new UserEntity($this->getStorage());
+        $user = new UserEntity($this->getStorage(), $users);
         $validation = $user->validate($params);
 
         if ($validation === true) {

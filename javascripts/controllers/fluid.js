@@ -26,7 +26,7 @@ define(
             initialize: function () {
                 var root = this;
 
-                $.ajax({url: "server", type: "POST"}).done(function (response) {
+                $.ajax({url: "server"}).done(function (response) {
                     if (response == 'true') {
                         root.load();
                     } else {

@@ -1,14 +1,17 @@
 <?php
-namespace Fluid\Controllers;
+namespace Fluid\Controller;
 
 use Fluid\Controller;
 use Fluid\Session\SessionCollection;
 use Fluid\Session\SessionEntity;
 use Fluid\User\UserCollection;
 use Fluid\User\UserEntity;
+use Fluid\Helper\SessionHelper;
 
 class AdminController extends Controller
 {
+    use SessionHelper;
+
     /**
      * @return string
      */

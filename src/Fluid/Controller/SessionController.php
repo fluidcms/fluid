@@ -1,5 +1,5 @@
 <?php
-namespace Fluid\Controllers;
+namespace Fluid\Controller;
 
 use Fluid\Controller;
 use Fluid\Response;
