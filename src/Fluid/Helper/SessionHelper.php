@@ -120,6 +120,9 @@ trait SessionHelper
      */
     protected function getUser()
     {
+        if (null === $this->session) {
+            $this->createSession();
+        }
         return $this->user;
     }
 

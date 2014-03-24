@@ -1,6 +1,8 @@
 <?php
 namespace Fluid;
 
+use Fluid\Daemon\Daemon;
+
 abstract class Controller
 {
     /**
@@ -32,6 +34,11 @@ abstract class Controller
      * @var StorageInterface
      */
     protected $storage;
+
+    /**
+     * @var Daemon
+     */
+    protected $daemon;
 
     /**
      * @param Fluid $fluid
@@ -180,5 +187,34 @@ abstract class Controller
     public function getStorage()
     {
         return $this->storage;
+    }
+
+    /**
+     * @param Daemon $daemon
+     * @return $this
+     */
+    public function setDaemon(Daemon $daemon)
+    {
+        $this->daemon = $daemon;
+        return $this;
+    }
+
+    /**
+     * @return Daemon
+     */
+    public function getDaemon()
+    {
+        if (null === $this->daemon) {
+            $this->createDaemon();
+        }
+        return $this->daemon;
+    }
+
+    /**
+     * @return $this
+     */
+    private function createDaemon()
+    {
+        return $this->setDaemon($this->getFluid()->getDaemon());
     }
 }

@@ -3,6 +3,7 @@ namespace Fluid;
 
 use Fluid\Map\MapEntity;
 use Fluid\Map\MapMapper;
+use Fluid\Daemon\Daemon;
 
 /**
  * The fluid class
@@ -55,6 +56,16 @@ class Fluid
      * @var Router
      */
     private $router;
+
+    /**
+     * @var Event
+     */
+    private $event;
+
+    /**
+     * @var Daemon
+     */
+    private $daemon;
 
     public function __construct()
     {
@@ -149,7 +160,7 @@ class Fluid
     /**
      * @return $this
      */
-    public function createMap()
+    private function createMap()
     {
         $mapper = new MapMapper($this->getStorage(), $this->getXmlMappingLoader());
         return $this->setMap($mapper->map());
@@ -180,7 +191,7 @@ class Fluid
     /**
      * @return $this
      */
-    public function createStorage()
+    private function createStorage()
     {
         return $this->setStorage(new Storage($this));
     }
@@ -210,7 +221,7 @@ class Fluid
     /**
      * @return $this
      */
-    public function createXmlMappingLoader()
+    private function createXmlMappingLoader()
     {
         return $this->setXmlMappingLoader(new XmlMappingLoader($this));
     }
@@ -248,7 +259,7 @@ class Fluid
     /**
      * @return $this
      */
-    public function createRequest()
+    private function createRequest()
     {
         return $this->setRequest(new Request($this));
     }
@@ -286,8 +297,66 @@ class Fluid
     /**
      * @return $this
      */
-    public function createRouter()
+    private function createRouter()
     {
         return $this->setRouter(new Router($this, $this->getRequest()));
+    }
+
+    /**
+     * @param Event $event
+     * @return $this
+     */
+    public function setEvent(Event $event)
+    {
+        $this->event = $event;
+        return $this;
+    }
+
+    /**
+     * @return Event
+     */
+    public function getEvent()
+    {
+        if (null === $this->event) {
+            $this->createEvent();
+        }
+        return $this->event;
+    }
+
+    /**
+     * @return $this
+     */
+    private function createEvent()
+    {
+        return $this->setEvent(new Event);
+    }
+
+    /**
+     * @param Daemon $daemon
+     * @return $this
+     */
+    public function setDaemon(Daemon $daemon)
+    {
+        $this->daemon = $daemon;
+        return $this;
+    }
+
+    /**
+     * @return Daemon
+     */
+    public function getDaemon()
+    {
+        if (null === $this->daemon) {
+            $this->createDaemon();
+        }
+        return $this->daemon;
+    }
+
+    /**
+     * @return $this
+     */
+    private function createDaemon()
+    {
+        return $this->setDaemon(new Daemon($this->getConfig(), $this->getEvent()));
     }
 }

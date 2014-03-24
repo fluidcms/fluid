@@ -24,10 +24,27 @@ class Response
     private $code = self::RESPONSE_CODE_OK;
 
     /**
-     * @param $body
+     * @param mixed $body
      * @return $this
      */
     public function json($body)
+    {
+        return $this->setJson($body);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJson()
+    {
+        return json_decode($this->getBody(), true);
+    }
+
+    /**
+     * @param mixed $body
+     * @return $this
+     */
+    public function setJson($body)
     {
         return $this->setBody(json_encode($body));
     }

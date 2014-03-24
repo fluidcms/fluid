@@ -14,26 +14,17 @@ class ServerController extends Controller
     {
         $user = $this->getUser();
         if ($user instanceof UserEntity) {
-            die('connected');
-            return;
-        }
-        $this->response->code(Response::RESPONSE_CODE_FORBIDDEN);
-        /*
-        if (!empty(self::$request) && self::$method === 'POST' && strpos(self::$request, 'server') === 0 && isset(self::$input['session'])) {
-            if (Session::validate(self::$input['session'])) {
-                if (Daemon::isRunning()) {
-                    // Daemon is already running
-                    return json_encode(true);
-                } else if (Daemon::runBackground()) {
-                    // Start Daemon
-                    return json_encode(true);
-                } else {
-                    // Could not start Daemon
-                    return json_encode(false);
-                }
+            if ($this->getDaemon()->isRunning()) {
+                $this->getResponse()->setJson(true);
+                return;
+            } elseif ($this->getDaemon()->runBackground()) {
+                $this->getResponse()->setJson(true);
+                return;
+            } else {
+                $this->getResponse()->setJson(false);
+                return;
             }
         }
-
-        return false;*/
+        $this->getResponse()->setCode(Response::RESPONSE_CODE_FORBIDDEN);
     }
 }
