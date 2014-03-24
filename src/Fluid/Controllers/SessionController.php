@@ -19,6 +19,8 @@ class SessionController extends Controller
                 $sessions = new SessionCollection($this->getStorage(), $userCollection);
                 $sessions->create($session);
                 $sessions->save($session);
+
+                $this->cookie->save(SessionEntity::COOKIE_NAME, $session->getToken(), $session->getExpirationDate()->getTimestamp());
                 $this->response->json($session->getToken());
                 return;
             }

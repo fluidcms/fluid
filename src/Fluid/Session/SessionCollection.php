@@ -106,9 +106,11 @@ class SessionCollection implements Countable, IteratorAggregate, ArrayAccess
             }
         } else {
             $data = $this->getSessionMapper()->getCollectionData($this);
+            $updated = false;
             if (is_array($data)) {
                 foreach ($data as $sessionKey => $sessionData) {
                     if ($sessionData['token'] === $session->getToken()) {
+                        $updated = true;
                         $data[$sessionKey] = [
                             'token' => $session->getToken(),
                             'user_id' => $session->getUser()->getId(),
@@ -118,12 +120,16 @@ class SessionCollection implements Countable, IteratorAggregate, ArrayAccess
                     }
                 }
             } else {
-                $data = [[
+                $data = [];
+            }
+
+            if (!$updated) {
+                $data[] = [
                     'token' => $session->getToken(),
                     'user_id' => $session->getUser()->getId(),
                     'is_long_session' => $session->getIsLongSession(),
                     'expiration_date' => $session->getExpirationDate()->format('Y-m-d H:i:s'),
-                ]];
+                ];
             }
         }
         $this->getSessionMapper()->persist($this, $data);

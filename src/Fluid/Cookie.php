@@ -21,7 +21,7 @@ class Cookie implements CookieInterface
      * @param bool|null $secure
      * @return bool
      */
-    public function save($name, $value = null, $expire = null, $path = null, $domain = null, $secure = null)
+    public function save($name, $value = null, $expire = null, $path = '/', $domain = null, $secure = null)
     {
         return setcookie($name, $value, $expire, $path, $domain, $secure);
     }
