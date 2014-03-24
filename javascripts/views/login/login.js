@@ -35,8 +35,8 @@ define([
             this.session.testCredentials(
                     this.ui.email.val(),
                     this.ui.password.val()
-                ).done(function(response) {
-                    alert('Login');
+                ).done(function() {
+                    window.location.reload();
                 }).fail(function() {
                     root.showError();
                 })

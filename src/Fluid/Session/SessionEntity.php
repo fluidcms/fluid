@@ -63,12 +63,14 @@ class SessionEntity
         }
 
         foreach ($attributes as $key => $value) {
-            if ($key === 'user_id') {
+            if ($key === 'token') {
+                $this->setToken($value);
+            } elseif ($key === 'user_id') {
                 $this->setUser($this->getUserCollection()->find($value));
-            } elseif ($key === 'name') {
-                $this->setName($value);
-            } elseif ($key === 'password') {
-                $this->setPassword($value);
+            } elseif ($key === 'is_long_session') {
+                $this->setIsLongSession($value);
+            } elseif ($key === 'expiration_date') {
+                $this->setExpirationDate(new DateTime($value));
             }
         }
 
@@ -81,18 +83,17 @@ class SessionEntity
      */
     public function get($attribute)
     {
-        if ($attribute === 'id') {
-            return $this->getId();
-        } elseif ($attribute === 'email') {
-            return $this->getEmail();
-        } elseif ($attribute === 'name') {
-            return $this->getName();
-        } elseif ($attribute === 'password') {
-            return $this->getPassword();
+        if ($attribute === 'token') {
+            return $this->getToken();
+        } elseif ($attribute === 'user_id') {
+            return $this->getUser()->getId();
+        } elseif ($attribute === 'is_long_session') {
+            return $this->getIsLongSession();
+        } elseif ($attribute === 'expiration_date') {
+            return $this->getExpirationDate()->format('Y-m-d H:i:s');
         }
         return null;
     }
-
 
     /**
      * @param \DateTime|null $expirationDate

@@ -86,6 +86,58 @@ class SessionCollection implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
+     * @param string $token
+     * @return null|SessionEntity
+     */
+    public function find($token)
+    {
+        return $this->findOneBy(['token' => $token]);
+    }
+
+    /**
+     * @param array $params
+     * @param bool $findOne
+     * @return null|SessionEntity[]|array
+     */
+    public function findBy(array $params, $findOne = false)
+    {
+        if (null === $this->sessions) {
+            $this->getSessionMapper()->mapCollection($this);
+        }
+        $retval = [];
+
+        if (count($params) && is_array($this->sessions)) {
+            foreach ($this->sessions as $session) {
+                $match = true;
+                foreach ($params as $key => $param) {
+                    $haystack = $session->get($key);
+                    if ($haystack != $param) {
+                        $match = false;
+                    }
+                }
+                if ($match === true && $findOne) {
+                    return $session;
+                } elseif ($match === true) {
+                    $retval[] = $session;
+                }
+            }
+        }
+        if (count($retval)) {
+            return $retval;
+        }
+        return null;
+    }
+
+    /**
+     * @param array $params
+     * @return null|SessionEntity
+     */
+    public function findOneBy(array $params)
+    {
+        return $this->findBy($params, true);
+    }
+
+    /**
      * @param SessionEntity $session
      */
     public function save(SessionEntity $session = null)
