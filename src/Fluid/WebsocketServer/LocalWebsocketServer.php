@@ -2,7 +2,7 @@
 namespace Fluid\WebsocketServer;
 
 use Ratchet\Wamp\WampServerInterface;
-use Fluid;
+use Fluid\ConfigInterface;
 use Fluid\Event;
 use Fluid\Debug\Log;
 use Fluid\Requests\WebSocket as WebSocketRequest;
@@ -14,7 +14,7 @@ use Ratchet\Wamp\Topic;
 use Exception;
 
 /**
- * WebSocket Server for receiving and sending communications to the local server, remote servers and clients
+ * WebSocket Server for receiving and sending communications to the local server
  *
  * @package Fluid
  */
@@ -22,42 +22,66 @@ class LocalWebSocketServer implements WampServerInterface
 {
     const URI = 'websocket';
 
-    /** @var WebSocketServer $server */
-    private static $server;
+    /**
+     * @var array
+     */
+    protected $connections = [];
 
-    /** @var array $connections */
-    protected $connections = array();
-
-    /** @var int $startTime */
+    /**
+     * @var int
+     */
     private $startTime;
 
-    /** @var bool $hadConnections */
+    /**
+     * @var bool
+     */
     private $hadConnections = false;
 
-    function __construct()
+    /**
+     * @var ConfigInterface
+     */
+    private $config;
+
+    /**
+     * @var Event
+     */
+    private $event;
+
+    /**
+     * @param ConfigInterface $config
+     * @param Event $event
+     */
+    public function __construct(ConfigInterface $config, Event $event)
     {
-        self::$server = $this;
         $this->startTime = time();
+        $this->setConfig($config);
+        $this->setEvent($event);
+        $this->bindEvents();
+    }
+
+    private function bindEvents()
+    {
+        $root = $this;
 
         // User loads data from a page
-        Event::on('data:get', function($session, $language, $page) {
-            WebSocketServer::sendToSession($session, array(
+        $this->getEvent()->on('data:get', function($session, $language, $page) use ($root) {
+            $root->sendToSession($session, [
                 'target' => 'data_request',
-                'data' => array(
+                'data' => [
                     'language' => $language,
                     'page' => $page
-                )
-            ));
+                ]
+            ]);
         });
 
         // User loads data from a page
-        Event::on('language:changed', function($session, $language) {
-            WebSocketServer::sendToSession($session, array(
+        $this->getEvent()->on('language:changed', function($session, $language) use ($root) {
+            $root->sendToSession($session, [
                 'target' => 'language_detected',
-                'data' => array(
+                'data' => [
                     'language' => $language
-                )
-            ));
+                ]
+            ]);
         });
     }
 
@@ -102,23 +126,12 @@ class LocalWebSocketServer implements WampServerInterface
     }
 
     /**
-     * Alias of _sendToSession
-     *
-     * @param string $session
-     * @param mixed $message
-     */
-    public static function sendToSession($session, $message)
-    {
-        self::$server->_sendToSession($session, $message);
-    }
-
-    /**
      * Send message to user using his session token
      *
      * @param string $session
      * @param mixed $message
      */
-    public function _sendToSession($session, $message)
+    public function sendToSession($session, $message)
     {
         if (is_array($message)) {
             $message = json_encode($message);
@@ -134,26 +147,13 @@ class LocalWebSocketServer implements WampServerInterface
     }
 
     /**
-     * Alias of _subscribe
-     *
-     * @param string $userId
-     * @param string $topic
-     */
-    public static function subscribe($userId, $topic)
-    {
-        if (self::$server instanceof WebSocketServer) {
-            self::$server->_subscribe($userId, $topic);
-        }
-    }
-
-    /**
      * Subscribe a user to a topic, users are subscribed based on their actions server side and do not subscribe to
      * topics client side
      *
      * @param string $userId
      * @param string $topic
      */
-    public function _subscribe($userId, $topic)
+    public function subscribe($userId, $topic)
     {
         foreach ($this->getConnections() as $connection) {
             if (isset($connection['user_id']) && $userId === $connection['user_id']) {
@@ -204,7 +204,7 @@ class LocalWebSocketServer implements WampServerInterface
         $this->connections[$conn->WAMP->sessionId] = array();
 
         Log::add("User opened connection " . $conn->WAMP->sessionId);
-        Event::trigger('websocket:connection:open', array('conn' => $conn));
+        $this->getEvent()->trigger('websocket:connection:open', array('conn' => $conn));
     }
 
     /**
@@ -215,7 +215,7 @@ class LocalWebSocketServer implements WampServerInterface
         unset($this->connections[$conn->WAMP->sessionId]);
 
         Log::add("User closed connection " . $conn->WAMP->sessionId);
-        Event::trigger('websocket:connection:close', array('conn' => $conn));
+        $this->getEvent()->trigger('websocket:connection:close', array('conn' => $conn));
     }
 
     /**
@@ -287,5 +287,41 @@ class LocalWebSocketServer implements WampServerInterface
     {
         Log::add("Error");
         unset($this->connections[$conn->WAMP->sessionId]);
+    }
+
+    /**
+     * @param ConfigInterface $config
+     * @return $this
+     */
+    public function setConfig(ConfigInterface $config)
+    {
+        $this->config = $config;
+        return $this;
+    }
+
+    /**
+     * @return ConfigInterface
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * @param Event $event
+     * @return $this
+     */
+    public function setEvent(Event $event)
+    {
+        $this->event = $event;
+        return $this;
+    }
+
+    /**
+     * @return Event
+     */
+    public function getEvent()
+    {
+        return $this->event;
     }
 }

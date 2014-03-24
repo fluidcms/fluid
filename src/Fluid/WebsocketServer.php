@@ -38,14 +38,14 @@ class WebsocketServer
     private $port;
 
     /**
-     * @var Config
+     * @var ConfigInterface
      */
     private $config;
 
     /**
-     * @param Config $config
+     * @param ConfigInterface $config
      */
-    function __construct(Config $config)
+    function __construct(ConfigInterface $config)
     {
         $this->setConfig($config);
         $this->setPort($config->getWebsocketPort());
@@ -184,17 +184,17 @@ class WebsocketServer
     }
 
     /**
-     * @param Config $config
+     * @param ConfigInterface $config
      * @return $this
      */
-    public function setConfig(Config $config)
+    public function setConfig(ConfigInterface $config)
     {
         $this->config = $config;
         return $this;
     }
 
     /**
-     * @return Config
+     * @return ConfigInterface
      */
     public function getConfig()
     {

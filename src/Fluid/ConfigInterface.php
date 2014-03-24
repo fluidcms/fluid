@@ -9,6 +9,17 @@ namespace Fluid;
 interface ConfigInterface
 {
     /**
+     * @param string $adminPath
+     * @return $this
+     */
+    public function setAdminPath($adminPath);
+
+    /**
+     * @return string
+     */
+    public function getAdminPath();
+
+    /**
      * @param string $branch
      * @return $this
      */

@@ -8,7 +8,7 @@ class Event
     /**
      * @var array
      */
-    private static $listeners = [];
+    private $listeners = [];
 
     /**
      * Bind an event.
@@ -18,18 +18,18 @@ class Event
      * @throws InvalidArgumentException
      * @return bool
      */
-    public static function on($event, callable $callback)
+    public function on($event, callable $callback)
     {
         // Check if event is a string
         if (!is_string($event) || !is_callable($callback)) {
             throw new InvalidArgumentException();
         }
 
-        if (!isset(self::$listeners[$event])) {
-            self::$listeners[$event] = [];
+        if (!isset($this->listeners[$event])) {
+            $this->listeners[$event] = [];
         }
 
-        self::$listeners[$event][] = $callback;
+        $this->listeners[$event][] = $callback;
 
         return true;
     }
@@ -42,7 +42,7 @@ class Event
      * @throws InvalidArgumentException
      * @return array
      */
-    public static function trigger($event, array $arguments = [])
+    public function trigger($event, array $arguments = [])
     {
         if (!is_string($event) || !is_array($arguments)) {
             throw new InvalidArgumentException();
@@ -50,8 +50,8 @@ class Event
 
         $retval = [];
 
-        if (isset(self::$listeners[$event])) {
-            foreach (self::$listeners[$event] as $listener) {
+        if (isset($this->listeners[$event])) {
+            foreach ($this->listeners[$event] as $listener) {
                 $retval[] = call_user_func_array($listener, $arguments);
             }
         }

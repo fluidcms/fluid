@@ -1,8 +1,7 @@
 <?php
-
 namespace Fluid\Daemon;
 
-use Fluid\Fluid;
+use Fluid\Config;
 
 $vendor = realpath(__DIR__ . "/../../../../../");
 
@@ -14,19 +13,16 @@ if (is_dir($vendor) && is_file($vendor . "/autoload.php")) {
     }
 
     if (isset($argv) && isset($argv[2])) {
-        $config = unserialize(base64_decode($argv[1]));
-
-        Fluid::init($config);
+        $config = new Config();
+        $config->unserialize(base64_decode($argv[1]));
 
         if (isset($argv[3])) {
             $debugMode = (int)$argv[3];
             if ($debugMode !== 0) {
                 require_once __DIR__ . "/../Debug/Log.php";
 
-                set_error_handler(array('Fluid\\Debug\\ErrorHandler', 'error'));
-                register_shutdown_function(array('Fluid\\Debug\\ErrorHandler', 'shutdown'));
-
-                Fluid::debug($debugMode);
+                set_error_handler(['Fluid\\Debug\\ErrorHandler', 'error']);
+                register_shutdown_function(['Fluid\\Debug\\ErrorHandler', 'shutdown']);
             }
         }
 
@@ -37,9 +33,7 @@ if (is_dir($vendor) && is_file($vendor . "/autoload.php")) {
             }
         }
 
-        $class = "\\Fluid\\Daemon\\Daemon";
-        /** @var Daemon $daemon */
-        $daemon = new $class(null, $argv[2]);
+        $daemon = new Daemon($config, null, $argv[2]);
         $daemon->run();
     }
 } else {

@@ -8,16 +8,21 @@ use Fluid\WebsocketServer;
 use Fluid\WebsocketServer\LocalWebSocketServer;
 use Fluid\WebsocketServer\MessageWebsocketServer;
 use Fluid\Debug\Log;
-use Fluid\Config;
+use Fluid\ConfigInterface;
 
 class Daemon implements DaemonInterface
 {
     const LOCK_FILE = '.fluid-server.lock';
 
     /**
-     * @var Config
+     * @var ConfigInterface
      */
     private $config;
+
+    /**
+     * @var Event
+     */
+    private $event;
 
     /**
      * @var callable
@@ -45,13 +50,17 @@ class Daemon implements DaemonInterface
     private $lockFilePath;
 
     /**
-     * @param Config $config
+     * @param ConfigInterface $config
+     * @param Event $event
      * @param callable|null $uptimeCallback
      * @param string|null $instanceId
      */
-    public function __construct(Config $config, callable $uptimeCallback = null, $instanceId = null)
+    public function __construct(ConfigInterface $config, Event $event = null, callable $uptimeCallback = null, $instanceId = null)
     {
         $this->setConfig($config);
+        if (null !== $event) {
+            $this->setEvent($event);
+        }
         if (null !== $uptimeCallback) {
             $this->setUptimeCallback($uptimeCallback);
         }
@@ -171,11 +180,12 @@ class Daemon implements DaemonInterface
         $loop = $server->getReactEventLoop();
 
         // Create Local Websocket Server
-        $localWebsocketServer = new LocalWebSocketServer();
+        $localWebsocketServer = new LocalWebSocketServer($this->getConfig(), $this->getEvent());
         $server->add($localWebsocketServer, $this->getConfig()->getAdminPath() . LocalWebSocketServer::URI);
 
         // Create Message Websocket Server
-        $server->add(new MessageWebsocketServer(), $this->getConfig()->getAdminPath() . MessageWebsocketServer::URI);
+        $messageWebsocketServer = new MessageWebsocketServer($this->getConfig(), $this->getEvent());
+        $server->add($messageWebsocketServer, $this->getConfig()->getAdminPath() . MessageWebsocketServer::URI);
 
         $server->create();
 
@@ -187,7 +197,7 @@ class Daemon implements DaemonInterface
             }
         };
 
-        Event::on('websocket:connection:close', $stopServer);
+        $this->getEvent()->on('websocket:connection:close', $stopServer);
         $loop->addPeriodicTimer(1, $stopServer);
 
         // Execute uptime callback every 10 seconds
@@ -204,21 +214,50 @@ class Daemon implements DaemonInterface
     }
 
     /**
-     * @param Config $config
+     * @param ConfigInterface $config
      * @return $this
      */
-    public function setConfig(Config $config)
+    public function setConfig(ConfigInterface $config)
     {
         $this->config = $config;
         return $this;
     }
 
     /**
-     * @return Config
+     * @return ConfigInterface
      */
     public function getConfig()
     {
         return $this->config;
+    }
+
+    /**
+     * @param Event $event
+     * @return $this
+     */
+    public function setEvent(Event $event)
+    {
+        $this->event = $event;
+        return $this;
+    }
+
+    /**
+     * @return Event
+     */
+    public function getEvent()
+    {
+        if (null === $this->event) {
+            $this->createEvent();
+        }
+        return $this->event;
+    }
+
+    /**
+     * @return $this
+     */
+    public function createEvent()
+    {
+        return $this->setEvent(new Event);
     }
 
     /**

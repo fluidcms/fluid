@@ -1,6 +1,7 @@
 <?php
 namespace Fluid\Socket;
 
+use Fluid\WebsocketServer\MessageWebsocketServer;
 use WebSocketClient;
 use WebSocketClient\WebSocketClientInterface;
 use React\EventLoop\Factory;
@@ -14,26 +15,42 @@ use Fluid\Debug\Log;
  */
 class Message implements WebSocketClientInterface
 {
-    /** @var string $event */
-    private $event;
+    /**
+     * @var string
+     */
+    private $messageEvent;
 
-    /** @var array $data */
-    private $data;
+    /**
+     * @var array
+     */
+    private $messageData;
 
-    /** @var WebSocketClient $client */
+    /**
+     * @var WebSocketClient
+     */
     private $client;
 
-    /** @var bool $run */
+    /**
+     * @var bool
+     */
     private $run = false;
 
-    /** @var StreamSelectLoop $loop */
-    private static $loop;
+    /**
+     * @var StreamSelectLoop
+     */
+    private $loop;
 
-    /** @var StreamSelectLoop $_loop */
-    private $_loop;
+    /**
+     * @var Config
+     */
+    private $config;
 
-    public function __construct()
+    /**
+     * @param Config $config
+     */
+    public function __construct(Config $config)
     {
+        $this->setConfig($config);
     }
 
     /**
@@ -41,7 +58,7 @@ class Message implements WebSocketClientInterface
      */
     public function run()
     {
-        if (!self::$loop) {
+        if (!$this->loop) {
             $this->getLoop()->run();
         }
 
@@ -49,24 +66,22 @@ class Message implements WebSocketClientInterface
     }
 
     /**
-     * @param string $event
-     * @param array $data
+     * @param string $messageEvent
+     * @param array $messageData
      * @return $this
      */
-    public static function send($event, array $data)
+    public function send($messageEvent, array $messageData)
     {
-        $message = new self();
-        return $message
-            ->setEvent($event)
-            ->setData($data)
-            ->setClient(new WebSocketClient(
-                $message,
-                $message->getLoop(),
-                '127.0.0.1',
-                Config::get('websocket'),
-                MessageServer::URI
-            ))
-            ->run();
+        $this->setMessageEvent($messageEvent);
+        $this->setMessageData($messageData);
+        $this->setClient(new WebSocketClient(
+            $this,
+            $this->getLoop(),
+            '127.0.0.1',
+            $this->getConfig()->getWebsocketPort(),
+            $this->getConfig()->getAdminPath() . MessageWebsocketServer::URI
+        ));
+        return $this->run();
     }
 
     /**
@@ -75,11 +90,11 @@ class Message implements WebSocketClientInterface
     public function onWelcome(array $data)
     {
         $loop = $this->getLoop();
-        $event = $this->getEvent();
+        $event = $this->getMessageEvent();
 
         $this->client->call(
             'message',
-            array($this->getEvent(), $this->getData()),
+            [$this->getMessageEvent(), $this->getMessageData()],
             function() use ($loop, $event) {
                 Log::add('Message client successfully sent event ' . $event);
                 $loop->stop();
@@ -113,47 +128,49 @@ class Message implements WebSocketClientInterface
     }
 
     /**
-     * @param string $event
-     * @return self
+     * @param string $messageEvent
+     * @return $this
      */
-    public function setEvent($event)
+    public function setMessageEvent($messageEvent)
     {
-        $this->event = $event;
+        $this->messageEvent = $messageEvent;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getEvent()
+    public function getMessageEvent()
     {
-        return $this->event;
+        return $this->messageEvent;
     }
 
     /**
-     * @param array $data
-     * @return self
+     * @param array $messageData
+     * @return $this
      */
-    public function setData(array $data)
+    public function setMessageData(array $messageData)
     {
-        $this->data = $data;
+        $this->messageData = $messageData;
         return $this;
     }
 
     /**
      * @return array
      */
-    public function getData()
+    public function getMessageData()
     {
-        return $this->data;
+        return $this->messageData;
     }
 
     /**
      * @param StreamSelectLoop $loop
+     * @return $this
      */
-    public static function setLoop($loop)
+    public function setLoop($loop)
     {
-        self::$loop = $loop;
+        $this->loop = $loop;
+        return $this;
     }
 
     /**
@@ -161,12 +178,35 @@ class Message implements WebSocketClientInterface
      */
     public function getLoop()
     {
-        if (self::$loop) {
-            return self::$loop;
-        } elseif ($this->_loop) {
-            return $this->_loop;
-        } else {
-            return $this->_loop = Factory::create();
+        if (null === $this->loop) {
+            $this->createLoop();
         }
+        return $this->loop;
+    }
+
+    /**
+     * @return $this
+     */
+    public function createLoop()
+    {
+        return $this->setLoop(Factory::create());
+    }
+
+    /**
+     * @param Config $config
+     * @return $this
+     */
+    public function setConfig(Config $config)
+    {
+        $this->config = $config;
+        return $this;
+    }
+
+    /**
+     * @return Config
+     */
+    public function getConfig()
+    {
+        return $this->config;
     }
 }

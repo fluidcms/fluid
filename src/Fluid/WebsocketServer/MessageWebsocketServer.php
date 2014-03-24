@@ -7,12 +7,33 @@ use Ratchet\Wamp\WampConnection;
 use Ratchet\Wamp\WampServerInterface;
 use Ratchet\Wamp\Topic;
 use Ratchet\Server\IoConnection;
+use Fluid\ConfigInterface;
 use Fluid\Event;
 use Fluid\Debug\Log;
 
 class MessageWebsocketServer implements WampServerInterface
 {
     const URI = 'message';
+
+    /**
+     * @var ConfigInterface
+     */
+    private $config;
+
+    /**
+     * @var Event
+     */
+    private $event;
+
+    /**
+     * @param ConfigInterface $config
+     * @param Event $event
+     */
+    public function __construct(ConfigInterface $config, Event $event)
+    {
+        $this->setConfig($config);
+        $this->setEvent($event);
+    }
 
     /**
      * Check if incoming connection is allowed, for message system, only localhost connections are allowed
@@ -98,7 +119,7 @@ class MessageWebsocketServer implements WampServerInterface
                 array('true')
             )));
 
-            Event::trigger($event, $args);
+            $this->event->trigger($event, $args);
             Log::add('Message socket received event ' . $event);
         }
     }
@@ -124,5 +145,41 @@ class MessageWebsocketServer implements WampServerInterface
      */
     public function onError(ConnectionInterface $conn, Exception $e)
     {
+    }
+
+    /**
+     * @param ConfigInterface $config
+     * @return $this
+     */
+    public function setConfig(ConfigInterface $config)
+    {
+        $this->config = $config;
+        return $this;
+    }
+
+    /**
+     * @return ConfigInterface
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * @param Event $event
+     * @return $this
+     */
+    public function setEvent(Event $event)
+    {
+        $this->event = $event;
+        return $this;
+    }
+
+    /**
+     * @return Event
+     */
+    public function getEvent()
+    {
+        return $this->event;
     }
 }
