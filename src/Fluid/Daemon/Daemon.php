@@ -13,6 +13,7 @@ use Fluid\ConfigInterface;
 class Daemon implements DaemonInterface
 {
     const LOCK_FILE = '.fluid-server.lock';
+    const PID_FILE = '.fluid-server.pid';
 
     /**
      * @var ConfigInterface
@@ -50,6 +51,11 @@ class Daemon implements DaemonInterface
     private $lockFilePath;
 
     /**
+     * @var string
+     */
+    private $pidFilePath;
+
+    /**
      * @param ConfigInterface $config
      * @param Event $event
      * @param callable|null $uptimeCallback
@@ -66,6 +72,7 @@ class Daemon implements DaemonInterface
         }
         $this->timeStart = time();
         $this->setLockFilePath(sys_get_temp_dir() . DIRECTORY_SEPARATOR . self::LOCK_FILE);
+        $this->setPidFilePath(sys_get_temp_dir() . DIRECTORY_SEPARATOR . self::PID_FILE);
     }
 
     /**
@@ -97,6 +104,14 @@ class Daemon implements DaemonInterface
     }
 
     /**
+     * @param string $pid
+     */
+    public function setPid($pid)
+    {
+        file_put_contents($this->getPidFilePath(), $pid);
+    }
+
+    /**
      * Start daemon in background
      *
      * @return bool
@@ -110,8 +125,8 @@ class Daemon implements DaemonInterface
         shell_exec(
             "php -q " . __DIR__ . "/StartBackgroundDaemon.php " .
             base64_encode(serialize($this->getConfig())) . " " .
-            " {$instanceId} {$debugMode} " .
-            base64_encode($timeZone) .
+            base64_encode($instanceId) . " " .
+            base64_encode($timeZone) . " " .
             " > /dev/null &"
         );
 
@@ -162,8 +177,6 @@ class Daemon implements DaemonInterface
 
     /*
      * Run the web socket server
-     *
-     * @return  void
      */
     public function run()
     {
@@ -213,6 +226,24 @@ class Daemon implements DaemonInterface
         $this->release();
     }
 
+    /*
+     * Stop the web socket server
+     */
+    public function stop()
+    {
+        if (file_exists($this->getPidFilePath())) {
+            $pid = (int)file_get_contents($this->getPidFilePath());
+        }
+
+        if (isset($pid) && $pid) {
+            posix_kill($pid, SIGUSR1);
+        }
+
+        if (file_exists($this->getPidFilePath()) && is_writable($this->getPidFilePath())) {
+            unlink($this->getPidFilePath());
+        }
+    }
+    
     /**
      * @param ConfigInterface $config
      * @return $this
@@ -294,5 +325,23 @@ class Daemon implements DaemonInterface
     public function getLockFilePath()
     {
         return $this->lockFilePath;
+    }
+
+    /**
+     * @param string $pidFilePath
+     * @return $this
+     */
+    public function setPidFilePath($pidFilePath)
+    {
+        $this->pidFilePath = $pidFilePath;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPidFilePath()
+    {
+        return $this->pidFilePath;
     }
 }

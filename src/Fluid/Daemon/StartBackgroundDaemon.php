@@ -33,8 +33,31 @@ if (is_dir($vendor) && is_file($vendor . "/autoload.php")) {
             }
         }
 
-        $daemon = new Daemon($config, null, $argv[2]);
-        $daemon->run();
+        $instanceId = base64_decode($argv[2]);
+        $daemon = new Daemon($config, null, $instanceId);
+
+        if (is_file($daemon->getPidFilePath()) && is_writable($daemon->getPidFilePath())) {
+            $daemon->stop();
+        }
+
+        if (is_file($daemon->getLockFilePath()) && is_writable($daemon->getLockFilePath())) {
+            unlink($daemon->getLockFilePath());
+        }
+
+        $pid = pcntl_fork();
+        $daemon->setPid($pid);
+
+        if (isset($pid) && $pid !== -1 && !$pid) {
+            $parantPid = posix_getppid();
+            if ($parantPid) {
+                posix_kill(posix_getppid(), SIGUSR2);
+                return null;
+            }
+        }
+
+        if (!isset($parantPid) || !$parantPid) {
+            $daemon->run();
+        }
     }
 } else {
     trigger_error("Package Fluid is not installed properly");
