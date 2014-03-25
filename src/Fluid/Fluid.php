@@ -4,6 +4,7 @@ namespace Fluid;
 use Fluid\Map\MapEntity;
 use Fluid\Map\MapMapper;
 use Fluid\Daemon\Daemon;
+use Psr\Log\LoggerInterface;
 
 /**
  * The fluid class
@@ -61,6 +62,11 @@ class Fluid
      * @var Event
      */
     private $event;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * @var Daemon
@@ -332,6 +338,35 @@ class Fluid
     }
 
     /**
+     * @param LoggerInterface $logger
+     * @return $this
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+        return $this;
+    }
+
+    /**
+     * @return LoggerInterface
+     */
+    public function getLogger()
+    {
+        if (null === $this->logger) {
+            $this->createLogger();
+        }
+        return $this->logger;
+    }
+
+    /**
+     * @return $this
+     */
+    private function createLogger()
+    {
+        return $this->setLogger(new Logger($this->getConfig()));
+    }
+
+    /**
      * @param Daemon $daemon
      * @return $this
      */
@@ -357,6 +392,6 @@ class Fluid
      */
     private function createDaemon()
     {
-        return $this->setDaemon(new Daemon($this->getConfig(), $this->getEvent()));
+        return $this->setDaemon(new Daemon($this->getConfig(), $this->getLogger(), $this->getEvent()));
     }
 }
