@@ -21,7 +21,7 @@
 
         };
     </script>
-    <script src="javascripts/vendor/autobahnjs-0.9.2.min.js"></script>
+    <script src="javascripts/vendor/autobahnjs-0.8.0.min.js"></script>
     <script data-main="javascripts/fluid-0.1.0.min.js" src="javascripts/vendor/requirejs-2.1.11.min.js"></script>
 </head>
 <body>

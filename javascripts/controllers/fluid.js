@@ -3,7 +3,7 @@ define(
         'backbone',
         'marionette',
         'views/helpers/loader',
-        'models/socket/socket',
+        'lib/socket',
         'models/map/map',
         'models/language/language',
         'models/layout/layout',
@@ -23,8 +23,11 @@ define(
             ready: false,
             editors: {},
 
-            initialize: function () {
+            initialize: function (options) {
                 var root = this;
+                this.session = options.session;
+                this.user = options.user;
+                this.app = options.app;
 
                 $.ajax({url: "server"}).done(function (response) {
                     if (response == 'true') {
@@ -44,8 +47,13 @@ define(
                 this.views = {};
                 this.loader = new LoaderView();
 
-                // Socket
-                this.socket = new Socket({loader: this.loader});
+                this.socket = new Socket;
+                this.socket.initialize({
+                    loader: this.loader,
+                    session: this.session,
+                    user: this.user,
+                    app: this.app
+                });
 
                 // Models
                 this.models.languages = this.languages = new Language.Languages(null, {socket: this.socket}); // TODO: remove this.languages var
@@ -99,7 +107,7 @@ define(
                     }
                 });
 
-                this.socket.connection();
+                this.socket.connect();
 
                 // Control + Z or Command + Z events
                 $(document).keydown(function (e) {
@@ -121,29 +129,6 @@ define(
                     }
                     return true;
                 });
-            },
-
-            routes: {
-                "*method": "make"
-            },
-
-            make: function (method) {
-                var root = this;
-                method = method ? method : 'map';
-                if (typeof this[method] == 'function') {
-                    if (!this.ready) {
-                        setTimeout(function () {
-                            root.make(method)
-                        }, 10);
-                    } else {
-                        if (this.main !== null && this.current !== method) {
-                            this.main.hide();
-                        }
-                        this[method]();
-                        this.current = method;
-                        this.trigger('change');
-                    }
-                }
             },
 
             map: function () {

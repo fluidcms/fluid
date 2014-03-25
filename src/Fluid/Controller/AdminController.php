@@ -5,6 +5,7 @@ use Fluid\Controller;
 use Fluid\Session\SessionEntity;
 use Fluid\User\UserEntity;
 use Fluid\Helper\SessionHelper;
+use Fluid\WebsocketServer\LocalWebSocketServer;
 
 class AdminController extends Controller
 {
@@ -22,7 +23,7 @@ class AdminController extends Controller
                 'session' => $session,
                 'branch' => $this->fluid->getConfig()->getBranch(),
                 'path' => $this->router->getAdminPath(),
-                'websocket' => 'ws://' . $this->request->getUrl() . ':' . $this->fluid->getConfig()->getWebsocketPort() . $this->router->getAdminPath(),
+                'websocket' => 'ws://' . $this->request->getUrl() . $this->router->getAdminPath() . LocalWebSocketServer::URI,
                 'user' => $user,
                 'language' => $this->fluid->getConfig()->getLanguage(),
                 'languages' => $this->fluid->getConfig()->getLanguages()
