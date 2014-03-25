@@ -193,7 +193,9 @@ class Daemon implements DaemonInterface
             return;
         }
 
-        Log::add('Starting socket on port ' . $this->getConfig()->getWebsocketPort());
+        $logger = $this->getLogger();
+
+        $logger->debug('Starting socket on port ' . $this->getConfig()->getWebsocketPort());
 
         $root = $this;
 
@@ -202,19 +204,19 @@ class Daemon implements DaemonInterface
         $loop = $server->getReactEventLoop();
 
         // Create Local Websocket Server
-        $localWebsocketServer = new LocalWebSocketServer($this->getConfig(), $this->getEvent());
+        $localWebsocketServer = new LocalWebSocketServer($this->getConfig(), $logger, $this->getEvent());
         $server->add($localWebsocketServer, $this->getConfig()->getAdminPath() . LocalWebSocketServer::URI);
 
         // Create Message Websocket Server
-        $messageWebsocketServer = new MessageWebsocketServer($this->getConfig(), $this->getEvent());
+        $messageWebsocketServer = new MessageWebsocketServer($this->getConfig(), $logger, $this->getEvent());
         $server->add($messageWebsocketServer, $this->getConfig()->getAdminPath() . MessageWebsocketServer::URI);
 
         $server->create();
 
         // Stop server if inactive
-        $stopServer = function() use ($loop, $localWebsocketServer) {
+        $stopServer = function() use ($loop, $localWebsocketServer, $logger) {
             if ($localWebsocketServer->isInactive()) {
-                Log::add('Stopping socket after inactivity');
+                $logger->debug('Stopping socket after inactivity');
                 $loop->stop();
             }
         };

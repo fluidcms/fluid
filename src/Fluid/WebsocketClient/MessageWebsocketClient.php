@@ -1,13 +1,14 @@
 <?php
 namespace Fluid\Socket;
 
+use Fluid\Logger;
 use Fluid\WebsocketServer\MessageWebsocketServer;
 use WebSocketClient;
 use WebSocketClient\WebSocketClientInterface;
 use React\EventLoop\Factory;
 use Fluid\Config;
 use React\EventLoop\StreamSelectLoop;
-use Fluid\Debug\Log;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class Message
@@ -46,11 +47,20 @@ class Message implements WebSocketClientInterface
     private $config;
 
     /**
-     * @param Config $config
+     * @var LoggerInterface
      */
-    public function __construct(Config $config)
+    private $logger;
+
+    /**
+     * @param Config $config
+     * @param LoggerInterface|null $logger
+     */
+    public function __construct(Config $config, LoggerInterface $logger = null)
     {
         $this->setConfig($config);
+        if (null !== $logger) {
+            $this->setLogger($logger);
+        }
     }
 
     /**
@@ -96,7 +106,7 @@ class Message implements WebSocketClientInterface
             'message',
             [$this->getMessageEvent(), $this->getMessageData()],
             function() use ($loop, $event) {
-                Log::add('Message client successfully sent event ' . $event);
+                $this->getLogger()->debug('Message client successfully sent event ' . $event);
                 $loop->stop();
             }
         );
@@ -208,5 +218,34 @@ class Message implements WebSocketClientInterface
     public function getConfig()
     {
         return $this->config;
+    }
+
+    /**
+     * @param LoggerInterface $logger
+     * @return $this
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+        return $this;
+    }
+
+    /**
+     * @return LoggerInterface
+     */
+    public function getLogger()
+    {
+        if (null === $this->logger) {
+            $this->createLogger();
+        }
+        return $this->logger;
+    }
+
+    /**
+     * @return $this
+     */
+    private function createLogger()
+    {
+        return $this->setLogger(new Logger($this->getConfig()));
     }
 }

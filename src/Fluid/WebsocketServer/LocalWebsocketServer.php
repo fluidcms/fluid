@@ -4,7 +4,6 @@ namespace Fluid\WebsocketServer;
 use Ratchet\Wamp\WampServerInterface;
 use Fluid\ConfigInterface;
 use Fluid\Event;
-use Fluid\Debug\Log;
 use Fluid\Requests\WebSocket as WebSocketRequest;
 use Ratchet;
 use React;
@@ -12,6 +11,7 @@ use Ratchet\ConnectionInterface;
 use Ratchet\Wamp\WampConnection;
 use Ratchet\Wamp\Topic;
 use Exception;
+use Psr\Log\LoggerInterface;
 
 /**
  * WebSocket Server for receiving and sending communications to the local server
@@ -43,18 +43,25 @@ class LocalWebSocketServer implements WampServerInterface
     private $config;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @var Event
      */
     private $event;
 
     /**
      * @param ConfigInterface $config
+     * @param LoggerInterface $logger
      * @param Event $event
      */
-    public function __construct(ConfigInterface $config, Event $event)
+    public function __construct(ConfigInterface $config, LoggerInterface $logger, Event $event)
     {
         $this->startTime = time();
         $this->setConfig($config);
+        $this->setLogger($logger);
         $this->setEvent($event);
         $this->bindEvents();
     }
@@ -180,7 +187,7 @@ class LocalWebSocketServer implements WampServerInterface
                 'user_email' => $data['user_email'],
                 'topics' => array()
             );
-            Log::add("User {$data['user_id']} subscribed ({$data['user_name']} <{$data['user_email']}>)");
+            $this->getLogger()->debug("User {$data['user_id']} subscribed ({$data['user_name']} <{$data['user_email']}>)");
             $topic->broadcast('true');
         }
     }
@@ -191,7 +198,7 @@ class LocalWebSocketServer implements WampServerInterface
      */
     public function onUnSubscribe(ConnectionInterface $conn, $topic)
     {
-        Log::add("User unsubscribed");
+        $this->getLogger()->debug("User unsubscribed");
         unset($this->connections[$conn->WAMP->sessionId]);
     }
 
@@ -203,7 +210,7 @@ class LocalWebSocketServer implements WampServerInterface
         $this->hadConnections = true;
         $this->connections[$conn->WAMP->sessionId] = array();
 
-        Log::add("User opened connection " . $conn->WAMP->sessionId);
+        $this->getLogger()->debug("User opened connection " . $conn->WAMP->sessionId);
         $this->getEvent()->trigger('websocket:connection:open', array('conn' => $conn));
     }
 
@@ -214,7 +221,7 @@ class LocalWebSocketServer implements WampServerInterface
     {
         unset($this->connections[$conn->WAMP->sessionId]);
 
-        Log::add("User closed connection " . $conn->WAMP->sessionId);
+        $this->getLogger()->debug("User closed connection " . $conn->WAMP->sessionId);
         $this->getEvent()->trigger('websocket:connection:close', array('conn' => $conn));
     }
 
@@ -242,7 +249,7 @@ class LocalWebSocketServer implements WampServerInterface
         ) {
             $data = json_decode($topic, true);
 
-            Log::add("User {$data['user_id']} called method {$params['method']} {$params['url']}");
+            $this->getLogger()->debug("User {$data['user_id']} called method {$params['method']} {$params['url']}");
 
             ob_start();
             new WebSocketRequest(
@@ -276,7 +283,7 @@ class LocalWebSocketServer implements WampServerInterface
      */
     public function onPublish(ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible)
     {
-        Log::add("User published message");
+        $this->getLogger()->debug("User published message");
     }
 
     /**
@@ -285,7 +292,7 @@ class LocalWebSocketServer implements WampServerInterface
      */
     public function onError(ConnectionInterface $conn, Exception $e)
     {
-        Log::add("Error");
+        $this->getLogger()->debug("Error");
         unset($this->connections[$conn->WAMP->sessionId]);
     }
 
@@ -323,5 +330,23 @@ class LocalWebSocketServer implements WampServerInterface
     public function getEvent()
     {
         return $this->event;
+    }
+
+    /**
+     * @param LoggerInterface $logger
+     * @return $this
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+        return $this;
+    }
+
+    /**
+     * @return LoggerInterface
+     */
+    public function getLogger()
+    {
+        return $this->logger;
     }
 }

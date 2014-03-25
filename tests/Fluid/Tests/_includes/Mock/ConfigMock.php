@@ -5,6 +5,22 @@ use Fluid\ConfigInterface;
 
 class ConfigMock implements ConfigInterface
 {
+    public function setAdminPath($adminPath)
+    {
+    }
+
+    public function getAdminPath()
+    {
+    }
+
+    public function setDebug($debug)
+    {
+    }
+
+    public function getDebug()
+    {
+    }
+
     public function setBranch($branch)
     {
     }
@@ -58,6 +74,14 @@ class ConfigMock implements ConfigInterface
     }
 
     public function getLog()
+    {
+    }
+
+    public function serialize()
+    {
+    }
+
+    public function unserialize($serialized)
     {
     }
 }

@@ -9,7 +9,7 @@ use Ratchet\Wamp\Topic;
 use Ratchet\Server\IoConnection;
 use Fluid\ConfigInterface;
 use Fluid\Event;
-use Fluid\Debug\Log;
+use Psr\Log\LoggerInterface;
 
 class MessageWebsocketServer implements WampServerInterface
 {
@@ -21,17 +21,24 @@ class MessageWebsocketServer implements WampServerInterface
     private $config;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @var Event
      */
     private $event;
 
     /**
      * @param ConfigInterface $config
+     * @param LoggerInterface $logger
      * @param Event $event
      */
-    public function __construct(ConfigInterface $config, Event $event)
+    public function __construct(ConfigInterface $config, LoggerInterface $logger, Event $event)
     {
         $this->setConfig($config);
+        $this->setLogger($logger);
         $this->setEvent($event);
     }
 
@@ -83,7 +90,7 @@ class MessageWebsocketServer implements WampServerInterface
     public function onOpen(ConnectionInterface $conn)
     {
         if (!$this->isAllowed($conn)) {
-            Log::add('Connection to message socket server was declined');
+            $this->getLogger()->debug('Connection to message socket server was declined');
             $conn->close();
             return;
         }
@@ -120,7 +127,7 @@ class MessageWebsocketServer implements WampServerInterface
             )));
 
             $this->event->trigger($event, $args);
-            Log::add('Message socket received event ' . $event);
+            $this->getLogger()->debug('Message socket received event ' . $event);
         }
     }
 
@@ -163,6 +170,24 @@ class MessageWebsocketServer implements WampServerInterface
     public function getConfig()
     {
         return $this->config;
+    }
+
+    /**
+     * @param LoggerInterface $logger
+     * @return $this
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+        return $this;
+    }
+
+    /**
+     * @return LoggerInterface
+     */
+    public function getLogger()
+    {
+        return $this->logger;
     }
 
     /**
