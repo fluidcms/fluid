@@ -18,19 +18,6 @@ if (is_dir($vendor) && is_file($vendor . "/autoload.php")) {
         $config = new Config();
         $config->unserialize(base64_decode($argv[1]));
 
-        $logger = null;
-        if ($config->getDebug()) {
-            require_once __DIR__ . "/../Logger.php";
-            require_once __DIR__ . "/../ErrorHandler.php";
-
-            $logger = new Logger($config);
-
-            set_error_handler(['Fluid\\ErrorHandler', 'error']);
-            register_shutdown_function(['Fluid\\ErrorHandler', 'shutdown']);
-
-            ErrorHandler::$logger = $logger;
-        }
-
         if (isset($argv[3])) {
             $timezone = base64_decode($argv[3]);
             if (@date_default_timezone_get() !== $timezone) {
@@ -38,8 +25,16 @@ if (is_dir($vendor) && is_file($vendor . "/autoload.php")) {
             }
         }
 
+        $logger = null;
+        if ($config->getDebug()) {
+            require_once __DIR__ . "/../Logger.php";
+            require_once __DIR__ . "/../ErrorHandler.php";
+
+            $logger = new Logger($config);
+        }
+
         $instanceId = base64_decode($argv[2]);
-        $daemon = new Daemon($config, $logger, null, $instanceId);
+        $daemon = new Daemon($config, $logger, null, null, $instanceId);
 
         if (is_file($daemon->getPidFilePath()) && is_writable($daemon->getPidFilePath())) {
             $daemon->stop();
@@ -50,18 +45,39 @@ if (is_dir($vendor) && is_file($vendor . "/autoload.php")) {
         }
 
         $pid = pcntl_fork();
-        $daemon->setPid($pid);
 
-        if (isset($pid) && $pid !== -1 && !$pid) {
-            $parantPid = posix_getppid();
-            if ($parantPid) {
-                posix_kill(posix_getppid(), SIGUSR2);
-                return null;
+        if ($pid !== -1 && !$pid) {
+            if ($pid !== -1 && !$pid) {
+                $perentPid = posix_getppid();
+                if ($perentPid) {
+                    posix_kill(posix_getppid(), SIGUSR2);
+                }
             }
-        }
 
-        if (!isset($parantPid) || !$parantPid) {
+            if ($config->getDebug()) {
+                $logger = new Logger($config);
+
+                set_error_handler(['Fluid\\ErrorHandler', 'error']);
+                register_shutdown_function(['Fluid\\ErrorHandler', 'shutdown']);
+
+                ErrorHandler::$logger = $logger;
+                $daemon->setLogger($logger);
+            }
+
             $daemon->run();
+        } elseif ($pid) {
+            $wait = true;
+
+            pcntl_signal(SIGUSR2, function () use (&$wait) {
+                $wait = false;
+            });
+
+            while ($wait) {
+                pcntl_waitpid($pid, $status, WNOHANG);
+                pcntl_signal_dispatch();
+            }
+
+            $daemon->setPid($pid);
         }
     }
 } else {

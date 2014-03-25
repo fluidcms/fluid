@@ -15,11 +15,46 @@ class Logger implements LoggerInterface
     private $config;
 
     /**
+     * @var string
+     */
+    private $content = '';
+
+    /**
+     * @var string
+     */
+    private $file;
+
+    /**
      * @param ConfigInterface $config
      */
     public function __construct(ConfigInterface $config)
     {
         $this->setConfig($config);
+    }
+
+    public function __destruct()
+    {
+        if ($this->getConfig()->getDebug()) {
+            $this->writeLog();
+        }
+    }
+
+    private function writeLog()
+    {
+        if (!empty($this->content)) {
+            if ($this->file === null) {
+                $this->file = $this->getConfig()->getLog();
+            }
+
+            $content = '';
+            if (file_exists($this->file)) {
+                $content = file_get_contents($this->file);
+            }
+
+            $content .= $this->content;
+
+            file_put_contents($this->file, $content);
+        }
     }
 
     /**
@@ -71,6 +106,7 @@ class Logger implements LoggerInterface
     public function error($message, array $context = [])
     {
         $this->debug($message);
+        $this->writeLog();
     }
 
     /**
@@ -124,12 +160,7 @@ class Logger implements LoggerInterface
     public function debug($message, array $context = [])
     {
         if ($this->getConfig()->getDebug()) {
-            $file = $this->getConfig()->getLog();
-            if (!empty($file)) {
-                $content = file_get_contents($file);
-                $content .= date('Y-m-d H:i:s') . " {$message}\n";
-                file_put_contents($file, $content);
-            }
+            $this->content .= date('Y-m-d H:i:s') . " {$message}" . PHP_EOL;
         }
     }
 

@@ -83,6 +83,9 @@ class Daemon implements DaemonInterface
         $this->timeStart = time();
         $this->setLockFilePath(sys_get_temp_dir() . DIRECTORY_SEPARATOR . self::LOCK_FILE);
         $this->setPidFilePath(sys_get_temp_dir() . DIRECTORY_SEPARATOR . self::PID_FILE);
+        if (null !== $instanceId) {
+            $this->instanceId = $instanceId;
+        }
     }
 
     /**
@@ -165,6 +168,7 @@ class Daemon implements DaemonInterface
             mkdir(dirname($file));
         }
 
+        file_put_contents($file, $this->instanceId);
         $this->lock = fopen($file, "w+");
 
         if (flock($this->lock, LOCK_EX | LOCK_NB)) {
@@ -189,11 +193,11 @@ class Daemon implements DaemonInterface
      */
     public function run()
     {
+        $logger = $this->getLogger();
+
         if (!$this->lock()) {
             return;
         }
-
-        $logger = $this->getLogger();
 
         $logger->debug('Starting socket on port ' . $this->getConfig()->getWebsocketPort());
 

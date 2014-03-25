@@ -242,14 +242,26 @@ class Config implements ConfigInterface, Serializable
     public function unserialize($serialized)
     {
         $config = unserialize($serialized);
-        $this->setAdminPath($config['adminPath']);
-        $this->setDebug($config['debug']);
-        $this->setStorage($config['storage']);
-        $this->setMapping($config['mapping']);
-        $this->setLanguages($config['languages']);
-        $this->setLanguage($config['language']);
-        $this->setBranch($config['branch']);
-        $this->setWebsocketPort($config['websocketPort']);
-        $this->setLog($config['log']);
+        if (is_array($config)) {
+            $this->setAdminPath($config['adminPath']);
+            $this->setDebug($config['debug']);
+            $this->setStorage($config['storage']);
+            $this->setMapping($config['mapping']);
+            $this->setLanguages($config['languages']);
+            $this->setLanguage($config['language']);
+            $this->setBranch($config['branch']);
+            $this->setWebsocketPort($config['websocketPort']);
+            $this->setLog($config['log']);
+        } elseif ($config instanceof Config) {
+            $this->setAdminPath($config->getAdminPath());
+            $this->setDebug($config->getDebug());
+            $this->setStorage($config->getStorage());
+            $this->setMapping($config->getMapping());
+            $this->setLanguages($config->getLanguages());
+            $this->setLanguage($config->getLanguage());
+            $this->setBranch($config->getBranch());
+            $this->setWebsocketPort($config->getWebsocketPort());
+            $this->setLog($config->getLog());
+        }
     }
 }
