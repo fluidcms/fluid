@@ -1,9 +1,15 @@
 <?php
+namespace Fluid;
 
-namespace Fluid\Debug;
+use Psr\Log\LoggerInterface;
 
 class ErrorHandler
 {
+    /**
+     * @var LoggerInterface
+     */
+    public static $logger;
+
     /**
      * Error handler
      *
@@ -73,6 +79,6 @@ class ErrorHandler
 
         $msg .= " {$errstr} in {$errfile} on line {$errline}";
 
-        Log::add($msg);
+        self::$logger->error($msg);
     }
 }

@@ -16,6 +16,11 @@ class Config implements ConfigInterface, Serializable
     private $adminPath = '/admin/';
 
     /**
+     * @var bool
+     */
+    private $debug = false;
+
+    /**
      * @var string
      */
     private $storage;
@@ -195,12 +200,31 @@ class Config implements ConfigInterface, Serializable
     }
 
     /**
+     * @param bool $debug
+     * @return $this
+     */
+    public function setDebug($debug)
+    {
+        $this->debug = $debug;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getDebug()
+    {
+        return $this->debug;
+    }
+
+    /**
      * @return string
      */
     public function serialize()
     {
         return serialize([
             'adminPath' => $this->getAdminPath(),
+            'debug' => $this->getDebug(),
             'storage' => $this->getStorage(),
             'mapping' => $this->getMapping(),
             'languages' => $this->getLanguages(),
@@ -219,6 +243,7 @@ class Config implements ConfigInterface, Serializable
     {
         $config = unserialize($serialized);
         $this->setAdminPath($config['adminPath']);
+        $this->setDebug($config['debug']);
         $this->setStorage($config['storage']);
         $this->setMapping($config['mapping']);
         $this->setLanguages($config['languages']);

@@ -20,6 +20,17 @@ interface ConfigInterface
     public function getAdminPath();
 
     /**
+     * @param bool $debug
+     * @return $this
+     */
+    public function setDebug($debug);
+
+    /**
+     * @return bool
+     */
+    public function getDebug();
+
+    /**
      * @param string $branch
      * @return $this
      */

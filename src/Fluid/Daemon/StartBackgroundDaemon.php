@@ -2,6 +2,8 @@
 namespace Fluid\Daemon;
 
 use Fluid\Config;
+use Fluid\Logger;
+use Fluid\ErrorHandler;
 
 $vendor = realpath(__DIR__ . "/../../../../../");
 
@@ -12,29 +14,32 @@ if (is_dir($vendor) && is_file($vendor . "/autoload.php")) {
         $argv = $_SERVER['argv'];
     }
 
-    if (isset($argv) && isset($argv[2])) {
+    if (isset($argv) && isset($argv[1]) && isset($argv[2])) {
         $config = new Config();
         $config->unserialize(base64_decode($argv[1]));
 
-        if (isset($argv[3])) {
-            $debugMode = (int)$argv[3];
-            if ($debugMode !== 0) {
-                require_once __DIR__ . "/../Debug/Log.php";
+        $logger = null;
+        if ($config->getDebug()) {
+            require_once __DIR__ . "/../Logger.php";
+            require_once __DIR__ . "/../ErrorHandler.php";
 
-                set_error_handler(['Fluid\\Debug\\ErrorHandler', 'error']);
-                register_shutdown_function(['Fluid\\Debug\\ErrorHandler', 'shutdown']);
-            }
+            $logger = new Logger($config);
+
+            set_error_handler(['Fluid\\ErrorHandler', 'error']);
+            register_shutdown_function(['Fluid\\ErrorHandler', 'shutdown']);
+
+            ErrorHandler::$logger = $logger;
         }
 
-        if (isset($argv[4])) {
-            $timeZone = base64_decode($argv[4]);
-            if (@date_default_timezone_get() !== $timeZone) {
-                date_default_timezone_set($timeZone);
+        if (isset($argv[3])) {
+            $timezone = base64_decode($argv[3]);
+            if (@date_default_timezone_get() !== $timezone) {
+                date_default_timezone_set($timezone);
             }
         }
 
         $instanceId = base64_decode($argv[2]);
-        $daemon = new Daemon($config, null, $instanceId);
+        $daemon = new Daemon($config, $logger, null, $instanceId);
 
         if (is_file($daemon->getPidFilePath()) && is_writable($daemon->getPidFilePath())) {
             $daemon->stop();

@@ -1,14 +1,15 @@
 <?php
 namespace Fluid\Daemon;
 
+use Fluid\Logger;
 use React;
 use Ratchet;
 use Fluid\Event;
 use Fluid\WebsocketServer;
 use Fluid\WebsocketServer\LocalWebSocketServer;
 use Fluid\WebsocketServer\MessageWebsocketServer;
-use Fluid\Debug\Log;
 use Fluid\ConfigInterface;
+use Psr\Log\LoggerInterface;
 
 class Daemon implements DaemonInterface
 {
@@ -19,6 +20,11 @@ class Daemon implements DaemonInterface
      * @var ConfigInterface
      */
     private $config;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * @var Event
@@ -57,13 +63,17 @@ class Daemon implements DaemonInterface
 
     /**
      * @param ConfigInterface $config
+     * @param LoggerInterface|null $logger = null
      * @param Event $event
      * @param callable|null $uptimeCallback
      * @param string|null $instanceId
      */
-    public function __construct(ConfigInterface $config, Event $event = null, callable $uptimeCallback = null, $instanceId = null)
+    public function __construct(ConfigInterface $config, LoggerInterface $logger = null, Event $event = null, callable $uptimeCallback = null, $instanceId = null)
     {
         $this->setConfig($config);
+        if (null !== $logger) {
+            $this->setLogger($logger);
+        }
         if (null !== $event) {
             $this->setEvent($event);
         }
@@ -119,14 +129,13 @@ class Daemon implements DaemonInterface
     public function runBackground()
     {
         $instanceId = uniqid();
-        $debugMode = false; //$debugMode = Fluid\Fluid::getDebugMode(); TODO re-implement debug
-        $timeZone = date_default_timezone_get();
+        $timezone = date_default_timezone_get();
 
         shell_exec(
             "php -q " . __DIR__ . "/StartBackgroundDaemon.php " .
             base64_encode(serialize($this->getConfig())) . " " .
             base64_encode($instanceId) . " " .
-            base64_encode($timeZone) . " " .
+            base64_encode($timezone) . " " .
             " > /dev/null &"
         );
 
@@ -243,7 +252,7 @@ class Daemon implements DaemonInterface
             unlink($this->getPidFilePath());
         }
     }
-    
+
     /**
      * @param ConfigInterface $config
      * @return $this
@@ -286,7 +295,7 @@ class Daemon implements DaemonInterface
     /**
      * @return $this
      */
-    public function createEvent()
+    private function createEvent()
     {
         return $this->setEvent(new Event);
     }
@@ -343,5 +352,34 @@ class Daemon implements DaemonInterface
     public function getPidFilePath()
     {
         return $this->pidFilePath;
+    }
+
+    /**
+     * @param LoggerInterface $logger
+     * @return $this
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+        return $this;
+    }
+
+    /**
+     * @return LoggerInterface
+     */
+    public function getLogger()
+    {
+        if (null === $this->logger) {
+            $this->createLogger();
+        }
+        return $this->logger;
+    }
+
+    /**
+     * @return $this
+     */
+    private function createLogger()
+    {
+        return $this->setLogger(new Logger($this->getConfig()));
     }
 }
