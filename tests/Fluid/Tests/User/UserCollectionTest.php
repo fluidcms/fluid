@@ -6,6 +6,7 @@ use Fluid\Tests\Helper;
 use Fluid\User\UserEntity;
 use PHPUnit_Framework_TestCase;
 use Fluid\Fluid;
+use Fluid\Config;
 use Fluid\Storage;
 
 class UserCollectionTest extends PHPUnit_Framework_TestCase
@@ -22,7 +23,7 @@ class UserCollectionTest extends PHPUnit_Framework_TestCase
 
     public function testConstruct()
     {
-        $users = new UserCollection(new Storage(new Fluid));
+        $users = new UserCollection(new Storage(new Config));
         $this->assertInstanceOf('Fluid\StorageInterface', $users->getStorage());
         $this->assertInstanceOf('Fluid\User\UserMapper', $users->getUserMapper());
     }
@@ -42,7 +43,7 @@ class UserCollectionTest extends PHPUnit_Framework_TestCase
 
     public function testAdd()
     {
-        $users = new UserCollection(new Storage(new Fluid));
+        $users = new UserCollection(new Storage(new Config));
         $users->add(new UserEntity($users->getStorage(), $users));
         $this->assertInstanceOf('Fluid\User\UserEntity', $users[0]);
     }

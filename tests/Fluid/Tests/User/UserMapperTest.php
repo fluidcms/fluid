@@ -6,6 +6,7 @@ use Fluid\User\UserMapper;
 use Fluid\Tests\Helper;
 use PHPUnit_Framework_TestCase;
 use Fluid\Fluid;
+use Fluid\Config;
 use Fluid\Storage;
 
 class UserMapperTest extends PHPUnit_Framework_TestCase
@@ -22,7 +23,7 @@ class UserMapperTest extends PHPUnit_Framework_TestCase
 
     public function testConstruct()
     {
-        $userMapper = new UserMapper(new Storage(new Fluid));
+        $userMapper = new UserMapper(new Storage(new Config));
         $this->assertInstanceOf('Fluid\StorageInterface', $userMapper->getStorage());
     }
 
@@ -30,7 +31,7 @@ class UserMapperTest extends PHPUnit_Framework_TestCase
     {
         $fluid = new Fluid;
         $fluid->getConfig()->setStorage(Helper::getStorage());
-        $userMapper = new UserMapper($storage = new Storage($fluid));
+        $userMapper = new UserMapper($storage = new Storage($fluid->getConfig()));
 
         $users = new UserCollection($storage);
         $userMapper->mapCollection($users);
@@ -53,7 +54,7 @@ class UserMapperTest extends PHPUnit_Framework_TestCase
     {
         $fluid = new Fluid;
         $fluid->getConfig()->setStorage(Helper::getStorage());
-        $userMapper = new UserMapper($storage = new Storage($fluid));
+        $userMapper = new UserMapper($storage = new Storage($fluid->getConfig()));
 
         $users = new UserCollection($storage, $userMapper);
         $userMapper->mapCollection($users);
