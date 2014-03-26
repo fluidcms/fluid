@@ -11,6 +11,7 @@ class SessionEntity
 {
     const COOKIE_NAME = 'fluid_session';
     const EXPIRATION_TIME = 'PT1H';
+    const TOKEN_LENGHT = 128;
 
     /**
      * @var string
@@ -191,7 +192,7 @@ class SessionEntity
      */
     public function generateToken()
     {
-        return Token::generate(128);
+        return Token::generate(self::TOKEN_LENGHT);
     }
 
     /**

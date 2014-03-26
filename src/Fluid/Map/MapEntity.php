@@ -2,6 +2,7 @@
 namespace Fluid\Map;
 
 use Exception;
+use Fluid\Event;
 use InvalidArgumentException;
 use Fluid\Page\PageCollection;
 use Fluid\Page\PageEntity;
@@ -29,13 +30,24 @@ class MapEntity
     private $pages;
 
     /**
-     * Init
+     * @var Event
      */
-    public function __construct(MapMapper $mapper)
+    private $event;
+
+    /**
+     * Init
+     *
+     * @param MapMapper $mapper
+     * @param Event $event
+     */
+    public function __construct(MapMapper $mapper, Event $event = null)
     {
         $this->setMapper($mapper);
         $this->setPages(new PageCollection($mapper->getStorage(), $mapper->getXmlMappingLoader()));
         $this->setConfig(new MapConfig($this));
+        if (null !== $event) {
+            $this->setEvent($event);
+        }
     }
 
     /**
@@ -44,7 +56,11 @@ class MapEntity
      */
     public function findPage($page)
     {
-        return $this->getPages()->find($page);
+        $page = $this->getPages()->find($page);
+        if ($page instanceof PageEntity) {
+            $this->getEvent()->triggerWebsocketEvent('website:page:change', ['page' => $page->getName()]);
+        }
+        return $page;
     }
 
     /**
@@ -99,6 +115,24 @@ class MapEntity
     public function getConfig()
     {
         return $this->config;
+    }
+
+    /**
+     * @param Event $event
+     * @return $this
+     */
+    public function setEvent(Event $event)
+    {
+        $this->event = $event;
+        return $this;
+    }
+
+    /**
+     * @return Event
+     */
+    public function getEvent()
+    {
+        return $this->event;
     }
 
 

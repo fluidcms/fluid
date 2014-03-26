@@ -1,20 +1,16 @@
 <?php
-namespace Fluid\Socket;
+namespace Fluid\WebsocketClient;
 
 use Fluid\Logger;
-use Fluid\WebsocketServer\MessageWebsocketServer;
+use Fluid\WebsocketServer\EventWebsocketServer;
 use WebSocketClient;
 use WebSocketClient\WebSocketClientInterface;
 use React\EventLoop\Factory;
-use Fluid\Config;
+use Fluid\ConfigInterface;
 use React\EventLoop\StreamSelectLoop;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class Message
- * @package Fluid\WebSocket
- */
-class Message implements WebSocketClientInterface
+class EventWebsocketClient implements WebSocketClientInterface
 {
     /**
      * @var string
@@ -42,7 +38,7 @@ class Message implements WebSocketClientInterface
     private $loop;
 
     /**
-     * @var Config
+     * @var ConfigInterface
      */
     private $config;
 
@@ -52,10 +48,10 @@ class Message implements WebSocketClientInterface
     private $logger;
 
     /**
-     * @param Config $config
+     * @param ConfigInterface $config
      * @param LoggerInterface|null $logger
      */
-    public function __construct(Config $config, LoggerInterface $logger = null)
+    public function __construct(ConfigInterface $config, LoggerInterface $logger = null)
     {
         $this->setConfig($config);
         if (null !== $logger) {
@@ -68,9 +64,7 @@ class Message implements WebSocketClientInterface
      */
     public function run()
     {
-        if (!$this->loop) {
-            $this->getLoop()->run();
-        }
+        $this->getLoop()->run();
 
         return $this;
     }
@@ -89,7 +83,7 @@ class Message implements WebSocketClientInterface
             $this->getLoop(),
             '127.0.0.1',
             $this->getConfig()->getWebsocketPort(),
-            $this->getConfig()->getAdminPath() . MessageWebsocketServer::URI
+            $this->getConfig()->getAdminPath() . EventWebsocketServer::URI
         ));
         return $this->run();
     }
@@ -106,7 +100,7 @@ class Message implements WebSocketClientInterface
             'message',
             [$this->getMessageEvent(), $this->getMessageData()],
             function() use ($loop, $event) {
-                $this->getLogger()->debug('Message client successfully sent event ' . $event);
+                $this->getLogger()->debug('Event websocket client successfully sent ' . $event);
                 $loop->stop();
             }
         );
@@ -197,23 +191,23 @@ class Message implements WebSocketClientInterface
     /**
      * @return $this
      */
-    public function createLoop()
+    private function createLoop()
     {
         return $this->setLoop(Factory::create());
     }
 
     /**
-     * @param Config $config
+     * @param ConfigInterface $config
      * @return $this
      */
-    public function setConfig(Config $config)
+    public function setConfig(ConfigInterface $config)
     {
         $this->config = $config;
         return $this;
     }
 
     /**
-     * @return Config
+     * @return ConfigInterface
      */
     public function getConfig()
     {

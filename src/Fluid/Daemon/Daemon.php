@@ -8,7 +8,7 @@ use Ratchet;
 use Fluid\Event;
 use Fluid\WebsocketServer;
 use Fluid\WebsocketServer\LocalWebSocketServer;
-use Fluid\WebsocketServer\MessageWebsocketServer;
+use Fluid\WebsocketServer\EventWebsocketServer;
 use Fluid\ConfigInterface;
 use Psr\Log\LoggerInterface;
 use Fluid\StorageInterface;
@@ -223,8 +223,8 @@ class Daemon implements DaemonInterface
         $server->add($localWebsocketServer, $this->getConfig()->getAdminPath() . LocalWebSocketServer::URI);
 
         // Create Message Websocket Server
-        $messageWebsocketServer = new MessageWebsocketServer($this->getConfig(), $logger, $this->getEvent());
-        $server->add($messageWebsocketServer, $this->getConfig()->getAdminPath() . MessageWebsocketServer::URI);
+        $eventWebsocketServer = new EventWebsocketServer($this->getConfig(), $logger, $this->getEvent());
+        $server->add($eventWebsocketServer, $this->getConfig()->getAdminPath() . EventWebsocketServer::URI);
 
         $server->create();
 

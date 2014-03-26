@@ -1,6 +1,7 @@
 <?php
 namespace Fluid\Map;
 
+use Fluid\Event;
 use Fluid\MappingInterface;
 use Fluid\StorageInterface;
 use Fluid\XmlMappingLoaderInterface;
@@ -21,13 +22,20 @@ class MapMapper
     private $xmlMappingLoader;
 
     /**
+     * @var Event
+     */
+    private $event;
+
+    /**
      * @param StorageInterface $storage
      * @param XmlMappingLoaderInterface $xmlMappingLoader
+     * @param Event $event
      */
-    public function __construct(StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader)
+    public function __construct(StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, Event $event)
     {
         $this->setStorage($storage);
         $this->setXmlMappingLoader($xmlMappingLoader);
+        $this->setEvent($event);
     }
 
     /**
@@ -37,7 +45,7 @@ class MapMapper
     public function map(MapEntity $map = null)
     {
         if (null === $map) {
-            $map = new MapEntity($this);
+            $map = new MapEntity($this, $this->getEvent());
         }
         $this->mapObject($map, $this->getStorage()->loadBranchData(self::DATA_FILENAME));
         return $map;
@@ -112,5 +120,23 @@ class MapMapper
     public function getXmlMappingLoader()
     {
         return $this->xmlMappingLoader;
+    }
+
+    /**
+     * @param Event $event
+     * @return $this
+     */
+    public function setEvent(Event $event)
+    {
+        $this->event = $event;
+        return $this;
+    }
+
+    /**
+     * @return Event
+     */
+    public function getEvent()
+    {
+        return $this->event;
     }
 }

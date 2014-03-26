@@ -4,6 +4,9 @@ namespace Fluid;
 use Fluid\Map\MapEntity;
 use Fluid\Map\MapMapper;
 use Fluid\Daemon\Daemon;
+use Fluid\Session\SessionCollection;
+use Fluid\Session\SessionEntity;
+use Fluid\User\UserCollection;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -73,6 +76,11 @@ class Fluid
      */
     private $daemon;
 
+    /**
+     * @var bool
+     */
+    private $isAdmin;
+
     public function __construct()
     {
         $this->setConfig(new Config);
@@ -85,6 +93,7 @@ class Fluid
      * @param int $mode
      * @return $this
      * @throws Exception\InvalidDebugModeException
+     * @deprecated
      */
     public function debug($mode = self::DEBUG_LOG)
     {
@@ -99,6 +108,7 @@ class Fluid
      * Get the debug mode
      *
      * @return int
+     * @deprecated
      */
     public function getDebugMode()
     {
@@ -168,7 +178,7 @@ class Fluid
      */
     private function createMap()
     {
-        $mapper = new MapMapper($this->getStorage(), $this->getXmlMappingLoader());
+        $mapper = new MapMapper($this->getStorage(), $this->getXmlMappingLoader(), $this->getEvent());
         return $this->setMap($mapper->map());
     }
 
@@ -334,7 +344,9 @@ class Fluid
      */
     private function createEvent()
     {
-        return $this->setEvent(new Event);
+        $event = new Event($this->getConfig(), $this->getLogger());
+        $event->setIsAdmin($this->isAdmin());
+        return $this->setEvent($event);
     }
 
     /**
@@ -393,5 +405,52 @@ class Fluid
     private function createDaemon()
     {
         return $this->setDaemon(new Daemon($this->getConfig(), $this->getStorage(), $this->getLogger(), $this->getEvent()));
+    }
+
+    /**
+     * @param bool $isAdmin
+     * @return $this
+     */
+    public function setIsAdmin($isAdmin)
+    {
+        $this->isAdmin = $isAdmin;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsAdmin()
+    {
+        if (null === $this->isAdmin) {
+            $this->setIsAdmin($this->checkIfIsAdmin());
+        }
+        return $this->isAdmin;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->getIsAdmin();
+    }
+
+    /**
+     * @return bool
+     */
+    private function checkIfIsAdmin()
+    {
+        if (isset($_COOKIE['fluid_session'])) {
+            $session = $_COOKIE['fluid_session'];
+            if (strlen($session) === SessionEntity::TOKEN_LENGHT && preg_match('/^[a-zA-Z0-9]*$/', $session)) {
+                $sessions = new SessionCollection($this->getStorage(), new UserCollection($this->getStorage()));
+                $session = $sessions->find($session);
+                if ($session instanceof SessionEntity && !$session->isExpired()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

@@ -11,9 +11,9 @@ use Fluid\ConfigInterface;
 use Fluid\Event;
 use Psr\Log\LoggerInterface;
 
-class MessageWebsocketServer implements WampServerInterface
+class EventWebsocketServer implements WampServerInterface
 {
-    const URI = 'message';
+    const URI = 'event';
 
     /**
      * @var ConfigInterface
@@ -120,11 +120,11 @@ class MessageWebsocketServer implements WampServerInterface
             $event = $params[0];
             $args = $params[1];
 
-            $conn->send(json_encode(array(
+            $conn->send(json_encode([
                 3,
                 $id,
-                array('true')
-            )));
+                ['true']
+            ]));
 
             $this->event->trigger($event, $args);
             $this->getLogger()->debug('Message socket received event ' . $event);
