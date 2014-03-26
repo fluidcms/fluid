@@ -16,6 +16,7 @@ define(['backbone', 'views/helpers/error'], function (Backbone, ErrorView) {
 
             topic: function () {
                 return {
+                    session: this.session.get('token'),
                     user_id: this.user.get('id'),
                     branch: this.branch
                 };
@@ -71,15 +72,15 @@ define(['backbone', 'views/helpers/error'], function (Backbone, ErrorView) {
                 }, this.pingTimeout);
             },
 
-            send: function (method, url, data, callback) {
-                if (typeof data !== 'object' || data === null) {
-                    data = {};
+            send: function (method, uri, params, callback) {
+                if (typeof params !== 'object' || params === null) {
+                    params = {};
                 }
 
-                this.connection.call(JSON.stringify(this.topic), {
+                this.connection.call(JSON.stringify(this.topic()), {
                     method: method,
-                    url: url,
-                    data: data
+                    uri: uri,
+                    params: params
                 }).then(
                     function (result) {
                         if (typeof callback === 'function') {

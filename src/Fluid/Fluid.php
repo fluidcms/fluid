@@ -199,7 +199,7 @@ class Fluid
      */
     private function createStorage()
     {
-        return $this->setStorage(new Storage($this));
+        return $this->setStorage(new Storage($this->getConfig()));
     }
 
     /**
@@ -305,7 +305,7 @@ class Fluid
      */
     private function createRouter()
     {
-        return $this->setRouter(new Router($this, $this->getRequest()));
+        return $this->setRouter(new Router($this->getRequest(), null, $this));
     }
 
     /**
@@ -392,6 +392,6 @@ class Fluid
      */
     private function createDaemon()
     {
-        return $this->setDaemon(new Daemon($this->getConfig(), $this->getLogger(), $this->getEvent()));
+        return $this->setDaemon(new Daemon($this->getConfig(), $this->getStorage(), $this->getLogger(), $this->getEvent()));
     }
 }

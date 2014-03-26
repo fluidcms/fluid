@@ -1,5 +1,17 @@
 <?php
-namespace Fluid;
+namespace Fluid\Routes;
+
+use Fluid\Fluid;
+use Fluid\Router;
+use Fluid\Request;
+use Fluid\Response;
+use Fluid\CookieInterface;
+use Fluid\Session\SessionCollection;
+use Fluid\Session\SessionEntity;
+use Fluid\StorageInterface;
+use Fluid\Controller;
+use Fluid\User\UserCollection;
+use Fluid\User\UserEntity;
 
 /**
  * @param Fluid $fluid
@@ -8,8 +20,8 @@ namespace Fluid;
  * @param StorageInterface $storage
  * @return array
  */
-return function (Fluid $fluid, Router $router, Request $request, Response $response, StorageInterface $storage, CookieInterface $cookie) {
-    $router
+return function (Router $router, Request $request, Response $response, StorageInterface $storage, UserCollection $users, UserEntity $user, SessionCollection $sessions, SessionEntity $session) {
+    /*$router
         ->respond('/', function () use ($fluid, $router, $request, $response, $storage, $cookie) {
             (new Controller\AdminController($fluid, $router, $request, $response, $storage, $cookie))->index();
         })
@@ -21,5 +33,5 @@ return function (Fluid $fluid, Router $router, Request $request, Response $respo
         })
         ->respond('GET', '/server', function () use ($fluid, $router, $request, $response, $storage, $cookie) {
             (new Controller\ServerController($fluid, $router, $request, $response, $storage, $cookie))->status();
-        });
+        });*/
 };

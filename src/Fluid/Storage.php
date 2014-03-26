@@ -8,22 +8,16 @@ class Storage implements StorageInterface
     const DATA_DIR_NAME = 'data';
 
     /**
-     * @var Fluid
-     */
-    private $fluid;
-
-    /**
      * @var ConfigInterface
      */
     private $config;
 
     /**
-     * @param Fluid $fluid
+     * @param ConfigInterface $config
      */
-    public function __construct(Fluid $fluid)
+    public function __construct(ConfigInterface $config)
     {
-        $this->setFluid($fluid);
-        $this->setConfig($fluid->getConfig());
+        $this->setConfig($config);
     }
 
     /**
@@ -91,24 +85,6 @@ class Storage implements StorageInterface
             return false;
         }
         return true;
-    }
-
-    /**
-     * @param Fluid $fluid
-     * @return $this
-     */
-    public function setFluid(Fluid $fluid)
-    {
-        $this->fluid = $fluid;
-        return $this;
-    }
-
-    /**
-     * @return Fluid
-     */
-    public function getFluid()
-    {
-        return $this->fluid;
     }
 
     /**

@@ -2,6 +2,10 @@
 namespace Fluid;
 
 use Closure;
+use Fluid\Session\SessionCollection;
+use Fluid\Session\SessionEntity;
+use Fluid\User\UserCollection;
+use Fluid\User\UserEntity;
 
 class Router
 {
@@ -43,18 +47,29 @@ class Router
     private $request;
 
     /**
+     * @var Response
+     */
+    private $response;
+
+    /**
      * @var Closure[]
      */
     private $routes = [];
 
     /**
-     * @param Fluid $fluid
      * @param Request $request
+     * @param Response $response
+     * @param Fluid|null $fluid
      */
-    public function __construct(Fluid $fluid, Request $request)
+    public function __construct(Request $request, Response $response = null, Fluid $fluid = null)
     {
-        $this->setFluid($fluid);
         $this->setRequest($request);
+        if ($response !== null) {
+            $this->setResponse($response);
+        }
+        if ($fluid !== null) {
+            $this->setFluid($fluid);
+        }
     }
 
     /**
@@ -84,14 +99,14 @@ class Router
     public function dispatch()
     {
         $uri = $this->getRequest()->getUri();
+        $response = $this->getResponse();
         $found = false;
-        $response = new Response;
 
         if (stripos($uri, $this->getAdminPath()) === 0) {
             $uri = preg_replace('{^' . rtrim($this->getAdminPath(), '/') . '}', '', $uri);
 
             /** @var Closure $routes */
-            $routes = require __DIR__ . DIRECTORY_SEPARATOR . 'Routes.php';
+            $routes = require __DIR__ . DIRECTORY_SEPARATOR . 'Routes' . DIRECTORY_SEPARATOR . 'HttpRoutes.php';
             $routes($this->getFluid(), $this, $this->getRequest(), $response, $this->getFluid()->getStorage(), $this->getRequest()->getCookie());
 
             $method = $this->request->getMethod();
@@ -151,6 +166,47 @@ class Router
         }
         return null;
     }
+
+    /**
+     * Route a local websocket request
+     *
+     * @param StorageInterface $storage
+     * @param UserCollection $users
+     * @param UserEntity $user
+     * @param SessionCollection $sessions
+     * @param SessionEntity $session
+     * @return null|Response
+     */
+    public function dispatchLocalWebsocketRouter(StorageInterface $storage, UserCollection $users, UserEntity $user, SessionCollection $sessions, SessionEntity $session)
+    {
+        $uri = $this->getRequest()->getUri();
+        $response = $this->getResponse();
+        $found = false;
+
+        /** @var callable $routes */
+        $routes = require __DIR__ . DIRECTORY_SEPARATOR . 'Routes' . DIRECTORY_SEPARATOR . 'LocalWebsocketRoutes.php';
+        $routes($this, $this->getRequest(), $this->getResponse(), $storage, $users, $user, $sessions, $session);
+
+        $method = $this->request->getMethod();
+        if (isset($this->routes[$uri])) {
+            if (isset($this->routes[$uri][$method])) {
+                $found = true;
+                $this->routes[$uri][$method]();
+            } elseif (isset($this->routes[$uri][null])) {
+                $found = true;
+                $this->routes[$uri][null]();
+            } else {
+                $response->setCode(Response::RESPONSE_CODE_METHOD_NOT_ALLOWED);
+            }
+        }
+
+        if ($found) {
+            return $response;
+        }
+        return null;
+    }
+
+    //////------------
 
     /**
      * @param \Fluid\Map\Map $map
@@ -303,5 +359,34 @@ class Router
     public function getFluid()
     {
         return $this->fluid;
+    }
+
+    /**
+     * @param Response $response
+     * @return $this
+     */
+    public function setResponse(Response $response)
+    {
+        $this->response = $response;
+        return $this;
+    }
+
+    /**
+     * @return Response
+     */
+    public function getResponse()
+    {
+        if (null === $this->response) {
+            $this->createResponse();
+        }
+        return $this->response;
+    }
+
+    /**
+     * @return $this
+     */
+    private function createResponse()
+    {
+        return $this->setResponse(new Response);
     }
 }

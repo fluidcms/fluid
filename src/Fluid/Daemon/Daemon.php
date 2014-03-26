@@ -2,6 +2,7 @@
 namespace Fluid\Daemon;
 
 use Fluid\Logger;
+use Fluid\Storage;
 use React;
 use Ratchet;
 use Fluid\Event;
@@ -10,6 +11,7 @@ use Fluid\WebsocketServer\LocalWebSocketServer;
 use Fluid\WebsocketServer\MessageWebsocketServer;
 use Fluid\ConfigInterface;
 use Psr\Log\LoggerInterface;
+use Fluid\StorageInterface;
 
 class Daemon implements DaemonInterface
 {
@@ -20,6 +22,11 @@ class Daemon implements DaemonInterface
      * @var ConfigInterface
      */
     private $config;
+
+    /**
+     * @var StorageInterface
+     */
+    private $storage;
 
     /**
      * @var LoggerInterface
@@ -63,14 +70,18 @@ class Daemon implements DaemonInterface
 
     /**
      * @param ConfigInterface $config
+     * @param StorageInterface|null $storage = null
      * @param LoggerInterface|null $logger = null
      * @param Event $event
      * @param callable|null $uptimeCallback
      * @param string|null $instanceId
      */
-    public function __construct(ConfigInterface $config, LoggerInterface $logger = null, Event $event = null, callable $uptimeCallback = null, $instanceId = null)
+    public function __construct(ConfigInterface $config, StorageInterface $storage = null, LoggerInterface $logger = null, Event $event = null, callable $uptimeCallback = null, $instanceId = null)
     {
         $this->setConfig($config);
+        if (null !== $storage) {
+            $this->setStorage($storage);
+        }
         if (null !== $logger) {
             $this->setLogger($logger);
         }
@@ -208,7 +219,7 @@ class Daemon implements DaemonInterface
         $loop = $server->getReactEventLoop();
 
         // Create Local Websocket Server
-        $localWebsocketServer = new LocalWebSocketServer($this->getConfig(), $logger, $this->getEvent());
+        $localWebsocketServer = new LocalWebSocketServer($this->getConfig(), $this->getStorage(), $logger, $this->getEvent());
         $server->add($localWebsocketServer, $this->getConfig()->getAdminPath() . LocalWebSocketServer::URI);
 
         // Create Message Websocket Server
@@ -387,5 +398,34 @@ class Daemon implements DaemonInterface
     private function createLogger()
     {
         return $this->setLogger(new Logger($this->getConfig()));
+    }
+
+    /**
+     * @param StorageInterface $storage
+     * @return $this
+     */
+    public function setStorage(StorageInterface $storage)
+    {
+        $this->storage = $storage;
+        return $this;
+    }
+
+    /**
+     * @return StorageInterface
+     */
+    public function getStorage()
+    {
+        if (null === $this->storage) {
+            $this->createStorage();
+        }
+        return $this->storage;
+    }
+
+    /**
+     * @return $this
+     */
+    private function createStorage()
+    {
+        return $this->setStorage(new Storage($this->getConfig()));
     }
 }

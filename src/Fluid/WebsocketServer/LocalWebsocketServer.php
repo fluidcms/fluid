@@ -1,8 +1,16 @@
 <?php
 namespace Fluid\WebsocketServer;
 
+use Fluid\Request;
+use Fluid\Response;
+use Fluid\Router;
+use Fluid\Session\SessionEntity;
+use Fluid\User\UserCollection;
+use Fluid\Session\SessionCollection;
+use Fluid\User\UserEntity;
 use Ratchet\Wamp\WampServerInterface;
 use Fluid\ConfigInterface;
+use Fluid\StorageInterface;
 use Fluid\Event;
 use Fluid\Requests\WebSocket as WebSocketRequest;
 use Ratchet;
@@ -21,6 +29,16 @@ use Psr\Log\LoggerInterface;
 class LocalWebSocketServer implements WampServerInterface
 {
     const URI = 'websocket';
+
+    const TYPE_ID_WELCOME = 0;
+    const TYPE_ID_PREFIX = 1;
+    const TYPE_ID_CALL = 2;
+    const TYPE_ID_CALLRESULT = 3;
+    const TYPE_ID_ERROR = 4;
+    const TYPE_ID_SUBSCRIBE = 5;
+    const TYPE_ID_UNSUBSCRIBE = 6;
+    const TYPE_ID_PUBLISH = 7;
+    const TYPE_ID_EVENT = 8;
 
     /**
      * @var array
@@ -43,6 +61,11 @@ class LocalWebSocketServer implements WampServerInterface
     private $config;
 
     /**
+     * @var StorageInterface
+     */
+    private $storage;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -53,14 +76,26 @@ class LocalWebSocketServer implements WampServerInterface
     private $event;
 
     /**
+     * @var UserCollection
+     */
+    private $users;
+
+    /**
+     * @var SessionCollection
+     */
+    private $sessions;
+
+    /**
      * @param ConfigInterface $config
+     * @param StorageInterface $storage
      * @param LoggerInterface $logger
      * @param Event $event
      */
-    public function __construct(ConfigInterface $config, LoggerInterface $logger, Event $event)
+    public function __construct(ConfigInterface $config, StorageInterface $storage, LoggerInterface $logger, Event $event)
     {
         $this->startTime = time();
         $this->setConfig($config);
+        $this->setStorage($storage);
         $this->setLogger($logger);
         $this->setEvent($event);
         $this->bindEvents();
@@ -183,11 +218,9 @@ class LocalWebSocketServer implements WampServerInterface
                 'session' => $data['session'],
                 'branch' => $data['branch'],
                 'user_id' => $data['user_id'],
-                'user_name' => $data['user_name'],
-                'user_email' => $data['user_email'],
                 'topics' => array()
             );
-            $this->getLogger()->debug("User {$data['user_id']} subscribed ({$data['user_name']} <{$data['user_email']}>)");
+            $this->getLogger()->debug("User {$data['user_id']} subscribed");
             $topic->broadcast('true');
         }
     }
@@ -240,38 +273,43 @@ class LocalWebSocketServer implements WampServerInterface
         }
 
         if (
-            isset($params['url']) &&
+            isset($params['uri']) &&
             isset($params['method']) &&
-            isset($params['data']) &&
-            is_string($params['url']) &&
+            isset($params['params']) &&
+            is_string($params['uri']) &&
             is_string($params['method']) &&
-            is_array($params['data'])
+            is_array($params['params'])
         ) {
             $data = json_decode($topic, true);
 
-            $this->getLogger()->debug("User {$data['user_id']} called method {$params['method']} {$params['url']}");
+            $this->getLogger()->debug("User {$data['user_id']} called method {$params['method']} {$params['uri']}");
 
-            ob_start();
-            new WebSocketRequest(
-                $params['url'],
-                $params['method'],
-                $params['data'],
-                $data['branch'],
-                array(
-                    'id' => $data['user_id'],
-                    'name' => $data['user_name'],
-                    'email' => $data['user_email']
-                )
-            );
-            $retval = ob_get_contents();
-            ob_end_clean();
+            $session = $this->getSessions()->find($data['session']);
+            $user = $this->getUsers()->find($data['user_id']);
 
-            if (!empty($retval)) {
-                $conn->send('[3,"' . $id . '",' . $retval . ']');
+            if ($session instanceof SessionEntity && $user instanceof UserEntity) {
+                $request = new Request;
+                $request->setMethod($params['method']);
+                $request->setParams($params['params']);
+
+                $uri = $params['uri'];
+                if (strpos($uri, '/') !== 0) {
+                    $uri = '/' . $uri;
+                }
+                $request->setUri($uri);
+
+                $response = new Response;
+
+                $router = new Router($request, $response);
+                $router->dispatchLocalWebsocketRouter($this->getStorage(), $this->getUsers(), $user, $this->getSessions(), $session);
+
+                $conn->send(json_encode([self::TYPE_ID_CALLRESULT, $id, $response->getBody()]));
+                return;
             }
-        } else {
-            $conn->callError($id, $topic, 'Invalid call')->close();
+
         }
+
+        $conn->callError($id, $topic, 'Invalid call')->close();
     }
 
     /**
@@ -348,5 +386,81 @@ class LocalWebSocketServer implements WampServerInterface
     public function getLogger()
     {
         return $this->logger;
+    }
+
+    /**
+     * @param StorageInterface $storage
+     * @return $this
+     */
+    public function setStorage(StorageInterface $storage)
+    {
+        $this->storage = $storage;
+        return $this;
+    }
+
+    /**
+     * @return StorageInterface
+     */
+    public function getStorage()
+    {
+        return $this->storage;
+    }
+
+    /**
+     * @param UserCollection $users
+     * @return $this
+     */
+    public function setUsers(UserCollection $users)
+    {
+        $this->users = $users;
+        return $this;
+    }
+
+    /**
+     * @return UserCollection
+     */
+    public function getUsers()
+    {
+        if (null === $this->users) {
+            $this->createUsers();
+        }
+        return $this->users;
+    }
+
+    /**
+     * @return $this
+     */
+    private function createUsers()
+    {
+        return $this->setUsers(new UserCollection($this->getStorage()));
+    }
+
+    /**
+     * @param SessionCollection $sessions
+     * @return $this
+     */
+    public function setSessions(SessionCollection $sessions)
+    {
+        $this->sessions = $sessions;
+        return $this;
+    }
+
+    /**
+     * @return SessionCollection
+     */
+    public function getSessions()
+    {
+        if (null === $this->sessions) {
+            $this->createSessions();
+        }
+        return $this->sessions;
+    }
+
+    /**
+     * @return $this
+     */
+    private function createSessions()
+    {
+        return $this->setSessions(new SessionCollection($this->getStorage(), $this->getUsers()));
     }
 }
