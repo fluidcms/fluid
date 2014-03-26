@@ -5,19 +5,17 @@
 
 /* Table of Content
 ==================================================
-  # Main
+  # Website
   # Commands */
 
-/* # Main
+/* # Website
 ================================================== */
-
-// TODO: rename target to main and main to something else
-#target {
+#website {
   position: relative;
   z-index: 1;
   width: 100%;
   height: 100%;
-  padding: 42px 0 0 306px;
+  padding: 0 0 0 306px;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -30,7 +28,7 @@
 
 /* # Commands
 ================================================== */
-#target div.commands {
+#website div.commands {
   position: fixed;
   bottom: 0;
   right: 0;

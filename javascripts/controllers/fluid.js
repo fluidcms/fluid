@@ -7,16 +7,17 @@ define(
         'models/map/map',
         'models/language/language',
         'models/layout/layout',
-        'models/preview/preview',
+        'models/website/website',
         'models/history/history',
         'models/component/component',
         'models/file/file',
+        'views/website/website',
         'views/nav/nav',
         'views/toolbar/toolbar',
         'views/tools/tools',
         'views/helpers/error'
     ],
-    function (Backbone, Marionette, LoaderView, Socket, Map, Language, Layout, Preview, History, Components, Files, Nav, Toolbar, ToolsView, ErrorView) {
+    function (Backbone, Marionette, LoaderView, Socket, Map, Language, Layout, Website, History, Components, Files, WebsiteView, Nav, Toolbar, ToolsView, ErrorView) {
         return Marionette.Controller.extend({
             current: "",
             main: null,
@@ -59,7 +60,9 @@ define(
                 this.models.languages = this.languages = new Language.Languages(null, {socket: this.socket}); // TODO: remove this.languages var
                 this.socket.models['language'] = this.models.languages;
 
-                this.models.preview = new Preview({socket: this.socket, languages: this.languages});
+                //this.models.preview = new Preview({socket: this.socket, languages: this.languages});
+                this.website = new Website({});
+                this.websiteView = new WebsiteView({model: this.website});
 
                 this.models.layouts = this.layouts = new Layout.Layouts(null, {socket: this.socket}); // TODO: remove this.layouts var
 
@@ -99,12 +102,15 @@ define(
                     if (root.ready !== true) {
                         root.ready = true;
                         root.loader.remove();
-                        root.models.components.fetch();
-                        /*root.models.languages.fetch();
+                        /*root.models.components.fetch();
+                        root.models.languages.fetch();
                         root.models.layouts.fetch();
                         root.models.preview.loadPage();
                         root.models.components.fetch();
                         root.models.map.fetch();*/
+
+                        //root.models.preview.loadPage();
+                        root.app.websiteRegion.show(root.websiteView);
                     }
                 });
 
@@ -126,7 +132,9 @@ define(
                 // Control + R or Command + R events
                 $(document).keydown(function (e) {
                     if ((e.ctrlKey || e.metaKey) && e.keyCode == 82) {
-                        console.log('Block refresh');
+                        e.preventDefault();
+                        root.websiteView.reload();
+                        return false;
                     }
                     return true;
                 });

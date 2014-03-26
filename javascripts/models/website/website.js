@@ -7,7 +7,7 @@ define(['backbone'], function (Backbone) {
             this.languages = attrs.languages;
 
             // Track iframe location change
-            $("#website").on('load', function(e) { root.verifyFrameStatus(e) });
+            $("#website-iframe").on('load', function(e) { root.verifyFrameStatus(e) });
 
             // Block normal link behavior of the iframe
             this.overrideIframeBehavior();
@@ -15,7 +15,7 @@ define(['backbone'], function (Backbone) {
 
         overrideIframeBehavior: function() {
             var root = this;
-            var iframe = $("#website")[0].contentWindow.document;
+            var iframe = $("#website-iframe")[0].contentWindow.document;
 
             // Append the token and branch to local links
             $('[href]', $(iframe.body)).on('click', function(e) {
@@ -35,7 +35,9 @@ define(['backbone'], function (Backbone) {
         },
 
         getUrl: function() {
-            var url = $("#website")[0].contentWindow.location.toString();
+            return '/';
+            // TODO
+            var url = $("#website-iframe")[0].contentWindow.location.toString();
             url = RemoveUrlParameter(url, 'fluidbranch');
             url = RemoveUrlParameter(url, 'fluidtoken');
             url = RemoveUrlParameter(url, 'fluidsession');
@@ -73,7 +75,7 @@ define(['backbone'], function (Backbone) {
                     url = updateQueryStringParameter(url, 'fluidbranch', fluidBranch);
                     url = updateQueryStringParameter(url, 'fluidtoken', response.token);
                     url = updateQueryStringParameter(url, 'fluidsession', fluidSession);
-                    $("#website")[0].contentWindow.location = url;
+                    $("#website-iframe")[0].contentWindow.location = url;
                 });
             } else {
                 $.ajax({url: 'changepage.json', dataType: 'JSON', type: "GET", data: {
@@ -84,7 +86,7 @@ define(['backbone'], function (Backbone) {
                             url = updateQueryStringParameter(url, 'fluidbranch', fluidBranch);
                             url = updateQueryStringParameter(url, 'fluidtoken', response.token);
                             url = updateQueryStringParameter(url, 'fluidsession', fluidSession);
-                            $("#website")[0].contentWindow.location = url;
+                            $("#website-iframe")[0].contentWindow.location = url;
                         });
                     });
             }
@@ -97,7 +99,7 @@ define(['backbone'], function (Backbone) {
         },
 
         reload: function () {
-            $("#website")[0].contentWindow.location.reload();
+            $("#website-iframe")[0].contentWindow.location.reload();
 
         }
     });

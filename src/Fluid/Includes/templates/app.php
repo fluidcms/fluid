@@ -33,8 +33,8 @@
 <div id="toolbar">
 </div>
 
-<div id="target">
-    <iframe id="website"></iframe>
+<div id="website">
+    <iframe id="website-iframe"></iframe>
 </div>
 
 <div class="loader">
