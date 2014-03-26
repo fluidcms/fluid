@@ -23,6 +23,7 @@ define([
 
         render: function() {
             this.$el[0].contentWindow.location = '/';
+            Backbone.history.navigate('/');
 
             //console.log(this.$el);
             //this.model.getUrl();
