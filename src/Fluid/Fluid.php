@@ -81,6 +81,11 @@ class Fluid
      */
     private $isAdmin;
 
+    /**
+     * @var string
+     */
+    private $sessionToken;
+
     public function __construct()
     {
         $this->setConfig(new Config);
@@ -346,6 +351,7 @@ class Fluid
     {
         $event = new Event($this->getConfig(), $this->getLogger());
         $event->setIsAdmin($this->isAdmin());
+        $event->setSessionToken($this->sessionToken);
         return $this->setEvent($event);
     }
 
@@ -447,6 +453,7 @@ class Fluid
                 $sessions = new SessionCollection($this->getStorage(), new UserCollection($this->getStorage()));
                 $session = $sessions->find($session);
                 if ($session instanceof SessionEntity && !$session->isExpired()) {
+                    $this->sessionToken = $session->getToken();
                     return true;
                 }
             }

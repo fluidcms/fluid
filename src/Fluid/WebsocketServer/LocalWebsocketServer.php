@@ -106,6 +106,17 @@ class LocalWebSocketServer implements WampServerInterface
         $root = $this;
 
         // User loads data from a page
+        $this->getEvent()->on('website:page:change', function($sessionToken, $page) use ($root) {
+            $root->sendToSession($sessionToken, [
+                'target' => 'website:page:change',
+                'data' => [
+                    'page' => $page
+                ]
+            ]);
+        });
+
+        // User loads data from a page
+        // @deprecated
         $this->getEvent()->on('data:get', function($session, $language, $page) use ($root) {
             $root->sendToSession($session, [
                 'target' => 'data_request',
@@ -117,6 +128,7 @@ class LocalWebSocketServer implements WampServerInterface
         });
 
         // User loads data from a page
+        // @deprecated
         $this->getEvent()->on('language:changed', function($session, $language) use ($root) {
             $root->sendToSession($session, [
                 'target' => 'language_detected',
@@ -178,6 +190,9 @@ class LocalWebSocketServer implements WampServerInterface
         if (is_array($message)) {
             $message = json_encode($message);
         }
+
+        // todo
+        //$this->getLogger()->debug('');
 
         foreach ($this->getConnections() as $connection) {
             if (isset($connection['session']) && $session === $connection['session']) {

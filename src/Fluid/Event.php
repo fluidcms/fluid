@@ -28,6 +28,11 @@ class Event
     private $isAdmin;
 
     /**
+     * @var string
+     */
+    private $sessionToken;
+
+    /**
      * @param ConfigInterface $config
      * @param LoggerInterface $logger
      */
@@ -53,7 +58,7 @@ class Event
     {
         if ($this->isAdmin()) {
             $eventWebsocketClient = new EventWebsocketClient($this->getConfig(), $this->getLogger());
-            $eventWebsocketClient->send($event, $arguments);
+            $eventWebsocketClient->send($event, array_merge(['sessionToken' => $this->sessionToken], $arguments));
         }
     }
 
@@ -166,5 +171,23 @@ class Event
     public function getLogger()
     {
         return $this->logger;
+    }
+
+    /**
+     * @param string $sessionToken
+     * @return $this
+     */
+    public function setSessionToken($sessionToken)
+    {
+        $this->sessionToken = $sessionToken;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSessionToken()
+    {
+        return $this->sessionToken;
     }
 }

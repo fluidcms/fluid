@@ -26,6 +26,6 @@ websocket:connection:close (Ratchet\ConnectionInterface $conn)
 
 # Website
 ```
-website:page:change (string $page)
+website:page:change (string $sessionToken, string $page)
 website:language:change (string $language)
 ```

@@ -126,7 +126,7 @@ class EventWebsocketServer implements WampServerInterface
                 ['true']
             ]));
 
-            $this->event->trigger($event, $args);
+            $this->getEvent()->trigger($event, $args);
             $this->getLogger()->debug('Message socket received event ' . $event);
         }
     }

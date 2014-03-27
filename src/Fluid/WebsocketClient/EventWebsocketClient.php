@@ -3,7 +3,8 @@ namespace Fluid\WebsocketClient;
 
 use Fluid\Logger;
 use Fluid\WebsocketServer\EventWebsocketServer;
-use WebSocketClient;
+use WebSocketClient\Exception\ConnectionException;
+use WebSocketClient\WebSocketClient;
 use WebSocketClient\WebSocketClientInterface;
 use React\EventLoop\Factory;
 use Fluid\ConfigInterface;
@@ -63,7 +64,8 @@ class EventWebsocketClient implements WebSocketClientInterface
      * @return $this
      */
     public function run()
-    {
+    {        var_dump('this here');
+die();
         $this->getLoop()->run();
 
         return $this;
@@ -72,20 +74,25 @@ class EventWebsocketClient implements WebSocketClientInterface
     /**
      * @param string $messageEvent
      * @param array $messageData
-     * @return $this
+     * @return bool
      */
     public function send($messageEvent, array $messageData)
     {
         $this->setMessageEvent($messageEvent);
         $this->setMessageData($messageData);
-        $this->setClient(new WebSocketClient(
-            $this,
-            $this->getLoop(),
-            '127.0.0.1',
-            $this->getConfig()->getWebsocketPort(),
-            $this->getConfig()->getAdminPath() . EventWebsocketServer::URI
-        ));
-        return $this->run();
+        try {
+            $this->setClient(new WebSocketClient(
+                $this,
+                $this->getLoop(),
+                '127.0.0.1',
+                $this->getConfig()->getWebsocketPort(),
+                $this->getConfig()->getAdminPath() . EventWebsocketServer::URI
+            ));
+            $this->run();
+            return true;
+        } catch(ConnectionException $e) {
+            return false;
+        }
     }
 
     /**
