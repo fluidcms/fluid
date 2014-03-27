@@ -64,8 +64,7 @@ class EventWebsocketClient implements WebSocketClientInterface
      * @return $this
      */
     public function run()
-    {        var_dump('this here');
-die();
+    {
         $this->getLoop()->run();
 
         return $this;
