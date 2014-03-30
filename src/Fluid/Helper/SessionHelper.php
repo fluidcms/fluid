@@ -41,9 +41,36 @@ trait SessionHelper
     protected $sessions;
 
     /**
+     * @return bool
+     */
+    public function validSession()
+    {
+        if ($this->getSession() instanceof SessionEntity && !$this->getSession()->isExpired()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param UserCollection $users
+     * @param UserEntity $user
+     * @param SessionCollection $sessions
+     * @param SessionEntity $session
+     * @return $this
+     */
+    public function setSessionDepenencies(UserCollection $users, UserEntity $user, SessionCollection $sessions, SessionEntity $session)
+    {
+        $this->setUsers($users);
+        $this->setUser($user);
+        $this->setSessions($sessions);
+        $this->setSession($session);
+        return $this;
+    }
+
+    /**
      * @return SessionEntity
      */
-    protected function getSession()
+    public function getSession()
     {
         if (null === $this->session) {
             $this->createSession();
@@ -55,7 +82,7 @@ trait SessionHelper
      * @param SessionEntity $session
      * @return $this
      */
-    protected function setSession(SessionEntity $session)
+    public function setSession(SessionEntity $session)
     {
         $this->session = $session;
         return $this;
@@ -80,7 +107,7 @@ trait SessionHelper
      * @param SessionCollection $sessions
      * @return $this
      */
-    protected function setSessions(SessionCollection $sessions)
+    public function setSessions(SessionCollection $sessions)
     {
         $this->sessions = $sessions;
         return $this;
@@ -89,7 +116,7 @@ trait SessionHelper
     /**
      * @return SessionCollection
      */
-    protected function getSessions()
+    public function getSessions()
     {
         if (null === $this->sessions) {
             $this->createSessions();
@@ -109,7 +136,7 @@ trait SessionHelper
      * @param UserEntity $user
      * @return $this
      */
-    protected function setUser(UserEntity $user)
+    public function setUser(UserEntity $user)
     {
         $this->user = $user;
         return $this;
@@ -118,7 +145,7 @@ trait SessionHelper
     /**
      * @return UserEntity
      */
-    protected function getUser()
+    public function getUser()
     {
         if (null === $this->session) {
             $this->createSession();
@@ -130,7 +157,7 @@ trait SessionHelper
      * @param UserCollection $users
      * @return $this
      */
-    protected function setUsers(UserCollection $users)
+    public function setUsers(UserCollection $users)
     {
         $this->users = $users;
         return $this;
@@ -139,7 +166,7 @@ trait SessionHelper
     /**
      * @return UserCollection
      */
-    protected function getUsers()
+    public function getUsers()
     {
         if (null === $this->users) {
             $this->createUsers();

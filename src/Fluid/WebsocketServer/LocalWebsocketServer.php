@@ -12,7 +12,7 @@ use Ratchet\Wamp\WampServerInterface;
 use Fluid\ConfigInterface;
 use Fluid\StorageInterface;
 use Fluid\Event;
-use Fluid\Requests\WebSocket as WebSocketRequest;
+use Fluid\Fluid;
 use Ratchet;
 use React;
 use Ratchet\ConnectionInterface;
@@ -86,18 +86,27 @@ class LocalWebSocketServer implements WampServerInterface
     private $sessions;
 
     /**
+     * @var Fluid
+     */
+    private $fluid;
+
+    /**
      * @param ConfigInterface $config
      * @param StorageInterface $storage
      * @param LoggerInterface $logger
      * @param Event $event
+     * @param Fluid $fluid
      */
-    public function __construct(ConfigInterface $config, StorageInterface $storage, LoggerInterface $logger, Event $event)
+    public function __construct(ConfigInterface $config, StorageInterface $storage, LoggerInterface $logger, Event $event, Fluid $fluid = null)
     {
         $this->startTime = time();
         $this->setConfig($config);
         $this->setStorage($storage);
         $this->setLogger($logger);
         $this->setEvent($event);
+        if (null !== $fluid) {
+            $this->setFluid($fluid);
+        }
         $this->bindEvents();
     }
 
@@ -315,7 +324,7 @@ class LocalWebSocketServer implements WampServerInterface
 
                 $response = new Response;
 
-                $router = new Router($request, $response);
+                $router = new Router($request, $response, $this->getFluid());
                 $router->dispatchLocalWebsocketRouter($this->getStorage(), $this->getUsers(), $user, $this->getSessions(), $session);
 
                 $conn->send(json_encode([self::TYPE_ID_CALLRESULT, $id, $response->getBody()]));
@@ -477,5 +486,38 @@ class LocalWebSocketServer implements WampServerInterface
     private function createSessions()
     {
         return $this->setSessions(new SessionCollection($this->getStorage(), $this->getUsers()));
+    }
+
+    /**
+     * @param Fluid $fluid
+     * @return $this
+     */
+    public function setFluid(Fluid $fluid)
+    {
+        $this->fluid = $fluid;
+        return $this;
+    }
+
+    /**
+     * @return Fluid
+     */
+    public function getFluid()
+    {
+        if (null === $this->fluid) {
+            $this->createFluid();
+        }
+        return $this->fluid;
+    }
+
+    /**
+     * @return $this
+     */
+    private function createFluid()
+    {
+        $fluid = new Fluid($this->getConfig());
+        $fluid->setLogger($this->getLogger());
+        $fluid->setEvent($this->getEvent());
+        $fluid->setStorage($this->getStorage());
+        return $this->setFluid($fluid);
     }
 }

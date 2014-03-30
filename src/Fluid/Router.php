@@ -185,7 +185,7 @@ class Router
 
         /** @var callable $routes */
         $routes = require __DIR__ . DIRECTORY_SEPARATOR . 'Routes' . DIRECTORY_SEPARATOR . 'LocalWebsocketRoutes.php';
-        $routes($this, $this->getRequest(), $this->getResponse(), $storage, $users, $user, $sessions, $session);
+        $routes($this->getFluid(), $this, $this->getRequest(), $this->getResponse(), $storage, $users, $user, $sessions, $session);
 
         $method = $this->request->getMethod();
         if (isset($this->routes[$uri])) {

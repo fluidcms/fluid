@@ -86,10 +86,14 @@ class Fluid
      */
     private $sessionToken;
 
-    public function __construct()
+    /**
+     * @param ConfigInterface $config
+     */
+    public function __construct(ConfigInterface $config = null)
     {
-        $this->setConfig(new Config);
-        $this->setTemplateEngine(new TemplateEngine);
+        if (null !== $config) {
+            $this->setConfig($config);
+        }
     }
 
     /**
@@ -135,7 +139,18 @@ class Fluid
      */
     public function getTemplateEngine()
     {
+        if (null === $this->templateEngine) {
+            $this->createTemplateEngine();
+        }
         return $this->templateEngine;
+    }
+
+    /**
+     * @return $this
+     */
+    private function createTemplateEngine()
+    {
+        return $this->setTemplateEngine(new TemplateEngine);
     }
 
     /**
@@ -153,7 +168,18 @@ class Fluid
      */
     public function getConfig()
     {
+        if (null === $this->config) {
+            $this->createConfig();
+        }
         return $this->config;
+    }
+
+    /**
+     * @return $this
+     */
+    private function createConfig()
+    {
+        return $this->setConfig(new Config);
     }
 
     /**

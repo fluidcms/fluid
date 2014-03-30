@@ -48,14 +48,18 @@ abstract class Controller
      * @param StorageInterface $storage
      * @param CookieInterface $cookie
      */
-    public function __construct(Fluid $fluid, Router $router, Request $request, Response $response, StorageInterface $storage, CookieInterface $cookie)
+    public function __construct(Fluid $fluid = null, Router $router, Request $request, Response $response, StorageInterface $storage, CookieInterface $cookie = null)
     {
-        $this->setFluid($fluid);
+        if (null !== $fluid) {
+            $this->setFluid($fluid);
+        }
         $this->setRouter($router);
         $this->setRequest($request);
         $this->setResponse($response);
         $this->setStorage($storage);
-        $this->setCookie($cookie);
+        if (null !== $cookie) {
+            $this->setCookie($cookie);
+        }
     }
 
     /**

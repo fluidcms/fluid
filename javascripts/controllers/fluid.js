@@ -109,6 +109,7 @@ define(
                         root.models.components.fetch();
                         root.models.map.fetch();*/
 
+                        root.models.map.fetch();
                         //root.models.preview.loadPage();
                         root.app.websiteRegion.show(root.websiteView);
                     }
