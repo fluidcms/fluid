@@ -25,7 +25,7 @@ class MapEntity
     private $config;
 
     /**
-     * @var PageCollection
+     * @var PageCollection|PageEntity[]
      */
     private $pages;
 
@@ -48,6 +48,30 @@ class MapEntity
         if (null !== $event) {
             $this->setEvent($event);
         }
+    }
+
+    /**
+     * @param PageCollection|PageEntity[] $pages
+     * @return array
+     */
+    public function toArray($pages = null)
+    {
+        if (null === $pages) {
+            $pages = $this->getPages();
+        }
+        $retval = [];
+        foreach ($pages as $page) {
+            $retval[] = [
+                'name' => $page->getName(),
+                'pages' => $this->toArray($page->getPages()),
+                'languages' => $page->getConfig()->getLanguages(),
+                'allow_childs' => $page->getConfig()->getAllowChilds(),
+                'child_templates' => $page->getConfig()->getChildTemplates(),
+                'template' => $page->getConfig()->getTemplate(),
+                'url' => $page->getConfig()->getUrl()
+            ];
+        }
+        return $retval;
     }
 
     /**

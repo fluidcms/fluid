@@ -13,9 +13,8 @@ class MapController extends Controller implements SessionHelperInterface
     public function get()
     {
         if ($this->validSession()) {
-            $this->getFluid()->getMap();
-
-            $this->getResponse()->json(['user' => $this->getUser()->getName()]);
+            $map = $this->getFluid()->getMap();
+            $this->getResponse()->json($map->toArray());
         }
         $this->getResponse()->setCode(Response::RESPONSE_CODE_FORBIDDEN);
     }
