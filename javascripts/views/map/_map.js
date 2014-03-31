@@ -17,18 +17,17 @@ define(
 
             template: new EJS({url: ' javascripts/templates/map/map.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
-            initialize: function (attrs) {
-                var root = this;
+            initialize: function (options) {
                 this.render();
-                this.collection.on('reset add remove update editing', this.render, this);
-                this.languages = attrs.languages;
-                this.layouts = attrs.layouts;
+                this.model.on('reset add remove update editing', this.render, this);
+                //this.languages = options.languages;
+                //this.layouts = options.layouts;
             },
 
             render: function () {
                 var root = this;
-                var current;
-                if (typeof this.collection.editor.page !== 'undefined') {
+                var current = "";
+                /*if (typeof this.model.editor.page !== 'undefined') {
                     current = this.collection.editor.page.get('id');
                     if (typeof current === 'undefined') {
                         current = 'global';
@@ -37,7 +36,7 @@ define(
                     current = "";
                 } else {
                     current = this.collection.current;
-                }
+                }*/
 
                 if (this.rendered === true) {
                     var scroll = this.$el.scrollTop();
@@ -46,13 +45,11 @@ define(
                 // TODO: live tracking of the scroll
 
                 this.$el.html(this.template.render({
-                    pages: this.collection,
+                    pages: this.model.pages,
                     current: current
                 }));
 
                 this.rendered = true;
-
-                $("#main #content").append(this.$el);
 
                 if (typeof scroll !== 'undefined') {
                     this.$el.scrollTop(scroll);
@@ -61,7 +58,7 @@ define(
                     }, 10);
                 }
 
-                this.sortable();
+                //this.sortable();
 
                 return this;
             },

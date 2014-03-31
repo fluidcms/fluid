@@ -6,11 +6,11 @@ use Fluid\Helper\SessionHelper;
 use Fluid\Helper\SessionHelperInterface;
 use Fluid\Response;
 
-class MapController extends Controller implements SessionHelperInterface
+class PageController extends Controller implements SessionHelperInterface
 {
     use SessionHelper;
 
-    public function get()
+    public function getAll()
     {
         if ($this->validSession()) {
             $map = $this->getFluid()->getMap();

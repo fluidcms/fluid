@@ -40,63 +40,6 @@
   }
 }
 
-/* # Navigation
-================================================== */
-#pannel #nav nav {
-  width: 306px;
-  height: 42px;
-  @include background(linear-gradient(top, #292e34 0%, #373d44 75%, #2a2f35 100%));
-
-  ul {
-    @include display-box;
-    @include box-pack(center);
-
-    li {
-    }
-  }
-
-  a {
-    margin: 0 3px;
-    position: relative;
-    display: block;
-    width: 32px;
-    height: 42px;
-    cursor: default;
-    &:after {
-      top: 13px;
-      left: 8px;
-      @include sprite-after(16px, 16px);
-    }
-    &.structure:after {
-      background-position-x: 0;
-    }
-    &.components:after {
-      background-position-x: -16px;
-    }
-    &.files:after {
-      background-position-x: -32px;
-    }
-    &.intl:after {
-      background-position-x: -48px;
-    }
-    &.tools:after {
-      @include sprite-position(-74px -32px);
-    }
-    &.history:after {
-      background-position-x: -64px;
-    }
-    &.current {
-      background: rgba(0, 0, 0, .14);
-      @include current-item-shadow;
-      &:after {
-        background-position-y: -16px;
-      }
-    }
-    &.current.tools:after {
-      @include sprite-position(-74px -48px);
-    }
-  }
-}
 
 /* # Tabs
 ================================================== */

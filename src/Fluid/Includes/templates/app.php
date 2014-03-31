@@ -25,7 +25,7 @@
     <script data-main="javascripts/fluid-0.1.0.min.js" src="javascripts/vendor/requirejs-2.1.11.min.js"></script>
 </head>
 <body>
-<div id="main">
+<div id="pannel">
     <div id="nav"></div>
     <div id="content"></div>
 </div>

@@ -82,9 +82,10 @@ define(['backbone', 'views/helpers/error'], function (Backbone, ErrorView) {
                     uri: uri,
                     params: params
                 }).then(
-                    function (result) {
+                    function (response) {
+                        response = JSON.parse(response);
                         if (typeof callback === 'function') {
-                            callback(result);
+                            callback(response);
                         }
                     }
                 );

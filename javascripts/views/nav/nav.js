@@ -13,18 +13,22 @@ define(['backbone', 'ejs', 'qtip'], function (Backbone, EJS, qTip) {
                 {name: 'History', className: 'history'}
             ];
 
-            this.router = attrs.router;
-            this.router.on("change", this.changeRoute, this);
+            this.$el = $("#nav");
+
+            //this.router = attrs.router;
+            //this.router.on("change", this.changeRoute, this);
         },
 
         render: function () {
-            this.$el.html(this.template.render({items: this.items, current: this.router.current}));
-            $("#main #nav").remove();
-            $('#main').prepend(this.$el);
+            this.$el.html(this.template.render({
+                items: this.items,
+                current: 'map'
+                //current: this.router.current
+            }));
 
-            $("#main #nav a").qtip({
+            this.$el.find("a").qtip({
                 style: {
-                    tip: false,
+                    tip: false
                 },
                 position: {
                     my: 'top center',

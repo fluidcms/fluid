@@ -10,11 +10,11 @@ define(['backbone', 'models/variables/variables'], function (Backbone, Variables
         chain: false,
 
         initialize: function (attrs, options) {
-            this.socket = options.socket;
+            /*this.socket = options.socket;
             this.languages = options.languages;
             this.preview = options.preview;
             this.components = options.components;
-            this.languages.on('change', this.changeLanguage, this);
+            this.languages.on('change', this.changeLanguage, this);*/
         },
 
         changeLanguage: function() {

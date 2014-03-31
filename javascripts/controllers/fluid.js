@@ -13,15 +13,17 @@ define(
         'models/file/file',
         'views/website/website',
         'views/nav/nav',
+        'views/map/map-layout',
         'views/toolbar/toolbar',
         'views/tools/tools',
         'views/helpers/error'
     ],
-    function (Backbone, Marionette, LoaderView, Socket, Map, Language, Layout, Website, History, Components, Files, WebsiteView, Nav, Toolbar, ToolsView, ErrorView) {
+    function (Backbone, Marionette, LoaderView, Socket, Map, Language, Layout, Website, History, Components, Files, WebsiteView, NavView, MapLayoutView, Toolbar, ToolsView, ErrorView) {
         return Marionette.Controller.extend({
             current: "",
             main: null,
             ready: false,
+            mapView: null,
             editors: {},
 
             initialize: function (options) {
@@ -56,7 +58,6 @@ define(
                     app: this.app
                 });
 
-                // Models
                 this.models.languages = this.languages = new Language.Languages(null, {socket: this.socket}); // TODO: remove this.languages var
                 this.socket.models['language'] = this.models.languages;
 
@@ -64,29 +65,30 @@ define(
                 this.website = new Website({});
                 this.websiteView = new WebsiteView({model: this.website});
 
-                this.models.layouts = this.layouts = new Layout.Layouts(null, {socket: this.socket}); // TODO: remove this.layouts var
+                /*this.models.layouts = this.layouts = new Layout.Layouts(null, {socket: this.socket}); // TODO: remove this.layouts var
 
                 this.models.components = new Components(null, {socket: this.socket});
 
-                this.models.files = new Files(null, {socket: this.socket});
+                this.models.files = new Files(null, {socket: this.socket});*/
 
-                this.models.map = new Map.Pages(null, {
-                    app: this,
-                    socket: this.socket,
+                this.map = new Map(null, {
+                    socket: this.socket
+/*
                     languages: this.models.languages,
                     preview: this.models.preview,
                     components: this.models.components,
                     files: this.models.files
+*/
                 });
-                this.socket.models['map'] = this.models.map;
+                this.socket.models['map'] = this.map;
 
-                this.models.history = new History(null, {socket: this.socket});
+                //this.models.history = new History(null, {socket: this.socket});
 
                 // Views
-                this.nav = new Nav({router: this}).render();
+                this.nav = new NavView({controller: this}).render();
                 //this.version = new Version();
 
-                this.views.toolbar = this.toolbar = new Toolbar({
+                /*this.views.toolbar = this.toolbar = new Toolbar({
                     languages: this.languages,
                     preview: this.models.preview,
                     map: this.models.map
@@ -95,7 +97,7 @@ define(
                 this.views.tools = new ToolsView({
                     map: this.models.map
                 });
-                this.models.map.tools = this.views.tools;
+                this.models.map.tools = this.views.tools;*/
 
                 // Socket event
                 this.socket.on('ready', function () {
@@ -109,12 +111,13 @@ define(
                         root.models.components.fetch();
                         root.models.map.fetch();*/
 
-                        root.models.map.fetch();
+                        root.map.pages.fetch();
                         //root.models.preview.loadPage();
                         root.app.websiteRegion.show(root.websiteView);
                     }
                 });
 
+                this.mapPannel();
                 this.socket.connect();
 
                 // Control + Z or Command + Z events
@@ -141,20 +144,18 @@ define(
                 });
             },
 
-            map: function () {
+            mapPannel: function () {
                 var root = this;
-                if (this.current !== 'map' && typeof this.views.map === 'undefined') {
-                    require(['views/map/map'], function (MapView) {
-                        root.views.map = root.main = new MapView({
-                            collection: root.models.map,
-                            page: root.page,
-                            languages: root.languages,
-                            layouts: root.layouts
-                        });
-                    });
+                if (this.current !== 'map' && typeof this.mapView === 'undefined' || this.mapView === null) {
+                    this.app.pannelRegion.show(new MapLayoutView({
+                        model: this.map
+                        //page: root.page,
+                        //languages: root.languages,
+                        //layouts: root.layouts
+                    }));
                 } else if (this.current !== 'map') {
-                    this.views.map.show();
-                    this.main = this.views.map;
+                    //this.views.map.show();
+                    //this.main = this.views.map;
                 }
             },
 

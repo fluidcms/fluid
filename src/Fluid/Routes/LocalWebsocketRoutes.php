@@ -21,12 +21,12 @@ use Fluid\User\UserEntity;
  * @return array
  */
 return function (Fluid $fluid, Router $router, Request $request, Response $response, StorageInterface $storage, UserCollection $users, UserEntity $user, SessionCollection $sessions, SessionEntity $session) {
-    // Map routes
-    $router->respond('/map', function () use ($fluid, $router, $request, $response, $storage, $users, $user, $sessions, $session) {
-        $controller = new Controller\MapController($fluid, $router, $request, $response, $storage, null);
+    // Pages routes
+    $router->respond('/pages', function () use ($fluid, $router, $request, $response, $storage, $users, $user, $sessions, $session) {
+        $controller = new Controller\PageController($fluid, $router, $request, $response, $storage, null);
         $controller->setSessionDepenencies($users, $user, $sessions, $session);
         if ($request->getMethod() === 'GET') {
-            $controller->get();
+            $controller->getAll();
         } else {
             $response->setCode(Response::RESPONSE_CODE_METHOD_NOT_ALLOWED);
         }
