@@ -16,6 +16,16 @@ class VariableEntity
     private $type;
 
     /**
+     * @var mixed
+     */
+    private $value;
+
+    public function setValue($value)
+    {
+        $this->value = $value;
+    }
+
+    /**
      * @param array|string $attributes
      * @param mixed|null $value
      */

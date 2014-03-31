@@ -13,7 +13,7 @@ use Fluid\Page\PageEntity;
 class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
 {
     /**
-     * @var array
+     * @var array|VariableEntity[]
      */
     protected $variables;
 
@@ -58,6 +58,20 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
         if (null !== $mapper) {
             $this->setMapper($mapper);
         }
+    }
+
+    /**
+     * @param string $name
+     * @return null|VariableEntity
+     */
+    public function find($name)
+    {
+        foreach ($this->variables as $variable) {
+            if ($variable->getName() === $name) {
+                return $variable;
+            }
+        }
+        return null;
     }
 
     /**
@@ -163,7 +177,7 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     private function createMapper()
     {
-        return $this->setMapper(new VariableMapper($this->getLanguage()));
+        return $this->setMapper(new VariableMapper($this->getStorage(), $this->getLanguage()));
     }
 
     /**

@@ -15,7 +15,8 @@ class PageEntityTest extends \PHPUnit_Framework_TestCase
         $page = new PageEntity(
             $storage = new Storage($fluid->getConfig()),
             $xmlMappingLoader = new XmlMappingLoader($fluid),
-            new PageMapper($storage, $xmlMappingLoader)
+            new PageMapper($storage, $xmlMappingLoader),
+            $fluid->getLanguage()
         );
         $this->assertEquals(null, $page->getName());
         $this->assertInstanceOf('Fluid\Page\PageCollection', $page->getPages());
