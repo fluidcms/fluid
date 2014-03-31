@@ -20,9 +20,20 @@ class VariableEntity
      */
     private $value;
 
+    /**
+     * @param $value
+     */
     public function setValue($value)
     {
         $this->value = $value;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getValue()
+    {
+        return $this->value;
     }
 
     /**
@@ -78,5 +89,13 @@ class VariableEntity
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function __toString()
+    {
+        return $this->getValue();
     }
 }

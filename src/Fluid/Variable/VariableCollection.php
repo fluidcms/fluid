@@ -66,10 +66,8 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     public function find($name)
     {
-        foreach ($this->variables as $variable) {
-            if ($variable->getName() === $name) {
-                return $variable;
-            }
+        if (isset($this->variables[$name])) {
+            return $this->variables[$name];
         }
         return null;
     }
@@ -84,7 +82,7 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
         if (!$variable instanceof VariableGroup && !$variable instanceof VariableEntity) {
             throw new \InvalidArgumentException;
         }
-        $this->variables[] = $variable;
+        $this->variables[$variable->getName()] = $variable;
         return $this;
     }
 
