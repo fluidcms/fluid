@@ -12,6 +12,7 @@ use Fluid\Layout\Layout;
 use Fluid\Variable\VariableCollection;
 use Fluid\StorageInterface;
 use Fluid\XmlMappingLoaderInterface;
+use Fluid\Template\TemplateEntity;
 
 /**
  * Page Entity
@@ -29,6 +30,11 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
      * @var PageCollection
      */
     private $pages;
+
+    /**
+     * @var TemplateEntity
+     */
+    private $template;
 
     /**
      * @var VariableCollection
@@ -99,6 +105,35 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
             }
         }
         return $this;
+    }
+
+    /**
+     * @param TemplateEntity $template
+     * @return $this
+     */
+    public function setTemplate(TemplateEntity $template)
+    {
+        $this->template = $template;
+        return $this;
+    }
+
+    /**
+     * @return TemplateEntity
+     */
+    public function getTemplate()
+    {
+        if (null === $this->template) {
+            $this->createTemplate();
+        }
+        return $this->template;
+    }
+
+    /**
+     * @return $this
+     */
+    private function createTemplate()
+    {
+        return $this->setTemplate(new TemplateEntity($this->getConfig()->getTemplate(), $this->getVariables(), $this->getXmlMappingLoader()));
     }
 
     /**
@@ -265,6 +300,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
         if ($offset === 'pages') {
             return $this->getPages();
         }
+        return $this->getVariables()[$offset];
         //return $this->items[$offset];
     }
 

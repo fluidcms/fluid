@@ -14,7 +14,7 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
     /**
      * @var array
      */
-    protected $variables = [];
+    protected $variables;
 
     /**
      * @var PageEntity
@@ -27,6 +27,11 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
     private $storage;
 
     /**
+     * @var VariableMapper
+     */
+    private $mapper;
+
+    /**
      * @var XmlMappingLoaderInterface
      */
     private $xmlMappingLoader;
@@ -35,12 +40,30 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
      * @param PageEntity $page
      * @param StorageInterface $storage
      * @param XmlMappingLoaderInterface $xmlMappingLoader
+     * @param null|VariableMapper $mapper
      */
-    public function __construct(PageEntity $page, StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader)
+    public function __construct(PageEntity $page, StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, VariableMapper $mapper = null)
     {
         $this->setPage($page);
         $this->setStorage($storage);
         $this->setXmlMappingLoader($xmlMappingLoader);
+        if (null !== $mapper) {
+            $this->setMapper($mapper);
+        }
+    }
+
+    /**
+     * @param VariableEntity|VariableGroup $variable
+     * @return $this
+     * @throws \InvalidArgumentException
+     */
+    public function addVariable($variable)
+    {
+        if (!$variable instanceof VariableGroup && !$variable instanceof VariableEntity) {
+            throw new \InvalidArgumentException;
+        }
+        $this->variables[] = $variable;
+        return $this;
     }
 
     /**
@@ -107,10 +130,42 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
+     * @param VariableMapper $mapper
+     * @return $this
+     */
+    public function setMapper(VariableMapper $mapper)
+    {
+        $this->mapper = $mapper;
+        return $this;
+    }
+
+    /**
+     * @return VariableMapper
+     */
+    public function getMapper()
+    {
+        if (null === $this->mapper) {
+            $this->createMapper();
+        }
+        return $this->mapper;
+    }
+
+    /**
+     * @return $this
+     */
+    private function createMapper()
+    {
+        return $this->setMapper(new VariableMapper);
+    }
+
+    /**
      * @return int
      */
     public function count()
     {
+        if (null === $this->variables) {
+            $this->getMapper()->mapCollection($this);
+        }
         return count($this->variables);
     }
 
@@ -119,6 +174,9 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     public function getIterator()
     {
+        if (null === $this->variables) {
+            $this->getMapper()->mapCollection($this);
+        }
         return new ArrayIterator($this->variables);
     }
 
@@ -128,6 +186,9 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     public function offsetExists($offset)
     {
+        if (null === $this->variables) {
+            $this->getMapper()->mapCollection($this);
+        }
         return isset($this->variables[$offset]);
     }
 
@@ -137,7 +198,13 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     public function offsetGet($offset)
     {
-        return $this->variables[$offset];
+        if (null === $this->variables) {
+            $this->getMapper()->mapCollection($this);
+        }
+        if (isset($this->variables[$offset])) {
+            return $this->variables[$offset];
+        }
+        return null;
     }
 
     /**
@@ -146,6 +213,9 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
+        if (null === $this->variables) {
+            $this->getMapper()->mapCollection($this);
+        }
         $this->variables[$offset] = $value;
     }
 
@@ -154,6 +224,9 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     public function offsetUnset($offset)
     {
+        if (null === $this->variables) {
+            $this->getMapper()->mapCollection($this);
+        }
         unset($this->variables[$offset]);
     }
 }

@@ -1,10 +1,8 @@
 <?php
-namespace Fluid\Variable;
+namespace Fluid\Template;
 
-class VariableEntity
+class TemplateConfig
 {
-    public static $types = ['string', 'content'];
-
     /**
      * @var string
      */
@@ -13,7 +11,7 @@ class VariableEntity
     /**
      * @var string
      */
-    private $type;
+    private $file;
 
     /**
      * @param array|string $attributes
@@ -28,10 +26,28 @@ class VariableEntity
         foreach ($attributes as $key => $value) {
             if ($key === 'name') {
                 $this->setName($value);
-            } elseif ($key === 'type') {
-                $this->setType($value);
+            } elseif ($key === 'file') {
+                $this->setFile($value);
             }
         }
+    }
+
+    /**
+     * @param string $file
+     * @return $this
+     */
+    public function setFile($file)
+    {
+        $this->file = $file;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFile()
+    {
+        return $this->file;
     }
 
     /**
@@ -50,23 +66,5 @@ class VariableEntity
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * @param string $type
-     * @return $this
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 }
