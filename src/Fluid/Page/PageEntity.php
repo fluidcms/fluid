@@ -290,6 +290,34 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
+     * @param string $name
+     * @return bool
+     */
+    public function __isset($name)
+    {
+        return $this->getVariables()->__isset($name);
+    }
+
+    /**
+     * @param string $name
+     * @param array $arguments
+     * @return mixed
+     */
+    public function __call($name, array $arguments)
+    {
+        return $this->getVariables()->__call($name, $arguments);
+    }
+
+    /**
+     * @param string $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        return $this->getVariables()->__get($name);
+    }
+
+    /**
      * @return int
      */
     public function count()
