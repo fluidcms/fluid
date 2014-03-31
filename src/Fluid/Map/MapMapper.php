@@ -2,6 +2,7 @@
 namespace Fluid\Map;
 
 use Fluid\Event;
+use Fluid\Language\LanguageEntity;
 use Fluid\MappingInterface;
 use Fluid\StorageInterface;
 use Fluid\XmlMappingLoaderInterface;
@@ -27,15 +28,22 @@ class MapMapper
     private $event;
 
     /**
+     * @var LanguageEntity
+     */
+    private $language;
+
+    /**
      * @param StorageInterface $storage
      * @param XmlMappingLoaderInterface $xmlMappingLoader
      * @param Event $event
+     * @param LanguageEntity $language
      */
-    public function __construct(StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, Event $event)
+    public function __construct(StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, Event $event, LanguageEntity $language)
     {
         $this->setStorage($storage);
         $this->setXmlMappingLoader($xmlMappingLoader);
         $this->setEvent($event);
+        $this->setLanguage($language);
     }
 
     /**
@@ -45,7 +53,7 @@ class MapMapper
     public function map(MapEntity $map = null)
     {
         if (null === $map) {
-            $map = new MapEntity($this, $this->getEvent());
+            $map = new MapEntity($this, $this->getEvent(), $this->getLanguage());
         }
         $this->mapObject($map, $this->getStorage()->loadBranchData(self::DATA_FILENAME));
         return $map;
@@ -138,5 +146,23 @@ class MapMapper
     public function getEvent()
     {
         return $this->event;
+    }
+
+    /**
+     * @param LanguageEntity $language
+     * @return $this
+     */
+    public function setLanguage(LanguageEntity $language)
+    {
+        $this->language = $language;
+        return $this;
+    }
+
+    /**
+     * @return LanguageEntity
+     */
+    public function getLanguage()
+    {
+        return $this->language;
     }
 }

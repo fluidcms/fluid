@@ -2,6 +2,7 @@
 namespace Fluid\Variable;
 
 use Countable;
+use Fluid\Language\LanguageEntity;
 use IteratorAggregate;
 use ArrayAccess;
 use ArrayIterator;
@@ -37,13 +38,20 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
     private $xmlMappingLoader;
 
     /**
+     * @var LanguageEntity
+     */
+    private $language;
+
+    /**
      * @param PageEntity $page
      * @param StorageInterface $storage
      * @param XmlMappingLoaderInterface $xmlMappingLoader
      * @param null|VariableMapper $mapper
+     * @param LanguageEntity $language
      */
-    public function __construct(PageEntity $page, StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, VariableMapper $mapper = null)
+    public function __construct(PageEntity $page, StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, VariableMapper $mapper = null, LanguageEntity $language)
     {
+        $this->setLanguage($language);
         $this->setPage($page);
         $this->setStorage($storage);
         $this->setXmlMappingLoader($xmlMappingLoader);
@@ -155,7 +163,25 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     private function createMapper()
     {
-        return $this->setMapper(new VariableMapper);
+        return $this->setMapper(new VariableMapper($this->getLanguage()));
+    }
+
+    /**
+     * @param LanguageEntity $language
+     * @return $this
+     */
+    public function setLanguage(LanguageEntity $language)
+    {
+        $this->language = $language;
+        return $this;
+    }
+
+    /**
+     * @return LanguageEntity
+     */
+    public function getLanguage()
+    {
+        return $this->language;
     }
 
     /**

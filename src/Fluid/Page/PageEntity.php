@@ -3,6 +3,7 @@ namespace Fluid\Page;
 
 use Exception;
 use Countable;
+use Fluid\Language\LanguageEntity;
 use IteratorAggregate;
 use ArrayAccess;
 use ArrayIterator;
@@ -62,18 +63,25 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
     private $config;
 
     /**
+     * @var LanguageEntity
+     */
+    private $language;
+
+    /**
      * @param StorageInterface $storage
      * @param XmlMappingLoaderInterface $xmlMappingLoader
      * @param PageMapper $pageMapper
+     * @param LanguageEntity $language
      */
-    public function __construct(StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, PageMapper $pageMapper)
+    public function __construct(StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, PageMapper $pageMapper, LanguageEntity $language)
     {
         $this->setStorage($storage);
         $this->setXmlMappingLoader($xmlMappingLoader);
         $this->setPageMapper($pageMapper);
         $this->setConfig(new PageConfig($this));
-        $this->setPages(new PageCollection($storage, $xmlMappingLoader, $pageMapper));
-        $this->setVariables(new VariableCollection($this, $storage, $xmlMappingLoader));
+        $this->setLanguage($language);
+        $this->setPages(new PageCollection($storage, $xmlMappingLoader, $pageMapper, $this->getLanguage()));
+        $this->setVariables(new VariableCollection($this, $storage, $xmlMappingLoader, null, $this->getLanguage()));
     }
 
     /**
@@ -261,6 +269,24 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
     public function getConfig()
     {
         return $this->config;
+    }
+
+    /**
+     * @param LanguageEntity $language
+     * @return $this
+     */
+    public function setLanguage(LanguageEntity $language)
+    {
+        $this->language = $language;
+        return $this;
+    }
+
+    /**
+     * @return LanguageEntity
+     */
+    public function getLanguage()
+    {
+        return $this->language;
     }
 
     /**

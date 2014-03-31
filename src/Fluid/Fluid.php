@@ -8,6 +8,7 @@ use Fluid\Session\SessionCollection;
 use Fluid\Session\SessionEntity;
 use Fluid\User\UserCollection;
 use Psr\Log\LoggerInterface;
+use Fluid\Language\LanguageEntity;
 
 /**
  * The fluid class
@@ -85,6 +86,11 @@ class Fluid
      * @var string
      */
     private $sessionToken;
+
+    /**
+     * @var LanguageEntity
+     */
+    private $language;
 
     /**
      * @param ConfigInterface $config
@@ -209,7 +215,7 @@ class Fluid
      */
     private function createMap()
     {
-        $mapper = new MapMapper($this->getStorage(), $this->getXmlMappingLoader(), $this->getEvent());
+        $mapper = new MapMapper($this->getStorage(), $this->getXmlMappingLoader(), $this->getEvent(), $this->getLanguage());
         return $this->setMap($mapper->map());
     }
 
@@ -485,5 +491,34 @@ class Fluid
             }
         }
         return false;
+    }
+
+    /**
+     * @param LanguageEntity $language
+     * @return $this
+     */
+    public function setLanguage(LanguageEntity $language)
+    {
+        $this->language = $language;
+        return $this;
+    }
+
+    /**
+     * @return LanguageEntity
+     */
+    public function getLanguage()
+    {
+        if (null === $this->language) {
+            $this->createLanguage();
+        }
+        return $this->language;
+    }
+
+    /**
+     * @return $this
+     */
+    private function createLanguage()
+    {
+        return $this->setLanguage(new LanguageEntity($this->getConfig()->getLanguage()));
     }
 }

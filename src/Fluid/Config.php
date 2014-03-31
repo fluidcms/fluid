@@ -38,7 +38,7 @@ class Config implements ConfigInterface, Serializable
     /**
      * @var string
      */
-    private $language;
+    private $language = 'en-US';
 
     /**
      * @var string

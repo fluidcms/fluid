@@ -2,6 +2,7 @@
 namespace Fluid\Page;
 
 use Countable;
+use Fluid\Language\LanguageEntity;
 use IteratorAggregate;
 use ArrayAccess;
 use ArrayIterator;
@@ -42,11 +43,17 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
     private $xmlMappingLoader;
 
     /**
+     * @var LanguageEntity
+     */
+    private $language;
+
+    /**
      * @param StorageInterface $storage
      * @param XmlMappingLoaderInterface $xmlMappingLoader
      * @param PageMapper|null $pageMapper
+     * @param LanguageEntity $language
      */
-    public function __construct(StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, PageMapper $pageMapper = null)
+    public function __construct(StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, PageMapper $pageMapper = null, LanguageEntity $language)
     {
         $this->setStorage($storage);
         $this->setXmlMappingLoader($xmlMappingLoader);
@@ -55,6 +62,7 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
         } else {
             $this->setMapper(new PageMapper($storage, $xmlMappingLoader));
         }
+        $this->setLanguage($language);
     }
 
     /**
@@ -124,7 +132,7 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
                 $page = $this->find($data['name']);
             }
             if (!isset($page)) {
-                $page = new PageEntity($this->getStorage(), $this->getXmlMappingLoader(), $this->getMapper());
+                $page = new PageEntity($this->getStorage(), $this->getXmlMappingLoader(), $this->getMapper(), $this->getLanguage());
             }
 
             $this->pages[$data['name']] = $page;
@@ -218,6 +226,24 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
     public function getMapper()
     {
         return $this->mapper;
+    }
+
+    /**
+     * @param LanguageEntity $language
+     * @return $this
+     */
+    public function setLanguage(LanguageEntity $language)
+    {
+        $this->language = $language;
+        return $this;
+    }
+
+    /**
+     * @return LanguageEntity
+     */
+    public function getLanguage()
+    {
+        return $this->language;
     }
 
     /**

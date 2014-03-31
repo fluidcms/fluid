@@ -3,6 +3,7 @@ namespace Fluid\Map;
 
 use Exception;
 use Fluid\Event;
+use Fluid\Language\LanguageEntity;
 use InvalidArgumentException;
 use Fluid\Page\PageCollection;
 use Fluid\Page\PageEntity;
@@ -35,15 +36,22 @@ class MapEntity
     private $event;
 
     /**
+     * @var LanguageEntity
+     */
+    private $language;
+
+    /**
      * Init
      *
      * @param MapMapper $mapper
      * @param Event $event
+     * @param LanguageEntity $language
      */
-    public function __construct(MapMapper $mapper, Event $event = null)
+    public function __construct(MapMapper $mapper, Event $event = null, LanguageEntity $language)
     {
         $this->setMapper($mapper);
-        $this->setPages(new PageCollection($mapper->getStorage(), $mapper->getXmlMappingLoader()));
+        $this->setLanguage($language);
+        $this->setPages(new PageCollection($mapper->getStorage(), $mapper->getXmlMappingLoader(), null, $this->getLanguage()));
         $this->setConfig(new MapConfig($this));
         if (null !== $event) {
             $this->setEvent($event);
@@ -157,6 +165,24 @@ class MapEntity
     public function getEvent()
     {
         return $this->event;
+    }
+
+    /**
+     * @param LanguageEntity $language
+     * @return $this
+     */
+    public function setLanguage(LanguageEntity $language)
+    {
+        $this->language = $language;
+        return $this;
+    }
+
+    /**
+     * @return LanguageEntity
+     */
+    public function getLanguage()
+    {
+        return $this->language;
     }
 
 
