@@ -13,6 +13,24 @@ class VariableGroup
      */
     private $variables;
 
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $variables = [];
+        foreach ($this->variables as $variable) {
+            $variables[] = $variable->toArray();
+        }
+        return [
+            'name' => $this->getName(),
+            'variables' => $variables
+        ];
+    }
+
+    /**
+     * @param VariableEntity $variable
+     */
     public function add(VariableEntity $variable)
     {
         $this->variables[] = $variable;

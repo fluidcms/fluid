@@ -39,7 +39,9 @@ class TemplateMapper
                 $variable->set($attributes);
                 $variables->addVariable($variable);
             } elseif (isset($value['name']) && $value['name'] === 'group') {
+                $attributes = isset($value['attributes']) ? $value['attributes'] : [];
                 $variableGroup = new VariableGroup();
+                $variableGroup->setName(isset($attributes['name']) ? $attributes['name'] : null);
                 foreach ($value as $groupVariable) {
                     if (isset($groupVariable['name']) && $groupVariable['name'] === 'variable') {
                         $attributes = isset($groupVariable['attributes']) ? $groupVariable['attributes'] : [];

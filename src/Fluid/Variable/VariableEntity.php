@@ -21,6 +21,18 @@ class VariableEntity
     private $value;
 
     /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'name' => $this->getName(),
+            'type' => $this->getType(),
+            'value' => $this->getValue()
+        ];
+    }
+
+    /**
      * @param $value
      */
     public function setValue($value)

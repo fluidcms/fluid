@@ -50,6 +50,14 @@ class TemplateEntity
     }
 
     /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return [];
+    }
+
+    /**
      * @param string $template
      * @return $this
      */

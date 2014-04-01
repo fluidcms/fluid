@@ -13,7 +13,7 @@ use Fluid\Page\PageEntity;
 class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
 {
     /**
-     * @var array|VariableEntity[]
+     * @var array|VariableEntity[]|VariableGroup[]
      */
     protected $variables;
 
@@ -58,6 +58,19 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
         if (null !== $mapper) {
             $this->setMapper($mapper);
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $retval = [];
+        /** @var VariableEntity|VariableGroup $variable */
+        foreach ($this->getIterator() as $variable) {
+            $retval[] = $variable->toArray();
+        }
+        return $retval;
     }
 
     /**

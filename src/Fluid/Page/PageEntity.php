@@ -85,6 +85,18 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'config' => $this->getConfig()->toArray(),
+            'template' => $this->getTemplate()->toArray(),
+            'variables' => $this->getVariables()->toArray()
+        ];
+    }
+
+    /**
      * @param array|string $attributes
      * @param mixed|null $value
      * @return $this

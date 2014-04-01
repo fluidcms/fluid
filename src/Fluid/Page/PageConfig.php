@@ -42,6 +42,20 @@ class PageConfig
     }
 
     /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'template' => $this->getTemplate(),
+            'allow_childs' => $this->getAllowChilds(),
+            'url' => $this->getUrl(),
+            'child_templates' => $this->getChildTemplates(),
+            'languages' => $this->getLanguages()
+        ];
+    }
+
+    /**
      * @param array|string $attributes
      * @param mixed|null $value
      */
