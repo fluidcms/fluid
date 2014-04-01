@@ -9,7 +9,7 @@
     <script data-main="javascripts/offline-0.1.0.min.js" src="javascripts/vendor/requirejs-2.1.11.min.js"></script>
 </head>
 <body>
-    <div id="main" class="box-layout">
+    <div id="box" class="box-layout">
     </div>
 </body>
 </html>

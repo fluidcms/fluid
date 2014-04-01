@@ -1,18 +1,1 @@
-<div>
-    <nav>
-        <ul>
-            <% $.each(definition, function(key, item) { %>
-            <li><a data-group="<%= key %>"><%= key %></a></li>
-            <% }); %>
-        </ul>
-    </nav>
-
-    <div class="main">
-        <% $.each(definition, function(key, group) { %>
-        <div data-group="<%= key %>" style="display: none;">
-            <% if (typeof render[key] !== 'undefined') { var data = render[key]; } else { var data = {}; } %>
-            <%= variables.render({definition: group, data: data}) %>
-        </div>
-        <% }); %>
-    </div>
-</div>
+hello world

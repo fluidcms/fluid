@@ -1,14 +1,15 @@
 define([
     'backbone',
+    'marionette',
     'ejs',
     'views/map/map-collection',
     'views/map/map-item',
     'text!templates/map/map-item.ejs'
 ],
-    function (Backbone, EJS, MapCollectionView, MapItemView, Template) {
-        return Backbone.Marionette.CompositeView.extend({
-            initialize: function() {
-                this.collection = this.model.pages;
+    function (Backbone, Marionette, EJS, MapCollectionView, MapItemView, Template) {
+        return Marionette.CompositeView.extend({
+            events: {
+                "click a": "editPage"
             },
 
             itemView: MapItemView,
@@ -23,7 +24,16 @@ define([
                 };
             },
 
-            template: new EJS({text: Template})
+            template: new EJS({text: Template}),
+
+            initialize: function(options) {
+                this.controller = options.controller;
+                this.collection = this.model.pages;
+            },
+
+            editPage: function() {
+                this.controller.pageEditor(this.model);
+            }
         });
     }
 );

@@ -37,6 +37,8 @@
     <iframe id="website-iframe"></iframe>
 </div>
 
+<div id="main"></div>
+
 <div class="loader">
     <img src="images/preloader.gif" width="32" height="32" alt="">
 </div>

@@ -1,12 +1,21 @@
 define([
     'backbone',
+    'marionette',
     'views/map/map-item'
 ],
-    function (Backbone, MapItemView) {
-        return Backbone.Marionette.CollectionView.extend({
+    function (Backbone, Marionette, MapItemView) {
+        return Marionette.CollectionView.extend({
             tagName: 'ul',
             className: 'map mapSortable',
-            itemView: MapItemView
+            itemView: MapItemView,
+            itemViewOptions: function() {
+                return {
+                    controller: this.controller
+                };
+            },
+            initialize: function(options) {
+                this.controller = options.controller;
+            }
         });
     }
 );

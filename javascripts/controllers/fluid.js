@@ -16,9 +16,11 @@ define(
         'views/map/map-layout',
         'views/toolbar/toolbar',
         'views/tools/tools',
-        'views/helpers/error'
+        'views/helpers/error',
+        'views/page/page'
     ],
-    function (Backbone, Marionette, LoaderView, Socket, Map, Language, Layout, Website, History, Components, Files, WebsiteView, NavView, MapLayoutView, Toolbar, ToolsView, ErrorView) {
+    function (Backbone, Marionette, LoaderView, Socket, Map, Language, Layout, Website, History, Components, Files, WebsiteView, NavView, MapLayoutView, Toolbar, ToolsView, ErrorView,
+        PageView) {
         return Marionette.Controller.extend({
             current: "",
             main: null,
@@ -148,6 +150,7 @@ define(
                 var root = this;
                 if (this.current !== 'map' && typeof this.mapView === 'undefined' || this.mapView === null) {
                     this.app.pannelRegion.show(new MapLayoutView({
+                        controller: this,
                         model: this.map
                         //page: root.page,
                         //languages: root.languages,
@@ -157,6 +160,11 @@ define(
                     //this.views.map.show();
                     //this.main = this.views.map;
                 }
+            },
+
+            pageEditor: function(page) {
+                this.app.mainRegion.show(new PageView({model: page}));
+                this.app.mainRegion.$el.show();
             },
 
             components: function () {
