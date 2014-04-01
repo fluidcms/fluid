@@ -1,6 +1,6 @@
 define(['backbone', 'models/variables/variables'], function (Backbone, Variables) {
     return Backbone.Model.extend({
-        url: 'page',
+        urlRoot: '/page',
 
         socket: null,
 
@@ -10,8 +10,8 @@ define(['backbone', 'models/variables/variables'], function (Backbone, Variables
         chain: false,
 
         initialize: function (attrs, options) {
-            /*this.socket = options.socket;
-            this.languages = options.languages;
+            this.socket = this.collection.socket;
+            /*tthis.languages = options.languages;
             this.preview = options.preview;
             this.components = options.components;
             this.languages.on('change', this.changeLanguage, this);*/
@@ -23,7 +23,13 @@ define(['backbone', 'models/variables/variables'], function (Backbone, Variables
         },
 
         fetch: function() {
-            var root = this;
+            this.socket.send('GET', this.url(), {}, function(response) {
+                console.log(response);
+                //root.reset(response);
+            });
+
+
+            /*var root = this;
             var url = this.url;
 
             if (typeof this.id !== 'undefined') {
@@ -35,7 +41,7 @@ define(['backbone', 'models/variables/variables'], function (Backbone, Variables
             this.socket.send('GET', url, {}, function(response) {
                 response = root.parse(response);
                 root.set(response);
-            });
+            });*/
         },
 
         save: function() {

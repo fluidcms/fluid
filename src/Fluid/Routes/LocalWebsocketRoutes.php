@@ -32,6 +32,17 @@ return function (Fluid $fluid, Router $router, Request $request, Response $respo
         }
     });
 
+    // Page routes
+    $router->respond('/page/(.+)', function ($page) use ($fluid, $router, $request, $response, $storage, $users, $user, $sessions, $session) {
+        $controller = new Controller\PageController($fluid, $router, $request, $response, $storage, null);
+        $controller->setSessionDepenencies($users, $user, $sessions, $session);
+        if ($request->getMethod() === 'GET') {
+            $controller->get($page);
+        } else {
+            //$response->setCode(Response::RESPONSE_CODE_METHOD_NOT_ALLOWED);
+        }
+    });
+
     /*$router
         ->respond('/', function () use ($fluid, $router, $request, $response, $storage, $cookie) {
             (new Controller\AdminController($fluid, $router, $request, $response, $storage, $cookie))->index();

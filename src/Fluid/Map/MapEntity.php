@@ -70,6 +70,7 @@ class MapEntity
         $retval = [];
         foreach ($pages as $page) {
             $retval[] = [
+                'id' => $page->getId(),
                 'name' => $page->getName(),
                 'pages' => $this->toArray($page->getPages()),
                 'languages' => $page->getConfig()->getLanguages(),

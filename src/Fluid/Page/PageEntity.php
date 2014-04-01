@@ -116,6 +116,14 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->name;
+    }
+
+    /**
      * @param TemplateEntity $template
      * @return $this
      */

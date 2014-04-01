@@ -188,15 +188,28 @@ class Router
         $routes($this->getFluid(), $this, $this->getRequest(), $this->getResponse(), $storage, $users, $user, $sessions, $session);
 
         $method = $this->request->getMethod();
-        if (isset($this->routes[$uri])) {
-            if (isset($this->routes[$uri][$method])) {
-                $found = true;
-                $this->routes[$uri][$method]();
-            } elseif (isset($this->routes[$uri][null])) {
-                $found = true;
-                $this->routes[$uri][null]();
-            } else {
-                $response->setCode(Response::RESPONSE_CODE_METHOD_NOT_ALLOWED);
+        foreach ($this->routes as $path => $methods) {
+            $path = str_replace('/', '\/', $path);
+            $match = preg_match_all('/^' . $path . '$/i', $uri, $matches);
+            if ($match) {
+                array_shift($matches);
+                $arguments = [];
+                if (is_array($matches)) {
+                    foreach ($matches as $match) {
+                        if (isset($match[0])) {
+                            $arguments[] = $match[0];
+                        }
+                    }
+                }
+                if (isset($methods[$method])) {
+                    $found = true;
+                    call_user_func_array($methods[$method], $arguments);
+                } elseif (isset($methods[null])) {
+                    $found = true;
+                    call_user_func_array($methods[null], $arguments);
+                } else {
+                    $response->setCode(Response::RESPONSE_CODE_METHOD_NOT_ALLOWED);
+                }
             }
         }
 

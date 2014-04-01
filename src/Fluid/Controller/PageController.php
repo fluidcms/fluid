@@ -18,4 +18,9 @@ class PageController extends Controller implements SessionHelperInterface
         }
         $this->getResponse()->setCode(Response::RESPONSE_CODE_FORBIDDEN);
     }
+
+    public function get($page)
+    {
+        $this->getResponse()->json($page);
+    }
 }

@@ -5,8 +5,9 @@ define([
     'text!templates/page/page.ejs'
 ],
     function (Backbone, Marionette, EJS, Template) {
-        return Marionette.ItemView.extend({
+        return Marionette.CompositeView.extend({
             initialize: function() {
+                this.model.fetch();
             },
 
             events: {
