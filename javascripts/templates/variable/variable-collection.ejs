@@ -1,0 +1,13 @@
+<% if (hasGroups) { %>
+    <nav>
+        <ul>
+            <% if (hasVariables) { %>
+            <li><a>Variables</a></li>
+            <% } %>
+            <% $.each(groups, function(key, group) { %>
+            <li><a><%= group.name %></a></li>
+            <% }) %>
+        </ul>
+    </nav>
+<% } %>
+

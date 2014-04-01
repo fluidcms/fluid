@@ -6,13 +6,16 @@
 
 /* Table of Content
 ==================================================
+	# Container
+	# Navigation
 	# Variables
 	# Content variable
 	# Image variable  */
 
-/* # Variables
+
+/* # Container
 ================================================== */
-div.page-editor, #target>div.component, #target>div.variables {
+[data-name="variables"] {
   z-index: 10;
   position: absolute;
   top: 0;
@@ -25,7 +28,7 @@ div.page-editor, #target>div.component, #target>div.variables {
     width: 100%;
     height: 100%;
     background: white;
-    padding: 42px 0 0 306px;
+    padding: 0 0 0 306px;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -34,7 +37,11 @@ div.page-editor, #target>div.component, #target>div.variables {
       padding-bottom: 58px;
     }
   }
+}
 
+/* # Navigation
+================================================== */
+[data-name="variables"] {
   nav {
     position: fixed;
     background-color: #dcdcdc;
@@ -63,7 +70,11 @@ div.page-editor, #target>div.component, #target>div.variables {
       }
     }
   }
+}
 
+/* # Variables
+================================================== */
+[data-name="variables"] {
   nav + div.main {
     padding-left: 214px;
   }
