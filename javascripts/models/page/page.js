@@ -1,16 +1,24 @@
-define(['backbone', 'models/variables/variables'], function (Backbone, Variables) {
+define([
+    'backbone',
+    'models/variable/variable-collection',
+    'models/page/page-config',
+    'models/template/template'
+], function (Backbone, VariableCollection, PageConfig, Template) {
     return Backbone.Model.extend({
         urlRoot: '/page',
-
         socket: null,
-
         variables: null,
+        config: null,
+        template: null,
 
         saving: false,
         chain: false,
 
         initialize: function (attrs, options) {
             this.socket = this.collection.socket;
+            this.variables = new VariableCollection;
+            this.config = new PageConfig;
+            this.template = new Template;
             /*tthis.languages = options.languages;
             this.preview = options.preview;
             this.components = options.components;
@@ -22,10 +30,24 @@ define(['backbone', 'models/variables/variables'], function (Backbone, Variables
             this.fetch();
         },
 
+        parse: function(response) {
+            if (typeof response.variables !== 'undefined') {
+                this.variables.reset(response.variables);
+            }
+            if (typeof response.config !== 'undefined') {
+                this.config.set(response.config);
+            }
+            if (typeof response.template !== 'undefined') {
+                this.template.set(response.template);
+            }
+            return [];
+        },
+
         fetch: function() {
+            var root = this;
             this.socket.send('GET', this.url(), {}, function(response) {
-                console.log(response);
-                //root.reset(response);
+                root.parse(response);
+                root.trigger('sync change reset');
             });
 
 
@@ -82,7 +104,7 @@ define(['backbone', 'models/variables/variables'], function (Backbone, Variables
             }
         },
 
-        parse: function(response) {
+        /*parse: function(response) {
             this.variables = new Variables(null, {
                 components: this.components,
                 data: response.data,
@@ -90,7 +112,7 @@ define(['backbone', 'models/variables/variables'], function (Backbone, Variables
             });
             response.render = this.variables.toHTML(); // TODO: rename to render to html
             return response;
-        },
+        },*/
 
         destroy: function() {
             this.unbind();
