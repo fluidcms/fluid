@@ -22,15 +22,10 @@ define([
                     groups: this.collection.getGroups()
                 }));
                 this.variableCollectionRegion = new Marionette.Region({
-                    el: this.$el.find('#oiheciohreoivr')
+                    el: this.$el.find('[data-name="variable-collection"]')
                 });
                 this.variableCollectionRegion.show(new VariableCollectionView({collection: this.collection}));
                 return this;
-            },
-
-            test: function() {
-                this.variableCollectionRegion.reset();
-                console.log(this.variableCollectionRegion);
             },
 
             changeGroup: function(e) {

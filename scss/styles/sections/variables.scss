@@ -8,6 +8,7 @@
 ==================================================
 	# Container
 	# Navigation
+	# Variable Collection
 	# Variables
 	# Content variable
 	# Image variable  */
@@ -70,186 +71,182 @@
       }
     }
   }
-}
-
-/* # Variables
-================================================== */
-[data-name="variables"] {
-  nav + div.main {
+  nav + .variable-collection {
     padding-left: 214px;
   }
+}
 
-  div.main {
-    height: 100%;
-    overflow: auto;
-    padding-top: $big-margin-top - $big-margin-top/2;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+/* # Variable Collection
+================================================== */
+.variable-collection {
+  height: 100%;
+  overflow: auto;
+  padding-top: $big-margin-top - $big-margin-top/2;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
 
-    header {
-      padding-top: $big-margin-top/2;
-      padding-bottom: $big-margin-bottom;
-      margin-left: $big-margin-left;
+  header {
+    padding-top: $big-margin-top/2;
+    padding-bottom: $big-margin-bottom;
+    margin-left: $big-margin-left;
 
-      img {
-        float: left;
-        margin-right: $main-margin-right;
-      }
-
-      line-height: 32px;
-      font-size: 22px;
-      font-weight: $light;
+    img {
+      float: left;
+      margin-right: $main-margin-right;
     }
 
-    [data-item], [data-array], [data-array-item] {
+    line-height: 32px;
+    font-size: 22px;
+    font-weight: $light;
+  }
+
+  [data-item], [data-array], [data-array-item] {
+    display: block;
+    padding-top: $big-margin-top/2;
+    padding-bottom: $big-margin-bottom/2;
+    clear: both;
+
+    div.label {
+      width: 90px;
+      float: left;
+      margin-left: $big-margin-left;
+      color: $gray;
+      font-size: 13px;
+      font-weight: $bold;
+    }
+  }
+
+  [data-type="table"] div.label {
+    float: none;
+  }
+
+  [data-item], [data-array-item] {
+    cursor: pointer;
+
+    &:after {
+      content: "\0020";
       display: block;
-      padding-top: $big-margin-top/2;
-      padding-bottom: $big-margin-bottom/2;
+      height: 0;
       clear: both;
+      visibility: hidden;
+    }
+
+    div.data {
+      margin-left: 90px+$big-margin-left;
+      margin-right: $big-margin-right;
+      min-height: 1em;
+    }
+
+    &:hover div.label {
+      color: $blue;
+    }
+    &:active div.label {
+      color: $dark-blue;
+    }
+  }
+
+  [data-array] {
+    div.label.array {
+      color: $dark-gray;
+      width: auto;
+      float: none;
+      position: relative;
+      cursor: pointer;
+      padding-left: 18px;
+
+      &:before {
+        @include sprite-after(10px, 10px);
+        @include sprite-position(-35px -64px);
+        position: absolute;
+        top: 4px;
+        left: 0;
+      }
+
+      &:hover {
+        color: $blue;
+        &:before {
+          @include sprite-position(-45px -64px);
+        }
+      }
+      &:active {
+        color: $dark-blue;
+        &:before {
+          @include sprite-position(-55px -64px);
+        }
+      }
+    }
+
+    div.label.array + div.array-item {
+      margin-top: $big-margin-top/2;
+    }
+
+    // TODO: move like the table into separate section
+    div.array-item {
+      cursor: move;
+      position: relative;
+      padding-left: 80px;
+      @include background(
+          linear-gradient(top, transparent 0%, transparent 19px, #e9e9e9 19px, #e9e9e9 50%, transparent 50%),
+          linear-gradient(bottom, transparent 0%, transparent 19px, #e9e9e9 19px, #e9e9e9 50%, transparent 50%),
+          linear-gradient(left, #e9e9e9, #e9e9e9)
+      );
+      background-size: 1px 100%, 1px 100%, 28px 1px;
+      background-repeat: no-repeat, no-repeat, no-repeat;
+      background-position: 40px 0, 40px 0, 40px 19px;
+
+      &>span.key {
+        position: absolute;
+        top: 50%;
+        left: 15px;
+        margin-top: -6px;
+        font-weight: $black;
+        color: $light-gray;
+      }
 
       div.label {
-        width: 90px;
-        float: left;
-        margin-left: $big-margin-left;
-        color: $gray;
-        font-size: 13px;
-        font-weight: $bold;
+        margin-left: 0;
       }
-    }
-
-    [data-type="table"] div.label {
-      float: none;
-    }
-
-    [data-item], [data-array-item] {
-      cursor: pointer;
 
       &:after {
-        content: "\0020";
+        content: "";
+        position: absolute;
         display: block;
-        height: 0;
-        clear: both;
-        visibility: hidden;
+        left: 40px;
+        width: 28px;
+        height: 1px;
+        background: #e9e9e9;
+        bottom: 19px;
       }
-
-      div.data {
-        margin-left: 90px+$big-margin-left;
-        margin-right: $big-margin-right;
-        min-height: 1em;
+      &:before {
+        @include sprite-after(5px, 15px);
+        @include sprite-position(-65px -64px);
+        position: absolute;
+        top: 50%;
+        left: 38px;
+        margin-top: -7px;
       }
-
-      &:hover div.label {
-        color: $blue;
-      }
-      &:active div.label {
-        color: $dark-blue;
+      &:hover:before {
+        @include sprite-position(-70px -64px);
       }
     }
 
-    [data-array] {
-      div.label.array {
-        color: $dark-gray;
-        width: auto;
-        float: none;
-        position: relative;
-        cursor: pointer;
-        padding-left: 18px;
-
-        &:before {
-          @include sprite-after(10px, 10px);
-          @include sprite-position(-35px -64px);
-          position: absolute;
-          top: 4px;
-          left: 0;
-        }
-
-        &:hover {
-          color: $blue;
-          &:before {
-            @include sprite-position(-45px -64px);
-          }
-        }
-        &:active {
-          color: $dark-blue;
-          &:before {
-            @include sprite-position(-55px -64px);
-          }
-        }
-      }
-
-      div.label.array + div.array-item {
-        margin-top: $big-margin-top/2;
-      }
-
-      // TODO: move like the table into separate section
-      div.array-item {
-        cursor: move;
-        position: relative;
-        padding-left: 80px;
-        @include background(
-            linear-gradient(top, transparent 0%, transparent 19px, #e9e9e9 19px, #e9e9e9 50%, transparent 50%),
-            linear-gradient(bottom, transparent 0%, transparent 19px, #e9e9e9 19px, #e9e9e9 50%, transparent 50%),
-            linear-gradient(left, #e9e9e9, #e9e9e9)
-        );
-        background-size: 1px 100%, 1px 100%, 28px 1px;
-        background-repeat: no-repeat, no-repeat, no-repeat;
-        background-position: 40px 0, 40px 0, 40px 19px;
-
-        &>span.key {
-          position: absolute;
-          top: 50%;
-          left: 15px;
-          margin-top: -6px;
-          font-weight: $black;
-          color: $light-gray;
-        }
-
-        div.label {
-          margin-left: 0;
-        }
-
-        &:after {
-          content: "";
-          position: absolute;
-          display: block;
-          left: 40px;
-          width: 28px;
-          height: 1px;
-          background: #e9e9e9;
-          bottom: 19px;
-        }
-        &:before {
-          @include sprite-after(5px, 15px);
-          @include sprite-position(-65px -64px);
-          position: absolute;
-          top: 50%;
-          left: 38px;
-          margin-top: -7px;
-        }
-        &:hover:before {
-          @include sprite-position(-70px -64px);
-        }
-      }
-
-      .ui-state-highlight {
-        position: relative;
+    .ui-state-highlight {
+      position: relative;
+      width: 100%;
+      padding: 19px 40px 19px 40px;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      &:after {
+        display: block;
+        content: "";
         width: 100%;
-        padding: 19px 40px 19px 40px;
-        -moz-box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-        &:after {
-          display: block;
-          content: "";
-          width: 100%;
-          height: 100%;
-          border: 1px solid  rgba($light-blue, .5);
-          background: rgba($light-blue, .02);
-        }
+        height: 100%;
+        border: 1px solid  rgba($light-blue, .5);
+        background: rgba($light-blue, .02);
       }
     }
-
   }
 }
 
