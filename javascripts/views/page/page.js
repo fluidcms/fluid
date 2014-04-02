@@ -2,10 +2,10 @@ define([
     'backbone',
     'marionette',
     'ejs',
-    'views/variable/variable-collection',
+    'views/variable/variable-layout',
     'text!templates/page/page.ejs'
 ],
-    function (Backbone, Marionette, EJS, VariableCollectionView, Template) {
+    function (Backbone, Marionette, EJS, VariableLayoutView, Template) {
         return Marionette.Layout.extend({
             initialize: function() {
                 this.model.fetch();
@@ -26,7 +26,7 @@ define([
             },
 
             modelChanged: function() {
-                this.variablesRegion.show(new VariableCollectionView({collection: this.model.variables}));
+                this.variablesRegion.show(new VariableLayoutView({collection: this.model.variables}));
             }
         });
     }

@@ -29,6 +29,8 @@ define([
                     root.variables.push(variable);
                 }
             });
+
+            this.length = this.models.length;
         },
 
         getGroups: function() {

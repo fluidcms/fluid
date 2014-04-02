@@ -5,9 +5,10 @@
             <li><a>Variables</a></li>
             <% } %>
             <% $.each(groups, function(key, group) { %>
-            <li><a><%= group.name %></a></li>
+            <li><a data-group="<%= group.name %>"><%= group.name %></a></li>
             <% }) %>
         </ul>
     </nav>
 <% } %>
 
+<div id="oiheciohreoivr" data-name="variable-collection"></div>
