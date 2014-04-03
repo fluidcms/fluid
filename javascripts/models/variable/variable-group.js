@@ -12,6 +12,16 @@ define(['backbone', 'models/variable/variable'], function (Backbone, Variable) {
         initialize: function(models, options) {
             this.name = options.name;
             this.collection = options.collection;
+        },
+
+        toJSON: function(options) {
+            var retval = {variables: []};
+            var data = Backbone.Collection.prototype.toJSON.call(this, options);
+            for (var i = 0, len = data.length; i < len; ++i) {
+                retval.variables.push(data[i]);
+            }
+            retval.name = this.name;
+            return retval;
         }
     });
 });

@@ -86,6 +86,43 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
+     * @param array $variables
+     * @return $this
+     */
+    public function reset(array $variables = null)
+    {
+        $this->variables = null;
+        if (is_array($variables)) {
+            $this->variables = [];
+            foreach ($variables as $data) {
+                if (isset($data['name']) && isset($data['type'])) {
+                    $variable = new VariableEntity();
+                    $variable->setName($data['name']);
+                    $variable->setType($data['type']);
+                    if (isset($data['value'])) {
+                        $variable->setValue($data['value']);
+                    }
+                    $this->addVariable($variable);
+                } elseif (isset($data['name']) && isset($data['variables'])) {
+                    $variable = new VariableGroup();
+                    $variable->setName($data['name']);
+                    $variable->reset($data['variables']);
+                    $this->addVariable($variable);
+                }
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function persist()
+    {
+        return $this;
+    }
+
+    /**
      * @param VariableEntity|VariableGroup $variable
      * @return $this
      * @throws \InvalidArgumentException

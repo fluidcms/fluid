@@ -14,9 +14,10 @@ define([
         saving: false,
         chain: false,
 
-        initialize: function (attrs, options) {
+        initialize: function (attributes, options) {
+            console.log(attributes);
             this.socket = this.collection.socket;
-            this.variables = new VariableCollection;
+            this.variables = new VariableCollection(null, {page: this});
             this.config = new PageConfig;
             this.template = new Template;
             /*tthis.languages = options.languages;
@@ -26,8 +27,8 @@ define([
         },
 
         changeLanguage: function() {
-            this.set('language', this.languages.current.get('language'));
-            this.fetch();
+            //this.set('language', this.languages.current.get('language'));
+            //this.fetch();
         },
 
         parse: function(response) {
@@ -67,7 +68,14 @@ define([
         },
 
         save: function() {
-            var root = this;
+            console.log(this.toJSON());
+            this.socket.send('POST', this.url(), this.toJSON(), function(response) {
+                console.log(response);
+                //root.parse(response);
+                //root.trigger('sync change reset');
+            });
+
+            /*var root = this;
             var url = this.url;
 
             if (typeof this.id !== 'undefined') {
@@ -101,7 +109,13 @@ define([
                 });
             } else {
                 this.chain = true;
-            }
+            }*/
+        },
+
+        toJSON: function(options) {
+            var retval = Backbone.Model.prototype.toJSON.call(this, options);
+            retval.variables = this.variables.toJSON();
+            return retval;
         },
 
         /*parse: function(response) {

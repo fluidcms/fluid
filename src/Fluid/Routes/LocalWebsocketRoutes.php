@@ -38,6 +38,8 @@ return function (Fluid $fluid, Router $router, Request $request, Response $respo
         $controller->setSessionDepenencies($users, $user, $sessions, $session);
         if ($request->getMethod() === 'GET') {
             $controller->get($page);
+        } elseif ($request->getMethod() === 'POST') {
+            $controller->post($page);
         } else {
             //$response->setCode(Response::RESPONSE_CODE_METHOD_NOT_ALLOWED);
         }

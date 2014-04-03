@@ -12,7 +12,10 @@ define(['backbone'], function (Backbone) {
             }
         },
 
-        save: function() {
+        save: function(attributes, options) {
+            if (typeof attributes !== 'undefined') {
+                this.set(attributes);
+            }
             this.collection.save();
         }
     });

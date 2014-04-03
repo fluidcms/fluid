@@ -9,6 +9,11 @@ define([
         hasVariables: false,
         groups: [],
         variables: [],
+        page: null,
+
+        initialize: function(models, options) {
+            this.page = options.page;
+        },
 
         reset: function(models) {
             var root = this;
@@ -35,6 +40,10 @@ define([
 
         getGroups: function() {
             return this.groups;
+        },
+
+        save: function() {
+            this.page.save();
         }
     });
 });
