@@ -1,0 +1,7 @@
+<div class="data option">
+    <select>
+        <% $.each(variable.options, function(key, item) { %>
+        <option value="<%= item['value'] %>" <% if (typeof data !== 'undefined' && data == item['value']) { %>selected<% } %>><%= item['name'] %></option>
+        <% }); %>
+    </select>
+</div>

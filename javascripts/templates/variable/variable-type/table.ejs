@@ -1,0 +1,45 @@
+<div class="data table">
+    <table>
+        <% if (variable.header) { %>
+        <thead>
+        <tr>
+            <% if (typeof data === 'undefined' || data === null || typeof data.thead === 'undefined' || data.thead === null) { %>
+            <td contenteditable="true"></td>
+            <% } else { %>
+            <% $.each(data.thead, function(key, value) { %>
+            <td contenteditable="true"><%= value %></td>
+            <% }); %>
+            <% } %>
+        </tr>
+        </thead>
+        <% } %>
+        <tbody>
+        <% if (typeof data === 'undefined' || data === null || typeof data.tbody === 'undefined' || data.tbody === null) { %>
+        <tr>
+            <td contenteditable="true"></td>
+        </tr>
+        <% } else { %>
+        <% $.each(data.tbody, function(key, row) { %>
+        <tr>
+            <% $.each(row, function(key, value) { %>
+            <td contenteditable="true"><%= value %></td>
+            <% }); %>
+        </tr>
+        <% }); %>
+        <% } %>
+        </tbody>
+        <% if (variable.footer) { %>
+        <tfoot>
+        <tr>
+            <% if (typeof data === 'undefined' || data === null || typeof data.tfoot === 'undefined' || data.tfoot === null) { %>
+            <td contenteditable="true"></td>
+            <% } else { %>
+            <% $.each(data.tfoot, function(key, value) { %>
+            <td contenteditable="true"><%= value %></td>
+            <% }); %>
+            <% } %>
+        </tr>
+        </tfoot>
+        <% } %>
+    </table>
+</div>

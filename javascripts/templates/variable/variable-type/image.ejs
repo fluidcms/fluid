@@ -1,0 +1,27 @@
+<div class="data image">
+    <%
+    var width = parseInt(typeof variable.width !== 'undefined' ? variable.width : 0);
+    var height = parseInt(typeof variable.height !== 'undefined' ? variable.height : 0);
+
+    if (typeof variable.formats !== 'undefined' && width === 0 && height === 0) {
+        $.each(variable.formats, function(formatkey, format) {
+            if (typeof format.width !== 'undefined' && parseInt(format.width) > width) {
+                width = parseInt(format.width);
+                height = parseInt(typeof format.height !== 'undefined' ? format.height : "");
+                if (width !== 0 || height !== 0) {
+                    return false;
+                }
+            }
+        });
+    }
+    %>
+
+    <% if (typeof data !== 'undefined') { %>
+    <%= data %>
+    <% } else { %>
+    <img src="images/imgtmp-<%= width === 0 ? 3000 : width %>px-<%= height === 0 ? 200 : height %>px.gif"
+         width="<%= width === 0 ? 3000 : "" %>"
+         height="<%= height === 0 ? 200 : "" %>"
+         alt="">
+    <% } %>
+</div>
