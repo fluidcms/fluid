@@ -19,12 +19,12 @@ define([
             $.each(models, function(key, item) {
                 if (typeof item.variables !== 'undefined') {
                     root.hasGroups = true;
-                    var group = new VariableGroup(item.variables, {name: item.name});
+                    var group = new VariableGroup(item.variables, {name: item.name, collection: root});
                     root.models.push(group);
                     root.groups.push(group);
                 } else {
                     root.hasVariables = true;
-                    var variable = new Variable(item);
+                    var variable = new Variable(item, {collection: root});
                     root.models.push(variable);
                     root.variables.push(variable);
                 }
