@@ -9,6 +9,14 @@ define([
         return Marionette.ItemView.extend({
             variableItemTemplate: new EJS({text: VariableItemTemplate}),
 
+            events: {
+                "click": "edit"
+            },
+
+            initialize: function(options) {
+                this.controller = options.controller;
+            },
+
             render: function() {
                 if (typeof this.model.attributes !== 'undefined' && typeof this.model.attributes.type !== 'undefined') {
                     if (this.model.attributes.type !== 'array') {
@@ -22,6 +30,10 @@ define([
                     }
                 }
                 return this;
+            },
+
+            edit: function() {
+                this.controller.editor(this.model.attributes.type, this.model);
             }
         });
     }

@@ -39,6 +39,8 @@
 
 <div id="main"></div>
 
+<div id="editor"></div>
+
 <div class="loader">
     <img src="images/preloader.gif" width="32" height="32" alt="">
 </div>

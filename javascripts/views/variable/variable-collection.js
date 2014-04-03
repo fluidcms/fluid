@@ -6,7 +6,17 @@ define([
 ],
     function (Backbone, Marionette, EJS, VariableItemView) {
         return Marionette.CollectionView.extend({
-            itemView: VariableItemView
+            itemView: VariableItemView,
+
+            itemViewOptions: function() {
+                return {
+                    controller: this.controller
+                };
+            },
+
+            initialize: function(options) {
+                this.controller = options.controller;
+            }
         });
     }
 );

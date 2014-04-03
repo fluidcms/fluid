@@ -10,10 +10,15 @@ define([
             template: new EJS({text: Template}),
 
             events: {
-                "click nav a": "changeGroup"
+                "click nav a": "changeGroup",
+                "click [data-action=close]": "closeView"
             },
 
             regions: {}, // For some reasons, regions are not working here, we init regions in the render function
+
+            initialize: function(options) {
+                this.controller = options.controller;
+            },
 
             render: function() {
                 this.$el.html(this.template.render({
@@ -24,14 +29,19 @@ define([
                 this.variableCollectionRegion = new Marionette.Region({
                     el: this.$el.find('[data-name="variable-collection"]')
                 });
-                this.variableCollectionRegion.show(new VariableCollectionView({collection: this.collection}));
+                this.variableCollectionRegion.show(new VariableCollectionView({collection: this.collection, controller: this.controller}));
                 return this;
+            },
+
+            closeView: function() {
+                this.controller.app.mainRegion.$el.hide();
+                this.close();
             },
 
             changeGroup: function(e) {
                 var group = $(e.currentTarget).attr('data-group');
                 if (typeof group === 'undefined') {
-                    this.variableCollectionRegion.show(new VariableCollectionView({collection: this.collection}));
+                    this.variableCollectionRegion.show(new VariableCollectionView({collection: this.collection, controller: this.controller}));
                 } else {
                     console.log(group);
                 }

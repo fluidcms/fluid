@@ -7,7 +7,8 @@ define([
 ],
     function (Backbone, Marionette, EJS, VariableLayoutView, Template) {
         return Marionette.Layout.extend({
-            initialize: function() {
+            initialize: function(options) {
+                this.controller = options.controller;
                 this.model.fetch();
             },
 
@@ -26,7 +27,7 @@ define([
             },
 
             modelChanged: function() {
-                this.variablesRegion.show(new VariableLayoutView({collection: this.model.variables}));
+                this.variablesRegion.show(new VariableLayoutView({collection: this.model.variables, controller: this.controller}));
             }
         });
     }

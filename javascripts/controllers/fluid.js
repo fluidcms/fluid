@@ -17,10 +17,11 @@ define(
         'views/toolbar/toolbar',
         'views/tools/tools',
         'views/helpers/error',
-        'views/page/page'
+        'views/page/page',
+        'views/editor/string/string'
     ],
     function (Backbone, Marionette, LoaderView, Socket, Map, Language, Layout, Website, History, Components, Files, WebsiteView, NavView, MapLayoutView, Toolbar, ToolsView, ErrorView,
-        PageView) {
+        PageView, EditorStringView) {
         return Marionette.Controller.extend({
             current: "",
             main: null,
@@ -147,24 +148,30 @@ define(
             },
 
             mapPannel: function () {
-                var root = this;
-                if (this.current !== 'map' && typeof this.mapView === 'undefined' || this.mapView === null) {
-                    this.app.pannelRegion.show(new MapLayoutView({
-                        controller: this,
-                        model: this.map
-                        //page: root.page,
-                        //languages: root.languages,
-                        //layouts: root.layouts
-                    }));
-                } else if (this.current !== 'map') {
-                    //this.views.map.show();
-                    //this.main = this.views.map;
-                }
+                this.app.pannelRegion.show(new MapLayoutView({
+                    controller: this,
+                    model: this.map
+                    //page: root.page,
+                    //languages: root.languages,
+                    //layouts: root.layouts
+                }));
             },
 
             pageEditor: function(page) {
-                this.app.mainRegion.show(new PageView({model: page}));
+                this.app.mainRegion.show(new PageView({model: page, controller: this}));
                 this.app.mainRegion.$el.show();
+            },
+
+            editor: function(type, model) {
+                var view;
+                switch (type) {
+                    case 'string':
+                        view = new EditorStringView({model: model, controller: this});
+                }
+                if (typeof view !== 'undefined') {
+                    this.app.editorRegion.show(view);
+                    this.app.editorRegion.$el.show();
+                }
             },
 
             components: function () {

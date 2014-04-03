@@ -1,0 +1,11 @@
+<div class="<%= type %>">
+    <% if (typeof value !== 'undefined' && value !== null) { value = value.replace(/^\s+|\s+$/g, ''); } %>
+    <div data-name="string" class="string-editor" contenteditable="true"><%= value %></div>
+
+    <div class="commands">
+        <div>
+            <a data-action="cancel" class="button">Cancel</a>
+            <a data-action="save" class="button blue">Save</a>
+        </div>
+    </div>
+</div>

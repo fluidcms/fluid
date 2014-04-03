@@ -5,121 +5,131 @@
 
 /* #Page Editor
 ================================================== */
-div.editor {
-  z-index: 10;
-  position: absolute;
+#editor {
+  z-index: 1;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  padding: 0 0 0 306px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: none;
   background: white;
 
-  &>div {
+  & > div {
     height: 100%;
     padding: 43px 0 135px 306px;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
+  }
 
-    &.string {
-      @include display-flex;
-      @include align-content(center);
-      @include align-items(center);
+  & > div > div {
+    height: 100%;
+  }
+
+  .string {
+    @include display-box;
+    @include box-align(center);
+    @include box-orient(vertical);
+  }
+
+  div.content-editor, div.string-editor {
+    padding: $big-margin-top 0;
+    margin: 0 auto;
+    width: 800px;
+    outline: none;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: $light;
+  }
+
+  div.content-editor {
+    height: 100%;
+    overflow: auto;
+    vertical-align: baseline;
+    * {
+      vertical-align: baseline;
     }
 
-    div.content-editor, div.string-editor {
-      padding: $big-margin-top 0;
-      margin: 0 auto;
-      width: 800px;
-      outline: none;
+    p {
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-weight: $black;
+      font-size: 30px;
+      line-height: 40px;
+      margin-bottom: 20px;
+    }
+    h2 {
+      font-weight: $black;
+      font-size: 27px;
+      line-height: 34px;
+      margin-bottom: 16px;
+    }
+    h3 {
+      font-weight: $black;
+      font-size: 23px;
+      line-height: 30px;
+      margin-bottom: 13px;
+    }
+    h4 {
+      font-weight: $black;
+      font-size: 20px;
+      line-height: 26px;
+      margin-bottom: 10px;
+    }
+    h5 {
+      font-weight: $black;
+      font-size: 16px;
+      line-height: 22px;
+      margin-bottom: 4px;
+    }
+    h6 {
+      font-weight: $black;
       font-size: 14px;
       line-height: 20px;
-      font-weight: $light;
     }
-
-    div.content-editor {
-      height: 100%;
-      overflow: auto;
-      vertical-align: baseline;
-      * {
-        vertical-align: baseline;
-      }
-
-      p {
-        margin-bottom: 20px;
-      }
-      h1 {
-        font-weight: $black;
-        font-size: 30px;
-        line-height: 40px;
-        margin-bottom: 20px;
-      }
-      h2 {
-        font-weight: $black;
-        font-size: 27px;
-        line-height: 34px;
-        margin-bottom: 16px;
-      }
-      h3 {
-        font-weight: $black;
-        font-size: 23px;
-        line-height: 30px;
-        margin-bottom: 13px;
-      }
-      h4 {
-        font-weight: $black;
-        font-size: 20px;
-        line-height: 26px;
-        margin-bottom: 10px;
-      }
-      h5 {
-        font-weight: $black;
-        font-size: 16px;
-        line-height: 22px;
-        margin-bottom: 4px;
-      }
-      h6 {
-        font-weight: $black;
-        font-size: 14px;
-        line-height: 20px;
-      }
+    ul, ol {
+      margin-bottom: 20px;
+      margin-left: 30px;
       ul, ol {
-        margin-bottom: 20px;
-        margin-left: 30px;
-        ul, ol {
-          margin-bottom: 0;
-        }
+        margin-bottom: 0;
       }
-      ol {
-        list-style: decimal;
-      }
+    }
+    ol {
+      list-style: decimal;
+    }
+    ul {
+      list-style: disc outside;
       ul {
-        list-style: disc outside;
-        ul {
-          list-style: circle outside;
-        }
-      }
-      div.component {
-        cursor: pointer;
-        margin-bottom: 20px;
-        line-height: 32px;
-        height: 32px;
-        img {
-          display: block;
-          float: left;
-          margin: 0;
-          margin-right: 12px;
-        }
-        &:hover {
-          color: $blue;
-        }
-      }
-      div[data-component] {
-        -webkit-user-select: none;
+        list-style: circle outside;
       }
     }
+    div.component {
+      cursor: pointer;
+      margin-bottom: 20px;
+      line-height: 32px;
+      height: 32px;
+      img {
+        display: block;
+        float: left;
+        margin: 0;
+        margin-right: 12px;
+      }
+      &:hover {
+        color: $blue;
+      }
+    }
+    div[data-component] {
+      -webkit-user-select: none;
+    }
+  }
 
-    div.string-editor {
-    }
+  div.string-editor {
   }
 }
