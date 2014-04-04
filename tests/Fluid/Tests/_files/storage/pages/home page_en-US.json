@@ -1,59 +1,93 @@
-{
-    "Header": {
-        "Title": "Page Title",
-        "Description": "Page Description"
+[
+    {
+        "name": "Header",
+        "variables": [
+            {
+                "name": "Title",
+                "type": "string",
+                "value": "Page Title"
+            },
+            {
+                "name": "Description",
+                "type": "string",
+                "value": "Page Description"
+            }
+        ]
     },
-    "Content": {
-        "Title": "Welcome",
-        "Content": {
-            "source": "Hello World {PkPUah3bme2qvkTK} {H7inutVo}",
-            "components": {
-                "H7inutVo": {
-                    "component": "accordion",
-                    "data": {
-                        "Name": "Hello World",
-                        "Content": {
-                            "source": "",
-                            "components": [],
-                            "images": []
+    {
+        "name": "Content",
+        "variables": [
+            {
+                "name": "Title",
+                "type": "string",
+                "value": "Welcome"
+            },
+            {
+                "name": "Content",
+                "type": "content",
+                "value": {
+                    "text": "Hello World {PkPUah3bme2qvkTK} {H7inutVo}",
+                    "components": {
+                        "H7inutVo": {
+                            "component": "accordion",
+                            "data": {
+                                "Name": "Hello World",
+                                "Content": {
+                                    "source": "",
+                                    "components": [],
+                                    "images": []
+                                }
+                            }
+                        }
+                    },
+                    "images": {
+                        "PkPUah3bme2qvkTK": {
+                            "src": "\/fluidcms\/images\/y3gsv57j\/My Logo.png",
+                            "alt": "",
+                            "width": "64",
+                            "height": "64"
                         }
                     }
                 }
             },
-            "images": {
-                "PkPUah3bme2qvkTK": {
-                    "src": "\/fluidcms\/images\/y3gsv57j\/My Logo.png",
-                    "alt": "",
-                    "width": "64",
-                    "height": "64"
-                }
-            }
-        },
-        "Status": "Closed",
-        "Sections": [
             {
-                "Name": "Test",
-                "Image": {
-                    "src": "\/fluidcms\/images\/y3gsv57j\/My Logo.png",
-                    "alt": "",
-                    "width": "64",
-                    "height": "64"
-                }
+                "name": "Status",
+                "type": "string",
+                "value": "Closed"
             },
             {
-                "Name": "Test 2",
-                "Image": {
-                    "src": "\/fluidcms\/images\/y3gsv57j\/My Logo.png",
-                    "alt": "",
-                    "width": "64",
-                    "height": "64"
-                }
+                "name": "Sections",
+                "type": "array",
+                "variables": [
+                    {
+                        "name": "Test",
+                        "type": "image",
+                        "value": {
+                            "src": "\/fluidcms\/images\/y3gsv57j\/My Logo.png",
+                            "alt": "",
+                            "width": "64",
+                            "height": "64"
+                        }
+                    },
+                    {
+                        "name": "Test 2",
+                        "type": "image",
+                        "value": {
+                            "src": "\/fluidcms\/images\/y3gsv57j\/My Logo.png",
+                            "alt": "",
+                            "width": "64",
+                            "height": "64"
+                        }
+                    }
+                ]
             }
         ]
     },
-    "Sidebar": {
-        "Sidebar": {
-            "source": "{qvbZhieA7r8efNDs}{RMhQkX8KBsxoAh4G}",
+    {
+        "name": "Sidebar",
+        "type": "content",
+        "value": {
+            "text": "{qvbZhieA7r8efNDs}{RMhQkX8KBsxoAh4G}",
             "components": {
                 "qvbZhieA7r8efNDs": {
                     "component": "table",
@@ -75,4 +109,4 @@
             }
         }
     }
-}
+]

@@ -1,23 +1,38 @@
-{
-    "Site": {
-        "Name": "My Website",
-        "Description": {
-            "source": "Hello World {PkPUah3bme2qvkTK}",
-            "components": {},
-            "images": {
-                "PkPUah3bme2qvkTK": {
+[
+    {
+        "name": "Site",
+        "variables": [
+            {
+                "name": "Name",
+                "type": "string",
+                "value": "My Website"
+            },
+            {
+                "name": "Description",
+                "type": "string",
+                "value": {
+                    "text": "Hello World {PkPUah3bme2qvkTK}",
+                    "components": {},
+                    "images": {
+                        "PkPUah3bme2qvkTK": {
+                            "src": "\/fluidcms\/images\/y3gsv57j\/My Logo.png",
+                            "alt": "",
+                            "width": "64",
+                            "height": "64"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "Logo",
+                "type": "image",
+                "value": {
                     "src": "\/fluidcms\/images\/y3gsv57j\/My Logo.png",
                     "alt": "",
-                    "width": "64",
-                    "height": "64"
+                    "width": "180",
+                    "height": "100"
                 }
             }
-        },
-        "Logo": {
-            "src": "\/fluidcms\/images\/y3gsv57j\/My Logo.png",
-            "alt": "",
-            "width": "180",
-            "height": "100"
-        }
+        ]
     }
-}
+]
