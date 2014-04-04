@@ -31,19 +31,42 @@ class VariableMapper
     /**
      * @param VariableCollection $collection
      */
+    public function persist(VariableCollection $collection)
+    {
+        $file = $this->getFile($collection->getPage()->getName(), $this->getLanguage()->getLanguage());
+        $this->getStorage()->saveBranchData($file, $collection->toArray());
+    }
+
+    /**
+     * @param VariableCollection $collection
+     */
     public function mapCollection(VariableCollection $collection)
     {
         $variables = $collection->getPage()->getTemplate()->getVariables();
-        $file = self::DATA_DIRECTORY . DIRECTORY_SEPARATOR . $collection->getPage()->getName() . '_' . $this->getLanguage()->getLanguage() . '.json';
+        $file = $this->getFile($collection->getPage()->getName(), $this->getLanguage()->getLanguage());
         $data = $this->getStorage()->loadBranchData($file);
         if (is_array($data)) {
-            foreach ($data as $key => $value) {
-                $variable = $variables->find($key);
+            foreach ($data as $item) {
+                $variable = $variables->find($item['name']);
                 if ($variable) {
-                    $variable->setValue($value);
+                    if (isset($item['value'])) {
+                        $variable->setValue($item['value']);
+                    } elseif (isset($item['variables'])) {
+                        $variable->reset($item['variables']);
+                    }
                 }
             }
         }
+    }
+
+    /**
+     * @param string $page
+     * @param string $language
+     * @return string
+     */
+    private function getFile($page, $language)
+    {
+        return self::DATA_DIRECTORY . DIRECTORY_SEPARATOR . $page . '_' . $language . '.json';
     }
 
     /**

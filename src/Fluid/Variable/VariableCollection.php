@@ -75,7 +75,7 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @param string $name
-     * @return null|VariableEntity
+     * @return null|VariableEntity|VariableGroup
      */
     public function find($name)
     {
@@ -119,6 +119,7 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     public function persist()
     {
+        $this->getMapper()->persist($this);
         return $this;
     }
 

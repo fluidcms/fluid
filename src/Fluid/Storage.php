@@ -77,6 +77,17 @@ class Storage implements StorageInterface
      * @param array $data
      * @return bool
      */
+    public function saveBranchData($filename, array $data)
+    {
+        $file = $this->createFile($filename, true);
+        return file_put_contents($file, json_encode($data));
+    }
+
+    /**
+     * @param string $filename
+     * @param array $data
+     * @return bool
+     */
     public function saveData($filename, array $data)
     {
         $file = $this->createFile($filename, false);
