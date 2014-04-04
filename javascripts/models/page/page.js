@@ -15,7 +15,6 @@ define([
         chain: false,
 
         initialize: function (attributes, options) {
-            console.log(attributes);
             this.socket = this.collection.socket;
             this.variables = new VariableCollection(null, {page: this});
             this.config = new PageConfig;
@@ -67,12 +66,13 @@ define([
             });*/
         },
 
-        save: function() {
-            console.log(this.toJSON());
+        save: function(attributes, options) {
+            var root = this;
             this.socket.send('POST', this.url(), this.toJSON(), function(response) {
-                console.log(response);
-                //root.parse(response);
-                //root.trigger('sync change reset');
+                root.trigger('sync');
+                if (typeof options.success === 'function') {
+                    options.success.call(response);
+                }
             });
 
             /*var root = this;

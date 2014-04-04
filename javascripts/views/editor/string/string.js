@@ -22,8 +22,13 @@ define([
             },
 
             save: function() {
+                var root = this;
                 this.model.save({
                     value: this.ui.string.text().replace(/^\s+|\s+$/g, '')
+                }, {
+                    success: function() {
+                        root.cancel();
+                    }
                 });
             },
 

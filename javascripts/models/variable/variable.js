@@ -16,7 +16,13 @@ define(['backbone'], function (Backbone) {
             if (typeof attributes !== 'undefined') {
                 this.set(attributes);
             }
-            this.collection.save();
+            this.collection.save(null, {
+                success: function(response) {
+                    if (typeof options.success === 'function') {
+                        options.success.call(response);
+                    }
+                }
+            });
         }
     });
 });

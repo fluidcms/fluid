@@ -15,6 +15,7 @@ define([
 
             initialize: function(options) {
                 this.controller = options.controller;
+                this.model.on('change', this.render);
             },
 
             render: function() {

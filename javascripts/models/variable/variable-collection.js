@@ -42,8 +42,14 @@ define([
             return this.groups;
         },
 
-        save: function() {
-            this.page.save();
+        save: function(attributes, options) {
+            this.page.save(null, {
+                success: function(response) {
+                    if (typeof options.success === 'function') {
+                        options.success.call(response);
+                    }
+                }
+            });
         }
     });
 });
