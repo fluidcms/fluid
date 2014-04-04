@@ -1,0 +1,12 @@
+<div class="<%= type %>">
+    <div data-name="content" class="content-editor" contenteditable="true">
+        <% if (rendered_value !== '' && rendered_value !== null) { %><%= rendered_value %><p><br></p><% } else { %><p><br></p><% } %>
+    </div>
+
+    <div class="commands">
+        <div>
+            <a data-action="cancel" class="button">Cancel</a>
+            <a data-action="save" class="button blue">Save</a>
+        </div>
+    </div>
+</div>

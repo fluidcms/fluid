@@ -18,10 +18,11 @@ define(
         'views/tools/tools',
         'views/helpers/error',
         'views/page/page',
-        'views/editor/string/string'
+        'views/editor/string/string',
+        'views/editor/content/content'
     ],
     function (Backbone, Marionette, LoaderView, Socket, Map, Language, Layout, Website, History, Components, Files, WebsiteView, NavView, MapLayoutView, Toolbar, ToolsView, ErrorView,
-        PageView, EditorStringView) {
+        PageView, EditorStringView, EditorContentView) {
         return Marionette.Controller.extend({
             current: "",
             main: null,
@@ -162,11 +163,15 @@ define(
                 this.app.mainRegion.$el.show();
             },
 
-            editor: function(type, model) {
+            editor: function(type, model, variableView) {
                 var view;
                 switch (type) {
                     case 'string':
-                        view = new EditorStringView({model: model, controller: this});
+                        view = new EditorStringView({model: model, controller: this, variableView: variableView});
+                        break;
+                    case 'content':
+                        view = new EditorContentView({model: model, controller: this, variableView: variableView});
+                        break;
                 }
                 if (typeof view !== 'undefined') {
                     this.app.editorRegion.show(view);
