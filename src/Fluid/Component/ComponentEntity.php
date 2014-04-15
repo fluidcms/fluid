@@ -77,7 +77,7 @@ class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess
     public function toArray()
     {
         return [
-            'name' => $this->getName(),
+            'config' => $this->getConfig(),
             'variables' => $this->getVariables()->toArray()
         ];
     }

@@ -14,7 +14,7 @@ class PageEntityTest extends \PHPUnit_Framework_TestCase
         $fluid = new Fluid;
         $page = new PageEntity(
             $storage = new Storage($fluid->getConfig()),
-            $xmlMappingLoader = new XmlMappingLoader($fluid),
+            $xmlMappingLoader = new XmlMappingLoader($fluid->getConfig()),
             new PageMapper($storage, $xmlMappingLoader),
             $fluid->getLanguage()
         );

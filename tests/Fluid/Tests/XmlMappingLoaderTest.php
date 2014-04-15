@@ -11,24 +11,21 @@ class XmlMappingLoaderTest extends PHPUnit_Framework_TestCase
 {
     public function testConstruct()
     {
-        $xmlMappingLoader = new XmlMappingLoader(new Fluid);
-        $this->assertInstanceOf('Fluid\Fluid', $xmlMappingLoader->getFluid());
+        $fluid = new Fluid;
+        $xmlMappingLoader = new XmlMappingLoader($fluid->getConfig());
         $this->assertInstanceOf('Fluid\Config', $xmlMappingLoader->getConfig());
     }
 
     public function testSetters()
     {
-        $xmlMappingLoader = new XmlMappingLoader(new Fluid);
-        $xmlMappingLoader->setConfig(new ConfigMock);
+        $xmlMappingLoader = new XmlMappingLoader(new ConfigMock);
         $this->assertInstanceOf('Fluid\Tests\Mock\ConfigMock', $xmlMappingLoader->getConfig());
-        $xmlMappingLoader->setFluid(new FluidMock);
-        $this->assertInstanceOf('Fluid\Tests\Mock\FluidMock', $xmlMappingLoader->getFluid());
     }
 
     public function testLoad()
     {
         $fluid = new Fluid;
         $fluid->getConfig()->setMapping(__DIR__ . '/_files/mapping');
-        $this->assertInstanceOf('Fluid\Mapping', (new XmlMappingLoader($fluid))->load('map.xml'));
+        $this->assertInstanceOf('Fluid\Mapping', (new XmlMappingLoader($fluid->getConfig()))->load('map.xml'));
     }
 }

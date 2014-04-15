@@ -26,7 +26,7 @@ class MappingTest extends PHPUnit_Framework_TestCase
     {
         $fluid = new Fluid;
         $fluid->getConfig()->setMapping(__DIR__ . '/_files/mapping');
-        $mapping = (new XmlMappingLoader($fluid))->load('config.xml');
+        $mapping = (new XmlMappingLoader($fluid->getConfig()))->load('config.xml');
         $config = $mapping->getConfig();
 
         $this->assertArrayHasKey('name1', $config);
@@ -40,7 +40,7 @@ class MappingTest extends PHPUnit_Framework_TestCase
     {
         $fluid = new Fluid;
         $fluid->getConfig()->setMapping(__DIR__ . '/_files/mapping');
-        $mapping = (new XmlMappingLoader($fluid))->load('content.xml');
+        $mapping = (new XmlMappingLoader($fluid->getConfig()))->load('content.xml');
         $content = $mapping->getContent();
 
         $this->assertCount(3, $content);

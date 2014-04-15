@@ -24,7 +24,7 @@ class MapMapperTest extends PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $fluid = new Fluid;
-        $mapMapper = new MapMapper(new Storage($fluid->getConfig()), new XmlMappingLoader($fluid), $fluid->getEvent(), $fluid->getLanguage());
+        $mapMapper = new MapMapper(new Storage($fluid->getConfig()), new XmlMappingLoader($fluid->getConfig()), $fluid->getEvent(), $fluid->getLanguage());
         $this->assertInstanceOf('Fluid\StorageInterface', $mapMapper->getStorage());
         $this->assertInstanceOf('Fluid\XmlMappingLoaderInterface', $mapMapper->getXmlMappingLoader());
     }
@@ -34,7 +34,7 @@ class MapMapperTest extends PHPUnit_Framework_TestCase
         $fluid = new Fluid;
         $fluid->getConfig()->setStorage(Helper::getStorage());
         $fluid->getConfig()->setMapping(__DIR__ . "/../_files/mapping");
-        $mapMapper = new MapMapper(new Storage($fluid->getConfig()), new XmlMappingLoader($fluid), $fluid->getEvent(), $fluid->getLanguage());
+        $mapMapper = new MapMapper(new Storage($fluid->getConfig()), new XmlMappingLoader($fluid->getConfig()), $fluid->getEvent(), $fluid->getLanguage());
         $pages = $mapMapper->map()->getPages();
 
         $this->assertArrayHasKey('home-page', $pages);
