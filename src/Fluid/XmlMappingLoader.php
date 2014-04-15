@@ -26,7 +26,7 @@ class XmlMappingLoader implements XmlMappingLoaderInterface
     public function load($filename)
     {
         $file = $this->getConfig()->getMapping() . DIRECTORY_SEPARATOR . $filename;
-        if (file_exists($file)) {
+        if (is_file($file)) {
             return new Mapping(new SimpleXMLElement($file, null, true));
         }
         return new Mapping();

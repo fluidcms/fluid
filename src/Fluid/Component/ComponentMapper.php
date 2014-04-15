@@ -39,7 +39,7 @@ class ComponentMapper
         $files = $this->getXmlMappingLoader()->filelist(self::MAPPING_DIRECTORY);
         foreach ($files as $file) {
             $component = new ComponentEntity($this->getStorage(), $this->getXmlMappingLoader(), $this, $collection);
-            $component->setXmlMappingFile($file);
+            $component->setXmlMappingFile(self::MAPPING_DIRECTORY . DIRECTORY_SEPARATOR . $file);
             $component = $this->mapEntity($component);
             if (null !== $component) {
                 $collection->add($component);
@@ -54,12 +54,17 @@ class ComponentMapper
      */
     public function mapEntity(ComponentEntity $component)
     {
-        $mapping = $this->getXmlMappingLoader()->load(self::MAPPING_DIRECTORY . DIRECTORY_SEPARATOR . $component->getXmlMappingFile() . '.xml');
-        $component->getConfig()->set($mapping->getConfig());
-        $variables = $component->getVariables();
+        $mapping = $this->getXmlMappingLoader()->load($component->getXmlMappingFile());
 
+        if (!count($mapping->getContent()) && !count($mapping->getConfig())) {
+            return null;
+        }
+
+        $component->getConfig()->set($mapping->getConfig());
+
+        $variables = $component->getVariables();
         foreach ($mapping->getContent() as $key => $value) {
-            /*if (isset($value['name']) && $value['name'] === 'variable') {
+            if (isset($value['name']) && $value['name'] === 'variable') {
                 $attributes = isset($value['attributes']) ? $value['attributes'] : [];
                 $variable = new VariableEntity;
                 $variable->set($attributes);
@@ -77,7 +82,7 @@ class ComponentMapper
                     }
                 }
                 $variables->addVariable($variableGroup);
-            }*/
+            }
         }
 
         return $component;
