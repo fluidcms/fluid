@@ -1,16 +1,22 @@
 define(['backbone', 'ejs', 'qtip'], function (Backbone, EJS, qTip) {
     return Backbone.View.extend({
+        events: {
+            "click a": "navigate"
+        },
+
         id: "nav",
 
         template: new EJS({url: ' javascripts/templates/nav/nav.ejs?' + (new Date()).getTime()}),  // !! Remove for production
 
-        initialize: function (attrs) {
+        initialize: function (options) {
+            this.controller = options.controller;
+
             this.items = [
-                {name: 'Map', className: 'map'},
-                {name: 'Components', className: 'components'},
-                {name: 'Files', className: 'files'},
-                {name: 'Tools', className: 'tools'},
-                {name: 'History', className: 'history'}
+                {name: 'Map', className: 'map', pannel: 'mapPannel'},
+                {name: 'Components', className: 'components', pannel: 'componentsPannel'},
+                {name: 'Files', className: 'files', pannel: 'filesPannel'},
+                {name: 'Tools', className: 'tools', pannel: 'toolsPanel'},
+                {name: 'History', className: 'history', pannel: 'historyPannel'}
             ];
 
             this.$el = $("#nav");
@@ -42,9 +48,16 @@ define(['backbone', 'ejs', 'qtip'], function (Backbone, EJS, qTip) {
             return this;
         },
 
-        changeRoute: function () {
-            $("#main #nav a").removeClass('current');
-            $("#main #nav a." + this.router.current).addClass('current');
+        navigate: function (e) {
+            var pannel = $(e.currentTarget).attr('data-pannel');
+            this.controller[pannel]();
+            this.changeRoute(pannel);
+        },
+
+        changeRoute: function (pannel) {
+            var nav = $("#nav");
+            nav.find("a").removeClass('current');
+            nav.find("a[data-pannel=" + pannel + "]").addClass('current');
         }
     });
 });
