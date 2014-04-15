@@ -22,10 +22,12 @@ class VariableMapper
      * @param LanguageEntity $language
      * @param StorageInterface $storage
      */
-    public function __construct(StorageInterface $storage, LanguageEntity $language)
+    public function __construct(StorageInterface $storage, LanguageEntity $language = null)
     {
-        $this->setLanguage($language);
         $this->setStorage($storage);
+        if (null !== $language) {
+            $this->setLanguage($language);
+        }
     }
 
     /**

@@ -15,7 +15,7 @@ interface SessionHelperInterface
      * @param SessionEntity $session
      * @return $this
      */
-    function setSessionDepenencies(UserCollection $users, UserEntity $user, SessionCollection $sessions, SessionEntity $session);
+    function setSessionDependencies(UserCollection $users, UserEntity $user, SessionCollection $sessions, SessionEntity $session);
 
     /**
      * @return SessionEntity

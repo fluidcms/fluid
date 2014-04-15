@@ -11,6 +11,7 @@ use Fluid\User\UserEntity;
 use Ratchet\Wamp\WampServerInterface;
 use Fluid\ConfigInterface;
 use Fluid\StorageInterface;
+use Fluid\XmlMappingLoaderInterface;
 use Fluid\Event;
 use Fluid\Fluid;
 use Ratchet;
@@ -66,6 +67,11 @@ class LocalWebSocketServer implements WampServerInterface
     private $storage;
 
     /**
+     * @var XmlMappingLoaderInterface
+     */
+    private $xmlMappingLoader;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -93,15 +99,17 @@ class LocalWebSocketServer implements WampServerInterface
     /**
      * @param ConfigInterface $config
      * @param StorageInterface $storage
+     * @param XmlMappingLoaderInterface $xmlMappingLoader
      * @param LoggerInterface $logger
      * @param Event $event
      * @param Fluid $fluid
      */
-    public function __construct(ConfigInterface $config, StorageInterface $storage, LoggerInterface $logger, Event $event, Fluid $fluid = null)
+    public function __construct(ConfigInterface $config, StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, LoggerInterface $logger, Event $event, Fluid $fluid = null)
     {
         $this->startTime = time();
         $this->setConfig($config);
         $this->setStorage($storage);
+        $this->setXmlMappingLoader($xmlMappingLoader);
         $this->setLogger($logger);
         $this->setEvent($event);
         if (null !== $fluid) {
@@ -325,7 +333,7 @@ class LocalWebSocketServer implements WampServerInterface
                 $response = new Response;
 
                 $router = new Router($request, $response, $this->getFluid());
-                $router->dispatchLocalWebsocketRouter($this->getStorage(), $this->getUsers(), $user, $this->getSessions(), $session);
+                $router->dispatchLocalWebsocketRouter($this->getStorage(), $this->getXmlMappingLoader(), $this->getUsers(), $user, $this->getSessions(), $session);
 
                 $conn->send(json_encode([self::TYPE_ID_CALLRESULT, $id, $response->getBody()]));
                 return;
@@ -354,7 +362,7 @@ class LocalWebSocketServer implements WampServerInterface
      */
     public function onError(ConnectionInterface $conn, Exception $e)
     {
-        $this->getLogger()->debug("Error");
+        $this->getLogger()->debug("Local Websocket Server Error (" . $e->getCode() . "): " . $e->getMessage());
         unset($this->connections[$conn->WAMP->sessionId]);
     }
 
@@ -428,6 +436,24 @@ class LocalWebSocketServer implements WampServerInterface
     public function getStorage()
     {
         return $this->storage;
+    }
+
+    /**
+     * @param XmlMappingLoaderInterface $xmlMappingLoader
+     * @return $this
+     */
+    public function setXmlMappingLoader(XmlMappingLoaderInterface $xmlMappingLoader)
+    {
+        $this->xmlMappingLoader = $xmlMappingLoader;
+        return $this;
+    }
+
+    /**
+     * @return XmlMappingLoaderInterface
+     */
+    public function getXmlMappingLoader()
+    {
+        return $this->xmlMappingLoader;
     }
 
     /**

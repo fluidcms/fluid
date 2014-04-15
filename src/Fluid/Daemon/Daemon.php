@@ -3,6 +3,7 @@ namespace Fluid\Daemon;
 
 use Fluid\Logger;
 use Fluid\Storage;
+use Fluid\XmlMappingLoader;
 use React;
 use Ratchet;
 use Fluid\Event;
@@ -12,6 +13,7 @@ use Fluid\WebsocketServer\EventWebsocketServer;
 use Fluid\ConfigInterface;
 use Psr\Log\LoggerInterface;
 use Fluid\StorageInterface;
+use Fluid\XmlMappingLoaderInterface;
 
 class Daemon implements DaemonInterface
 {
@@ -27,6 +29,11 @@ class Daemon implements DaemonInterface
      * @var StorageInterface
      */
     private $storage;
+
+    /**
+     * @var XmlMappingLoaderInterface
+     */
+    private $xmlMappingLoader;
 
     /**
      * @var LoggerInterface
@@ -70,17 +77,21 @@ class Daemon implements DaemonInterface
 
     /**
      * @param ConfigInterface $config
-     * @param StorageInterface|null $storage = null
-     * @param LoggerInterface|null $logger = null
+     * @param StorageInterface|null $storage
+     * @param XmlMappingLoaderInterface|null $xmlMappingLoader
+     * @param LoggerInterface|null $logger
      * @param Event $event
      * @param callable|null $uptimeCallback
      * @param string|null $instanceId
      */
-    public function __construct(ConfigInterface $config, StorageInterface $storage = null, LoggerInterface $logger = null, Event $event = null, callable $uptimeCallback = null, $instanceId = null)
+    public function __construct(ConfigInterface $config, StorageInterface $storage = null, XmlMappingLoaderInterface $xmlMappingLoader = null, LoggerInterface $logger = null, Event $event = null, callable $uptimeCallback = null, $instanceId = null)
     {
         $this->setConfig($config);
         if (null !== $storage) {
             $this->setStorage($storage);
+        }
+        if (null !== $xmlMappingLoader) {
+            $this->setXmlMappingLoader($xmlMappingLoader);
         }
         if (null !== $logger) {
             $this->setLogger($logger);
@@ -219,7 +230,7 @@ class Daemon implements DaemonInterface
         $loop = $server->getReactEventLoop();
 
         // Create Local Websocket Server
-        $localWebsocketServer = new LocalWebSocketServer($this->getConfig(), $this->getStorage(), $logger, $this->getEvent());
+        $localWebsocketServer = new LocalWebSocketServer($this->getConfig(), $this->getStorage(), $this->getXmlMappingLoader(), $logger, $this->getEvent());
         $server->add($localWebsocketServer, $this->getConfig()->getAdminPath() . LocalWebSocketServer::URI);
 
         // Create Message Websocket Server
@@ -427,5 +438,34 @@ class Daemon implements DaemonInterface
     private function createStorage()
     {
         return $this->setStorage(new Storage($this->getConfig()));
+    }
+
+    /**
+     * @param XmlMappingLoaderInterface $xmlMappingLoader
+     * @return $this
+     */
+    public function setXmlMappingLoader(XmlMappingLoaderInterface $xmlMappingLoader)
+    {
+        $this->xmlMappingLoader = $xmlMappingLoader;
+        return $this;
+    }
+
+    /**
+     * @return XmlMappingLoaderInterface
+     */
+    public function getXmlMappingLoader()
+    {
+        if (null === $this->xmlMappingLoader) {
+            $this->createXmlMappingLoader();
+        }
+        return $this->xmlMappingLoader;
+    }
+
+    /**
+     * @return $this
+     */
+    private function createXmlMappingLoader()
+    {
+        return $this->setXmlMappingLoader(new XmlMappingLoader($this->getConfig()));
     }
 }

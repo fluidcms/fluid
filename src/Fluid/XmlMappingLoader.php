@@ -6,22 +6,16 @@ use SimpleXMLElement;
 class XmlMappingLoader implements XmlMappingLoaderInterface
 {
     /**
-     * @var Fluid
-     */
-    private $fluid;
-
-    /**
      * @var ConfigInterface
      */
     private $config;
 
     /**
-     * @param Fluid $fluid
+     * @param ConfigInterface $config
      */
-    public function __construct(Fluid $fluid)
+    public function __construct(ConfigInterface $config)
     {
-        $this->setFluid($fluid);
-        $this->setConfig($fluid->getConfig());
+        $this->setConfig($config);
     }
 
     /**
@@ -39,21 +33,21 @@ class XmlMappingLoader implements XmlMappingLoaderInterface
     }
 
     /**
-     * @param Fluid $fluid
-     * @return $this
+     * @param string $dir
+     * @return array
      */
-    public function setFluid(Fluid $fluid)
+    public function filelist($dir)
     {
-        $this->fluid = $fluid;
-        return $this;
-    }
-
-    /**
-     * @return Fluid
-     */
-    public function getFluid()
-    {
-        return $this->fluid;
+        $dir = $this->getConfig()->getMapping() . DIRECTORY_SEPARATOR . $dir;
+        $retval = [];
+        if (is_dir($dir)) {
+            foreach (scandir($dir) as $file) {
+                if ($file !== '.' && $file !== '..') {
+                    $retval[] = $file;
+                }
+            }
+        }
+        return $retval;
     }
 
     /**

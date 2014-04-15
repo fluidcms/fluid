@@ -107,7 +107,7 @@ class Router
 
             /** @var Closure $routes */
             $routes = require __DIR__ . DIRECTORY_SEPARATOR . 'Routes' . DIRECTORY_SEPARATOR . 'HttpRoutes.php';
-            $routes($this->getFluid(), $this, $this->getRequest(), $response, $this->getFluid()->getStorage(), $this->getRequest()->getCookie());
+            $routes($this->getFluid(), $this, $this->getRequest(), $response, $this->getFluid()->getStorage(), $this->getFluid()->getXmlMappingLoader(), $this->getRequest()->getCookie());
 
             $method = $this->request->getMethod();
             if (isset($this->routes[$uri])) {
@@ -171,13 +171,14 @@ class Router
      * Route a local websocket request
      *
      * @param StorageInterface $storage
+     * @param XmlMappingLoaderInterface $xmlMappingLoader
      * @param UserCollection $users
      * @param UserEntity $user
      * @param SessionCollection $sessions
      * @param SessionEntity $session
      * @return null|Response
      */
-    public function dispatchLocalWebsocketRouter(StorageInterface $storage, UserCollection $users, UserEntity $user, SessionCollection $sessions, SessionEntity $session)
+    public function dispatchLocalWebsocketRouter(StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, UserCollection $users, UserEntity $user, SessionCollection $sessions, SessionEntity $session)
     {
         $uri = $this->getRequest()->getUri();
         $response = $this->getResponse();
@@ -185,7 +186,7 @@ class Router
 
         /** @var callable $routes */
         $routes = require __DIR__ . DIRECTORY_SEPARATOR . 'Routes' . DIRECTORY_SEPARATOR . 'LocalWebsocketRoutes.php';
-        $routes($this->getFluid(), $this, $this->getRequest(), $this->getResponse(), $storage, $users, $user, $sessions, $session);
+        $routes($this->getFluid(), $this, $this->getRequest(), $this->getResponse(), $storage, $xmlMappingLoader, $users, $user, $sessions, $session);
 
         $method = $this->request->getMethod();
         foreach ($this->routes as $path => $methods) {

@@ -8,4 +8,10 @@ interface XmlMappingLoaderInterface
      * @return MappingInterface
      */
     public function load($filename);
+
+    /**
+     * @param string $dir
+     * @return array
+     */
+    public function filelist($dir);
 }

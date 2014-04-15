@@ -36,6 +36,11 @@ abstract class Controller
     protected $storage;
 
     /**
+     * @var XmlMappingLoaderInterface
+     */
+    protected $xmlMappingLoader;
+
+    /**
      * @var Daemon
      */
     protected $daemon;
@@ -46,9 +51,10 @@ abstract class Controller
      * @param Request $request
      * @param Response $response
      * @param StorageInterface $storage
-     * @param CookieInterface $cookie
+     * @param XmlMappingLoaderInterface|null $xmlMappingLoader
+     * @param CookieInterface|null $cookie
      */
-    public function __construct(Fluid $fluid = null, Router $router, Request $request, Response $response, StorageInterface $storage, CookieInterface $cookie = null)
+    public function __construct(Fluid $fluid = null, Router $router, Request $request, Response $response, StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader = null, CookieInterface $cookie = null)
     {
         if (null !== $fluid) {
             $this->setFluid($fluid);
@@ -57,6 +63,9 @@ abstract class Controller
         $this->setRequest($request);
         $this->setResponse($response);
         $this->setStorage($storage);
+        if (null !== $xmlMappingLoader) {
+            $this->setXmlMappingLoader($xmlMappingLoader);
+        }
         if (null !== $cookie) {
             $this->setCookie($cookie);
         }
@@ -220,5 +229,23 @@ abstract class Controller
     private function createDaemon()
     {
         return $this->setDaemon($this->getFluid()->getDaemon());
+    }
+
+    /**
+     * @param XmlMappingLoaderInterface $xmlMappingLoader
+     * @return $this
+     */
+    public function setXmlMappingLoader(XmlMappingLoaderInterface $xmlMappingLoader)
+    {
+        $this->xmlMappingLoader = $xmlMappingLoader;
+        return $this;
+    }
+
+    /**
+     * @return XmlMappingLoaderInterface
+     */
+    public function getXmlMappingLoader()
+    {
+        return $this->xmlMappingLoader;
     }
 }

@@ -34,7 +34,7 @@ if (is_dir($vendor) && is_file($vendor . "/autoload.php")) {
         }
 
         $instanceId = base64_decode($argv[2]);
-        $daemon = new Daemon($config, null, $logger, null, null, $instanceId);
+        $daemon = new Daemon($config, null, null, $logger, null, null, $instanceId);
 
         if (is_file($daemon->getPidFilePath()) && is_writable($daemon->getPidFilePath())) {
             $daemon->stop();

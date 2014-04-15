@@ -49,10 +49,14 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
      * @param null|VariableMapper $mapper
      * @param LanguageEntity $language
      */
-    public function __construct(PageEntity $page, StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, VariableMapper $mapper = null, LanguageEntity $language)
+    public function __construct(PageEntity $page = null, StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, VariableMapper $mapper = null, LanguageEntity $language = null)
     {
-        $this->setLanguage($language);
-        $this->setPage($page);
+        if (null !== $language) {
+            $this->setLanguage($language);
+        }
+        if (null !== $page) {
+            $this->setPage($page);
+        }
         $this->setStorage($storage);
         $this->setXmlMappingLoader($xmlMappingLoader);
         if (null !== $mapper) {
@@ -66,9 +70,10 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
     public function toArray()
     {
         $retval = [];
-        /** @var VariableEntity|VariableGroup $variable */
-        foreach ($this->getIterator() as $variable) {
-            $retval[] = $variable->toArray();
+        if (null !== $this->variables) {
+            foreach ($this->getIterator() as $variable) {
+                $retval[] = $variable->toArray();
+            }
         }
         return $retval;
     }
@@ -280,18 +285,18 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     public function count()
     {
-        if (null === $this->variables) {
+        if (null === $this->variables && null !== $this->getPage()) {
             $this->getMapper()->mapCollection($this);
         }
         return count($this->variables);
     }
 
     /**
-     * @return ArrayIterator
+     * @return ArrayIterator|VariableEntity[]|VariableGroup[]
      */
     public function getIterator()
     {
-        if (null === $this->variables) {
+        if (null === $this->variables && null !== $this->getPage()) {
             $this->getMapper()->mapCollection($this);
         }
         return new ArrayIterator($this->variables);
@@ -303,7 +308,7 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     public function offsetExists($offset)
     {
-        if (null === $this->variables) {
+        if (null === $this->variables && null !== $this->getPage()) {
             $this->getMapper()->mapCollection($this);
         }
         return isset($this->variables[$offset]);
@@ -315,7 +320,7 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     public function offsetGet($offset)
     {
-        if (null === $this->variables) {
+        if (null === $this->variables && null !== $this->getPage()) {
             $this->getMapper()->mapCollection($this);
         }
         if (isset($this->variables[$offset])) {
@@ -330,7 +335,7 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
-        if (null === $this->variables) {
+        if (null === $this->variables && null !== $this->getPage()) {
             $this->getMapper()->mapCollection($this);
         }
         $this->variables[$offset] = $value;
@@ -341,7 +346,7 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     public function offsetUnset($offset)
     {
-        if (null === $this->variables) {
+        if (null === $this->variables && null !== $this->getPage()) {
             $this->getMapper()->mapCollection($this);
         }
         unset($this->variables[$offset]);

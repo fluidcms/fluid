@@ -58,7 +58,7 @@ trait SessionHelper
      * @param SessionEntity $session
      * @return $this
      */
-    public function setSessionDepenencies(UserCollection $users, UserEntity $user, SessionCollection $sessions, SessionEntity $session)
+    public function setSessionDependencies(UserCollection $users, UserEntity $user, SessionCollection $sessions, SessionEntity $session)
     {
         $this->setUsers($users);
         $this->setUser($user);

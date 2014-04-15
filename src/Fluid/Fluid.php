@@ -276,7 +276,7 @@ class Fluid
      */
     private function createXmlMappingLoader()
     {
-        return $this->setXmlMappingLoader(new XmlMappingLoader($this));
+        return $this->setXmlMappingLoader(new XmlMappingLoader($this->getConfig()));
     }
 
     /**
@@ -442,7 +442,7 @@ class Fluid
      */
     private function createDaemon()
     {
-        return $this->setDaemon(new Daemon($this->getConfig(), $this->getStorage(), $this->getLogger(), $this->getEvent()));
+        return $this->setDaemon(new Daemon($this->getConfig(), $this->getStorage(), $this->getXmlMappingLoader(), $this->getLogger(), $this->getEvent()));
     }
 
     /**
