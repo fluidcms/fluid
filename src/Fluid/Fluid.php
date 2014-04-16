@@ -352,7 +352,7 @@ class Fluid
      */
     private function createRouter()
     {
-        return $this->setRouter(new Router($this->getRequest(), null, $this));
+        return $this->setRouter(new Router($this->getConfig(), $this->getRequest(), null, $this));
     }
 
     /**

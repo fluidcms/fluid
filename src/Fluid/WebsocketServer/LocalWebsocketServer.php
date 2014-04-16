@@ -332,7 +332,7 @@ class LocalWebSocketServer implements WampServerInterface
 
                 $response = new Response;
 
-                $router = new Router($request, $response, $this->getFluid());
+                $router = new Router($this->getConfig(), $request, $response, $this->getFluid());
                 $router->dispatchLocalWebsocketRouter($this->getStorage(), $this->getXmlMappingLoader(), $this->getUsers(), $user, $this->getSessions(), $session);
 
                 $conn->send(json_encode([self::TYPE_ID_CALLRESULT, $id, $response->getBody()]));

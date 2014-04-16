@@ -11,6 +11,11 @@ abstract class Controller
     protected $fluid;
 
     /**
+     * @var ConfigInterface
+     */
+    protected $config;
+
+    /**
      * @var Router
      */
     protected $router;
@@ -47,6 +52,7 @@ abstract class Controller
 
     /**
      * @param Fluid $fluid
+     * @param ConfigInterface $config
      * @param Router $router
      * @param Request $request
      * @param Response $response
@@ -54,11 +60,12 @@ abstract class Controller
      * @param XmlMappingLoaderInterface|null $xmlMappingLoader
      * @param CookieInterface|null $cookie
      */
-    public function __construct(Fluid $fluid = null, Router $router, Request $request, Response $response, StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader = null, CookieInterface $cookie = null)
+    public function __construct(Fluid $fluid = null, ConfigInterface $config, Router $router, Request $request, Response $response, StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader = null, CookieInterface $cookie = null)
     {
         if (null !== $fluid) {
             $this->setFluid($fluid);
         }
+        $this->setConfig($config);
         $this->setRouter($router);
         $this->setRequest($request);
         $this->setResponse($response);
@@ -110,6 +117,24 @@ abstract class Controller
     public function getFluid()
     {
         return $this->fluid;
+    }
+
+    /**
+     * @param ConfigInterface $config
+     * @return $this
+     */
+    public function setConfig(ConfigInterface $config)
+    {
+        $this->config = $config;
+        return $this;
+    }
+
+    /**
+     * @return ConfigInterface
+     */
+    public function getConfig()
+    {
+        return $this->config;
     }
 
     /**

@@ -13,8 +13,7 @@ define(['backbone', 'models/component/component'], function (Backbone, Component
         fetch: function () {
             var root = this;
             this.socket.send('GET', this.url, {}, function(response) {
-                console.log(response);
-                //root.parse(response);
+                root.parse(response);
             });
         },
 

@@ -31,6 +31,6 @@ class AdminController extends Controller
             return;
         }
         $this->cookie->delete(SessionEntity::COOKIE_NAME);
-        (new LoginController($this->getFluid(), $this->getRouter(), $this->getRequest(), $this->getResponse(), $this->getStorage(), $this->getXmlMappingLoader(), $this->getCookie()))->index();
+        (new LoginController($this->getFluid(), $this->getConfig(), $this->getRouter(), $this->getRequest(), $this->getResponse(), $this->getStorage(), $this->getXmlMappingLoader(), $this->getCookie()))->index();
     }
 }

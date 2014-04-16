@@ -14,7 +14,7 @@ define(
         'views/website/website',
         'views/nav/nav',
         'views/map/map-layout',
-        'views/component/component-layout',
+        'views/component/component-collection',
         'views/toolbar/toolbar',
         'views/tools/tools',
         'views/helpers/error',
@@ -22,10 +22,11 @@ define(
         'views/editor/string/string',
         'views/editor/content/content'
     ],
-    function (Backbone, Marionette, LoaderView, Socket, Map, Language, Layout, Website, History, ComponentCollection, Files, WebsiteView, NavView, MapLayoutView, ComponentLayoutView, Toolbar,
+    function (Backbone, Marionette, LoaderView, Socket, Map, Language, Layout, Website, History, ComponentCollection, Files, WebsiteView, NavView, MapLayoutView, ComponentCollectionView, Toolbar,
               ToolsView, ErrorView, PageView, EditorStringView, EditorContentView) {
         return Marionette.Controller.extend({
             current: "",
+            baseUrl: "",
             main: null,
             ready: false,
             mapView: null,
@@ -33,6 +34,7 @@ define(
 
             initialize: function (options) {
                 var root = this;
+                this.baseUrl = window.location.rootpath;
                 this.session = options.session;
                 this.user = options.user;
                 this.app = options.app;
@@ -163,8 +165,9 @@ define(
             },
 
             componentsPannel: function () {
-                this.app.pannelRegion.show(new ComponentLayoutView({
+                this.app.pannelRegion.show(new ComponentCollectionView({
                     controller: this,
+                    collection: this.components
                     //model: this.map
                     //page: root.page,
                     //languages: root.languages,

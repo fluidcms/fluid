@@ -8,13 +8,13 @@
 
 /* # Layout
 ================================================== */
-#content>div.components {
+#content {
   @include flex-grow(1);
 }
 
 /* # Components
 ================================================== */
-#content>div.components {
+#content {
   overflow-y: auto;
   padding: $main-margin-top 0;
 

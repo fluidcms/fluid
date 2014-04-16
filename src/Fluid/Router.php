@@ -42,6 +42,11 @@ class Router
     private $fluid;
 
     /**
+     * @var ConfigInterface
+     */
+    private $config;
+
+    /**
      * @var Request
      */
     private $request;
@@ -57,12 +62,14 @@ class Router
     private $routes = [];
 
     /**
+     * @param ConfigInterface $config
      * @param Request $request
      * @param Response $response
      * @param Fluid|null $fluid
      */
-    public function __construct(Request $request, Response $response = null, Fluid $fluid = null)
+    public function __construct(ConfigInterface $config, Request $request, Response $response = null, Fluid $fluid = null)
     {
+        $this->setConfig($config);
         $this->setRequest($request);
         if ($response !== null) {
             $this->setResponse($response);
@@ -107,20 +114,35 @@ class Router
 
             /** @var Closure $routes */
             $routes = require __DIR__ . DIRECTORY_SEPARATOR . 'Routes' . DIRECTORY_SEPARATOR . 'HttpRoutes.php';
-            $routes($this->getFluid(), $this, $this->getRequest(), $response, $this->getFluid()->getStorage(), $this->getFluid()->getXmlMappingLoader(), $this->getRequest()->getCookie());
+            $routes($this->getFluid(), $this->getConfig(), $this, $this->getRequest(), $response, $this->getFluid()->getStorage(), $this->getFluid()->getXmlMappingLoader(), $this->getRequest()->getCookie());
 
             $method = $this->request->getMethod();
-            if (isset($this->routes[$uri])) {
-                if (isset($this->routes[$uri][$method])) {
-                    $found = true;
-                    $this->routes[$uri][$method]();
-                } elseif (isset($this->routes[$uri][null])) {
-                    $found = true;
-                    $this->routes[$uri][null]();
-                } else {
-                    $response->setCode(Response::RESPONSE_CODE_METHOD_NOT_ALLOWED);
+            foreach ($this->routes as $path => $methods) {
+                $path = str_replace('/', '\/', $path);
+                $match = preg_match_all('/^' . $path . '$/i', $uri, $matches);
+                if ($match) {
+                    array_shift($matches);
+                    $arguments = [];
+                    if (is_array($matches)) {
+                        foreach ($matches as $match) {
+                            if (isset($match[0])) {
+                                $arguments[] = $match[0];
+                            }
+                        }
+                    }
+                    if (isset($methods[$method])) {
+                        $found = true;
+                        call_user_func_array($methods[$method], $arguments);
+                    } elseif (isset($methods[null])) {
+                        $found = true;
+                        call_user_func_array($methods[null], $arguments);
+                    } else {
+                        $response->setCode(Response::RESPONSE_CODE_METHOD_NOT_ALLOWED);
+                    }
                 }
-            } else {
+            }
+
+            if (!$found) {
                 $file = $uri;
                 $dir = realpath(__DIR__ . DIRECTORY_SEPARATOR . self::PUBLIC_FILES_PATH);
                 if ($this->useDevelop() && stripos(substr($file, 1), basename(self::DEVELOP_JAVASCRIPTS_PATH)) === 0) {
@@ -161,7 +183,7 @@ class Router
             }
         }
 
-        if ($found) {
+        if ($found && $this->getResponse()->code() !== Response::RESPONSE_CODE_NOT_FOUND) {
             return $response;
         }
         return null;
@@ -186,7 +208,7 @@ class Router
 
         /** @var callable $routes */
         $routes = require __DIR__ . DIRECTORY_SEPARATOR . 'Routes' . DIRECTORY_SEPARATOR . 'LocalWebsocketRoutes.php';
-        $routes($this->getFluid(), $this, $this->getRequest(), $this->getResponse(), $storage, $xmlMappingLoader, $users, $user, $sessions, $session);
+        $routes($this->getFluid(), $this->getConfig(), $this, $this->getRequest(), $this->getResponse(), $storage, $xmlMappingLoader, $users, $user, $sessions, $session);
 
         $method = $this->request->getMethod();
         foreach ($this->routes as $path => $methods) {
@@ -257,6 +279,24 @@ class Router
             }
         }
         return false;
+    }
+
+    /**
+     * @param ConfigInterface $config
+     * @return $this
+     */
+    public function setConfig(ConfigInterface $config)
+    {
+        $this->config = $config;
+        return $this;
+    }
+
+    /**
+     * @return ConfigInterface
+     */
+    public function getConfig()
+    {
+        return $this->config;
     }
 
     /**
