@@ -21,10 +21,8 @@ class FileController extends Controller implements SessionHelperInterface
             $container = new Container();
             $container->setStorage($this->getStorage());
             $container->setXmlMappingLoader($this->getXmlMappingLoader());
-            $files = new FileCollection($container);
-            $files->toArray();
 
-            //$this->getResponse()->json($files->toArray());
+            $this->getResponse()->setJson(new FileCollection($container));
             return;
         }
         $this->getResponse()->setCode(Response::RESPONSE_CODE_FORBIDDEN);

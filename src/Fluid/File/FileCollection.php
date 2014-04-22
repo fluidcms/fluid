@@ -2,6 +2,7 @@
 namespace Fluid\File;
 
 use Countable;
+use JsonSerializable;
 use Fluid\Container;
 use IteratorAggregate;
 use ArrayAccess;
@@ -9,7 +10,7 @@ use ArrayIterator;
 use Fluid\StorageInterface;
 use Fluid\XmlMappingLoaderInterface;
 
-class FileCollection implements Countable, IteratorAggregate, ArrayAccess
+class FileCollection implements Countable, IteratorAggregate, ArrayAccess, JsonSerializable
 {
     /**
      * @var FileEntity[]
@@ -22,7 +23,7 @@ class FileCollection implements Countable, IteratorAggregate, ArrayAccess
     private $storage;
 
     /**
-     * @var FileMapping
+     * @var FileMapper
      */
     private $mapper;
 
@@ -33,17 +34,35 @@ class FileCollection implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @param Container $container
-     * @param FileMapping|null $mapper
+     * @param FileMapper|null $mapper
      */
-    public function __construct(Container $container, FileMapping $mapper = null)
+    public function __construct(Container $container, FileMapper $mapper = null)
     {
         $this->setStorage($container->getStorage());
         $this->setXmlMappingLoader($container->getXmlMappingLoader());
         if (null !== $mapper) {
             $this->setMapper($mapper);
         } else {
-            $this->setMapper(new FileMapping($container));
+            $this->setMapper(new FileMapper($container));
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        if (null === $this->files)  {
+            $this->getMapper()->mapCollection($this);
+        }
+
+        $retval = [];
+
+        foreach ($this->files as $file) {
+            $retval[] = $file->jsonSerialize();
+        }
+
+        return $retval;
     }
 
     /**
@@ -96,17 +115,17 @@ class FileCollection implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
-     * @param FileMapping $mapper
+     * @param FileMapper $mapper
      * @return $this
      */
-    public function setMapper(FileMapping $mapper)
+    public function setMapper(FileMapper $mapper)
     {
         $this->mapper = $mapper;
         return $this;
     }
 
     /**
-     * @return FileMapping
+     * @return FileMapper
      */
     public function getMapper()
     {

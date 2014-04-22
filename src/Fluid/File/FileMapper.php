@@ -7,6 +7,13 @@ use Fluid\XmlMappingLoaderInterface;
 
 class FileMapper
 {
+    const FILES_DIRECTORY = 'files';
+
+    /**
+     * @var Container
+     */
+    private $container;
+
     /**
      * @var StorageInterface
      */
@@ -22,6 +29,7 @@ class FileMapper
      */
     public function __construct(Container $container)
     {
+        $this->setContainer($container);
         $this->setStorage($container->getStorage());
         $this->setXmlMappingLoader($container->getXmlMappingLoader());
     }
@@ -32,14 +40,39 @@ class FileMapper
      */
     public function mapCollection(FileCollection $collection)
     {
+        $files = $this->getStorage()->getBranchFileList(self::FILES_DIRECTORY);
+        foreach ($files as $fileid) {
+            $file = new FileEntity($this->getContainer());
+            $file->setId($fileid);
+            $file = $this->mapEntity($file);
+            if ($file !== null) {
+                $collection->add($file);
+            }
+        }
+        return $collection;
     }
 
     /**
-     * @param FileEntity $component
+     * @param FileEntity $file
      * @return FileEntity
      */
-    public function mapEntity(FileEntity $component)
+    public function mapEntity(FileEntity $file)
     {
+        $found = false;
+        $id = $file->getId();
+        $fileDir = $this->getStorage()->getBranchFileList(self::FILES_DIRECTORY . DIRECTORY_SEPARATOR . $id);
+        foreach ($fileDir as $item) {
+            if (is_file($item)) {
+                $file->setName($item);
+                $found = true;
+            }
+        }
+
+        if ($found) {
+            return $file;
+        }
+
+        return null;
     }
 
     /**
@@ -76,5 +109,23 @@ class FileMapper
     public function getXmlMappingLoader()
     {
         return $this->xmlMappingLoader;
+    }
+
+    /**
+     * @return Container
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
+     * @param Container $container
+     * @return $this
+     */
+    public function setContainer(Container $container)
+    {
+        $this->container = $container;
+        return $this;
     }
 }

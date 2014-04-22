@@ -53,6 +53,30 @@ class Storage implements StorageInterface
     }
 
     /**
+     * @param string $dir
+     * @param bool $useBranch
+     * @return array
+     */
+    protected function scanDir($dir, $useBranch = true)
+    {
+        if ($useBranch) {
+            $dir = $this->getConfig()->getStorage() . DIRECTORY_SEPARATOR . $this->getConfig()->getBranch() . DIRECTORY_SEPARATOR . $dir;
+        } else {
+            $dir = $this->getConfig()->getStorage() . DIRECTORY_SEPARATOR . self::DATA_DIR_NAME . DIRECTORY_SEPARATOR . $dir;
+        }
+
+        $retval = [];
+        if (is_dir($dir)) {
+            foreach (scandir($dir) as $file) {
+                if ($file !== '.' && $file !== '..') {
+                    $retval .= $file;
+                }
+            }
+        }
+        return $retval;
+    }
+
+    /**
      * @param string $filename
      * @return array
      */
@@ -96,6 +120,24 @@ class Storage implements StorageInterface
             return false;
         }
         return true;
+    }
+
+    /**
+     * @param string $dir
+     * @return array
+     */
+    public function getBranchFileList($dir)
+    {
+        return $this->scanDir($dir, true);
+    }
+
+    /**
+     * @param string $dir
+     * @return array
+     */
+    public function getFileList($dir)
+    {
+        return $this->scanDir($dir, false);
     }
 
     /**

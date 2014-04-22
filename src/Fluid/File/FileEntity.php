@@ -2,6 +2,7 @@
 namespace Fluid\File;
 
 use Countable;
+use JsonSerializable;
 use Fluid\Container;
 use IteratorAggregate;
 use ArrayAccess;
@@ -9,8 +10,13 @@ use ArrayIterator;
 use Fluid\StorageInterface;
 use Fluid\XmlMappingLoaderInterface;
 
-class FileEntity implements Countable, IteratorAggregate, ArrayAccess
+class FileEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSerializable
 {
+    /**
+     * @var string
+     */
+    private $id;
+
     /**
      * @var string
      */
@@ -56,9 +62,11 @@ class FileEntity implements Countable, IteratorAggregate, ArrayAccess
     /**
      * @return array
      */
-    public function toArray()
+    public function jsonSerialize()
     {
         return [
+            'id' => $this->getId(),
+            'name' => $this->getName()
         ];
     }
 
@@ -96,6 +104,24 @@ class FileEntity implements Countable, IteratorAggregate, ArrayAccess
     public function getMapper()
     {
         return $this->mapper;
+    }
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $id
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
     }
 
     /**
