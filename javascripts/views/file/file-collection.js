@@ -1,16 +1,15 @@
 define([
-    'backbone',
-    'marionette',
-    'jquery-ui',
-    'views/component/component-item'
-],
-    function (Backbone, Marionette, jUI, ComponentItemView) {
+        'backbone',
+        'marionette',
+        'views/file/file-item'
+    ],
+    function (Backbone, Marionette, FileItemView) {
         return Marionette.CollectionView.extend({
             tagName: 'ul',
 
-            className: 'components',
+            className: 'files',
 
-            itemView: ComponentItemView,
+            itemView: FileItemView,
 
             itemViewOptions: function() {
                 return {

@@ -10,11 +10,12 @@ define(
         'models/website/website',
         'models/history/history',
         'models/component/component-collection',
-        'models/file/file',
+        'models/file/file-collection',
         'views/website/website',
         'views/nav/nav',
         'views/map/map-layout',
         'views/component/component-collection',
+        'views/file/file-collection',
         'views/toolbar/toolbar',
         'views/tools/tools',
         'views/helpers/error',
@@ -22,7 +23,8 @@ define(
         'views/editor/string/string',
         'views/editor/content/content'
     ],
-    function (Backbone, Marionette, LoaderView, Socket, Map, Language, Layout, Website, History, ComponentCollection, Files, WebsiteView, NavView, MapLayoutView, ComponentCollectionView, Toolbar,
+    function (Backbone, Marionette, LoaderView, Socket, Map, Language, Layout, Website, History, ComponentCollection,
+              FileCollection, WebsiteView, NavView, MapLayoutView, ComponentCollectionView, FileCollectionView, Toolbar,
               ToolsView, ErrorView, PageView, EditorStringView, EditorContentView) {
         return Marionette.Controller.extend({
             current: "",
@@ -75,10 +77,7 @@ define(
                 /*this.models.layouts = this.layouts = new Layout.Layouts(null, {socket: this.socket}); // TODO: remove this.layouts var
 */
                 this.components = new ComponentCollection(null, {socket: this.socket});
-
-/*
-                this.models.files = new Files(null, {socket: this.socket});*/
-
+                this.files = new FileCollection(null, {socket: this.socket});
                 this.map = new Map(null, {
                     socket: this.socket
 /*
@@ -121,6 +120,7 @@ define(
 
                         root.map.pages.fetch();
                         root.components.fetch();
+                        root.files.fetch();
                         //root.models.preview.loadPage();
                         root.app.websiteRegion.show(root.websiteView);
                     }
@@ -188,6 +188,16 @@ define(
             },
 
             filesPannel: function () {
+
+                this.app.pannelRegion.show(new FileCollectionView({
+                    controller: this,
+                    collection: this.files
+                    //model: this.map
+                    //page: root.page,
+                    //languages: root.languages,
+                    //layouts: root.layouts
+                }));
+
                 return;
                 var root = this;
                 if (this.current !== 'files' && typeof this.views.files === 'undefined') {

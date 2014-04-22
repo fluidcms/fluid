@@ -4,7 +4,7 @@ define(['backbone', 'models/component/component'], function (Backbone, Component
 
         socket: null,
 
-        url: 'component',
+        url: '/component',
 
         initialize: function (models, options) {
             this.socket = options.socket;
