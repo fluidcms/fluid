@@ -141,6 +141,66 @@ class Storage implements StorageInterface
     }
 
     /**
+     * @param string $file
+     * @return bool
+     */
+    public function branchFileExists($file)
+    {
+        $file = $this->getConfig()->getStorage() . DIRECTORY_SEPARATOR . $this->getConfig()->getBranch() . DIRECTORY_SEPARATOR . $file;
+        return file_exists($file);
+    }
+
+    /**
+     * @param string $file
+     * @return bool
+     */
+    public function fileExists($file)
+    {
+        $file = $this->getConfig()->getStorage() . DIRECTORY_SEPARATOR . self::DATA_DIR_NAME . DIRECTORY_SEPARATOR . $file;
+        return file_exists($file);
+    }
+
+    /**
+     * @param string $tmpfile
+     * @param string $newfile
+     * @return bool
+     * @throws PermissionDeniedException
+     */
+    public function uploadBranchFile($tmpfile, $newfile)
+    {
+        $newfile = $this->getConfig()->getStorage() . DIRECTORY_SEPARATOR . $this->getConfig()->getBranch() . DIRECTORY_SEPARATOR . $newfile;
+        $dir = dirname($newfile);
+
+        if (!file_exists($dir)) {
+            if (!mkdir($dir, 0777, true)) {
+                throw new PermissionDeniedException('You do not have read/write permssions on the storage directory');
+            }
+        }
+
+        return move_uploaded_file($tmpfile, $newfile);
+    }
+
+    /**
+     * @param string $tmpfile
+     * @param string $newfile
+     * @return bool
+     * @throws PermissionDeniedException
+     */
+    public function uploadFile($tmpfile, $newfile)
+    {
+        $newfile = $this->getConfig()->getStorage() . DIRECTORY_SEPARATOR . self::DATA_DIR_NAME . DIRECTORY_SEPARATOR . $newfile;
+        $dir = dirname($newfile);
+
+        if (!file_exists($dir)) {
+            if (!mkdir($dir, 0777, true)) {
+                throw new PermissionDeniedException('You do not have read/write permssions on the storage directory');
+            }
+        }
+
+        return move_uploaded_file($tmpfile, $newfile);
+    }
+
+    /**
      * @param ConfigInterface $config
      * @return $this
      */

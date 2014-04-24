@@ -15,7 +15,7 @@ define(
         'views/nav/nav',
         'views/map/map-layout',
         'views/component/component-collection',
-        'views/file/file-collection',
+        'views/file/file-composite-view',
         'views/toolbar/toolbar',
         'views/tools/tools',
         'views/helpers/error',
@@ -24,7 +24,7 @@ define(
         'views/editor/content/content'
     ],
     function (Backbone, Marionette, LoaderView, Socket, Map, Language, Layout, Website, History, ComponentCollection,
-              FileCollection, WebsiteView, NavView, MapLayoutView, ComponentCollectionView, FileCollectionView, Toolbar,
+              FileCollection, WebsiteView, NavView, MapLayoutView, ComponentCollectionView, FileCompositeView, Toolbar,
               ToolsView, ErrorView, PageView, EditorStringView, EditorContentView) {
         return Marionette.Controller.extend({
             current: "",
@@ -189,7 +189,7 @@ define(
 
             filesPannel: function () {
 
-                this.app.pannelRegion.show(new FileCollectionView({
+                this.app.pannelRegion.show(new FileCompositeView({
                     controller: this,
                     collection: this.files
                     //model: this.map

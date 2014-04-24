@@ -9,13 +9,13 @@
 
 /* # Layout
 ================================================== */
-#content>div.files {
+#content div.files {
   @include flex-grow(1);
 }
 
 /* # Files
 ================================================== */
-#content>div.files {
+#content div.files {
 
   input[type="file"] {
     position: absolute;

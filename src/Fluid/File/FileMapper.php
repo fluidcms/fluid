@@ -62,7 +62,7 @@ class FileMapper
         $id = $file->getId();
         $fileDir = $this->getStorage()->getBranchFileList(self::FILES_DIRECTORY . DIRECTORY_SEPARATOR . $id);
         foreach ($fileDir as $item) {
-            if (is_file($item)) {
+            if (is_file($fileDir . DIRECTORY_SEPARATOR . $item)) {
                 $file->setName($item);
                 $found = true;
             }
@@ -72,6 +72,25 @@ class FileMapper
             return $file;
         }
 
+        return null;
+    }
+
+    /**
+     * @param FileEntity $file
+     * @param array $uploadedFile
+     * @return null|FileEntity
+     */
+    public function persist(FileEntity $file, array $uploadedFile)
+    {
+        if ($file->validate($uploadedFile)) {
+            $tmpfile = $uploadedFile['tmp_name'];
+            $newfile = self::FILES_DIRECTORY . DIRECTORY_SEPARATOR . $file->getId() . DIRECTORY_SEPARATOR . $file->getName();
+
+            if (!$this->getStorage()->branchFileExists($newfile)) {
+                $this->getStorage()->uploadBranchFile($tmpfile, $newfile);
+                return $file;
+            }
+        }
         return null;
     }
 

@@ -36,5 +36,8 @@ return function (Fluid $fluid, ConfigInterface $config, Router $router, Request 
         })
         ->respond('GET', '/components-icons/(.*)', function ($icon) use ($fluid, $config, $router, $request, $response, $storage, $xmlMappingLoader, $cookie) {
             (new Controller\ComponentController($fluid, $config, $router, $request, $response, $storage, $xmlMappingLoader, $cookie))->icon($icon);
+        })
+        ->respond('POST', '/file-upload', function () use ($fluid, $config, $router, $request, $response, $storage, $xmlMappingLoader, $cookie) {
+            (new Controller\FileController($fluid, $config, $router, $request, $response, $storage, $xmlMappingLoader, $cookie))->upload();
         });
 };

@@ -2,6 +2,7 @@
 namespace Fluid\File;
 
 use Countable;
+use Fluid\Token;
 use JsonSerializable;
 use Fluid\Container;
 use IteratorAggregate;
@@ -21,6 +22,11 @@ class FileEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
      * @var string
      */
     private $name;
+
+    /**
+     * @var Container
+     */
+    private $container;
 
     /**
      * @var StorageInterface
@@ -43,12 +49,18 @@ class FileEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     private $collection;
 
     /**
+     * @var FileValidator
+     */
+    private $validator;
+
+    /**
      * @param Container $container
      * @param FileMapper|null $mapper
      * @param FileCollection|null $collection
      */
     public function __construct(Container $container, FileMapper $mapper = null, FileCollection $collection = null)
     {
+        $this->setContainer($container);
         $this->setStorage($container->getStorage());
         $this->setXmlMappingLoader($container->getXmlMappingLoader());
         if (null !== $mapper) {
@@ -57,6 +69,7 @@ class FileEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
         if (null !== $collection) {
             $this->setCollection($collection);
         }
+        $this->setId(Token::generate(8));
     }
 
     /**
@@ -68,6 +81,23 @@ class FileEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
             'id' => $this->getId(),
             'name' => $this->getName()
         ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isValid()
+    {
+        return $this->getValidator()->validate();
+    }
+
+    /**
+     * @param array $uploadedFile
+     * @return bool
+     */
+    public function validate(array $uploadedFile = null)
+    {
+        return $this->getValidator()->validate($uploadedFile);
     }
 
     /**
@@ -103,6 +133,9 @@ class FileEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
      */
     public function getMapper()
     {
+        if (null === $this->mapper) {
+            $this->setMapper(new FileMapper($this->getContainer()));
+        }
         return $this->mapper;
     }
 
@@ -176,6 +209,45 @@ class FileEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     public function getXmlMappingLoader()
     {
         return $this->xmlMappingLoader;
+    }
+
+    /**
+     * @return Container
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
+     * @param Container $container
+     * @return $this
+     */
+    public function setContainer(Container $container)
+    {
+        $this->container = $container;
+        return $this;
+    }
+
+    /**
+     * @return FileValidator
+     */
+    public function getValidator()
+    {
+        if (null === $this->validator) {
+            $this->setValidator(new FileValidator($this));
+        }
+        return $this->validator;
+    }
+
+    /**
+     * @param FileValidator $validator
+     * @return $this
+     */
+    public function setValidator(FileValidator $validator)
+    {
+        $this->validator = $validator;
+        return $this;
     }
 
     /**

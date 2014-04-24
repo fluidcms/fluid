@@ -106,6 +106,21 @@ class Request
     }
 
     /**
+     * @return array|null
+     */
+    public function getFile()
+    {
+        if (isset($_FILES) && is_array($_FILES)) {
+            foreach ($_FILES as $file) {
+                if ((!isset($file['error']) || !$file['error']) && isset($file['name']) && isset($file['size']) && isset($file['tmp_name'])) {
+                    return $file;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * @param array $params
      * @return $this
      */

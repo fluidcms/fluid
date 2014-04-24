@@ -11,6 +11,11 @@ abstract class Controller
     protected $fluid;
 
     /**
+     * @var Container
+     */
+    protected $container;
+
+    /**
      * @var ConfigInterface
      */
     protected $config;
@@ -117,6 +122,30 @@ abstract class Controller
     public function getFluid()
     {
         return $this->fluid;
+    }
+
+    /**
+     * @return Container
+     */
+    public function getContainer()
+    {
+        if (null === $this->container) {
+            $container = new Container;
+            $container->setStorage($this->getStorage());
+            $container->setXmlMappingLoader($this->getXmlMappingLoader());
+            $this->setContainer($container);
+        }
+        return $this->container;
+    }
+
+    /**
+     * @param Container $container
+     * @return $this
+     */
+    public function setContainer(Container $container)
+    {
+        $this->container = $container;
+        return $this;
     }
 
     /**

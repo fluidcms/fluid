@@ -1,6 +1,6 @@
 define(['backbone'], function (Backbone) {
     return Backbone.Model.extend({
-        urlRoot: "file",
+        urlRoot: window.location.rootpath + "file-upload",
 
         new: false,
 

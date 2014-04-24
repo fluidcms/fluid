@@ -9,4 +9,8 @@ interface StorageInterface
     public function saveData($filename, array $data);
     public function getBranchFileList($dir);
     public function getFileList($dir);
+    public function branchFileExists($file);
+    public function fileExists($file);
+    public function uploadBranchFile($tmpfile, $newfile);
+    public function uploadFile($tmpfile, $newfile);
 }
