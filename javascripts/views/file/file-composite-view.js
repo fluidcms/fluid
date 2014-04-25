@@ -12,11 +12,11 @@ define([
 
             template: new EJS({text: Template}),
 
+            className: "files",
+
             itemView: FileItemView,
 
             itemViewContainer: "ul",
-
-            className: "files",
 
             itemViewOptions: function() {
                 return {

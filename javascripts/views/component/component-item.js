@@ -33,6 +33,7 @@ define([
                     helper: "clone",
                     containment: "document",
                     revert: "invalid",
+                    revertDuration: 100,
                     iframeFix: true
                 });
             }

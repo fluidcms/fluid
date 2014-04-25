@@ -1,10 +1,11 @@
 define([
         'backbone',
         'marionette',
+        'jquery-ui',
         'ejs',
         'text!templates/file/file-item.ejs'
     ],
-    function (Backbone, Marionette, EJS, Template) {
+    function (Backbone, Marionette, jUI, EJS, Template) {
         return Marionette.ItemView.extend({
             template: new EJS({text: Template}),
 
@@ -24,12 +25,25 @@ define([
                 })));
 
                 if (this.model.new) {
-                    this.getPreview(function(preview) {
+                    this.getPreview(function (preview) {
                         root.showPreview(preview);
                     });
                 }
 
+                this.makeDraggable();
+
                 return this;
+            },
+
+            makeDraggable: function () {
+                this.$el.draggable({
+                    connectToSortable: "div[contenteditable]",
+                    helper: "clone",
+                    containment: "document",
+                    revert: "invalid",
+                    revertDuration: 100,
+                    iframeFix: true
+                });
             },
 
             showPreview: function (preview) {
@@ -58,7 +72,7 @@ define([
                 element.find('img').removeClass('dark');
             },
 
-            getPreview: function(callback) {
+            getPreview: function (callback) {
                 var root = this;
                 var reader = new FileReader();
                 var preview = {};
