@@ -3,6 +3,8 @@ namespace Fluid;
 
 interface StorageInterface
 {
+    public function getBranchDir();
+    public function getDir();
     public function loadBranchData($filename);
     public function loadData($filename);
     public function saveBranchData($filename, array $data);

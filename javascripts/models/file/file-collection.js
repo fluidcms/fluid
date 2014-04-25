@@ -11,16 +11,8 @@ define(['backbone', 'models/file/file'], function (Backbone, File) {
         fetch: function () {
             var root = this;
             this.socket.send('GET', this.url, {}, function(response) {
-                root.parse(response);
+                root.reset(response);
             });
-        },
-
-        parse: function(response) {
-            var root = this;
-            $.each(response, function() {
-                this.socket = root.socket;
-            });
-            this.reset(response);
         },
 
         comparator: function (file) {
@@ -35,8 +27,8 @@ define(['backbone', 'models/file/file'], function (Backbone, File) {
                 type: file.type,
                 creation: Math.round((new Date()).getTime() / 1000)
             }, {file: file});
-
             this.add(model);
+            model.upload();
         }
     });
 });

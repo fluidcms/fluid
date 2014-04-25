@@ -77,6 +77,22 @@ class Storage implements StorageInterface
     }
 
     /**
+     * @return string
+     */
+    public function getBranchDir()
+    {
+        return $this->getConfig()->getStorage() . DIRECTORY_SEPARATOR . $this->getConfig()->getBranch();
+    }
+
+    /**
+     * @return string
+     */
+    public function getDir()
+    {
+        return $this->getConfig()->getStorage() . DIRECTORY_SEPARATOR . self::DATA_DIR_NAME;
+    }
+
+    /**
      * @param string $filename
      * @return array
      */

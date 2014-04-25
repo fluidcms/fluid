@@ -1,4 +1,6 @@
-<li data-id="<%= id %>" data-name="<%= name %>">
-    <img src="data:image/gif;base64,R0lGODdhAQABAIAAAOTm5AAAACwAAAAAAQABAAACAkQBADs=" width="<%= preview.width %>" height="<%= preview.height %>" alt="" style="opacity: .1;">
-    <span><%= name %></span>
-</li>
+<% if (!is_new) { %>
+    <img src="<%= rootpath %>file-preview/<%= id %>" width="" height="" alt="">
+<% } else { %>
+    <img src="" width="" height="" alt="" style="display: none;">
+<% } %>
+<span><%= name %></span>

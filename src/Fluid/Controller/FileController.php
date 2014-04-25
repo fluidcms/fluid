@@ -5,9 +5,11 @@ use Fluid\Container;
 use Fluid\Controller;
 use Fluid\File\FileCollection;
 use Fluid\File\FileEntity;
+use Fluid\File\FilePreview;
 use Fluid\Helper\SessionHelper;
 use Fluid\Helper\SessionHelperInterface;
 use Fluid\Response;
+use Fluid\StaticFile;
 
 class FileController extends Controller implements SessionHelperInterface
 {
@@ -44,6 +46,19 @@ class FileController extends Controller implements SessionHelperInterface
             return;
         }
         $this->getResponse()->setCode(Response::RESPONSE_CODE_FORBIDDEN);
+    }
 
+    public function preview($id)
+    {
+        if ($this->validSession()) {
+            $fileCollection = new Filecollection($this->getContainer());
+            $file = $fileCollection->find($id);
+
+            $preview = new FilePreview($this->getContainer(), $file);
+
+            new StaticFile($preview->createPreview(), "image/png", true);
+            return;
+        }
+        $this->getResponse()->setCode(Response::RESPONSE_CODE_FORBIDDEN);
     }
 }

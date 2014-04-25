@@ -39,5 +39,8 @@ return function (Fluid $fluid, ConfigInterface $config, Router $router, Request 
         })
         ->respond('POST', '/file-upload', function () use ($fluid, $config, $router, $request, $response, $storage, $xmlMappingLoader, $cookie) {
             (new Controller\FileController($fluid, $config, $router, $request, $response, $storage, $xmlMappingLoader, $cookie))->upload();
+        })
+        ->respond('GET', '/file-preview/(.*)', function ($id) use ($fluid, $config, $router, $request, $response, $storage, $xmlMappingLoader, $cookie) {
+            (new Controller\FileController($fluid, $config, $router, $request, $response, $storage, $xmlMappingLoader, $cookie))->preview($id);
         });
 };

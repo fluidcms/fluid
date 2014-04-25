@@ -66,6 +66,24 @@ class FileCollection implements Countable, IteratorAggregate, ArrayAccess, JsonS
     }
 
     /**
+     * @param string $id
+     * @return FileEntity|null
+     */
+    public function find($id)
+    {
+        if (null === $this->files)  {
+            $this->getMapper()->mapCollection($this);
+        }
+
+        foreach ($this->files as $file) {
+            if ($file->getId() === $id) {
+                return $file;
+            }
+        }
+        return null;
+    }
+
+    /**
      * @param FileEntity $file
      * @return $this
      */
