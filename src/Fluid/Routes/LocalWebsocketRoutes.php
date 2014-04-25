@@ -58,4 +58,15 @@ return function (Fluid $fluid, ConfigInterface $config, Router $router, Request 
             $response->setCode(Response::RESPONSE_CODE_METHOD_NOT_ALLOWED);
         }
     });
+
+    // File routes
+    $router->respond('/file', function ($file = null) use ($fluid, $config, $router, $request, $response, $storage, $xmlMappingLoader, $users, $user, $sessions, $session) {
+        $controller = new Controller\FileController($fluid, $config, $router, $request, $response, $storage, $xmlMappingLoader, null);
+        $controller->setSessionDependencies($users, $user, $sessions, $session);
+        if (null === $file && $request->getMethod() === 'GET') {
+            $controller->getAll();
+        } else {
+            $response->setCode(Response::RESPONSE_CODE_METHOD_NOT_ALLOWED);
+        }
+    });
 };

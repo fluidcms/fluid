@@ -2,7 +2,7 @@ define(['backbone', 'models/file/file'], function (Backbone, File) {
     return Backbone.Collection.extend({
         model: File,
 
-        url: '/files',
+        url: 'file',
 
         initialize: function (items, attrs) {
             this.socket = attrs.socket;

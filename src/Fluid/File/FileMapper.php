@@ -42,11 +42,14 @@ class FileMapper
     {
         $files = $this->getStorage()->getBranchFileList(self::FILES_DIRECTORY);
         foreach ($files as $fileid) {
-            $file = new FileEntity($this->getContainer());
-            $file->setId($fileid);
-            $file = $this->mapEntity($file);
-            if ($file !== null) {
-                $collection->add($file);
+            if (is_dir($fileid)) {
+                $fileid = basename($fileid);
+                $file = new FileEntity($this->getContainer());
+                $file->setId($fileid);
+                $file = $this->mapEntity($file);
+                if ($file !== null) {
+                    $collection->add($file);
+                }
             }
         }
         return $collection;
@@ -62,8 +65,8 @@ class FileMapper
         $id = $file->getId();
         $fileDir = $this->getStorage()->getBranchFileList(self::FILES_DIRECTORY . DIRECTORY_SEPARATOR . $id);
         foreach ($fileDir as $item) {
-            if (is_file($fileDir . DIRECTORY_SEPARATOR . $item)) {
-                $file->setName($item);
+            if (is_file($item)) {
+                $file->setName(basename($item));
                 $found = true;
             }
         }

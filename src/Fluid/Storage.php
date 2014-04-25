@@ -69,7 +69,7 @@ class Storage implements StorageInterface
         if (is_dir($dir)) {
             foreach (scandir($dir) as $file) {
                 if ($file !== '.' && $file !== '..') {
-                    $retval .= $file;
+                    $retval[] = $dir . DIRECTORY_SEPARATOR . $file;
                 }
             }
         }
