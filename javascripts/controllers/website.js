@@ -6,11 +6,11 @@ define([
     return Marionette.Controller.extend({
         initialize: function (options) {
             var root = this;
-
-            //this.website = new Website({}, {languages: this.languages});
-            //this.websiteView = new WebsiteView({model: this.website});
-
-            //root.app.websiteRegion.show(root.websiteView);
+            this.app = options.app;
+            this.fluidController = options.fluidController;
+            this.languages = options.languages;
+            this.websiteView = new WebsiteView({controller: this});
+            this.app.websiteRegion.show(this.websiteView);
 
             // Control + R or Command + R events
             $(document).keydown(function (e) {
@@ -22,14 +22,11 @@ define([
                 return true;
             });
 
-            this.socket = options.socket;
-            this.languages = options.languages;
-
             // Track iframe location change
-            $("#website-iframe").on('load', function(e) { root.verifyFrameStatus(e) });
+            //$("#website-iframe").on('load', function(e) { root.verifyFrameStatus(e) });
 
             // Block normal link behavior of the iframe
-            this.overrideIframeBehavior();
+            //this.overrideIframeBehavior();
         },
 
         overrideIframeBehavior: function() {

@@ -41,12 +41,18 @@ define(
                 this.map = new Map(null, {socket: this.socket});
 
                 this.pannelController = new PannelController({
+                    baseUrl: this.baseUrl,
+                    app: this.app,
+                    fluidController: this,
+                    map: this.map,
                     languageCollection: this.languageCollection,
                     componentCollection: this.componentCollection,
                     fileCollection: this.fileCollection
                 });
 
                 this.websiteController = new WebsiteController({
+                    app: this.app,
+                    fluidController: this,
                     languageCollection: this.languageCollection
                 });
 

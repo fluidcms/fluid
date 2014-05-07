@@ -10,7 +10,17 @@ define(
     ],
     function (Backbone, Marionette, NavView, MapLayoutView, ToolPannelView, FileCompositeView, ComponentCollectionView) {
         return Marionette.Controller.extend({
+            baseUrl: "",
+
             initialize: function (options) {
+                this.baseUrl = options.baseUrl;
+                this.app = options.app;
+                this.fluidController = options.fluidController;
+                this.map = options.map;
+                this.languageCollection = options.languageCollection;
+                this.componentCollection = options.componentCollection;
+                this.fileCollection = options.fileCollection;
+
                 this.navView = new NavView({controller: this}).render();
                 this.mapPannel();
             },
@@ -28,7 +38,7 @@ define(
             componentsPannel: function () {
                 this.app.pannelRegion.show(new ComponentCollectionView({
                     controller: this,
-                    collection: this.components
+                    collection: this.componentCollection
                     //model: this.map
                     //page: root.page,
                     //languages: root.languages,
@@ -52,7 +62,7 @@ define(
 
                 this.app.pannelRegion.show(new FileCompositeView({
                     controller: this,
-                    collection: this.files
+                    collection: this.fileCollection
                     //model: this.map
                     //page: root.page,
                     //languages: root.languages,

@@ -6,7 +6,7 @@ define([
     return Marionette.ItemView.extend({
         initialize: function(options) {
             this.$el = $("#website-iframe");
-            //this.controller = options.controller;
+            this.controller = options.controller;
             //this.session = options.session;
         },
 
