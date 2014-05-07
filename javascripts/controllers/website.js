@@ -1,10 +1,29 @@
-define(['backbone'], function (Backbone) {
-    return Backbone.Model.extend({
-        initialize: function (attrs) {
+define([
+    'backbone',
+    'marionette',
+    'views/website/website'
+], function (Backbone, Marionette, WebsiteView) {
+    return Marionette.Controller.extend({
+        initialize: function (options) {
             var root = this;
 
-            this.socket = attrs.socket;
-            this.languages = attrs.languages;
+            //this.website = new Website({}, {languages: this.languages});
+            //this.websiteView = new WebsiteView({model: this.website});
+
+            //root.app.websiteRegion.show(root.websiteView);
+
+            // Control + R or Command + R events
+            $(document).keydown(function (e) {
+                if ((e.ctrlKey || e.metaKey) && e.keyCode == 82) {
+                    e.preventDefault();
+                    root.websiteView.reload();
+                    return false;
+                }
+                return true;
+            });
+
+            this.socket = options.socket;
+            this.languages = options.languages;
 
             // Track iframe location change
             $("#website-iframe").on('load', function(e) { root.verifyFrameStatus(e) });

@@ -17,7 +17,7 @@
                 "email": "<?= $GLOBALS['user']->getEmail() ?>"
             },
             language: "<?= $GLOBALS['language'] ?>",
-            languages: <?= json_encode($GLOBALS['language']) ?>
+            languages: [<?= json_encode($GLOBALS['language']) ?>]
 
         };
     </script>
