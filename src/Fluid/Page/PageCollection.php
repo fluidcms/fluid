@@ -2,10 +2,10 @@
 namespace Fluid\Page;
 
 use Countable;
-use Fluid\Language\LanguageEntity;
 use IteratorAggregate;
 use ArrayAccess;
 use ArrayIterator;
+use Fluid\Language\LanguageEntity;
 use Fluid\StorageInterface;
 use Fluid\XmlMappingLoaderInterface;
 use Fluid\Exception\MissingMappingAttributeException;
@@ -244,6 +244,34 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
     public function getLanguage()
     {
         return $this->language;
+    }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function __isset($name)
+    {
+        return $this->offsetExists($name);
+    }
+
+    /**
+     * @param string $name
+     * @param array $arguments
+     * @return mixed
+     */
+    public function __call($name, array $arguments)
+    {
+        return $this->offsetGet($name);
+    }
+
+    /**
+     * @param string $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        return $this->offsetGet($name);
     }
 
     /**

@@ -216,6 +216,9 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
      */
     public function getVariables()
     {
+        if (!$this->variables->isMapped()) {
+            $this->variables->mapCollection();
+        }
         return $this->variables;
     }
 

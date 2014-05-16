@@ -1,9 +1,18 @@
 <?php
 namespace Fluid\Variable;
 
-class VariableEntity
+use Fluid\Variable\Renderer\RenderContent;
+use JsonSerializable;
+
+class VariableEntity implements JsonSerializable
 {
-    public static $types = ['string', 'content'];
+    const TYPE_STRING = 'string';
+    const TYPE_CONTENT = 'content';
+
+    /**
+     * @var array
+     */
+    public static $types = [self::TYPE_STRING, self::TYPE_CONTENT];
 
     /**
      * @var string
@@ -23,13 +32,34 @@ class VariableEntity
     /**
      * @return array
      */
-    public function toArray()
+    function jsonSerialize()
     {
         return [
             'name' => $this->getName(),
             'type' => $this->getType(),
             'value' => $this->getValue()
         ];
+    }
+
+    /**
+     * @return array
+     * @deprecated
+     */
+    public function toArray()
+    {
+        return $this->jsonSerialize();
+    }
+
+    /**
+     * @return string
+     */
+    public function renderValue()
+    {
+        switch ($this->getType()) {
+            case self::TYPE_CONTENT:
+                return (new RenderContent($this))->render();
+        }
+        return null;
     }
 
     /**

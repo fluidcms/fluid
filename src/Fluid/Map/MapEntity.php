@@ -1,6 +1,10 @@
 <?php
 namespace Fluid\Map;
 
+use Countable;
+use IteratorAggregate;
+use ArrayAccess;
+use ArrayIterator;
 use Exception;
 use Fluid\Event;
 use Fluid\Language\LanguageEntity;
@@ -13,7 +17,7 @@ use Fluid\Page\PageEntity;
  *
  * @package fluid
  */
-class MapEntity
+class MapEntity implements Countable, IteratorAggregate, ArrayAccess
 {
     /**
      * @var MapMapper
@@ -186,6 +190,84 @@ class MapEntity
         return $this->language;
     }
 
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function __isset($name)
+    {
+        return $this->getPages()->__isset($name);
+    }
+
+    /**
+     * @param string $name
+     * @param array $arguments
+     * @return mixed
+     */
+    public function __call($name, array $arguments)
+    {
+        return $this->getPages()->__call($name, $arguments);
+    }
+
+    /**
+     * @param string $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        return $this->getPages()->__get($name);
+    }
+
+    /**
+     * @return int
+     */
+    public function count()
+    {
+        return $this->getPages()->count();
+    }
+
+    /**
+     * @return ArrayIterator|PageEntity[]
+     */
+    public function getIterator()
+    {
+        return $this->getPages()->getIterator();
+    }
+
+    /**
+     * @param int $offset
+     * @return bool
+     */
+    public function offsetExists($offset)
+    {
+        return $this->getPages()->offsetExists($offset);
+    }
+
+    /**
+     * @param int $offset
+     * @return mixed
+     */
+    public function offsetGet($offset)
+    {
+        return $this->getPages()->offsetGet($offset);
+    }
+
+    /**
+     * @param int $offset
+     * @param mixed $value
+     */
+    public function offsetSet($offset, $value)
+    {
+        return $this->getPages()->offsetSet($offset, $value);
+    }
+
+    /**
+     * @param int $offset
+     */
+    public function offsetUnset($offset)
+    {
+        return $this->getPages()->offsetUnset($offset);
+    }
 
     /////////////////////
 
