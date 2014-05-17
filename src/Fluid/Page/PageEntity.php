@@ -1,25 +1,19 @@
 <?php
 namespace Fluid\Page;
 
-use Exception;
 use Countable;
 use Fluid\Language\LanguageEntity;
+use Fluid\Page\Renderer\RenderPage;
 use IteratorAggregate;
 use ArrayAccess;
 use ArrayIterator;
-use Fluid\Fluid;
-use Fluid\Config;
-use Fluid\Layout\Layout;
 use Fluid\Variable\VariableCollection;
 use Fluid\StorageInterface;
 use Fluid\XmlMappingLoaderInterface;
 use Fluid\Template\TemplateEntity;
+use Fluid\Page\Renderer\RendererInterface;
+use Fluid\RegistryInterface;
 
-/**
- * Page Entity
- *
- * @package fluid
- */
 class PageEntity implements Countable, IteratorAggregate, ArrayAccess
 {
     /**
@@ -44,13 +38,20 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @var StorageInterface
+     * @deprecated Use registry
      */
     private $storage;
 
     /**
      * @var XmlMappingLoaderInterface
+     * @deprecated Use registry
      */
     private $xmlMappingLoader;
+
+    /**
+     * @var RegistryInterface
+     */
+    private $registry;
 
     /**
      * @var PageMapper
@@ -68,19 +69,26 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
     private $language;
 
     /**
+     * @var RendererInterface
+     */
+    private $renderer;
+
+    /**
+     * @param RegistryInterface $registry
      * @param StorageInterface $storage
      * @param XmlMappingLoaderInterface $xmlMappingLoader
      * @param PageMapper $pageMapper
      * @param LanguageEntity $language
      */
-    public function __construct(StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, PageMapper $pageMapper, LanguageEntity $language)
+    public function __construct(RegistryInterface $registry, StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, PageMapper $pageMapper, LanguageEntity $language)
     {
+        $this->setRegistry($registry);
         $this->setStorage($storage);
         $this->setXmlMappingLoader($xmlMappingLoader);
         $this->setPageMapper($pageMapper);
         $this->setConfig(new PageConfig($this));
         $this->setLanguage($language);
-        $this->setPages(new PageCollection($storage, $xmlMappingLoader, $pageMapper, $this->getLanguage()));
+        $this->setPages(new PageCollection($this->getRegistry(), $storage, $xmlMappingLoader, $pageMapper, $this->getLanguage()));
         $this->setVariables(new VariableCollection($this, $storage, $xmlMappingLoader, null, $this->getLanguage()));
     }
 
@@ -128,11 +136,14 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
-     *
+     * @return string
      */
     public function render()
     {
-        die('fuck off');
+        if (null === $this->renderer) {
+            $this->renderer = new RenderPage($this->getRegistry(), $this);
+        }
+        return $this->renderer->render();
     }
 
     /**
@@ -262,8 +273,27 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
+     * @return RegistryInterface
+     */
+    public function getRegistry()
+    {
+        return $this->registry;
+    }
+
+    /**
+     * @param RegistryInterface $registry
+     * @return $this
+     */
+    public function setRegistry(RegistryInterface $registry)
+    {
+        $this->registry = $registry;
+        return $this;
+    }
+
+    /**
      * @param StorageInterface $storage
      * @return $this
+     * @deprecated Use registry
      */
     public function setStorage(StorageInterface $storage)
     {
@@ -273,6 +303,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @return StorageInterface
+     * @deprecated Use registry
      */
     public function getStorage()
     {
@@ -282,6 +313,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
     /**
      * @param XmlMappingLoaderInterface $xmlMappingLoader
      * @return $this
+     * @deprecated Use registry
      */
     public function setXmlMappingLoader(XmlMappingLoaderInterface $xmlMappingLoader)
     {
@@ -291,6 +323,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @return XmlMappingLoaderInterface
+     * @deprecated Use registry
      */
     public function getXmlMappingLoader()
     {
@@ -339,6 +372,9 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
      */
     public function __isset($name)
     {
+        if ($name === 'pages') {
+            return true;
+        }
         return $this->getVariables()->__isset($name);
     }
 
@@ -349,6 +385,9 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
      */
     public function __call($name, array $arguments)
     {
+        if ($name === 'pages') {
+            return $this->getPages();
+        }
         return $this->getVariables()->__call($name, $arguments);
     }
 
@@ -358,6 +397,9 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
      */
     public function __get($name)
     {
+        if ($name === 'pages') {
+            return $this->getPages();
+        }
         return $this->getVariables()->__get($name);
     }
 
@@ -366,7 +408,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
      */
     public function count()
     {
-        //return count($this->items);
+        return $this->getVariables()->count() + 1;
     }
 
     /**
@@ -374,7 +416,11 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
      */
     public function getIterator()
     {
-        //return new ArrayIterator($this->items);
+        $array = array_merge(
+            ['pages' => $this->getPages()->getIterator()],
+            $this->getVariables()->getIterator()
+        );
+        return new ArrayIterator($array);
     }
 
     /**
@@ -386,7 +432,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
         if ($offset === 'pages') {
             return true;
         }
-        //return isset($this->items[$offset]);
+        return isset($this->getVariables()[$offset]);
     }
 
     /**
@@ -399,7 +445,6 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
             return $this->getPages();
         }
         return $this->getVariables()[$offset];
-        //return $this->items[$offset];
     }
 
     /**
@@ -408,7 +453,11 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
-        //$this->items[$offset] = $value;
+        if ($offset === 'pages') {
+            $this->setPages($value);
+            return;
+        }
+        $this->getVariables()[$offset] = $value;
     }
 
     /**
@@ -416,303 +465,10 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
      */
     public function offsetUnset($offset)
     {
-        //unset($this->items[$offset]);
-    }
-
-
-    /////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////
-
-    /**
-     * Get a page
-     *
-     * @param mixed $id
-     * @param string $language
-     * @return self
-     */
-    public static function ____get($id = null, $language = null)
-    {
-        if (is_array($id)) {
-            $obj = new self($id['id'], $id['page'], $id['languages'], $id['layout'], $id['url'], (isset($id['pages']) ? $id['pages'] : null));
-        } else {
-            $obj = new self($id);
-        }
-
-        if (null !== $language) {
-            $obj->setLanguage($language);
-        }
-
-        return $obj;
-    }
-
-    /**
-     * Get a variable
-     *
-     * @param string $item
-     * @param string $group
-     * @return array
-     */
-    public function ___getVariable($item, $group = null)
-    {
-        $data = $this->getRawData();
-        if (null !== $group) {
-            return $data[$group][$item];
-        } else {
-            return $data[$item];
-        }
-    }
-
-    /**
-     * Set the current page language
-     *
-     * @param string $value
-     * @throws Exception
-     */
-    public function ___setLanguage($value)
-    {
-        $languages = Config::get("languages");
-        if (in_array($value, $languages)) {
-            $this->language = $value;
+        if ($offset === 'pages') {
+            $this->setPages(null);
             return;
         }
-
-        throw new Exception("Language is not valid");
-    }
-
-    /**
-     * Get the current page language
-     *
-     * @return string
-     */
-    public function ___getLanguage()
-    {
-        return $this->language;
-    }
-
-    /**
-     * Get the processed page data
-     *
-     * @param string $language
-     * @return array
-     */
-    public function ___getData($language = null)
-    {
-        if (empty($this->layout)) {
-            $this->layout = 'global';
-        }
-        try {
-            return ParseData::parse($this, Layout::get($this->layout), $language);
-        } catch (Exception $e) {
-            null;
-        }
-        return array();
-    }
-
-    /**
-     * Get the raw page data
-     *
-     * @param string $language
-     * @return array
-     */
-    public function ___getRawData($language = null)
-    {
-        $id = $this->getId();
-        if (null === $language) {
-            $language = empty($this->language) ? Fluid::getLanguage() : $this->language;
-        }
-
-        if (!empty($id)) {
-            $file = 'pages/' . $id . '_' . $language . '.json';
-        } else {
-            $file = 'global_' . $language . '.json';
-        }
-
-        // TODO: variables in the definition that have not been saved will not appear here, variables that have been deleted will stil appear here
-        // TODO: this is not a big problem when using templates engines that will not report an error when using unset variables but will become
-        // TODO: a big problem when using the variables in a PHP template. Like the getData method, this method should parse the variables with the
-        // TODO: definition to make sure we return all existing variables even those that have not been saved yet.
-        return self::load($file);
-    }
-
-    /**
-     * Update a page's data
-     *
-     * @param array $data
-     * @throws Exception
-     * @return bool
-     */
-    public function ____update(array $data)
-    {
-        UpdateData::update($this, $data);
-    }
-
-    /**
-     * Create a page
-     *
-     * @param string $page
-     * @param string $parent
-     * @param array $languages
-     * @param string $layout
-     * @param string $url
-     * @throws Exception
-     * @return array
-     */
-    public static function ____create($page, $parent, array $languages, $layout, $url)
-    {
-        Validator::newPageValidator($page, $parent, $languages, $layout, $url);
-
-        $id = trim($parent . "/" . $page, "/");
-
-        foreach ($languages as $language) {
-            $file = 'pages/' . $id . '_' . $language . '.json';
-            self::save(json_encode(array(), JSON_PRETTY_PRINT), $file);
-        }
-
-        return array(
-            'id' => $id,
-            'page' => $page,
-            'languages' => $languages,
-            'layout' => $layout,
-            'url' => $url
-        );
-    }
-
-    /**
-     * Delete a page
-     *
-     * @throws Exception
-     * @return bool
-     */
-    public function _____delete()
-    {
-        $deletePage = function ($path, $name = false) use (&$deletePage) {
-            foreach (scandir($path) as $file) {
-                $link = $path . "/" . $file;
-                if ($file == '.' || $file == '..') {
-                    continue;
-                } else if (
-                    ($name === false && is_file($link)) ||
-                    ($name && (preg_match("/^{$name}_[a-z]{2,2}\\-[A-Z]{2,2}\\.json$/", $file)))
-                ) {
-                    unlink($link);
-                } else if (
-                    ($name === false && is_dir($link)) ||
-                    ($name && $file === $name)
-                ) {
-                    $deletePage($link);
-                    rmdir($link);
-                }
-            }
-        };
-
-        $deletePage(
-            Fluid::getBranchStorage() . "/pages/" . dirname($this->id),
-            basename($this->id)
-        );
-
-        return true;
-    }
-
-    /**
-     * Edit a page's configuration
-     *
-     * @param string $id
-     * @param string $page
-     * @param array $languages
-     * @param string $layout
-     * @param string $url
-     * @throws Exception
-     * @return bool
-     */
-    public static function _____config($id, $page, array $languages, $layout, $url)
-    {
-        Validator::pageValidator($page, $languages, $layout, $url);
-
-        $oldName = basename($id);
-
-        $dir = preg_replace('!/\.*/!', '/', dirname($id));
-        $dir = Fluid::getBranchStorage() . "/pages/" . trim($dir, '/ ');
-
-        $existingFiles = array();
-        if (is_dir($dir)) {
-            foreach (scandir($dir) as $file) {
-                if ($file === '.' || $file === '..') {
-                    continue;
-                } else if (preg_match("/^{$oldName}(_[a-z]{2,2}\\-[A-Z]{2,2})\\.json$/", $file, $match)) {
-                    // Delete files for removed languages
-                    $language = substr($match[1], 1);
-                    if (!in_array($language, $languages)) {
-                        unlink("{$dir}/{$file}");
-                    } // Rename file
-                    else {
-                        $existingFiles[] = $language;
-                        rename(
-                            "{$dir}/{$file}",
-                            "{$dir}/{$page}_{$language}.json"
-                        );
-                    }
-                } else if ($file === $oldName && is_dir("{$dir}/{$file}")) {
-                    rename(
-                        "{$dir}/{$file}",
-                        "{$dir}/{$page}"
-                    );
-                }
-            }
-        } // Move files
-        else {
-            throw new Exception('Unknown directory');
-        }
-
-        // Create new language files
-        foreach ($languages as $language) {
-            if (!in_array($language, $existingFiles)) {
-                file_put_contents(
-                    "{$dir}/{$page}_{$language}.json",
-                    json_encode(array(), JSON_PRETTY_PRINT)
-                );
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Move a page
-     *
-     * @param string $to
-     * @throws Exception
-     * @return bool
-     */
-    public function _____move($to)
-    {
-        $to = trim(str_replace('..', '', $to), '/.');
-
-        $fromDir = Fluid::getBranchStorage() . "/pages/" . trim(dirname($this->id), '.');
-        $toDir = Fluid::getBranchStorage() . "/pages/" . trim($to, '.');
-
-        if (!is_dir($toDir)) {
-            mkdir($toDir, 0777, true);
-        }
-
-        $page = basename($this->id);
-
-        if (is_dir($fromDir)) {
-            foreach (scandir($fromDir) as $file) {
-                if (preg_match("/^{$page}_[a-z]{2,2}\\-[A-Z]{2,2}\\.json$/", $file)) {
-                    if (!is_dir($toDir)) {
-                        mkdir($toDir);
-                    }
-                    rename(
-                        $fromDir . "/" . $file,
-                        $toDir . "/" . $file
-                    );
-                }
-            }
-        }
-
-        return true;
+        unset($this->getVariables()[$offset]);
     }
 }

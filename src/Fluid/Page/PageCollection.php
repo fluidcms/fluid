@@ -10,6 +10,7 @@ use Fluid\StorageInterface;
 use Fluid\XmlMappingLoaderInterface;
 use Fluid\Exception\MissingMappingAttributeException;
 use Fluid\Exception\InvalidDataException;
+use Fluid\RegistryInterface;
 
 /**
  * Class PageCollection
@@ -29,6 +30,7 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @var StorageInterface
+     * @deprecated Use registry instead
      */
     private $storage;
 
@@ -39,6 +41,7 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @var XmlMappingLoaderInterface
+     * @deprecated Use registry instead
      */
     private $xmlMappingLoader;
 
@@ -48,13 +51,20 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
     private $language;
 
     /**
+     * @var RegistryInterface
+     */
+    private $registry;
+
+    /**
+     * @param RegistryInterface $registry
      * @param StorageInterface $storage
      * @param XmlMappingLoaderInterface $xmlMappingLoader
      * @param PageMapper|null $pageMapper
      * @param LanguageEntity $language
      */
-    public function __construct(StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, PageMapper $pageMapper = null, LanguageEntity $language)
+    public function __construct(RegistryInterface $registry, StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, PageMapper $pageMapper = null, LanguageEntity $language)
     {
+        $this->setRegistry($registry);
         $this->setStorage($storage);
         $this->setXmlMappingLoader($xmlMappingLoader);
         if (null !== $pageMapper) {
@@ -132,7 +142,7 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
                 $page = $this->find($data['name']);
             }
             if (!isset($page)) {
-                $page = new PageEntity($this->getStorage(), $this->getXmlMappingLoader(), $this->getMapper(), $this->getLanguage());
+                $page = new PageEntity($this->getRegistry(), $this->getStorage(), $this->getXmlMappingLoader(), $this->getMapper(), $this->getLanguage());
             }
 
             $this->pages[$data['name']] = $page;
@@ -157,6 +167,24 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
+     * @return RegistryInterface
+     */
+    public function getRegistry()
+    {
+        return $this->registry;
+    }
+
+    /**
+     * @param RegistryInterface $registry
+     * @return $this
+     */
+    public function setRegistry(RegistryInterface $registry)
+    {
+        $this->registry = $registry;
+        return $this;
+    }
+
+    /**
      * @param string $path
      * @return $this
      */
@@ -177,6 +205,7 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
     /**
      * @param StorageInterface $storage
      * @return $this
+     * @deprecated Use registry instead
      */
     public function setStorage(StorageInterface $storage)
     {
@@ -186,6 +215,7 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @return StorageInterface
+     * @deprecated Use registry instead
      */
     public function getStorage()
     {
@@ -195,6 +225,7 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
     /**
      * @param XmlMappingLoaderInterface $xmlMappingLoader
      * @return $this
+     * @deprecated Use registry instead
      */
     public function setXmlMappingLoader(XmlMappingLoaderInterface $xmlMappingLoader)
     {
@@ -204,6 +235,7 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @return XmlMappingLoaderInterface
+     * @deprecated Use registry instead
      */
     public function getXmlMappingLoader()
     {

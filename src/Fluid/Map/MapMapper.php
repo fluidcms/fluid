@@ -6,6 +6,7 @@ use Fluid\Language\LanguageEntity;
 use Fluid\MappingInterface;
 use Fluid\StorageInterface;
 use Fluid\XmlMappingLoaderInterface;
+use Fluid\RegistryInterface;
 
 class MapMapper
 {
@@ -14,11 +15,13 @@ class MapMapper
 
     /**
      * @var StorageInterface
+     * @deprecated Use registry instead
      */
     private $storage;
 
     /**
      * @var XmlMappingLoaderInterface
+     * @deprecated Use registry instead
      */
     private $xmlMappingLoader;
 
@@ -33,13 +36,20 @@ class MapMapper
     private $language;
 
     /**
+     * @var RegistryInterface
+     */
+    private $registry;
+
+    /**
+     * @param RegistryInterface $registry
      * @param StorageInterface $storage
      * @param XmlMappingLoaderInterface $xmlMappingLoader
      * @param Event $event
      * @param LanguageEntity $language
      */
-    public function __construct(StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, Event $event, LanguageEntity $language)
+    public function __construct(RegistryInterface $registry, StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, Event $event, LanguageEntity $language)
     {
+        $this->setRegistry($registry);
         $this->setStorage($storage);
         $this->setXmlMappingLoader($xmlMappingLoader);
         $this->setEvent($event);
@@ -53,7 +63,7 @@ class MapMapper
     public function map(MapEntity $map = null)
     {
         if (null === $map) {
-            $map = new MapEntity($this, $this->getEvent(), $this->getLanguage());
+            $map = new MapEntity($this->getRegistry(), $this, $this->getEvent(), $this->getLanguage());
         }
         $this->mapObject($map, $this->getStorage()->loadBranchData(self::DATA_FILENAME));
         return $map;
@@ -97,6 +107,7 @@ class MapMapper
     /**
      * @param StorageInterface $storage
      * @return $this
+     * @deprecated Use registry instead
      */
     public function setStorage(StorageInterface $storage)
     {
@@ -106,6 +117,7 @@ class MapMapper
 
     /**
      * @return StorageInterface
+     * @deprecated Use registry instead
      */
     public function getStorage()
     {
@@ -115,6 +127,7 @@ class MapMapper
     /**
      * @param XmlMappingLoaderInterface $xmlMappingLoader
      * @return $this
+     * @deprecated Use registry instead
      */
     public function setXmlMappingLoader(XmlMappingLoaderInterface $xmlMappingLoader)
     {
@@ -124,6 +137,7 @@ class MapMapper
 
     /**
      * @return XmlMappingLoaderInterface
+     * @deprecated Use registry instead
      */
     public function getXmlMappingLoader()
     {
@@ -164,5 +178,23 @@ class MapMapper
     public function getLanguage()
     {
         return $this->language;
+    }
+
+    /**
+     * @return RegistryInterface
+     */
+    public function getRegistry()
+    {
+        return $this->registry;
+    }
+
+    /**
+     * @param RegistryInterface $registry
+     * @return $this
+     */
+    public function setRegistry(RegistryInterface $registry)
+    {
+        $this->registry = $registry;
+        return $this;
     }
 }

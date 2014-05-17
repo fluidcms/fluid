@@ -29,6 +29,7 @@ class Fluid
 
     /**
      * @var TemplateEngineInterface
+     * @deprecated Use registry instead
      */
     private $templateEngine;
 
@@ -44,36 +45,43 @@ class Fluid
 
     /**
      * @var StorageInterface
+     * @deprecated Use registry instead
      */
     private $storage;
 
     /**
      * @var XmlMappingLoaderInterface
+     * @deprecated Use registry instead
      */
     private $xmlMappingLoader;
 
     /**
      * @var Request
+     * @deprecated Use registry instead
      */
     private $request;
 
     /**
      * @var Router
+     * @deprecated Use registry instead
      */
     private $router;
 
     /**
      * @var Event
+     * @deprecated Use registry instead
      */
     private $event;
 
     /**
      * @var LoggerInterface
+     * @deprecated Use registry instead
      */
     private $logger;
 
     /**
      * @var Daemon
+     * @deprecated Use registry instead
      */
     private $daemon;
 
@@ -91,6 +99,11 @@ class Fluid
      * @var LanguageEntity
      */
     private $language;
+
+    /**
+     * @var RegistryInterface
+     */
+    private $registry;
 
     /**
      * @param ConfigInterface $config
@@ -133,6 +146,7 @@ class Fluid
     /**
      * @param null|TemplateEngineInterface $templateEngine
      * @return $this
+     * @deprecated Use registry instead
      */
     public function setTemplateEngine(TemplateEngineInterface $templateEngine = null)
     {
@@ -142,6 +156,7 @@ class Fluid
 
     /**
      * @return null|TemplateEngineInterface
+     * @deprecated Use registry instead
      */
     public function getTemplateEngine()
     {
@@ -153,6 +168,7 @@ class Fluid
 
     /**
      * @return $this
+     * @deprecated Use registry instead
      */
     private function createTemplateEngine()
     {
@@ -215,13 +231,14 @@ class Fluid
      */
     private function createMap()
     {
-        $mapper = new MapMapper($this->getStorage(), $this->getXmlMappingLoader(), $this->getEvent(), $this->getLanguage());
+        $mapper = new MapMapper($this->getRegistry(), $this->getStorage(), $this->getXmlMappingLoader(), $this->getEvent(), $this->getLanguage());
         return $this->setMap($mapper->map());
     }
 
     /**
      * @param StorageInterface $storage
      * @return $this
+     * @deprecated Use registry instead
      */
     public function setStorage(StorageInterface $storage)
     {
@@ -231,6 +248,7 @@ class Fluid
 
     /**
      * @return StorageInterface
+     * @deprecated Use registry instead
      */
     public function getStorage()
     {
@@ -243,6 +261,7 @@ class Fluid
 
     /**
      * @return $this
+     * @deprecated Use registry instead
      */
     private function createStorage()
     {
@@ -252,6 +271,7 @@ class Fluid
     /**
      * @param XmlMappingLoaderInterface $xmlMappingLoader
      * @return $this
+     * @deprecated Use registry instead
      */
     public function setXmlMappingLoader(XmlMappingLoaderInterface $xmlMappingLoader)
     {
@@ -261,6 +281,7 @@ class Fluid
 
     /**
      * @return XmlMappingLoaderInterface
+     * @deprecated Use registry instead
      */
     public function getXmlMappingLoader()
     {
@@ -273,6 +294,7 @@ class Fluid
 
     /**
      * @return $this
+     * @deprecated Use registry instead
      */
     private function createXmlMappingLoader()
     {
@@ -282,6 +304,7 @@ class Fluid
     /**
      * @param Request $request
      * @return $this
+     * @deprecated Use registry instead
      */
     public function setRequest(Request $request)
     {
@@ -291,6 +314,7 @@ class Fluid
 
     /**
      * @return Request
+     * @deprecated Use registry instead
      */
     public function getRequest()
     {
@@ -303,6 +327,7 @@ class Fluid
 
     /**
      * @return Request
+     * @deprecated Use registry instead
      */
     public function request()
     {
@@ -311,6 +336,7 @@ class Fluid
 
     /**
      * @return $this
+     * @deprecated Use registry instead
      */
     private function createRequest()
     {
@@ -320,6 +346,7 @@ class Fluid
     /**
      * @param Router $router
      * @return $this
+     * @deprecated Use registry instead
      */
     public function setRouter(Router $router)
     {
@@ -329,6 +356,7 @@ class Fluid
 
     /**
      * @return Router
+     * @deprecated Use registry instead
      */
     public function getRouter()
     {
@@ -341,6 +369,7 @@ class Fluid
 
     /**
      * @return Router
+     * @deprecated Use registry instead
      */
     public function router()
     {
@@ -349,6 +378,7 @@ class Fluid
 
     /**
      * @return $this
+     * @deprecated Use registry instead
      */
     private function createRouter()
     {
@@ -358,6 +388,7 @@ class Fluid
     /**
      * @param Event $event
      * @return $this
+     * @deprecated Use registry instead
      */
     public function setEvent(Event $event)
     {
@@ -367,6 +398,7 @@ class Fluid
 
     /**
      * @return Event
+     * @deprecated Use registry instead
      */
     public function getEvent()
     {
@@ -378,6 +410,7 @@ class Fluid
 
     /**
      * @return $this
+     * @deprecated Use registry instead
      */
     private function createEvent()
     {
@@ -390,6 +423,7 @@ class Fluid
     /**
      * @param LoggerInterface $logger
      * @return $this
+     * @deprecated Use registry instead
      */
     public function setLogger(LoggerInterface $logger)
     {
@@ -399,6 +433,7 @@ class Fluid
 
     /**
      * @return LoggerInterface
+     * @deprecated Use registry instead
      */
     public function getLogger()
     {
@@ -410,6 +445,7 @@ class Fluid
 
     /**
      * @return $this
+     * @deprecated Use registry instead
      */
     private function createLogger()
     {
@@ -419,6 +455,7 @@ class Fluid
     /**
      * @param Daemon $daemon
      * @return $this
+     * @deprecated Use registry instead
      */
     public function setDaemon(Daemon $daemon)
     {
@@ -428,6 +465,7 @@ class Fluid
 
     /**
      * @return Daemon
+     * @deprecated Use registry instead
      */
     public function getDaemon()
     {
@@ -439,6 +477,7 @@ class Fluid
 
     /**
      * @return $this
+     * @deprecated Use registry instead
      */
     private function createDaemon()
     {
@@ -520,5 +559,26 @@ class Fluid
     private function createLanguage()
     {
         return $this->setLanguage(new LanguageEntity($this->getConfig()->getLanguage()));
+    }
+
+    /**
+     * @return RegistryInterface
+     */
+    public function getRegistry()
+    {
+        if (null === $this->registry) {
+            $this->setRegistry(new Registry);
+        }
+        return $this->registry;
+    }
+
+    /**
+     * @param RegistryInterface $registry
+     * @return $this
+     */
+    public function setRegistry(RegistryInterface $registry)
+    {
+        $this->registry = $registry;
+        return $this;
     }
 }
