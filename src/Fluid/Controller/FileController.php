@@ -1,7 +1,7 @@
 <?php
 namespace Fluid\Controller;
 
-use Fluid\Container;
+use Fluid\Registry;
 use Fluid\Controller;
 use Fluid\File\FileCollection;
 use Fluid\File\FileEntity;
@@ -21,11 +21,11 @@ class FileController extends Controller implements SessionHelperInterface
     public function getAll()
     {
         if ($this->validSession()) {
-            $container = new Container();
-            $container->setStorage($this->getStorage());
-            $container->setXmlMappingLoader($this->getXmlMappingLoader());
+            $registry = new Registry();
+            $registry->setStorage($this->getStorage());
+            $registry->setXmlMappingLoader($this->getXmlMappingLoader());
 
-            $this->getResponse()->setJson(new FileCollection($container));
+            $this->getResponse()->setJson(new FileCollection($registry));
             return;
         }
         $this->getResponse()->setCode(Response::RESPONSE_CODE_FORBIDDEN);
@@ -36,7 +36,7 @@ class FileController extends Controller implements SessionHelperInterface
         if ($this->validSession()) {
             $uploadedFile = $this->getRequest()->getFile();
             if (null !== $uploadedFile) {
-                $file = new FileEntity($this->getContainer());
+                $file = new FileEntity($this->getRegistry());
                 $file->setName($uploadedFile['name']);
                 $file->getMapper()->persist($file, $uploadedFile);
                 $this->getResponse()->setJson($file);
@@ -51,10 +51,10 @@ class FileController extends Controller implements SessionHelperInterface
     public function preview($id)
     {
         if ($this->validSession()) {
-            $fileCollection = new Filecollection($this->getContainer());
+            $fileCollection = new Filecollection($this->getRegistry());
             $file = $fileCollection->find($id);
 
-            $preview = new FilePreview($this->getContainer(), $file);
+            $preview = new FilePreview($this->getRegistry(), $file);
 
             new StaticFile($preview->createPreview(), "image/png", true);
             return;

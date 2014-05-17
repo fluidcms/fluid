@@ -4,7 +4,7 @@ namespace Fluid\File;
 use Countable;
 use Fluid\Token;
 use JsonSerializable;
-use Fluid\Container;
+use Fluid\RegistryInterface;
 use IteratorAggregate;
 use ArrayAccess;
 use ArrayIterator;
@@ -24,9 +24,9 @@ class FileEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     private $name;
 
     /**
-     * @var Container
+     * @var RegistryInterface
      */
-    private $container;
+    private $registry;
 
     /**
      * @var StorageInterface
@@ -54,15 +54,15 @@ class FileEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     private $validator;
 
     /**
-     * @param Container $container
+     * @param RegistryInterface $registry
      * @param FileMapper|null $mapper
      * @param FileCollection|null $collection
      */
-    public function __construct(Container $container, FileMapper $mapper = null, FileCollection $collection = null)
+    public function __construct(RegistryInterface $registry, FileMapper $mapper = null, FileCollection $collection = null)
     {
-        $this->setContainer($container);
-        $this->setStorage($container->getStorage());
-        $this->setXmlMappingLoader($container->getXmlMappingLoader());
+        $this->setRegistry($registry);
+        $this->setStorage($registry->getStorage());
+        $this->setXmlMappingLoader($registry->getXmlMappingLoader());
         if (null !== $mapper) {
             $this->setMapper($mapper);
         }
@@ -134,7 +134,7 @@ class FileEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     public function getMapper()
     {
         if (null === $this->mapper) {
-            $this->setMapper(new FileMapper($this->getContainer()));
+            $this->setMapper(new FileMapper($this->getRegistry()));
         }
         return $this->mapper;
     }
@@ -212,20 +212,20 @@ class FileEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     }
 
     /**
-     * @return Container
+     * @return RegistryInterface
      */
-    public function getContainer()
+    public function getRegistry()
     {
-        return $this->container;
+        return $this->registry;
     }
 
     /**
-     * @param Container $container
+     * @param RegistryInterface $registry
      * @return $this
      */
-    public function setContainer(Container $container)
+    public function setRegistry(RegistryInterface $registry)
     {
-        $this->container = $container;
+        $this->registry = $registry;
         return $this;
     }
 

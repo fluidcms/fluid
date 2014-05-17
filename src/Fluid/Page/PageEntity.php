@@ -128,6 +128,22 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
+     *
+     */
+    public function render()
+    {
+        die('fuck off');
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasPages()
+    {
+        return $this->getPages()->count() !== 0;
+    }
+
+    /**
      * @return string
      */
     public function getId()

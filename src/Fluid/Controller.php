@@ -11,9 +11,9 @@ abstract class Controller
     protected $fluid;
 
     /**
-     * @var Container
+     * @var RegistryInterface
      */
-    protected $container;
+    protected $registry;
 
     /**
      * @var ConfigInterface
@@ -125,26 +125,26 @@ abstract class Controller
     }
 
     /**
-     * @return Container
+     * @return RegistryInterface
      */
-    public function getContainer()
+    public function getRegistry()
     {
-        if (null === $this->container) {
-            $container = new Container;
-            $container->setStorage($this->getStorage());
-            $container->setXmlMappingLoader($this->getXmlMappingLoader());
-            $this->setContainer($container);
+        if (null === $this->registry) {
+            $registry = new Registry;
+            $registry->setStorage($this->getStorage());
+            $registry->setXmlMappingLoader($this->getXmlMappingLoader());
+            $this->setRegistry($registry);
         }
-        return $this->container;
+        return $this->registry;
     }
 
     /**
-     * @param Container $container
+     * @param RegistryInterface $registry
      * @return $this
      */
-    public function setContainer(Container $container)
+    public function setRegistry(RegistryInterface $registry)
     {
-        $this->container = $container;
+        $this->registry = $registry;
         return $this;
     }
 

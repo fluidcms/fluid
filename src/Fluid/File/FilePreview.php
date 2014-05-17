@@ -3,7 +3,7 @@
 namespace Fluid\File;
 
 use DomainException;
-use Fluid\Container;
+use Fluid\RegistryInterface;
 use Fluid\StorageInterface;
 
 class FilePreview
@@ -21,14 +21,14 @@ class FilePreview
     private $storage;
 
     /**
-     * @param Container $container
+     * @param RegistryInterface $registry
      * @param FileEntity $file
      * @throws DomainException
      */
-    public function __construct(Container $container, FileEntity $file)
+    public function __construct(RegistryInterface $registry, FileEntity $file)
     {
         $this->file = $file;
-        $this->setStorage($container->getStorage());
+        $this->setStorage($registry->getStorage());
     }
 
     /**

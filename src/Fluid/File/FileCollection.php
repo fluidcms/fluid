@@ -2,8 +2,9 @@
 namespace Fluid\File;
 
 use Countable;
+use Fluid\RegistryInterface;
 use JsonSerializable;
-use Fluid\Container;
+use Fluid\Registry;
 use IteratorAggregate;
 use ArrayAccess;
 use ArrayIterator;
@@ -33,17 +34,17 @@ class FileCollection implements Countable, IteratorAggregate, ArrayAccess, JsonS
     private $xmlMappingLoader;
 
     /**
-     * @param Container $container
+     * @param RegistryInterface $registry
      * @param FileMapper|null $mapper
      */
-    public function __construct(Container $container, FileMapper $mapper = null)
+    public function __construct(RegistryInterface $registry, FileMapper $mapper = null)
     {
-        $this->setStorage($container->getStorage());
-        $this->setXmlMappingLoader($container->getXmlMappingLoader());
+        $this->setStorage($registry->getStorage());
+        $this->setXmlMappingLoader($registry->getXmlMappingLoader());
         if (null !== $mapper) {
             $this->setMapper($mapper);
         } else {
-            $this->setMapper(new FileMapper($container));
+            $this->setMapper(new FileMapper($registry));
         }
     }
 

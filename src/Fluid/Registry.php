@@ -1,7 +1,7 @@
 <?php
 namespace Fluid;
 
-class Container
+class Registry implements RegistryInterface
 {
     /**
      * @var StorageInterface

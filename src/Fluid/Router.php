@@ -2,10 +2,12 @@
 namespace Fluid;
 
 use Closure;
+use Fluid\Page\PageCollection;
 use Fluid\Session\SessionCollection;
 use Fluid\Session\SessionEntity;
 use Fluid\User\UserCollection;
 use Fluid\User\UserEntity;
+use Fluid\Page\PageEntity;
 
 class Router
 {
@@ -99,22 +101,18 @@ class Router
     }
 
     /**
-     * Route a request
-     *
-     * @return null|Response
+     * @param string $uri
+     * @return Response
      */
-    public function dispatch()
+    private function routeAdmin($uri)
     {
-        $uri = $this->getRequest()->getUri();
-        $response = $this->getResponse();
         $found = false;
-
         if (stripos($uri, $this->getAdminPath()) === 0) {
             $uri = preg_replace('{^' . rtrim($this->getAdminPath(), '/') . '}', '', $uri);
 
             /** @var Closure $routes */
             $routes = require __DIR__ . DIRECTORY_SEPARATOR . 'Routes' . DIRECTORY_SEPARATOR . 'HttpRoutes.php';
-            $routes($this->getFluid(), $this->getConfig(), $this, $this->getRequest(), $response, $this->getFluid()->getStorage(), $this->getFluid()->getXmlMappingLoader(), $this->getRequest()->getCookie());
+            $routes($this->getFluid(), $this->getConfig(), $this, $this->getRequest(), $this->getResponse(), $this->getFluid()->getStorage(), $this->getFluid()->getXmlMappingLoader(), $this->getRequest()->getCookie());
 
             $method = $this->request->getMethod();
             foreach ($this->routes as $path => $methods) {
@@ -137,7 +135,7 @@ class Router
                         $found = true;
                         call_user_func_array($methods[null], $arguments);
                     } else {
-                        $response->setCode(Response::RESPONSE_CODE_METHOD_NOT_ALLOWED);
+                        $this->getResponse()->setCode(Response::RESPONSE_CODE_METHOD_NOT_ALLOWED);
                     }
                 }
             }
@@ -155,38 +153,93 @@ class Router
                 $file = $dir . $file;
                 if (file_exists($file)) {
                     $found = true;
-                    $response->code(Response::RESPONSE_CODE_OK);
+                    $this->getResponse()->code(Response::RESPONSE_CODE_OK);
                     new StaticFile($file);
                 }
             }
-        } elseif (stripos($uri, $this->getImagesPath()) === 0) {
-            $found = true;
-            die('images');
-        } elseif (stripos($uri, $this->getFilesPath()) === 0) {
-            $found = true;
-            die('files');
-        } else {
-            return null;
-            die('try pages');
-            // Route pages
-            if (null === $pathname && isset($_SERVER['REQUEST_URI'])) {
-                $pathname = $_SERVER['REQUEST_URI'];
-            }
-
-            $pathname = '/' . ltrim($pathname, '/');
-
-            $map = new Map;
-            $page = self::matchRequest($pathname, $map->getPages());
-
-            if (isset($page) && false !== $page) {
-                return $this->view($map, $page);
-            }
         }
-
         if ($found && $this->getResponse()->code() !== Response::RESPONSE_CODE_NOT_FOUND) {
-            return $response;
+            return $this->getResponse();
         }
         return null;
+    }
+
+    /**
+     * @param string $uri
+     * @return null
+     */
+    private function routeImages($uri)
+    {
+        if (stripos($uri, $this->getImagesPath()) === 0) {
+            die('images');
+        }
+        return null;
+    }
+
+    /**
+     * @param string $uri
+     * @return null
+     */
+    private function routeFiles($uri)
+    {
+        if (stripos($uri, $this->getFilesPath()) === 0) {
+            die('files');
+        }
+        return null;
+    }
+
+    /**
+     * @param string $request
+     * @param PageCollection|PageEntity[] $pages
+     * @return array|bool
+     */
+    private function findPage($request, PageCollection $pages)
+    {
+        foreach ($pages as $page) {
+            if ($request === $page->getConfig()->getUrl()) {
+                return $page;
+            } elseif ($page->hasPages()) {
+                $match = $this->findPage($request, $page->getPages());
+                if ($match instanceof PageEntity) {
+                    return $match;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param string $uri
+     * @return Response
+     */
+    private function routePages($uri)
+    {
+        $map = $this->getFluid()->getMap();
+        $page = $this->findPage($uri, $map->getPages());
+
+        if ($page instanceof PageEntity) {
+            $this->getResponse()->setBody($page->render());
+            return $this->getResponse();
+        }
+
+        return null;
+    }
+
+    /**
+     * Route a request
+     *
+     * @return null|Response
+     */
+    public function dispatch()
+    {
+        $uri = $this->getRequest()->getUri();
+
+        $this->routeAdmin($uri) ||
+        $this->routeImages($uri) ||
+        $this->routeFiles($uri) ||
+        $this->routePages($uri);
+
+        return $this->getResponse();
     }
 
     /**
@@ -240,45 +293,6 @@ class Router
             return $response;
         }
         return null;
-    }
-
-    //////------------
-
-    /**
-     * @param \Fluid\Map\Map $map
-     * @param array $page
-     * @return string
-     */
-    private function view(Map $map, array $page)
-    {
-        Data::setMap($map);
-        $data = Data::get($page['id']);
-        $layout = new Layout($page['layout']);
-        return (new View($this->getFluid(), $map, $layout))->load($page, $data);
-    }
-
-    /**
-     * Try to match a request with an array of pages
-     *
-     * @param string $request
-     * @param array $pages
-     * @param string $parent
-     * @return array|bool
-     */
-    private static function matchRequest($request, array $pages, $parent = '')
-    {
-        foreach ($pages as $page) {
-            if (isset($page['url']) && $request == $page['url']) {
-                $page['page'] = trim($parent . '/' . $page['page'], '/');
-                return $page;
-            } else if (isset($page['pages']) && is_array($page['pages'])) {
-                $matchPages = self::matchRequest($request, $page['pages'], trim($parent . '/' . $page['page'], '/'));
-                if ($matchPages) {
-                    return $matchPages;
-                }
-            }
-        }
-        return false;
     }
 
     /**

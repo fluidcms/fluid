@@ -1,7 +1,7 @@
 <?php
 namespace Fluid\File;
 
-use Fluid\Container;
+use Fluid\RegistryInterface;
 use Fluid\StorageInterface;
 use Fluid\XmlMappingLoaderInterface;
 
@@ -10,9 +10,9 @@ class FileMapper
     const FILES_DIRECTORY = 'files';
 
     /**
-     * @var Container
+     * @var RegistryInterface
      */
-    private $container;
+    private $registry;
 
     /**
      * @var StorageInterface
@@ -25,13 +25,13 @@ class FileMapper
     private $xmlMappingLoader;
 
     /**
-     * @param Container $container
+     * @param RegistryInterface $registry
      */
-    public function __construct(Container $container)
+    public function __construct(RegistryInterface $registry)
     {
-        $this->setContainer($container);
-        $this->setStorage($container->getStorage());
-        $this->setXmlMappingLoader($container->getXmlMappingLoader());
+        $this->setRegistry($registry);
+        $this->setStorage($registry->getStorage());
+        $this->setXmlMappingLoader($registry->getXmlMappingLoader());
     }
 
     /**
@@ -44,7 +44,7 @@ class FileMapper
         foreach ($files as $fileid) {
             if (is_dir($fileid)) {
                 $fileid = basename($fileid);
-                $file = new FileEntity($this->getContainer());
+                $file = new FileEntity($this->getRegistry());
                 $file->setId($fileid);
                 $file = $this->mapEntity($file);
                 if ($file !== null) {
@@ -134,20 +134,20 @@ class FileMapper
     }
 
     /**
-     * @return Container
+     * @return RegistryInterface
      */
-    public function getContainer()
+    public function getRegistry()
     {
-        return $this->container;
+        return $this->registry;
     }
 
     /**
-     * @param Container $container
+     * @param RegistryInterface $registry
      * @return $this
      */
-    public function setContainer(Container $container)
+    public function setRegistry(RegistryInterface $registry)
     {
-        $this->container = $container;
+        $this->registry = $registry;
         return $this;
     }
 }
