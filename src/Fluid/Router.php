@@ -2,6 +2,7 @@
 namespace Fluid;
 
 use Closure;
+use Fluid\File\FileEntity;
 use Fluid\Page\PageCollection;
 use Fluid\Session\SessionCollection;
 use Fluid\Session\SessionEntity;
@@ -39,9 +40,9 @@ class Router
     private $adminPath = self::DEFAULT_ADMIN_PATH;
 
     /**
-     * @var Fluid
+     * @var RegistryInterface
      */
-    private $fluid;
+    private $registry;
 
     /**
      * @var ConfigInterface
@@ -64,20 +65,18 @@ class Router
     private $routes = [];
 
     /**
+     * @param RegistryInterface $registry
      * @param ConfigInterface $config
      * @param Request $request
      * @param Response $response
-     * @param Fluid|null $fluid
      */
-    public function __construct(ConfigInterface $config, Request $request, Response $response = null, Fluid $fluid = null)
+    public function __construct(RegistryInterface $registry, ConfigInterface $config, Request $request, Response $response = null)
     {
+        $this->setRegistry($registry);
         $this->setConfig($config);
         $this->setRequest($request);
         if ($response !== null) {
             $this->setResponse($response);
-        }
-        if ($fluid !== null) {
-            $this->setFluid($fluid);
         }
     }
 
@@ -112,7 +111,7 @@ class Router
 
             /** @var Closure $routes */
             $routes = require __DIR__ . DIRECTORY_SEPARATOR . 'Routes' . DIRECTORY_SEPARATOR . 'HttpRoutes.php';
-            $routes($this->getFluid(), $this->getConfig(), $this, $this->getRequest(), $this->getResponse(), $this->getFluid()->getStorage(), $this->getFluid()->getXmlMappingLoader(), $this->getRequest()->getCookie());
+            $routes($this->getRegistry(), $this->getConfig(), $this, $this->getRequest(), $this->getResponse(), $this->getRegistry()->getStorage(), $this->getRegistry()->getXmlMappingLoader(), $this->getRequest()->getCookie());
 
             $method = $this->request->getMethod();
             foreach ($this->routes as $path => $methods) {
@@ -171,7 +170,11 @@ class Router
     private function routeImages($uri)
     {
         if (stripos($uri, $this->getImagesPath()) === 0) {
-            die('images');
+            $args = explode('/', substr($uri, strlen($this->getImagesPath())));
+            $file = new FileEntity($this->getRegistry());
+            $file->setId($args[0]);
+            $file->setName(end($args));
+            $this->getResponse()->setBody($file->render());
         }
         return null;
     }
@@ -214,7 +217,7 @@ class Router
      */
     private function routePages($uri)
     {
-        $map = $this->getFluid()->getMap();
+        $map = $this->getRegistry()->getMap();
         $page = $this->findPage($uri, $map->getPages());
 
         if ($page instanceof PageEntity) {
@@ -261,7 +264,7 @@ class Router
 
         /** @var callable $routes */
         $routes = require __DIR__ . DIRECTORY_SEPARATOR . 'Routes' . DIRECTORY_SEPARATOR . 'LocalWebsocketRoutes.php';
-        $routes($this->getFluid(), $this->getConfig(), $this, $this->getRequest(), $this->getResponse(), $storage, $xmlMappingLoader, $users, $user, $sessions, $session);
+        $routes($this->getRegistry(), $this->getConfig(), $this, $this->getRequest(), $this->getResponse(), $storage, $xmlMappingLoader, $users, $user, $sessions, $session);
 
         $method = $this->request->getMethod();
         foreach ($this->routes as $path => $methods) {
@@ -412,24 +415,6 @@ class Router
     }
 
     /**
-     * @param Fluid $fluid
-     * @return $this
-     */
-    public function setFluid(Fluid $fluid)
-    {
-        $this->fluid = $fluid;
-        return $this;
-    }
-
-    /**
-     * @return Fluid
-     */
-    public function getFluid()
-    {
-        return $this->fluid;
-    }
-
-    /**
      * @param Response $response
      * @return $this
      */
@@ -456,5 +441,23 @@ class Router
     private function createResponse()
     {
         return $this->setResponse(new Response);
+    }
+
+    /**
+     * @return RegistryInterface
+     */
+    public function getRegistry()
+    {
+        return $this->registry;
+    }
+
+    /**
+     * @param RegistryInterface $registry
+     * @return $this
+     */
+    public function setRegistry(RegistryInterface $registry)
+    {
+        $this->registry = $registry;
+        return $this;
     }
 }

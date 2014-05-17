@@ -139,6 +139,26 @@ class Storage implements StorageInterface
     }
 
     /**
+     * @param string $file
+     * @return string
+     */
+    public function getBranchFilename($file)
+    {
+        $file = $this->getConfig()->getStorage() . DIRECTORY_SEPARATOR . $this->getConfig()->getBranch() . DIRECTORY_SEPARATOR . $file;
+        return $file;
+    }
+
+    /**
+     * @param string $file
+     * @return string
+     */
+    public function getFilename($file)
+    {
+        $file = $this->getConfig()->getStorage() . DIRECTORY_SEPARATOR . self::DATA_DIR_NAME . DIRECTORY_SEPARATOR . $file;
+        return $file;
+    }
+
+    /**
      * @param string $dir
      * @return array
      */
@@ -174,6 +194,26 @@ class Storage implements StorageInterface
     {
         $file = $this->getConfig()->getStorage() . DIRECTORY_SEPARATOR . self::DATA_DIR_NAME . DIRECTORY_SEPARATOR . $file;
         return file_exists($file);
+    }
+
+    /**
+     * @param string $file
+     * @return string
+     */
+    public function loadBranchFile($file)
+    {
+        $file = $this->getConfig()->getStorage() . DIRECTORY_SEPARATOR . $this->getConfig()->getBranch() . DIRECTORY_SEPARATOR . $file;
+        return file_get_contents($file);
+    }
+
+    /**
+     * @param string $file
+     * @return string
+     */
+    public function loadFile($file)
+    {
+        $file = $this->getConfig()->getStorage() . DIRECTORY_SEPARATOR . self::DATA_DIR_NAME . DIRECTORY_SEPARATOR . $file;
+        return file_get_contents($file);
     }
 
     /**

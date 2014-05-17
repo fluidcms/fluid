@@ -33,12 +33,6 @@ class Fluid
     private $request;
 
     /**
-     * @var Router
-     * @deprecated Use registry instead
-     */
-    private $router;
-
-    /**
      * @var Daemon
      * @deprecated Use registry instead
      */
@@ -207,45 +201,11 @@ class Fluid
     }
 
     /**
-     * @param Router $router
-     * @return $this
-     * @deprecated Use registry instead
-     */
-    public function setRouter(Router $router)
-    {
-        $this->router = $router;
-        return $this;
-    }
-
-    /**
      * @return Router
-     * @deprecated Use registry instead
-     */
-    public function getRouter()
-    {
-        if (null === $this->router) {
-            $this->createRouter();
-        }
-
-        return $this->router;
-    }
-
-    /**
-     * @return Router
-     * @deprecated Use registry instead
      */
     public function router()
     {
-        return $this->getRouter();
-    }
-
-    /**
-     * @return $this
-     * @deprecated Use registry instead
-     */
-    private function createRouter()
-    {
-        return $this->setRouter(new Router($this->getConfig(), $this->getRequest(), null, $this));
+        return $this->getRegistry()->getRouter();
     }
 
     /**
@@ -277,7 +237,7 @@ class Fluid
      */
     private function createDaemon()
     {
-        return $this->setDaemon(new Daemon($this->getConfig(), $this->getStorage(), $this->getXmlMappingLoader(), $this->getRegistry()->getLogger(), $this->getRegistry()->getEvent()));
+        return $this->setDaemon(new Daemon($this->getConfig(), $this->getRegistry()->getStorage(), $this->getRegistry()->getXmlMappingLoader(), $this->getRegistry()->getLogger(), $this->getRegistry()->getEvent()));
     }
 
     /**
@@ -317,7 +277,7 @@ class Fluid
         if (isset($_COOKIE['fluid_session'])) {
             $session = $_COOKIE['fluid_session'];
             if (strlen($session) === SessionEntity::TOKEN_LENGHT && preg_match('/^[a-zA-Z0-9]*$/', $session)) {
-                $sessions = new SessionCollection($this->getStorage(), new UserCollection($this->getStorage()));
+                $sessions = new SessionCollection($this->getRegistry()->getStorage(), new UserCollection($this->getRegistry()->getStorage()));
                 $session = $sessions->find($session);
                 if ($session instanceof SessionEntity && !$session->isExpired()) {
                     $this->sessionToken = $session->getToken();

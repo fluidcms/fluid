@@ -93,4 +93,15 @@ interface RegistryInterface
      * @return LoggerInterface
      */
     public function getLogger();
+
+    /**
+     * @param Router $router
+     * @return $this
+     */
+    public function setRouter(Router $router);
+
+    /**
+     * @return Router
+     */
+    public function getRouter();
 }

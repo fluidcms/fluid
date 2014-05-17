@@ -48,6 +48,11 @@ class Registry implements RegistryInterface
     private $logger;
 
     /**
+     * @var Router
+     */
+    private $router;
+
+    /**
      * @return Fluid
      */
     public function getFluid()
@@ -217,5 +222,27 @@ class Registry implements RegistryInterface
             $this->setLogger(new Logger($this->getConfig()));
         }
         return $this->logger;
+    }
+
+    /**
+     * @param Router $router
+     * @return $this
+     */
+    public function setRouter(Router $router)
+    {
+        $this->router = $router;
+        return $this;
+    }
+
+    /**
+     * @return Router
+     */
+    public function getRouter()
+    {
+        if (null === $this->router) {
+            $this->setRouter(new Router($this, $this->getConfig(), $this->getFluid()->getRequest()));
+        }
+
+        return $this->router;
     }
 }

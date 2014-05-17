@@ -1,18 +1,18 @@
 <?php
 namespace Fluid\File;
 
-use Countable;
+use Fluid\File\Renderer\RenderImage;
 use Fluid\Token;
 use JsonSerializable;
 use Fluid\RegistryInterface;
-use IteratorAggregate;
-use ArrayAccess;
-use ArrayIterator;
 use Fluid\StorageInterface;
 use Fluid\XmlMappingLoaderInterface;
+use Fluid\File\Renderer\RendererInterface;
 
-class FileEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSerializable
+class FileEntity implements JsonSerializable
 {
+    const TYPE_IMAGE = 'image';
+
     /**
      * @var string
      */
@@ -22,6 +22,11 @@ class FileEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
      * @var string
      */
     private $name;
+
+    /**
+     * @var string
+     */
+    private $type = self::TYPE_IMAGE;
 
     /**
      * @var RegistryInterface
@@ -54,6 +59,11 @@ class FileEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     private $validator;
 
     /**
+     * @var RendererInterface
+     */
+    private $renderer;
+
+    /**
      * @param RegistryInterface $registry
      * @param FileMapper|null $mapper
      * @param FileCollection|null $collection
@@ -70,6 +80,21 @@ class FileEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
             $this->setCollection($collection);
         }
         $this->setId(Token::generate(8));
+    }
+
+    /**
+     * @return string
+     */
+    public function render()
+    {
+        if (null === $this->renderer) {
+            switch ($this->getType()) {
+                case self::TYPE_IMAGE:
+                    $this->renderer = new RenderImage($this->getRegistry(), $this);
+                    break;
+            }
+        }
+        return $this->renderer->render();
     }
 
     /**
@@ -98,6 +123,14 @@ class FileEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     public function validate(array $uploadedFile = null)
     {
         return $this->getValidator()->validate($uploadedFile);
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasVersion()
+    {
+        return false;
     }
 
     /**
@@ -251,54 +284,10 @@ class FileEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function count()
+    public function getType()
     {
-        //return count($this->items);
-    }
-
-    /**
-     * @return ArrayIterator
-     */
-    public function getIterator()
-    {
-        //return new ArrayIterator($this->items);
-    }
-
-    /**
-     * @param int $offset
-     * @return bool
-     */
-    public function offsetExists($offset)
-    {
-        //return isset($this->items[$offset]);
-    }
-
-    /**
-     * @param int $offset
-     * @return mixed
-     */
-    public function offsetGet($offset)
-    {
-        //return $this->getVariables()[$offset];
-        //return $this->items[$offset];
-    }
-
-    /**
-     * @param int $offset
-     * @param mixed $value
-     */
-    public function offsetSet($offset, $value)
-    {
-        //$this->items[$offset] = $value;
-    }
-
-    /**
-     * @param int $offset
-     */
-    public function offsetUnset($offset)
-    {
-        //unset($this->items[$offset]);
+        return $this->type;
     }
 }
