@@ -6,6 +6,11 @@ use Fluid\Variable\VariableEntity;
 class RenderContent implements RendererInterface
 {
     /**
+     * @var string
+     */
+    private $imageHtml = '<img src="%s" width="%s" height="%s" alt="%s">';
+
+    /**
      * @var VariableEntity
      */
     private $variable;
@@ -19,13 +24,50 @@ class RenderContent implements RendererInterface
     }
 
     /**
+     * @param array $images
+     * @param string $text
+     * @return string
+     */
+    private function renderImages(array $images, $text)
+    {
+        foreach ($images as $image) {
+            if (isset($image['id']) && isset($image['src'])) {
+                $imageHtml = sprintf(
+                    $this->imageHtml,
+                    $image['src'],
+                    isset($image['width']) ? $image['width'] : '',
+                    isset($image['height']) ? $image['height'] : '',
+                    isset($image['alt']) ? $image['alt'] : ''
+                );
+                $text = str_replace("{{$image['id']}}", $imageHtml, $text);
+            }
+        }
+        return $text;
+    }
+
+    /**
      * @return string
      */
     public function render()
     {
         $text = null;
+        $images = [];
+        $components = [];
+        $files = [];
         if (isset($this->variable->getValue()['text'])) {
             $text = $this->variable->getValue()['text'];
+        }
+        if (isset($this->variable->getValue()['images']) && is_array($this->variable->getValue()['images'])) {
+            $images = $this->variable->getValue()['images'];
+        }
+        if (isset($this->variable->getValue()['components']) && is_array($this->variable->getValue()['components'])) {
+            $components = $this->variable->getValue()['components'];
+        }
+        if (isset($this->variable->getValue()['files']) && is_array($this->variable->getValue()['files'])) {
+            $files = $this->variable->getValue()['files'];
+        }
+        if (count($images)) {
+            $text = $this->renderImages($images, $text);
         }
         return $text;
     }
