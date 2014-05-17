@@ -31,8 +31,7 @@ class RenderPage implements RendererInterface
      */
     public function render()
     {
-        echo $this->page->getTemplate()->getFile();
-        die();
+        return $this->getRegistry()->getTemplateEngine()->render($this->page->getTemplate()->getFile(), $this->page->toArray(), $this->page->getTemplate()->getConfig());
     }
 
     /**

@@ -24,4 +24,15 @@ interface RegistryInterface
      * @return $this
      */
     public function setXmlMappingLoader(XmlMappingLoaderInterface $xmlMappingLoader);
+
+    /**
+     * @param TemplateEngineInterface $templateEngine
+     * @return $this
+     */
+    public function setTemplateEngine(TemplateEngineInterface $templateEngine);
+
+    /**
+     * @return TemplateEngineInterface
+     */
+    public function getTemplateEngine();
 }

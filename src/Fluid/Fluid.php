@@ -28,12 +28,6 @@ class Fluid
     private $debugMode = self::DEBUG_OFF;
 
     /**
-     * @var TemplateEngineInterface
-     * @deprecated Use registry instead
-     */
-    private $templateEngine;
-
-    /**
      * @var ConfigInterface
      */
     private $config;
@@ -144,35 +138,21 @@ class Fluid
     }
 
     /**
-     * @param null|TemplateEngineInterface $templateEngine
+     * @param TemplateEngineInterface $templateEngine
      * @return $this
-     * @deprecated Use registry instead
      */
-    public function setTemplateEngine(TemplateEngineInterface $templateEngine = null)
+    public function setTemplateEngine(TemplateEngineInterface $templateEngine)
     {
-        $this->templateEngine = $templateEngine;
+        $this->getRegistry()->setTemplateEngine($templateEngine);
         return $this;
     }
 
     /**
-     * @return null|TemplateEngineInterface
-     * @deprecated Use registry instead
+     * @return TemplateEngineInterface
      */
     public function getTemplateEngine()
     {
-        if (null === $this->templateEngine) {
-            $this->createTemplateEngine();
-        }
-        return $this->templateEngine;
-    }
-
-    /**
-     * @return $this
-     * @deprecated Use registry instead
-     */
-    private function createTemplateEngine()
-    {
-        return $this->setTemplateEngine(new TemplateEngine);
+        return $this->getRegistry()->getTemplateEngine();
     }
 
     /**
