@@ -161,7 +161,12 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
      */
     private function createTemplate()
     {
-        return $this->setTemplate(new TemplateEntity($this->getConfig()->getTemplate(), $this->getVariables(), $this->getXmlMappingLoader()));
+        $template = new TemplateEntity($this->getConfig()->getTemplate(), $this->variables, $this->getXmlMappingLoader());
+        $this->setTemplate($template);
+        if (!$this->variables->isMapped()) {
+            $this->variables->mapCollection();
+        }
+        return $this;
     }
 
     /**
