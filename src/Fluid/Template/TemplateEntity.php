@@ -187,4 +187,20 @@ class TemplateEntity
     {
         return $this->config;
     }
+
+    /**
+     * @return string
+     */
+    public function getFile()
+    {
+        return $this->getConfig()->getFile();
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getConfig()->getName();
+    }
 }
