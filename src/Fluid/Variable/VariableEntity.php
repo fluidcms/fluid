@@ -58,6 +58,8 @@ class VariableEntity implements JsonSerializable
         switch ($this->getType()) {
             case self::TYPE_CONTENT:
                 return (new RenderContent($this))->render();
+            case self::TYPE_STRING:
+                return $this->getValue();
         }
         return null;
     }
