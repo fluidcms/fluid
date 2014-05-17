@@ -1,23 +1,20 @@
 <?php
 namespace Fluid;
 
-use Fluid\Template\TemplateConfig;
+use Fluid\Component\ComponentEntity;
+use Fluid\Page\PageEntity;
 
 interface TemplateEngineInterface
 {
     /**
-     * @param string $template
-     * @param array $data
-     * @param TemplateConfig $config
+     * @param PageEntity $page
      * @return string
      */
-    public function render($template, array $data, TemplateConfig $config);
+    public function render(PageEntity $page);
 
     /**
-     * @param string $template
-     * @param array $data
-     * @param TemplateConfig $config
+     * @param ComponentEntity $component
      * @return string
      */
-    public function renderCompontent($template, array $data, TemplateConfig $config);
+    public function renderCompontent(ComponentEntity $component);
 }

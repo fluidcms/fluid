@@ -2,7 +2,6 @@
 namespace Fluid;
 
 use Fluid\Map\MapEntity;
-use Fluid\Map\MapMapper;
 use Fluid\Daemon\Daemon;
 use Fluid\Session\SessionCollection;
 use Fluid\Session\SessionEntity;
@@ -28,28 +27,6 @@ class Fluid
     private $debugMode = self::DEBUG_OFF;
 
     /**
-     * @var ConfigInterface
-     */
-    private $config;
-
-    /**
-     * @var MapEntity
-     */
-    private $map;
-
-    /**
-     * @var StorageInterface
-     * @deprecated Use registry instead
-     */
-    private $storage;
-
-    /**
-     * @var XmlMappingLoaderInterface
-     * @deprecated Use registry instead
-     */
-    private $xmlMappingLoader;
-
-    /**
      * @var Request
      * @deprecated Use registry instead
      */
@@ -60,18 +37,6 @@ class Fluid
      * @deprecated Use registry instead
      */
     private $router;
-
-    /**
-     * @var Event
-     * @deprecated Use registry instead
-     */
-    private $event;
-
-    /**
-     * @var LoggerInterface
-     * @deprecated Use registry instead
-     */
-    private $logger;
 
     /**
      * @var Daemon
@@ -161,7 +126,7 @@ class Fluid
      */
     public function setConfig(ConfigInterface $config)
     {
-        $this->config = $config;
+        $this->getRegistry()->setConfig($config);
         return $this;
     }
 
@@ -170,18 +135,15 @@ class Fluid
      */
     public function getConfig()
     {
-        if (null === $this->config) {
-            $this->createConfig();
-        }
-        return $this->config;
+        return $this->getRegistry()->getConfig();
     }
 
     /**
-     * @return $this
+     * @return MapEntity
      */
-    private function createConfig()
+    public function getMap()
     {
-        return $this->setConfig(new Config);
+        return $this->getRegistry()->getMap();
     }
 
     /**
@@ -190,95 +152,16 @@ class Fluid
      */
     public function setMap(MapEntity $map)
     {
-        $this->map = $map;
+        $this->getRegistry()->setMap($map);
         return $this;
     }
 
     /**
      * @return MapEntity
      */
-    public function getMap()
+    public function map()
     {
-        if (null === $this->map) {
-            $this->createMap();
-        }
-
-        return $this->map;
-    }
-
-    /**
-     * @return $this
-     */
-    private function createMap()
-    {
-        $mapper = new MapMapper($this->getRegistry(), $this->getStorage(), $this->getXmlMappingLoader(), $this->getEvent(), $this->getLanguage());
-        return $this->setMap($mapper->map());
-    }
-
-    /**
-     * @param StorageInterface $storage
-     * @return $this
-     * @deprecated Use registry instead
-     */
-    public function setStorage(StorageInterface $storage)
-    {
-        $this->storage = $storage;
-        return $this;
-    }
-
-    /**
-     * @return StorageInterface
-     * @deprecated Use registry instead
-     */
-    public function getStorage()
-    {
-        if (null === $this->storage) {
-            $this->createStorage();
-        }
-
-        return $this->storage;
-    }
-
-    /**
-     * @return $this
-     * @deprecated Use registry instead
-     */
-    private function createStorage()
-    {
-        return $this->setStorage(new Storage($this->getConfig()));
-    }
-
-    /**
-     * @param XmlMappingLoaderInterface $xmlMappingLoader
-     * @return $this
-     * @deprecated Use registry instead
-     */
-    public function setXmlMappingLoader(XmlMappingLoaderInterface $xmlMappingLoader)
-    {
-        $this->xmlMappingLoader = $xmlMappingLoader;
-        return $this;
-    }
-
-    /**
-     * @return XmlMappingLoaderInterface
-     * @deprecated Use registry instead
-     */
-    public function getXmlMappingLoader()
-    {
-        if (null === $this->xmlMappingLoader) {
-            $this->createXmlMappingLoader();
-        }
-
-        return $this->xmlMappingLoader;
-    }
-
-    /**
-     * @return $this
-     * @deprecated Use registry instead
-     */
-    private function createXmlMappingLoader()
-    {
-        return $this->setXmlMappingLoader(new XmlMappingLoader($this->getConfig()));
+        return $this->getRegistry()->getMap();
     }
 
     /**
@@ -366,73 +249,6 @@ class Fluid
     }
 
     /**
-     * @param Event $event
-     * @return $this
-     * @deprecated Use registry instead
-     */
-    public function setEvent(Event $event)
-    {
-        $this->event = $event;
-        return $this;
-    }
-
-    /**
-     * @return Event
-     * @deprecated Use registry instead
-     */
-    public function getEvent()
-    {
-        if (null === $this->event) {
-            $this->createEvent();
-        }
-        return $this->event;
-    }
-
-    /**
-     * @return $this
-     * @deprecated Use registry instead
-     */
-    private function createEvent()
-    {
-        $event = new Event($this->getConfig(), $this->getLogger());
-        $event->setIsAdmin($this->isAdmin());
-        $event->setSessionToken($this->sessionToken);
-        return $this->setEvent($event);
-    }
-
-    /**
-     * @param LoggerInterface $logger
-     * @return $this
-     * @deprecated Use registry instead
-     */
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-        return $this;
-    }
-
-    /**
-     * @return LoggerInterface
-     * @deprecated Use registry instead
-     */
-    public function getLogger()
-    {
-        if (null === $this->logger) {
-            $this->createLogger();
-        }
-        return $this->logger;
-    }
-
-    /**
-     * @return $this
-     * @deprecated Use registry instead
-     */
-    private function createLogger()
-    {
-        return $this->setLogger(new Logger($this->getConfig()));
-    }
-
-    /**
      * @param Daemon $daemon
      * @return $this
      * @deprecated Use registry instead
@@ -461,7 +277,7 @@ class Fluid
      */
     private function createDaemon()
     {
-        return $this->setDaemon(new Daemon($this->getConfig(), $this->getStorage(), $this->getXmlMappingLoader(), $this->getLogger(), $this->getEvent()));
+        return $this->setDaemon(new Daemon($this->getConfig(), $this->getStorage(), $this->getXmlMappingLoader(), $this->getRegistry()->getLogger(), $this->getRegistry()->getEvent()));
     }
 
     /**
@@ -548,6 +364,7 @@ class Fluid
     {
         if (null === $this->registry) {
             $this->setRegistry(new Registry);
+            $this->getRegistry()->setFluid($this);
         }
         return $this->registry;
     }
@@ -559,6 +376,24 @@ class Fluid
     public function setRegistry(RegistryInterface $registry)
     {
         $this->registry = $registry;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSessionToken()
+    {
+        return $this->sessionToken;
+    }
+
+    /**
+     * @param string $sessionToken
+     * @return $this
+     */
+    public function setSessionToken($sessionToken)
+    {
+        $this->sessionToken = $sessionToken;
         return $this;
     }
 }

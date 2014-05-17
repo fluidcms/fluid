@@ -1,8 +1,22 @@
 <?php
 namespace Fluid;
 
+use Fluid\Map\MapEntity;
+use Fluid\Map\MapMapper;
+use Psr\Log\LoggerInterface;
+
 class Registry implements RegistryInterface
 {
+    /**
+     * @var Fluid
+     */
+    private $fluid;
+
+    /**
+     * @var ConfigInterface
+     */
+    private $config;
+
     /**
      * @var StorageInterface
      */
@@ -19,11 +33,57 @@ class Registry implements RegistryInterface
     private $templateEngine;
 
     /**
-     * @return StorageInterface
+     * @var Event
      */
-    public function getStorage()
+    private $event;
+
+    /**
+     * @var MapEntity
+     */
+    private $map;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @return Fluid
+     */
+    public function getFluid()
     {
-        return $this->storage;
+        return $this->fluid;
+    }
+
+    /**
+     * @param Fluid $fluid
+     * @return $this
+     */
+    public function setFluid(Fluid $fluid)
+    {
+        $this->fluid = $fluid;
+        return $this;
+    }
+
+    /**
+     * @return ConfigInterface
+     */
+    public function getConfig()
+    {
+        if (null === $this->config) {
+            return $this->setConfig(new Config);
+        }
+        return $this->config;
+    }
+
+    /**
+     * @param ConfigInterface $config
+     * @return $this
+     */
+    public function setConfig(ConfigInterface $config)
+    {
+        $this->config = $config;
+        return $this;
     }
 
     /**
@@ -37,11 +97,15 @@ class Registry implements RegistryInterface
     }
 
     /**
-     * @return XmlMappingLoaderInterface
+     * @return StorageInterface
      */
-    public function getXmlMappingLoader()
+    public function getStorage()
     {
-        return $this->xmlMappingLoader;
+        if (null === $this->storage) {
+            $this->setStorage(new Storage($this->getConfig()));
+        }
+
+        return $this->storage;
     }
 
     /**
@@ -52,6 +116,18 @@ class Registry implements RegistryInterface
     {
         $this->xmlMappingLoader = $xmlMappingLoader;
         return $this;
+    }
+
+    /**
+     * @return XmlMappingLoaderInterface
+     */
+    public function getXmlMappingLoader()
+    {
+        if (null === $this->xmlMappingLoader) {
+            $this->setXmlMappingLoader(new XmlMappingLoader($this->getConfig()));
+        }
+
+        return $this->xmlMappingLoader;
     }
 
     /**
@@ -73,5 +149,73 @@ class Registry implements RegistryInterface
             $this->setTemplateEngine(new TemplateEngine($this));
         }
         return $this->templateEngine;
+    }
+
+    /**
+     * @param Event $event
+     * @return $this
+     */
+    public function setEvent(Event $event)
+    {
+        $this->event = $event;
+        return $this;
+    }
+
+    /**
+     * @return Event
+     */
+    public function getEvent()
+    {
+        if (null === $this->event) {
+            $event = new Event($this->getConfig(), $this->getLogger());
+            $event->setIsAdmin($this->getFluid()->isAdmin());
+            $event->setSessionToken($this->getFluid()->getSessionToken());
+            $this->setEvent($event);
+        }
+        return $this->event;
+    }
+
+    /**
+     * @param MapEntity $map
+     * @return $this
+     */
+    public function setMap(MapEntity $map)
+    {
+        $this->map = $map;
+        return $this;
+    }
+
+    /**
+     * @return MapEntity
+     */
+    public function getMap()
+    {
+        if (null === $this->map) {
+            $mapper = new MapMapper($this, $this->getStorage(), $this->getXmlMappingLoader(), $this->getEvent(), $this->getFluid()->getLanguage());
+            $this->setMap($mapper->map());
+        }
+
+        return $this->map;
+    }
+
+    /**
+     * @param LoggerInterface $logger
+     * @return $this
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+        return $this;
+    }
+
+    /**
+     * @return LoggerInterface
+     */
+    public function getLogger()
+    {
+        if (null === $this->logger) {
+            $this->setLogger(new Logger($this->getConfig()));
+        }
+        return $this->logger;
     }
 }

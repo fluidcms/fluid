@@ -2,6 +2,7 @@
 namespace Fluid\Page;
 
 use Countable;
+use JsonSerializable;
 use Fluid\Language\LanguageEntity;
 use Fluid\Page\Renderer\RenderPage;
 use IteratorAggregate;
@@ -14,7 +15,7 @@ use Fluid\Template\TemplateEntity;
 use Fluid\Page\Renderer\RendererInterface;
 use Fluid\RegistryInterface;
 
-class PageEntity implements Countable, IteratorAggregate, ArrayAccess
+class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSerializable
 {
     /**
      * @var string
@@ -95,7 +96,27 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess
     /**
      * @return array
      */
+    public function getData()
+    {
+        return [
+            'page' => $this,
+            'map' => $this->getRegistry()->getMap()
+        ];
+    }
+
+    /**
+     * @return array
+     * @deprecated use jsonSerialize instead
+     */
     public function toArray()
+    {
+        return $this->jsonSerialize();
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
     {
         return [
             'config' => $this->getConfig()->toArray(),
