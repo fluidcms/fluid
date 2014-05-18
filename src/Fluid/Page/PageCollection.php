@@ -56,13 +56,19 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
     private $registry;
 
     /**
+     * @var PageEntity
+     */
+    private $parent;
+
+    /**
      * @param RegistryInterface $registry
      * @param StorageInterface $storage
      * @param XmlMappingLoaderInterface $xmlMappingLoader
      * @param PageMapper|null $pageMapper
      * @param LanguageEntity $language
+     * @param PageEntity|null $parent
      */
-    public function __construct(RegistryInterface $registry, StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, PageMapper $pageMapper = null, LanguageEntity $language)
+    public function __construct(RegistryInterface $registry, StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, PageMapper $pageMapper = null, LanguageEntity $language, PageEntity $parent = null)
     {
         $this->setRegistry($registry);
         $this->setStorage($storage);
@@ -73,10 +79,13 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
             $this->setMapper(new PageMapper($storage, $xmlMappingLoader));
         }
         $this->setLanguage($language);
+        if (null !== $parent) {
+            $this->setParent($parent);
+        }
     }
 
     /**
-     * @param $path
+     * @param string $path
      * @return PageEntity
      */
     public function find($path)
@@ -147,6 +156,9 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
 
             $this->pages[$data['name']] = $page;
             $page->set($data);
+            if (null !== $this->getParent()) {
+                $page->setParent($this->getParent());
+            }
             return $page;
         }
         throw new InvalidDataException();
@@ -276,6 +288,24 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
     public function getLanguage()
     {
         return $this->language;
+    }
+
+    /**
+     * @return PageEntity
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @param PageEntity $parent
+     * @return $this
+     */
+    public function setParent(PageEntity $parent)
+    {
+        $this->parent = $parent;
+        return $this;
     }
 
     /**

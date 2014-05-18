@@ -75,6 +75,11 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     private $renderer;
 
     /**
+     * @var PageEntity
+     */
+    private $parent;
+
+    /**
      * @param RegistryInterface $registry
      * @param StorageInterface $storage
      * @param XmlMappingLoaderInterface $xmlMappingLoader
@@ -89,7 +94,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
         $this->setPageMapper($pageMapper);
         $this->setConfig(new PageConfig($this));
         $this->setLanguage($language);
-        $this->setPages(new PageCollection($this->getRegistry(), $storage, $xmlMappingLoader, $pageMapper, $this->getLanguage()));
+        $this->setPages(new PageCollection($this->getRegistry(), $storage, $xmlMappingLoader, $pageMapper, $this->getLanguage(), $this));
         $this->setVariables(new VariableCollection($this, $storage, $xmlMappingLoader, null, $this->getLanguage()));
     }
 
@@ -104,6 +109,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
             'name' => $this->getName(),
             'language' => $this->getLanguage()->getLanguage(),
             'pages' => $this->getPages(),
+            'parent' => $this->getParent(),
             'url' => $this->getConfig()->getUrl(),
             'template' => $this->getConfig()->getTemplate(),
             'languages' => $this->getConfig()->getLanguages(),
@@ -394,6 +400,24 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     public function getLanguage()
     {
         return $this->language;
+    }
+
+    /**
+     * @return PageEntity
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @param PageEntity $parent
+     * @return $this
+     */
+    public function setParent(PageEntity $parent)
+    {
+        $this->parent = $parent;
+        return $this;
     }
 
     /**
