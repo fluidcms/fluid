@@ -114,7 +114,8 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
             'template' => $this->getConfig()->getTemplate(),
             'languages' => $this->getConfig()->getLanguages(),
             'allow_childs' => $this->getConfig()->getAllowChilds(),
-            'child_templates' => $this->getConfig()->getChildTemplates()
+            'child_templates' => $this->getConfig()->getChildTemplates(),
+            'path' => explode('/', trim($this->getRegistry()->getRouter()->getRequest()->getUri(), '/'))
         ];
     }
 
