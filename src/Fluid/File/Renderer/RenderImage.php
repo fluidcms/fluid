@@ -34,12 +34,8 @@ class RenderImage implements RendererInterface
     public function render()
     {
         $storage = $this->getRegistry()->getStorage();
-        $filename = FileMapper::FILES_DIRECTORY . DIRECTORY_SEPARATOR . $this->file->getId();
-        if ($this->file->hasVersion()) {
-            // todo $filename .= DIRECTORY_SEPARATOR . $this->file->getVersion();
-        }
-        $filename .= DIRECTORY_SEPARATOR . $this->file->getName();
-        if ($storage->branchFileExists($filename)) {
+        if ($this->file->exists()) {
+            $filename = $this->file->getFilename();
             $filepath = $storage->getBranchFilename($filename);
             $filetype = null;
             switch(exif_imagetype($filepath)) {

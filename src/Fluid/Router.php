@@ -129,9 +129,11 @@ class Router
                     }
                     if (isset($methods[$method])) {
                         $found = true;
+                        $this->getResponse()->setCode(Response::RESPONSE_CODE_OK);
                         call_user_func_array($methods[$method], $arguments);
                     } elseif (isset($methods[null])) {
                         $found = true;
+                        $this->getResponse()->setCode(Response::RESPONSE_CODE_OK);
                         call_user_func_array($methods[null], $arguments);
                     } else {
                         $this->getResponse()->setCode(Response::RESPONSE_CODE_METHOD_NOT_ALLOWED);
@@ -172,9 +174,13 @@ class Router
         if (stripos($uri, $this->getImagesPath()) === 0) {
             $args = explode('/', substr($uri, strlen($this->getImagesPath())));
             $file = new FileEntity($this->getRegistry());
-            $file->setId($args[0]);
-            $file->setName(end($args));
-            $this->getResponse()->setBody($file->render());
+            $file->setId(urldecode($args[0]));
+            $file->setName(urldecode(end($args)));
+            if ($file->exists()) {
+                $this->getResponse()->setCode(Response::RESPONSE_CODE_OK);
+                $this->getResponse()->setBody($file->render());
+                return $this->getResponse();
+            }
         }
         return null;
     }
@@ -221,6 +227,7 @@ class Router
         $page = $this->findPage($uri, $map->getPages());
 
         if ($page instanceof PageEntity) {
+            $this->getResponse()->setCode(Response::RESPONSE_CODE_OK);
             $this->getResponse()->setBody($page->render());
             return $this->getResponse();
         }
@@ -236,13 +243,17 @@ class Router
     public function dispatch()
     {
         $uri = $this->getRequest()->getUri();
+        $this->getResponse()->setCode(Response::RESPONSE_CODE_NOT_FOUND);
 
         $this->routeAdmin($uri) ||
         $this->routeImages($uri) ||
         $this->routeFiles($uri) ||
         $this->routePages($uri);
 
-        return $this->getResponse();
+        if ($this->getResponse()->getCode() !== Response::RESPONSE_CODE_NOT_FOUND) {
+            return $this->getResponse();
+        }
+        return null;
     }
 
     /**

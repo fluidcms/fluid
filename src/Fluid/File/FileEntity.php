@@ -109,6 +109,27 @@ class FileEntity implements JsonSerializable
     }
 
     /**
+     * @return string
+     */
+    public function getFilename()
+    {
+        $filename = FileMapper::FILES_DIRECTORY . DIRECTORY_SEPARATOR . $this->getId();
+        if ($this->hasVersion()) {
+            // todo $filename .= DIRECTORY_SEPARATOR . $this->file->getVersion();
+        }
+        $filename .= DIRECTORY_SEPARATOR . $this->getName();
+        return $filename;
+    }
+
+    /**
+     * @return bool
+     */
+    public function exists()
+    {
+        return $this->getRegistry()->getStorage()->branchFileExists($this->getFilename());
+    }
+
+    /**
      * @return mixed
      */
     public function isValid()
