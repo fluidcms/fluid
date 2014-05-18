@@ -100,7 +100,15 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     {
         return [
             'page' => $this,
-            'map' => $this->getRegistry()->getMap()
+            'map' => $this->getRegistry()->getMap(),
+            'name' => $this->getName(),
+            'language' => $this->getLanguage()->getLanguage(),
+            'pages' => $this->getPages(),
+            'url' => $this->getConfig()->getUrl(),
+            'template' => $this->getConfig()->getTemplate(),
+            'languages' => $this->getConfig()->getLanguages(),
+            'allow_childs' => $this->getConfig()->getAllowChilds(),
+            'child_templates' => $this->getConfig()->getChildTemplates()
         ];
     }
 
@@ -177,6 +185,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
 
     /**
      * @return string
+     * @deprecated
      */
     public function getId()
     {
@@ -393,10 +402,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
      */
     public function __isset($name)
     {
-        if ($name === 'pages') {
-            return true;
-        }
-        return $this->getVariables()->__isset($name);
+        return $this->offsetExists($name);
     }
 
     /**
@@ -406,10 +412,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
      */
     public function __call($name, array $arguments)
     {
-        if ($name === 'pages') {
-            return $this->getPages();
-        }
-        return $this->getVariables()->__call($name, $arguments);
+        return $this->offsetGet($name);
     }
 
     /**
@@ -418,10 +421,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
      */
     public function __get($name)
     {
-        if ($name === 'pages') {
-            return $this->getPages();
-        }
-        return $this->getVariables()->__get($name);
+        return $this->offsetGet($name);
     }
 
     /**
@@ -429,7 +429,8 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
      */
     public function count()
     {
-        return $this->getVariables()->count() + 1;
+        $array = ['name', 'language', 'pages', 'url', 'template', 'languages', 'allow_childs', 'child_templates'];
+        return $this->getVariables()->count() + count($array);
     }
 
     /**
@@ -438,7 +439,16 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     public function getIterator()
     {
         $array = array_merge(
-            ['pages' => $this->getPages()->getIterator()],
+            [
+                'name' => $this->getName(),
+                'language' => $this->getLanguage()->getLanguage(),
+                'pages' => $this->getPages()->getIterator(),
+                'url' => $this->getConfig()->getUrl(),
+                'template' => $this->getConfig()->getTemplate(),
+                'languages' => $this->getConfig()->getLanguages(),
+                'allow_childs' => $this->getConfig()->getAllowChilds(),
+                'child_templates' => $this->getConfig()->getChildTemplates(),
+            ],
             $this->getVariables()->getIterator()
         );
         return new ArrayIterator($array);
@@ -450,7 +460,9 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
      */
     public function offsetExists($offset)
     {
-        if ($offset === 'pages') {
+        if ($offset === 'name' || $offset === 'language' || $offset === 'pages' || $offset === 'url' || $offset === 'template' ||
+            $offset === 'languages' || $offset === 'allow_childs' || $offset === 'child_templates'
+        ) {
             return true;
         }
         return isset($this->getVariables()[$offset]);
@@ -462,10 +474,25 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
      */
     public function offsetGet($offset)
     {
-        if ($offset === 'pages') {
+        if ($offset === 'name') {
+            return $this->getName();
+        } elseif ($offset === 'language') {
+            return $this->getLanguage()->getLanguage();
+        } elseif ($offset === 'pages') {
             return $this->getPages();
+        } elseif ($offset === 'url') {
+            return $this->getConfig()->getUrl();
+        } elseif ($offset === 'template') {
+            return $this->getConfig()->getTemplate();
+        } elseif ($offset === 'languages') {
+            return $this->getConfig()->getLanguages();
+        } elseif ($offset === 'allow_childs') {
+            return $this->getConfig()->getAllowChilds();
+        } elseif ($offset === 'child_templates') {
+            return $this->getConfig()->getChildTemplates();
+        } else {
+            return $this->getVariables()[$offset];
         }
-        return $this->getVariables()[$offset];
     }
 
     /**
@@ -474,11 +501,25 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
      */
     public function offsetSet($offset, $value)
     {
-        if ($offset === 'pages') {
+        if ($offset === 'name') {
+            $this->setName($value);
+        } elseif ($offset === 'language') {
+            $this->getLanguage()->setLanguage($value);
+        } elseif ($offset === 'pages') {
             $this->setPages($value);
-            return;
+        } elseif ($offset === 'url') {
+            $this->getConfig()->setUrl($value);
+        } elseif ($offset === 'template') {
+            $this->getConfig()->setTemplate($value);
+        } elseif ($offset === 'languages') {
+            $this->getConfig()->setLanguages($value);
+        } elseif ($offset === 'allow_childs') {
+            $this->getConfig()->setAllowChilds($value);
+        } elseif ($offset === 'child_templates') {
+            $this->getConfig()->setChildTemplates($value);
+        } else {
+            $this->getVariables()[$offset] = $value;
         }
-        $this->getVariables()[$offset] = $value;
     }
 
     /**
@@ -486,10 +527,24 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
      */
     public function offsetUnset($offset)
     {
-        if ($offset === 'pages') {
+        if ($offset === 'name') {
+            $this->setName(null);
+        } elseif ($offset === 'pages') {
             $this->setPages(null);
-            return;
+        } elseif ($offset === 'language') {
+            $this->getLanguage()->setLanguage(null);
+        } elseif ($offset === 'url') {
+            $this->getConfig()->setUrl(null);
+        } elseif ($offset === 'template') {
+            $this->getConfig()->setTemplate(null);
+        } elseif ($offset === 'languages') {
+            $this->getConfig()->setLanguages(null);
+        } elseif ($offset === 'allow_childs') {
+            $this->getConfig()->setAllowChilds(null);
+        } elseif ($offset === 'child_templates') {
+            $this->getConfig()->setChildTemplates(null);
+        } else {
+            unset($this->getVariables()[$offset]);
         }
-        unset($this->getVariables()[$offset]);
     }
 }
