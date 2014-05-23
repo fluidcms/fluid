@@ -1,6 +1,7 @@
 <?php
 namespace Fluid;
 
+use Fluid\Page\PageEntity;
 use Fluid\Map\MapEntity;
 use Fluid\Daemon\Daemon;
 use Fluid\Session\SessionCollection;
@@ -355,5 +356,14 @@ class Fluid
     {
         $this->sessionToken = $sessionToken;
         return $this;
+    }
+
+    /**
+     * @param $page
+     * @return PageEntity
+     */
+    public function findPage($page)
+    {
+        return $this->getMap()->findPage($page);
     }
 }
