@@ -24,7 +24,7 @@ class TemplateEngine implements TemplateEngineInterface
      * @param TemplateConfig $config
      * @return string
      */
-    public function render($template, array $data, TemplateConfig $config)
+    public function renderPage($template, array $data, TemplateConfig $config)
     {
         // fixme
         return null;
