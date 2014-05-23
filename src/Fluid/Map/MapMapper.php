@@ -81,8 +81,11 @@ class MapMapper
         $this->mapXmlObject($map, $mapping);
 
         if (is_array($data)) {
+            $count = 0;
             foreach ($data as $page) {
-                $map->getPages()->addPage($page);
+                $page = $map->getPages()->addPage($page);
+                $map->getPages()->order($page, $count);
+                $count++;
             }
         }
         return $map;

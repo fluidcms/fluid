@@ -113,6 +113,26 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
+     * @param PageEntity $page
+     * @param int $order
+     */
+    public function order(PageEntity $page, $order)
+    {
+        $retval = [];
+        $count = 0;
+        foreach ($this->pages as $key => $item) {
+            if ($count === $order) {
+                $retval[$page->getName()] = $page;
+            }
+            if ($page !== $item) {
+                $retval[$item->getName()] = $item;
+            }
+            $count++;
+        }
+        $this->pages = $retval;
+    }
+
+    /**
      * @param array $mapping
      * @return PageEntity
      * @throws MissingMappingAttributeException
