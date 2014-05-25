@@ -59,6 +59,9 @@ class VariableEntity implements JsonSerializable
             case self::TYPE_CONTENT:
                 return (new RenderContent($this))->render();
             case self::TYPE_STRING:
+                if ($this->getValue() === null) {
+                    return '';
+                }
                 return $this->getValue();
         }
         return null;
@@ -140,6 +143,6 @@ class VariableEntity implements JsonSerializable
      */
     public function __toString()
     {
-        return $this->getValue();
+        return $this->renderValue();
     }
 }
