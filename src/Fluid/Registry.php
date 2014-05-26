@@ -76,7 +76,7 @@ class Registry implements RegistryInterface
     public function getConfig()
     {
         if (null === $this->config) {
-            return $this->setConfig(new Config);
+            $this->setConfig(new Config);
         }
         return $this->config;
     }
