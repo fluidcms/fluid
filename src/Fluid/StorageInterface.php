@@ -7,6 +7,8 @@ interface StorageInterface
     public function getDir();
     public function loadBranchData($filename);
     public function loadData($filename);
+    public function loadCreateBranchData($filename);
+    public function loadCreateData($filename);
     public function saveBranchData($filename, array $data);
     public function saveData($filename, array $data);
     public function getBranchFilename($file);

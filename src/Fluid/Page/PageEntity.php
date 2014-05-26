@@ -100,6 +100,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
 
     /**
      * @return array
+     * todo move to separate class SoC
      */
     public function getData()
     {
@@ -107,7 +108,8 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
             'page' => $this,
             'map' => $this->getRegistry()->getMap(),
             'name' => $this->getName(),
-            'language' => $this->getLanguage()->getLanguage(),
+            'language' => substr($this->getLanguage()->getLanguage(), 0, 2),
+            'locale' => str_replace('_', '-', $this->getLanguage()->getLanguage()),
             'pages' => $this->getPages(),
             'parent' => $this->getParent(),
             'url' => $this->getConfig()->getUrl(),

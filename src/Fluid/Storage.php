@@ -56,6 +56,30 @@ class Storage implements StorageInterface
     }
 
     /**
+     * @param string $filename
+     * @param bool $useBranch
+     * @return string|bool
+     * @throws PermissionDeniedException
+     */
+    protected function getFile($filename, $useBranch = true)
+    {
+        if ($useBranch) {
+            $dir = $this->getConfig()->getStorage() . DIRECTORY_SEPARATOR . $this->getConfig()->getBranch();
+        } else {
+            $dir = $this->getConfig()->getStorage() . DIRECTORY_SEPARATOR . self::DATA_DIR_NAME;
+        }
+
+        $dir = dirname($dir . DIRECTORY_SEPARATOR . $filename);
+        $filename = basename($filename);
+
+        if (file_exists($file = $dir . DIRECTORY_SEPARATOR . $filename)) {
+            return realpath($file);
+        }
+
+        return null;
+    }
+
+    /**
      * @param string $dir
      * @param bool $useBranch
      * @return array
@@ -101,7 +125,7 @@ class Storage implements StorageInterface
      */
     public function loadBranchData($filename)
     {
-        $file = $this->createFile($filename, true);
+        $file = $this->getFile($filename, true);
         return json_decode(file_get_contents($file), true);
     }
 
@@ -110,6 +134,26 @@ class Storage implements StorageInterface
      * @return array
      */
     public function loadData($filename)
+    {
+        $file = $this->getFile($filename, false);
+        return json_decode(file_get_contents($file), true);
+    }
+
+    /**
+     * @param string $filename
+     * @return array
+     */
+    public function loadCreateBranchData($filename)
+    {
+        $file = $this->createFile($filename, true);
+        return json_decode(file_get_contents($file), true);
+    }
+
+    /**
+     * @param string $filename
+     * @return array
+     */
+    public function loadCreateData($filename)
     {
         $file = $this->createFile($filename, false);
         return json_decode(file_get_contents($file), true);
