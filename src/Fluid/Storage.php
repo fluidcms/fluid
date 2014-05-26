@@ -34,6 +34,9 @@ class Storage implements StorageInterface
             $dir = $this->getConfig()->getStorage() . DIRECTORY_SEPARATOR . self::DATA_DIR_NAME;
         }
 
+        $dir = dirname($dir . DIRECTORY_SEPARATOR . $filename);
+        $filename = basename($filename);
+
         if (file_exists($file = $dir . DIRECTORY_SEPARATOR . $filename)) {
             return realpath($file);
         }
