@@ -100,25 +100,13 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
 
     /**
      * @return array
-     * todo move to separate class SoC
      */
     public function getData()
     {
-        return [
-            'page' => $this,
-            'map' => $this->getRegistry()->getMap(),
-            'name' => $this->getName(),
-            'language' => substr($this->getLanguage()->getLanguage(), 0, 2),
-            'locale' => str_replace('_', '-', $this->getLanguage()->getLanguage()),
-            'pages' => $this->getPages(),
-            'parent' => $this->getParent(),
-            'url' => $this->getConfig()->getUrl(),
-            'template' => $this->getConfig()->getTemplate(),
-            'languages' => $this->getConfig()->getLanguages(),
-            'allow_childs' => $this->getConfig()->getAllowChilds(),
-            'child_templates' => $this->getConfig()->getChildTemplates(),
-            'path' => explode('/', trim($this->getRegistry()->getRouter()->getRequest()->getUri(), '/'))
-        ];
+        $data = $this->getRegistry()->getData();
+        $data->setMap($this->getRegistry()->getMap());
+        $data->setRequest($this->getRegistry()->getRouter()->getRequest());
+        return $data->getPageData($this);
     }
 
     /**

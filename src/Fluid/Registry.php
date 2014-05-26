@@ -53,6 +53,11 @@ class Registry implements RegistryInterface
     private $router;
 
     /**
+     * @var Data
+     */
+    private $data;
+
+    /**
      * @return Fluid
      */
     public function getFluid()
@@ -244,5 +249,26 @@ class Registry implements RegistryInterface
         }
 
         return $this->router;
+    }
+
+    /**
+     * @return DataInterface
+     */
+    public function getData()
+    {
+        if (null === $this->data) {
+            $this->setData(new Data);
+        }
+        return $this->data;
+    }
+
+    /**
+     * @param DataInterface $data
+     * @return $this
+     */
+    public function setData(DataInterface $data)
+    {
+        $this->data = $data;
+        return $this;
     }
 }

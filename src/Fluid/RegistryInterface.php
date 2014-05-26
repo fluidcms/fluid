@@ -104,4 +104,15 @@ interface RegistryInterface
      * @return Router
      */
     public function getRouter();
+
+    /**
+     * @param DataInterface $data
+     * @return $this
+     */
+    public function setData(DataInterface $data);
+
+    /**
+     * @return DataInterface
+     */
+    public function getData();
 }
