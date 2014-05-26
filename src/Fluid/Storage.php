@@ -126,7 +126,10 @@ class Storage implements StorageInterface
     public function loadBranchData($filename)
     {
         $file = $this->getFile($filename, true);
-        return json_decode(file_get_contents($file), true);
+        if ($file !== null) {
+            return json_decode(file_get_contents($file), true);
+        }
+        return null;
     }
 
     /**
@@ -136,7 +139,10 @@ class Storage implements StorageInterface
     public function loadData($filename)
     {
         $file = $this->getFile($filename, false);
-        return json_decode(file_get_contents($file), true);
+        if ($file !== null) {
+            return json_decode(file_get_contents($file), true);
+        }
+        return null;
     }
 
     /**
