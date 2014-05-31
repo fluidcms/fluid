@@ -30,6 +30,7 @@ class Data implements DataInterface
             'locale' => str_replace('_', '-', $page->getLanguage()->getLanguage()),
             'pages' => $page->getPages(),
             'parent' => $page->getParent(),
+            'parents' => $page->getParents(),
             'url' => $page->getConfig()->getUrl(),
             'template' => $page->getConfig()->getTemplate(),
             'languages' => $page->getConfig()->getLanguages(),

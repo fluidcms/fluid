@@ -175,6 +175,20 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     }
 
     /**
+     * @return array
+     */
+    public function getParents()
+    {
+        $parents = [];
+        $page = $this;
+        while ($page->getParent()) {
+            $parents[] = $page->getParent();
+            $page = $page->getParent();
+        }
+        return $parents;
+    }
+
+    /**
      * @return bool
      */
     public function hasPages()
