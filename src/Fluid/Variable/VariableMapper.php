@@ -2,6 +2,7 @@
 namespace Fluid\Variable;
 
 use Fluid\Language\LanguageEntity;
+use Fluid\Page\PageEntity;
 use Fluid\StorageInterface;
 
 class VariableMapper
@@ -35,7 +36,7 @@ class VariableMapper
      */
     public function persist(VariableCollection $collection)
     {
-        $file = $this->getFile($collection->getPage()->getName(), $this->getLanguage()->getLanguage());
+        $file = $this->getFile($collection->getPage(), $this->getLanguage()->getLanguage());
         $this->getStorage()->saveBranchData($file, $collection->toArray());
     }
 
@@ -45,8 +46,9 @@ class VariableMapper
     public function mapCollection(VariableCollection $collection)
     {
         $variables = $collection->getPage()->getTemplate()->getVariables();
-        $file = $this->getFile($collection->getPage()->getName(), $this->getLanguage()->getLanguage());
+        $file = $this->getFile($collection->getPage(), $this->getLanguage()->getLanguage());
         $data = $this->getStorage()->loadBranchData($file);
+
         if (is_array($data)) {
             foreach ($data as $item) {
                 $variable = $variables->find($item['name']);
@@ -62,13 +64,21 @@ class VariableMapper
     }
 
     /**
-     * @param string $page
+     * @param PageEntity $page
      * @param string $language
      * @return string
      */
-    private function getFile($page, $language)
+    private function getFile(PageEntity $page, $language)
     {
-        return self::DATA_DIRECTORY . DIRECTORY_SEPARATOR . $page . '_' . $language . '.json';
+        $filepath = '';
+        $parent = $page->getParent();
+        while ($parent) {
+            $filepath .= DIRECTORY_SEPARATOR . $parent->getName();
+            $parent = $parent->getParent();
+        }
+
+        $filepath .= DIRECTORY_SEPARATOR . $page->getName();
+        return self::DATA_DIRECTORY . $filepath . '_' . $language . '.json';
     }
 
     /**
