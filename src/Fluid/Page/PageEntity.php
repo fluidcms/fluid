@@ -17,6 +17,8 @@ use Fluid\RegistryInterface;
 
 class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSerializable
 {
+    const GLOBAL_PAGE = 'global';
+
     /**
      * @var string
      */
@@ -178,6 +180,14 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     public function hasPages()
     {
         return $this->getPages()->count() !== 0;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGlobalPage()
+    {
+        return $this->getName() === self::GLOBAL_PAGE;
     }
 
     /**

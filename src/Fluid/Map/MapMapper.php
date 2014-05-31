@@ -80,6 +80,7 @@ class MapMapper
         $map->getConfig()->set($mapping->getConfig());
         $this->mapXmlObject($map, $mapping);
 
+        $map->getPages()->addGlobalPage();
         if (is_array($data)) {
             $count = 0;
             foreach ($data as $page) {
@@ -88,6 +89,7 @@ class MapMapper
                 $count++;
             }
         }
+
         return $map;
     }
 

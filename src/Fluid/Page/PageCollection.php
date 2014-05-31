@@ -158,6 +158,15 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
         return $page;
     }
 
+    public function addGlobalPage()
+    {
+        return $this->addPage([
+            'name' => PageEntity::GLOBAL_PAGE,
+            'languages' => $this->getRegistry()->getConfig()->getLanguages(),
+            'template' => PageEntity::GLOBAL_PAGE
+        ], false);
+    }
+
     /**
      * @param array $data
      * @param bool $search

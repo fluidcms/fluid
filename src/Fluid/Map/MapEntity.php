@@ -100,7 +100,7 @@ class MapEntity implements Countable, IteratorAggregate, ArrayAccess
     public function findPage($page)
     {
         $page = $this->getPages()->find($page);
-        if ($page instanceof PageEntity) {
+        if ($page instanceof PageEntity && !$page->isGlobalPage()) {
             $this->getEvent()->triggerWebsocketEvent('website:page:change', ['page' => $page->getName()]);
         }
         return $page;

@@ -35,7 +35,8 @@ class Data implements DataInterface
             'languages' => $page->getConfig()->getLanguages(),
             'allow_childs' => $page->getConfig()->getAllowChilds(),
             'child_templates' => $page->getConfig()->getChildTemplates(),
-            'path' => explode('/', trim($this->getRequest()->getUri(), '/'))
+            'path' => explode('/', trim($this->getRequest()->getUri(), '/')),
+            'global' => $this->getMap()->findPage('global')
         ];
     }
 
