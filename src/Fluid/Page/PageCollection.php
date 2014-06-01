@@ -158,6 +158,10 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
         return $page;
     }
 
+    /**
+     * @return PageEntity
+     * @throws InvalidDataException
+     */
     public function addGlobalPage()
     {
         return $this->addPage([
@@ -370,7 +374,9 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     public function count()
     {
-        return count($this->pages);
+        $pages = $this->pages;
+        unset($pages[PageEntity::GLOBAL_PAGE]);
+        return count($pages);
     }
 
     /**
@@ -378,7 +384,9 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     public function getIterator()
     {
-        return new ArrayIterator($this->pages);
+        $pages = $this->pages;
+        unset($pages[PageEntity::GLOBAL_PAGE]);
+        return new ArrayIterator($pages);
     }
 
     /**
