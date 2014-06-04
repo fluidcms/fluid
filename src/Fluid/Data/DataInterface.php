@@ -1,8 +1,9 @@
 <?php
-namespace Fluid;
+namespace Fluid\Data;
 
 use Fluid\Map\MapEntity;
 use Fluid\Page\PageEntity;
+use Fluid\Request;
 
 interface DataInterface
 {

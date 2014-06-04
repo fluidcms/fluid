@@ -366,4 +366,12 @@ class Fluid
     {
         return $this->getMap()->findPage($page);
     }
+
+    /**
+     * @return Event\Dispatcher
+     */
+    public function getEventDispatcher()
+    {
+        return $this->getRegistry()->getEventDispatcher();
+    }
 }

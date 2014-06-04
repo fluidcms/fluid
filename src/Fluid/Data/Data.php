@@ -1,11 +1,19 @@
 <?php
-namespace Fluid;
+namespace Fluid\Data;
 
-use Fluid\Page\PageEntity;
 use Fluid\Map\MapEntity;
+use Fluid\Page\PageEntity;
+use Fluid\RegistryInterface;
+use Fluid\Request;
 
+// todo split the mapper, the entity and the collection
 class Data implements DataInterface
 {
+    /**
+     * @var RegistryInterface
+     */
+    private $registry;
+
     /**
      * @var Request
      */
@@ -17,11 +25,20 @@ class Data implements DataInterface
     private $map;
 
     /**
+     * @param RegistryInterface $registry
+     */
+    public function __construct(RegistryInterface $registry)
+    {
+        $this->registry = $registry;
+    }
+
+    /**
      * @param PageEntity $page
      * @return array
      */
     public function getPageData(PageEntity $page)
     {
+        $this->registry->getEventDispatcher()->trigger($this, 'get');
         return [
             'page' => $page,
             'map' => $this->getMap(),

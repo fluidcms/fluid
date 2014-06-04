@@ -1,6 +1,8 @@
 <?php
 namespace Fluid;
 
+use Fluid\Data\DataInterface;
+use Fluid\Event\Dispatcher;
 use Fluid\Map\MapEntity;
 use Psr\Log\LoggerInterface;
 
@@ -64,13 +66,26 @@ interface RegistryInterface
     /**
      * @param Event $event
      * @return $this
+     * @deprecated
      */
     public function setEvent(Event $event);
 
     /**
      * @return Event
+     * @deprecated
      */
     public function getEvent();
+
+    /**
+     * @param Dispatcher $dispatcher
+     * @return $this
+     */
+    public function setEventDispatcher(Dispatcher $dispatcher);
+
+    /**
+     * @return Dispatcher
+     */
+    public function getEventDispatcher();
 
     /**
      * @param MapEntity $map

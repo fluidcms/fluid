@@ -1,6 +1,9 @@
 <?php
 namespace Fluid;
 
+use Fluid\Data\Data;
+use Fluid\Data\DataInterface;
+use Fluid\Event\Dispatcher;
 use Fluid\Map\MapEntity;
 use Fluid\Map\MapMapper;
 use Psr\Log\LoggerInterface;
@@ -34,8 +37,14 @@ class Registry implements RegistryInterface
 
     /**
      * @var Event
+     * @deprecated
      */
     private $event;
+
+    /**
+     * @var Dispatcher
+     */
+    private $dispatcher;
 
     /**
      * @var MapEntity
@@ -183,6 +192,27 @@ class Registry implements RegistryInterface
             $this->setEvent($event);
         }
         return $this->event;
+    }
+
+    /**
+     * @param Dispatcher $dispatcher
+     * @return $this
+     */
+    public function setEventDispatcher(Dispatcher $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+        return $this;
+    }
+
+    /**
+     * @return Dispatcher
+     */
+    public function getEventDispatcher()
+    {
+        if (null === $this->dispatcher) {
+            $this->setEventDispatcher(new Dispatcher());
+        }
+        return $this->dispatcher;
     }
 
     /**

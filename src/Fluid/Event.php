@@ -5,6 +5,11 @@ use InvalidArgumentException;
 use Fluid\WebsocketClient\EventWebsocketClient;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class Event
+ * @package Fluid
+ * @deprecated todo move the websockets events to the new event system
+ */
 class Event
 {
     /**
