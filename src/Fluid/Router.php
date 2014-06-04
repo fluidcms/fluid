@@ -12,6 +12,9 @@ use Fluid\Page\PageEntity;
 
 class Router
 {
+    const EVENT_BEFORE_ROUTING = 'beforeRouting';
+    const EVENT_AFTER_ROUTING = 'afterRouting';
+
     const PUBLIC_FILES_PATH = '/../../public';
     const DEVELOP_JAVASCRIPTS_PATH = '/../../javascripts';
     const DEVELOP_STYLESHEETS_PATH = '/../../stylesheets';
@@ -242,6 +245,7 @@ class Router
      */
     public function dispatch()
     {
+        $this->getRegistry()->getEventDispatcher()->trigger($this, self::EVENT_BEFORE_ROUTING);
         $uri = $this->getRequest()->getUri();
         $this->getResponse()->setCode(Response::RESPONSE_CODE_NOT_FOUND);
 
@@ -250,6 +254,7 @@ class Router
         $this->routeFiles($uri) ||
         $this->routePages($uri);
 
+        $this->getRegistry()->getEventDispatcher()->trigger($this, self::EVENT_AFTER_ROUTING);
         if ($this->getResponse()->getCode() !== Response::RESPONSE_CODE_NOT_FOUND) {
             return $this->getResponse();
         }
