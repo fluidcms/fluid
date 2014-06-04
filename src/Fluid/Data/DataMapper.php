@@ -33,7 +33,7 @@ class DataMapper
 
     /**
      * @param PageEntity $page
-     * @return array
+     * @return DataCollection
      */
     public function mapPage(PageEntity $page)
     {

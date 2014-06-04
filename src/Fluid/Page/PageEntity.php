@@ -101,7 +101,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     }
 
     /**
-     * @return array
+     * @return DataCollection
      */
     public function getData()
     {
