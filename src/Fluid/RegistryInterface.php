@@ -1,7 +1,7 @@
 <?php
 namespace Fluid;
 
-use Fluid\Data\DataInterface;
+use Fluid\Data\DataMapper;
 use Fluid\Event\Dispatcher;
 use Fluid\Map\MapEntity;
 use Psr\Log\LoggerInterface;
@@ -121,13 +121,13 @@ interface RegistryInterface
     public function getRouter();
 
     /**
-     * @param DataInterface $data
+     * @param DataMapper $dataMapper
      * @return $this
      */
-    public function setData(DataInterface $data);
+    public function setDataMapper(DataMapper $dataMapper);
 
     /**
-     * @return DataInterface
+     * @return DataMapper
      */
-    public function getData();
+    public function getDataMapper();
 }

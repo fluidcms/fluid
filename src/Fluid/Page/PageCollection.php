@@ -12,10 +12,6 @@ use Fluid\Exception\MissingMappingAttributeException;
 use Fluid\Exception\InvalidDataException;
 use Fluid\RegistryInterface;
 
-/**
- * Class PageCollection
- * @package Fluid\Page
- */
 class PageCollection implements Countable, IteratorAggregate, ArrayAccess
 {
     /**

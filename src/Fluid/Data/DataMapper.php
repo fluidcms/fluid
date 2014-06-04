@@ -6,8 +6,7 @@ use Fluid\Page\PageEntity;
 use Fluid\RegistryInterface;
 use Fluid\Request;
 
-// todo split the mapper, the entity and the collection
-class Data implements DataInterface
+class DataMapper
 {
     /**
      * @var RegistryInterface
@@ -36,26 +35,9 @@ class Data implements DataInterface
      * @param PageEntity $page
      * @return array
      */
-    public function getPageData(PageEntity $page)
+    public function mapPage(PageEntity $page)
     {
-        $this->registry->getEventDispatcher()->trigger($this, 'get');
-        return [
-            'page' => $page,
-            'map' => $this->getMap(),
-            'name' => $page->getName(),
-            'language' => substr($page->getLanguage()->getLanguage(), 0, 2),
-            'locale' => str_replace('_', '-', $page->getLanguage()->getLanguage()),
-            'pages' => $page->getPages(),
-            'parent' => $page->getParent(),
-            'parents' => $page->getParents(),
-            'url' => $page->getConfig()->getUrl(),
-            'template' => $page->getConfig()->getTemplate(),
-            'languages' => $page->getConfig()->getLanguages(),
-            'allow_childs' => $page->getConfig()->getAllowChilds(),
-            'child_templates' => $page->getConfig()->getChildTemplates(),
-            'path' => explode('/', trim($this->getRequest()->getUri(), '/')),
-            'global' => $this->getMap()->findPage('global')
-        ];
+        return new DataCollection($this->registry, $this->getRequest(), $this->getMap(), $page);
     }
 
     /**

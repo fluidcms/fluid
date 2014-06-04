@@ -1,7 +1,7 @@
 <?php
 namespace Fluid;
 
-use Fluid\Data\Data;
+use Fluid\Data\DataMapper;
 use Fluid\Data\DataInterface;
 use Fluid\Event\Dispatcher;
 use Fluid\Map\MapEntity;
@@ -62,9 +62,9 @@ class Registry implements RegistryInterface
     private $router;
 
     /**
-     * @var Data
+     * @var DataMapper
      */
-    private $data;
+    private $dataMapper;
 
     /**
      * @return Fluid
@@ -282,23 +282,23 @@ class Registry implements RegistryInterface
     }
 
     /**
-     * @return DataInterface
+     * @return DataMapper
      */
-    public function getData()
+    public function getDataMapper()
     {
-        if (null === $this->data) {
-            $this->setData(new Data);
+        if (null === $this->dataMapper) {
+            $this->setDataMapper(new DataMapper($this));
         }
-        return $this->data;
+        return $this->dataMapper;
     }
 
     /**
-     * @param DataInterface $data
+     * @param DataMapper $dataMapper
      * @return $this
      */
-    public function setData(DataInterface $data)
+    public function setDataMapper(DataMapper $dataMapper)
     {
-        $this->data = $data;
+        $this->dataMapper = $dataMapper;
         return $this;
     }
 }

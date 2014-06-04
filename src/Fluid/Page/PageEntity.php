@@ -105,10 +105,10 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
      */
     public function getData()
     {
-        $data = $this->getRegistry()->getData();
+        $data = $this->getRegistry()->getDataMapper();
         $data->setMap($this->getRegistry()->getMap());
         $data->setRequest($this->getRegistry()->getRouter()->getRequest());
-        return $data->getPageData($this);
+        return $data->mapPage($this);
     }
 
     /**
