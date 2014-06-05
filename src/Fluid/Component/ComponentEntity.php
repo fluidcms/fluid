@@ -2,6 +2,7 @@
 namespace Fluid\Component;
 
 use Countable;
+use Fluid\RegistryInterface;
 use IteratorAggregate;
 use ArrayAccess;
 use ArrayIterator;
@@ -33,16 +34,19 @@ class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @var StorageInterface
+     * @deprecated
      */
     private $storage;
 
     /**
      * @var XmlMappingLoaderInterface
+     * @deprecated
      */
     private $xmlMappingLoader;
 
     /**
      * @var ComponentMapper
+     * @deprecated
      */
     private $mapper;
 
@@ -52,23 +56,24 @@ class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess
     private $collection;
 
     /**
-     * @param StorageInterface $storage
-     * @param XmlMappingLoaderInterface $xmlMappingLoader
-     * @param ComponentMapper|null $mapper
+     * @var RegistryInterface
+     */
+    private $registry;
+
+    /**
+     * @param RegistryInterface $registry
      * @param ComponentCollection|null $collection
      */
-    public function __construct(StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, ComponentMapper $mapper = null, ComponentCollection $collection = null)
+    public function __construct(RegistryInterface $registry, ComponentCollection $collection = null)
     {
-        $this->setStorage($storage);
-        $this->setXmlMappingLoader($xmlMappingLoader);
-        if (null !== $mapper) {
-            $this->setMapper($mapper);
-        }
+        $this->registry = $registry;
+        $this->setStorage($this->registry->getStorage());
+        $this->setXmlMappingLoader($this->registry->getXmlMappingLoader());
         if (null !== $collection) {
             $this->setCollection($collection);
         }
         $this->setConfig(new ComponentConfig($this));
-        $this->setVariables(new VariableCollection(null, $storage, $xmlMappingLoader));
+        $this->setVariables(new VariableCollection($this->registry));
     }
 
     /**
@@ -103,6 +108,7 @@ class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess
     /**
      * @param ComponentMapper $mapper
      * @return $this
+     * @deprecated
      */
     public function setMapper(ComponentMapper $mapper)
     {
@@ -112,10 +118,11 @@ class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @return ComponentMapper
+     * @deprecated
      */
     public function getMapper()
     {
-        return $this->mapper;
+        return $this->registry->getComponentMapper();
     }
 
     /**
@@ -157,6 +164,7 @@ class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess
     /**
      * @param StorageInterface $storage
      * @return $this
+     * @deprecated
      */
     public function setStorage(StorageInterface $storage)
     {
@@ -166,6 +174,7 @@ class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @return StorageInterface
+     * @deprecated
      */
     public function getStorage()
     {
@@ -211,6 +220,7 @@ class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess
     /**
      * @param XmlMappingLoaderInterface $xmlMappingLoader
      * @return $this
+     * @deprecated
      */
     public function setXmlMappingLoader(XmlMappingLoaderInterface $xmlMappingLoader)
     {
@@ -220,6 +230,7 @@ class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @return XmlMappingLoaderInterface
+     * @deprecated
      */
     public function getXmlMappingLoader()
     {

@@ -10,6 +10,7 @@ use Fluid\Variable\VariableGroup;
 class ComponentMapper
 {
     const MAPPING_DIRECTORY = 'components';
+    const FILE_EXTENSION = '.xml';
 
     /**
      * @var StorageInterface
@@ -62,7 +63,10 @@ class ComponentMapper
      */
     public function mapEntity(ComponentEntity $component)
     {
-        $mapping = $this->getXmlMappingLoader()->load($component->getXmlMappingFile());
+        if (null === $component->getXmlMappingFile()) {
+            $component->setXmlMappingFile(self::MAPPING_DIRECTORY . DIRECTORY_SEPARATOR . $component->getName() . self::FILE_EXTENSION);
+        }
+        $mapping = $this->registry->getXmlMappingLoader()->load($component->getXmlMappingFile());
 
         if (!count($mapping->getContent()) && !count($mapping->getConfig())) {
             return null;
@@ -102,7 +106,17 @@ class ComponentMapper
      */
     public function mapObject(array $attributes)
     {
+        $component = new ComponentEntity($this->registry);
+        if (isset($attributes['component'])) {
+            $component->setName($attributes['component']);
+        }
+        $this->mapEntity($component);
 
+        if (isset($attributes['variables'])) {
+            $component->getVariables()->setValues($attributes['variables']);
+        }
+        var_dump($component);
+        die('yo');
     }
 
     /**

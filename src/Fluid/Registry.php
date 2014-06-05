@@ -9,6 +9,7 @@ use Fluid\Map\MapMapper;
 use Psr\Log\LoggerInterface;
 use Fluid\Page\PageMapper;
 use Fluid\Variable\VariableMapper;
+use Fluid\Component\ComponentMapper;
 
 class Registry implements RegistryInterface
 {
@@ -77,6 +78,11 @@ class Registry implements RegistryInterface
      * @var VariableMapper
      */
     private $variableMapper;
+
+    /**
+     * @var ComponentMapper
+     */
+    private $componentMapper;
 
     /**
      * @return Fluid
@@ -353,6 +359,27 @@ class Registry implements RegistryInterface
     public function setVariableMapper(VariableMapper $variableMapper)
     {
         $this->variableMapper = $variableMapper;
+        return $this;
+    }
+
+    /**
+     * @return ComponentMapper
+     */
+    public function getComponentMapper()
+    {
+        if (null === $this->componentMapper) {
+            $this->setComponentMapper(new ComponentMapper($this));
+        }
+        return $this->componentMapper;
+    }
+
+    /**
+     * @param ComponentMapper $componentMapper
+     * @return $this
+     */
+    public function setComponentMapper(ComponentMapper $componentMapper)
+    {
+        $this->componentMapper = $componentMapper;
         return $this;
     }
 }

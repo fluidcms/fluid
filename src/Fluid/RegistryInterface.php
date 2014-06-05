@@ -7,6 +7,7 @@ use Fluid\Map\MapEntity;
 use Psr\Log\LoggerInterface;
 use Fluid\Page\PageMapper;
 use Fluid\Variable\VariableMapper;
+use Fluid\Component\ComponentMapper;
 
 interface RegistryInterface
 {
@@ -154,4 +155,15 @@ interface RegistryInterface
      * @return $this
      */
     public function setVariableMapper(VariableMapper $variableMapper);
+
+    /**
+     * @return ComponentMapper
+     */
+    public function getComponentMapper();
+
+    /**
+     * @param ComponentMapper $componentMapper
+     * @return $this
+     */
+    public function setComponentMapper(ComponentMapper $componentMapper);
 }

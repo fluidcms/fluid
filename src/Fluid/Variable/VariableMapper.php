@@ -72,6 +72,36 @@ class VariableMapper
     }
 
     /**
+     * @param VariableCollection $collection
+     * @param array $variables
+     * @return VariableCollection
+     */
+    public function mapCollectionValues(VariableCollection $collection, array $variables)
+    {
+        foreach ($variables as $data) {
+            if (isset($data['name'])) {
+                if ($variable = $collection->find($data['name'])) {
+                    $this->mapVariableValue($variable, $data);
+                }
+            }
+        }
+        return $collection;
+    }
+
+    /**
+     * @param VariableEntity $variable
+     * @param array $attributes
+     * @return VariableEntity
+     */
+    public function mapVariableValue(VariableEntity $variable, array $attributes)
+    {
+        if ($attributes['type'] === ) {
+
+        }
+        return $variable;
+    }
+
+    /**
      * @param PageEntity $page
      * @param string $language
      * @return string
