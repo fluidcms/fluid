@@ -1,6 +1,7 @@
 <?php
 namespace Fluid\Template;
 
+use Fluid\RegistryInterface;
 use Fluid\Variable\VariableCollection;
 use Fluid\XmlMappingLoaderInterface;
 
@@ -33,19 +34,26 @@ class TemplateEntity
 
     /**
      * @var XmlMappingLoaderInterface
+     * @deprecated
      */
     private $xmlMappingLoader;
 
     /**
+     * @var RegistryInterface
+     */
+    private $registry;
+
+    /**
+     * @param RegistryInterface $registry
      * @param string $template
      * @param VariableCollection $variables
-     * @param XmlMappingLoaderInterface $xmlMappingLoader
      */
-    public function __construct($template, VariableCollection $variables, XmlMappingLoaderInterface $xmlMappingLoader)
+    public function __construct(RegistryInterface $registry, $template, VariableCollection $variables)
     {
+        $this->registry = $registry;
         $this->setTemplate($template);
         $this->setVariables($variables);
-        $this->setXmlMappingLoader($xmlMappingLoader);
+        $this->setXmlMappingLoader($registry->getXmlMappingLoader());
         $this->setConfig(new TemplateConfig);
     }
 
@@ -146,15 +154,17 @@ class TemplateEntity
 
     /**
      * @return $this
+     * @deprecated
      */
     private function createMapper()
     {
-        return $this->setMapper(new TemplateMapper($this->getXmlMappingLoader()));
+        return $this->setMapper(new TemplateMapper($this->registry));
     }
 
     /**
      * @param XmlMappingLoaderInterface $xmlMappingLoader
      * @return $this
+     * @deprecated
      */
     public function setXmlMappingLoader(XmlMappingLoaderInterface $xmlMappingLoader)
     {
@@ -164,6 +174,7 @@ class TemplateEntity
 
     /**
      * @return XmlMappingLoaderInterface
+     * @deprecated
      */
     public function getXmlMappingLoader()
     {

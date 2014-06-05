@@ -61,7 +61,7 @@ class MapEntity implements Countable, IteratorAggregate, ArrayAccess
         $this->setRegistry($registry);
         $this->setMapper($mapper);
         $this->setLanguage($language);
-        $this->setPages(new PageCollection($this->getRegistry(), $mapper->getStorage(), $mapper->getXmlMappingLoader(), null, $this->getLanguage()));
+        $this->setPages(new PageCollection($this->getRegistry(), $this->getLanguage()));
         $this->setConfig(new MapConfig($this));
         if (null !== $event) {
             $this->setEvent($event);

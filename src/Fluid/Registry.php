@@ -7,6 +7,8 @@ use Fluid\Event\Dispatcher;
 use Fluid\Map\MapEntity;
 use Fluid\Map\MapMapper;
 use Psr\Log\LoggerInterface;
+use Fluid\Page\PageMapper;
+use Fluid\Variable\VariableMapper;
 
 class Registry implements RegistryInterface
 {
@@ -65,6 +67,16 @@ class Registry implements RegistryInterface
      * @var DataMapper
      */
     private $dataMapper;
+
+    /**
+     * @var PageMapper
+     */
+    private $pageMapper;
+
+    /**
+     * @var VariableMapper
+     */
+    private $variableMapper;
 
     /**
      * @return Fluid
@@ -299,6 +311,48 @@ class Registry implements RegistryInterface
     public function setDataMapper(DataMapper $dataMapper)
     {
         $this->dataMapper = $dataMapper;
+        return $this;
+    }
+
+    /**
+     * @return PageMapper
+     */
+    public function getPageMapper()
+    {
+        if (null === $this->pageMapper) {
+            $this->setPageMapper(new PageMapper($this));
+        }
+        return $this->pageMapper;
+    }
+
+    /**
+     * @param PageMapper $pageMapper
+     * @return $this
+     */
+    public function setPageMapper(PageMapper $pageMapper)
+    {
+        $this->pageMapper = $pageMapper;
+        return $this;
+    }
+
+    /**
+     * @return VariableMapper
+     */
+    public function getVariableMapper()
+    {
+        if (null === $this->variableMapper) {
+            $this->setVariableMapper(new VariableMapper($this));
+        }
+        return $this->variableMapper;
+    }
+
+    /**
+     * @param VariableMapper $variableMapper
+     * @return $this
+     */
+    public function setVariableMapper(VariableMapper $variableMapper)
+    {
+        $this->variableMapper = $variableMapper;
         return $this;
     }
 }

@@ -83,21 +83,18 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
 
     /**
      * @param RegistryInterface $registry
-     * @param StorageInterface $storage
-     * @param XmlMappingLoaderInterface $xmlMappingLoader
-     * @param PageMapper $pageMapper
      * @param LanguageEntity $language
      */
-    public function __construct(RegistryInterface $registry, StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, PageMapper $pageMapper, LanguageEntity $language)
+    public function __construct(RegistryInterface $registry, LanguageEntity $language)
     {
-        $this->setRegistry($registry);
-        $this->setStorage($storage);
-        $this->setXmlMappingLoader($xmlMappingLoader);
-        $this->setPageMapper($pageMapper);
+        $this->registry = $registry;
+        $this->setStorage($registry->getStorage());
+        $this->setXmlMappingLoader($registry->getXmlMappingLoader());
+        $this->setPageMapper($registry->getPageMapper());
         $this->setConfig(new PageConfig($this));
         $this->setLanguage($language);
-        $this->setPages(new PageCollection($this->getRegistry(), $storage, $xmlMappingLoader, $pageMapper, $this->getLanguage(), $this));
-        $this->setVariables(new VariableCollection($this, $storage, $xmlMappingLoader, null, $this->getLanguage()));
+        $this->setPages(new PageCollection($registry, $this->getLanguage(), $this));
+        $this->setVariables(new VariableCollection($this->registry, $this, $this->getLanguage()));
     }
 
     /**
@@ -239,7 +236,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
      */
     private function createTemplate()
     {
-        $template = new TemplateEntity($this->getConfig()->getTemplate(), $this->variables, $this->getXmlMappingLoader());
+        $template = new TemplateEntity($this->registry, $this->getConfig()->getTemplate(), $this->variables);
         $this->setTemplate($template);
         if (!$this->variables->isMapped()) {
             $this->variables->mapCollection();

@@ -1,6 +1,7 @@
 <?php
 namespace Fluid\Variable;
 
+use Fluid\RegistryInterface;
 use Fluid\Variable\Renderer\RenderContent;
 use JsonSerializable;
 
@@ -30,9 +31,22 @@ class VariableEntity implements JsonSerializable
     private $value;
 
     /**
+     * @var RegistryInterface
+     */
+    private $registry;
+
+    /**
+     * @param RegistryInterface $registry
+     */
+    public function __construct(RegistryInterface $registry)
+    {
+        $this->registry = $registry;
+    }
+
+    /**
      * @return array
      */
-    function jsonSerialize()
+    public function jsonSerialize()
     {
         return [
             'name' => $this->getName(),
@@ -57,7 +71,7 @@ class VariableEntity implements JsonSerializable
     {
         switch ($this->getType()) {
             case self::TYPE_CONTENT:
-                return (new RenderContent($this))->render();
+                return (new RenderContent($this->registry, $this))->render();
             case self::TYPE_STRING:
                 if ($this->getValue() === null) {
                     return '';

@@ -1,6 +1,7 @@
 <?php
 namespace Fluid\Page;
 
+use Fluid\RegistryInterface;
 use Fluid\StorageInterface;
 use Fluid\XmlMappingLoaderInterface;
 
@@ -8,22 +9,29 @@ class PageMapper
 {
     /**
      * @var StorageInterface
+     * @deprecated
      */
     private $storage;
 
     /**
      * @var XmlMappingLoaderInterface
+     * @deprecated
      */
     private $xmlMappingLoader;
 
     /**
-     * @param StorageInterface $storage
-     * @param XmlMappingLoaderInterface $xmlMappingLoader
+     * @var RegistryInterface
      */
-    public function __construct(StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader)
+    private $registry;
+
+    /**
+     * @param RegistryInterface $registry
+     */
+    public function __construct(RegistryInterface $registry)
     {
-        $this->setStorage($storage);
-        $this->setXmlMappingLoader($xmlMappingLoader);
+        $this->registry = $registry;
+        $this->setStorage($registry->getStorage());
+        $this->setXmlMappingLoader($registry->getXmlMappingLoader());
     }
 
     /**
@@ -49,6 +57,7 @@ class PageMapper
     /**
      * @param StorageInterface $storage
      * @return $this
+     * @deprecated
      */
     public function setStorage(StorageInterface $storage)
     {
@@ -58,6 +67,7 @@ class PageMapper
 
     /**
      * @return StorageInterface
+     * @deprecated
      */
     public function getStorage()
     {
@@ -67,6 +77,7 @@ class PageMapper
     /**
      * @param XmlMappingLoaderInterface $xmlMappingLoader
      * @return $this
+     * @deprecated
      */
     public function setXmlMappingLoader(XmlMappingLoaderInterface $xmlMappingLoader)
     {
@@ -76,6 +87,7 @@ class PageMapper
 
     /**
      * @return XmlMappingLoaderInterface
+     * @deprecated
      */
     public function getXmlMappingLoader()
     {

@@ -32,6 +32,7 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @var PageMapper
+     * @deprecated
      */
     private $mapper;
 
@@ -58,22 +59,15 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @param RegistryInterface $registry
-     * @param StorageInterface $storage
-     * @param XmlMappingLoaderInterface $xmlMappingLoader
-     * @param PageMapper|null $pageMapper
      * @param LanguageEntity $language
      * @param PageEntity|null $parent
      */
-    public function __construct(RegistryInterface $registry, StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, PageMapper $pageMapper = null, LanguageEntity $language, PageEntity $parent = null)
+    public function __construct(RegistryInterface $registry, LanguageEntity $language, PageEntity $parent = null)
     {
         $this->setRegistry($registry);
-        $this->setStorage($storage);
-        $this->setXmlMappingLoader($xmlMappingLoader);
-        if (null !== $pageMapper) {
-            $this->setMapper($pageMapper);
-        } else {
-            $this->setMapper(new PageMapper($storage, $xmlMappingLoader));
-        }
+        $this->setStorage($registry->getStorage());
+        $this->setXmlMappingLoader($registry->getXmlMappingLoader());
+        $this->setMapper($registry->getPageMapper());
         $this->setLanguage($language);
         if (null !== $parent) {
             $this->setParent($parent);
@@ -180,7 +174,7 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
                 $page = $this->find($data['name']);
             }
             if (!isset($page)) {
-                $page = new PageEntity($this->getRegistry(), $this->getStorage(), $this->getXmlMappingLoader(), $this->getMapper(), $this->getLanguage());
+                $page = new PageEntity($this->getRegistry(), $this->getLanguage());
             }
 
             $this->pages[$data['name']] = $page;
@@ -286,6 +280,7 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
     /**
      * @param PageMapper $mapper
      * @return $this
+     * @deprecated
      */
     public function setMapper(PageMapper $mapper)
     {
@@ -295,6 +290,7 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @return PageMapper
+     * @deprecated
      */
     public function getMapper()
     {

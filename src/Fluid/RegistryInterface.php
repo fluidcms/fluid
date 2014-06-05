@@ -5,6 +5,8 @@ use Fluid\Data\DataMapper;
 use Fluid\Event\Dispatcher;
 use Fluid\Map\MapEntity;
 use Psr\Log\LoggerInterface;
+use Fluid\Page\PageMapper;
+use Fluid\Variable\VariableMapper;
 
 interface RegistryInterface
 {
@@ -130,4 +132,26 @@ interface RegistryInterface
      * @return DataMapper
      */
     public function getDataMapper();
+
+    /**
+     * @return PageMapper
+     */
+    public function getPageMapper();
+
+    /**
+     * @param PageMapper $pageMapper
+     * @return $this
+     */
+    public function setPageMapper(PageMapper $pageMapper);
+
+    /**
+     * @return VariableMapper
+     */
+    public function getVariableMapper();
+
+    /**
+     * @param VariableMapper $variableMapper
+     * @return $this
+     */
+    public function setVariableMapper(VariableMapper $variableMapper);
 }

@@ -1,6 +1,7 @@
 <?php
 namespace Fluid\Template;
 
+use Fluid\RegistryInterface;
 use Fluid\Variable\VariableCollection;
 use Fluid\Variable\VariableEntity;
 use Fluid\Variable\VariableGroup;
@@ -12,15 +13,22 @@ class TemplateMapper
 
     /**
      * @var XmlMappingLoaderInterface
+     * @deprecated
      */
     private $xmlMappingLoader;
 
     /**
-     * @param XmlMappingLoaderInterface $xmlMappingLoader
+     * @var RegistryInterface
      */
-    public function __construct(XmlMappingLoaderInterface $xmlMappingLoader)
+    private $registry;
+
+    /**
+     * @param RegistryInterface $registry
+     */
+    public function __construct(RegistryInterface $registry)
     {
-        $this->setXmlMappingLoader($xmlMappingLoader);
+        $this->registry = $registry;
+        $this->setXmlMappingLoader($registry->getXmlMappingLoader());
     }
 
     /**
@@ -35,17 +43,17 @@ class TemplateMapper
         foreach ($mapping->getContent() as $key => $value) {
             if (isset($value['name']) && $value['name'] === 'variable') {
                 $attributes = isset($value['attributes']) ? $value['attributes'] : [];
-                $variable = new VariableEntity;
+                $variable = new VariableEntity($this->registry);
                 $variable->set($attributes);
                 $variables->addVariable($variable);
             } elseif (isset($value['name']) && $value['name'] === 'group') {
                 $attributes = isset($value['attributes']) ? $value['attributes'] : [];
-                $variableGroup = new VariableGroup();
+                $variableGroup = new VariableGroup($this->registry);
                 $variableGroup->setName(isset($attributes['name']) ? $attributes['name'] : null);
                 foreach ($value as $groupVariable) {
                     if (isset($groupVariable['name']) && $groupVariable['name'] === 'variable') {
                         $attributes = isset($groupVariable['attributes']) ? $groupVariable['attributes'] : [];
-                        $variable = new VariableEntity;
+                        $variable = new VariableEntity($this->registry);
                         $variable->set($attributes);
                         $variableGroup->add($variable);
                     }
@@ -58,6 +66,7 @@ class TemplateMapper
     /**
      * @param XmlMappingLoaderInterface $xmlMappingLoader
      * @return $this
+     * @deprecated
      */
     public function setXmlMappingLoader(XmlMappingLoaderInterface $xmlMappingLoader)
     {
@@ -67,6 +76,7 @@ class TemplateMapper
 
     /**
      * @return XmlMappingLoaderInterface
+     * @deprecated
      */
     public function getXmlMappingLoader()
     {

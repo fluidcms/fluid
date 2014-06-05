@@ -1,6 +1,9 @@
 <?php
 namespace Fluid\Variable\Renderer;
 
+use Fluid\Component\ComponentEntity;
+use Fluid\Component\ComponentMapper;
+use Fluid\RegistryInterface;
 use Fluid\Variable\VariableEntity;
 
 class RenderContent implements RendererInterface
@@ -16,10 +19,17 @@ class RenderContent implements RendererInterface
     private $variable;
 
     /**
+     * @var RegistryInterface
+     */
+    private $registry;
+
+    /**
+     * @param RegistryInterface $registry;
      * @param VariableEntity $variable
      */
-    public function __construct(VariableEntity $variable)
+    public function __construct(RegistryInterface $registry, VariableEntity $variable)
     {
+        $this->registry = $registry;
         $this->setVariable($variable);
     }
 
@@ -41,6 +51,22 @@ class RenderContent implements RendererInterface
                 );
                 $text = str_replace("{{$image['id']}}", $imageHtml, $text);
             }
+        }
+        return $text;
+    }
+
+    /**
+     * @param array $components
+     * @param string $text
+     * @return string
+     */
+    private function renderComponents(array $components, $text)
+    {
+        $componentMapper = new ComponentMapper($this->registry);
+        foreach ($components as $component) {
+            $componentMapper->mapObject($component);
+            var_dump($component); die();
+            new RenderComponent();
         }
         return $text;
     }
@@ -68,6 +94,9 @@ class RenderContent implements RendererInterface
         }
         if (count($images)) {
             $text = $this->renderImages($images, $text);
+        }
+        if (count($components)) {
+            $text = $this->renderComponents($components, $text);
         }
         return $text;
     }

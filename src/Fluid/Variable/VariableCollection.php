@@ -3,6 +3,7 @@ namespace Fluid\Variable;
 
 use Countable;
 use Fluid\Language\LanguageEntity;
+use Fluid\RegistryInterface;
 use IteratorAggregate;
 use ArrayAccess;
 use ArrayIterator;
@@ -24,16 +25,19 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @var StorageInterface
+     * @deprecated
      */
     private $storage;
 
     /**
      * @var VariableMapper
+     * @deprecated
      */
     private $mapper;
 
     /**
      * @var XmlMappingLoaderInterface
+     * @deprecated
      */
     private $xmlMappingLoader;
 
@@ -48,32 +52,35 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
     private $isMapped = false;
 
     /**
+     * @var RegistryInterface
+     */
+    private $registry;
+
+    /**
+     * @param RegistryInterface $registry
      * @param PageEntity $page
-     * @param StorageInterface $storage
-     * @param XmlMappingLoaderInterface $xmlMappingLoader
-     * @param null|VariableMapper $mapper
      * @param LanguageEntity $language
      */
-    public function __construct(PageEntity $page = null, StorageInterface $storage, XmlMappingLoaderInterface $xmlMappingLoader, VariableMapper $mapper = null, LanguageEntity $language = null)
+    public function __construct(RegistryInterface $registry, PageEntity $page = null, LanguageEntity $language = null)
     {
+        $this->registry = $registry;
         if (null !== $language) {
             $this->setLanguage($language);
         }
         if (null !== $page) {
             $this->setPage($page);
         }
-        $this->setStorage($storage);
-        $this->setXmlMappingLoader($xmlMappingLoader);
-        if (null !== $mapper) {
-            $this->setMapper($mapper);
-        }
+        $this->setStorage($registry->getStorage());
+        $this->setXmlMappingLoader($registry->getXmlMappingLoader());
     }
 
     public function mapCollection()
     {
         if (null !== $this->getPage()) {
             $this->setIsMapped(true);
-            $this->getMapper()->mapCollection($this);
+            $mapper = $this->registry->getVariableMapper();
+            $mapper->setLanguage($this->getLanguage());
+            $mapper->mapCollection($this);
         }
     }
 
@@ -114,7 +121,7 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
             $this->variables = [];
             foreach ($variables as $data) {
                 if (isset($data['name']) && isset($data['type'])) {
-                    $variable = new VariableEntity();
+                    $variable = new VariableEntity($this->registry);
                     $variable->setName($data['name']);
                     $variable->setType($data['type']);
                     if (isset($data['value'])) {
@@ -185,6 +192,7 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
     /**
      * @param StorageInterface $storage
      * @return $this
+     * @deprecated
      */
     public function setStorage(StorageInterface $storage)
     {
@@ -194,6 +202,7 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @return StorageInterface
+     * @deprecated
      */
     public function getStorage()
     {
@@ -203,6 +212,7 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
     /**
      * @param XmlMappingLoaderInterface $xmlMappingLoader
      * @return $this
+     * @deprecated
      */
     public function setXmlMappingLoader(XmlMappingLoaderInterface $xmlMappingLoader)
     {
@@ -212,6 +222,7 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @return XmlMappingLoaderInterface
+     * @deprecated
      */
     public function getXmlMappingLoader()
     {
@@ -221,6 +232,7 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
     /**
      * @param VariableMapper $mapper
      * @return $this
+     * @deprecated
      */
     public function setMapper(VariableMapper $mapper)
     {
@@ -230,6 +242,7 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @return VariableMapper
+     * @deprecated
      */
     public function getMapper()
     {
@@ -241,6 +254,7 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @return $this
+     * @deprecated
      */
     private function createMapper()
     {

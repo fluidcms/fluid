@@ -3,6 +3,7 @@ namespace Fluid\Variable;
 
 use Fluid\Language\LanguageEntity;
 use Fluid\Page\PageEntity;
+use Fluid\RegistryInterface;
 use Fluid\StorageInterface;
 
 class VariableMapper
@@ -16,16 +17,23 @@ class VariableMapper
 
     /**
      * @var StorageInterface
+     * @deprecated
      */
     private $storage;
 
     /**
-     * @param LanguageEntity $language
-     * @param StorageInterface $storage
+     * @var RegistryInterface
      */
-    public function __construct(StorageInterface $storage, LanguageEntity $language = null)
+    private $registry;
+
+    /**
+     * @param RegistryInterface $registry
+     * @param LanguageEntity $language
+     */
+    public function __construct(RegistryInterface $registry, LanguageEntity $language = null)
     {
-        $this->setStorage($storage);
+        $this->registry = $registry;
+        $this->setStorage($registry->getStorage());
         if (null !== $language) {
             $this->setLanguage($language);
         }
@@ -102,6 +110,7 @@ class VariableMapper
     /**
      * @param StorageInterface $storage
      * @return $this
+     * @deprecated
      */
     public function setStorage(StorageInterface $storage)
     {
@@ -111,6 +120,7 @@ class VariableMapper
 
     /**
      * @return StorageInterface
+     * @deprecated
      */
     public function getStorage()
     {

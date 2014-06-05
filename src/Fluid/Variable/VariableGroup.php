@@ -2,6 +2,7 @@
 namespace Fluid\Variable;
 
 use Countable;
+use Fluid\RegistryInterface;
 use IteratorAggregate;
 use ArrayAccess;
 use ArrayIterator;
@@ -17,6 +18,19 @@ class VariableGroup implements Countable, IteratorAggregate, ArrayAccess
      * @var array|VariableEntity[]
      */
     private $variables;
+
+    /**
+     * @var RegistryInterface
+     */
+    private $registry;
+
+    /**
+     * @param RegistryInterface $registry
+     */
+    public function __construct(RegistryInterface $registry)
+    {
+        $this->registry = $registry;
+    }
 
     /**
      * @return array
@@ -44,7 +58,7 @@ class VariableGroup implements Countable, IteratorAggregate, ArrayAccess
             $this->variables = [];
             foreach ($variables as $data) {
                 if (isset($data['name']) && isset($data['type'])) {
-                    $variable = new VariableEntity();
+                    $variable = new VariableEntity($this->registry);
                     $variable->setName($data['name']);
                     $variable->setType($data['type']);
                     if (isset($data['value'])) {
