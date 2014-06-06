@@ -62,11 +62,13 @@ class RenderContent implements RendererInterface
      */
     private function renderComponents(array $components, $text)
     {
-        $componentMapper = new ComponentMapper($this->registry);
+        $componentMapper = $this->registry->getComponentMapper();
         foreach ($components as $component) {
-            $componentMapper->mapObject($component);
-            var_dump($component); die();
-            new RenderComponent();
+            if (!$component instanceof ComponentEntity) {
+                $component = $componentMapper->mapObject($component);
+            }
+            $result = $component->render();
+            echo '';
         }
         return $text;
     }

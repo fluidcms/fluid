@@ -3,6 +3,7 @@ namespace Fluid\Data;
 
 use ArrayIterator;
 use Countable;
+use Fluid\Component\ComponentEntity;
 use IteratorAggregate;
 use ArrayAccess;
 use Fluid\Map\MapEntity;
@@ -12,7 +13,8 @@ use Fluid\Request;
 
 class DataCollection implements Countable, IteratorAggregate, ArrayAccess
 {
-    const CREATE_EVENT = 'create';
+    const CREATE_PAGE_EVENT = 'createPage';
+    const CREATE_COMPONENT_EVENT = 'createComponent';
 
     /**
      * @var MapEntity
@@ -20,9 +22,9 @@ class DataCollection implements Countable, IteratorAggregate, ArrayAccess
     private $map;
 
     /**
-     * @var PageEntity
+     * @var Request
      */
-    private $page;
+    private $request;
 
     /**
      * @var array
@@ -33,16 +35,23 @@ class DataCollection implements Countable, IteratorAggregate, ArrayAccess
      * @param RegistryInterface $registry
      * @param Request $request
      * @param MapEntity $map
-     * @param PageEntity $page
      */
-    public function __construct(RegistryInterface $registry, Request $request, MapEntity $map, PageEntity $page)
+    public function __construct(RegistryInterface $registry, Request $request, MapEntity $map)
     {
+        $this->registry = $registry;
         $this->map = $map;
-        $this->page = $page;
+        $this->request = $request;
+    }
 
+    /**
+     * @param PageEntity $page
+     * @return $this
+     */
+    public function createPageData(PageEntity $page)
+    {
         $this->data = [
             'page' => $page,
-            'map' => $map,
+            'map' => $this->map,
             'name' => $page->getName(),
             'language' => substr($page->getLanguage()->getLanguage(), 0, 2),
             'locale' => str_replace('_', '-', $page->getLanguage()->getLanguage()),
@@ -54,11 +63,32 @@ class DataCollection implements Countable, IteratorAggregate, ArrayAccess
             'languages' => $page->getConfig()->getLanguages(),
             'allow_childs' => $page->getConfig()->getAllowChilds(),
             'child_templates' => $page->getConfig()->getChildTemplates(),
-            'path' => explode('/', trim($request->getUri(), '/')),
-            'global' => $map->findPage('global')
+            'path' => explode('/', trim($this->request->getUri(), '/')),
+            'global' => $this->map->findPage('global')
         ];
 
-        $registry->getEventDispatcher()->trigger($this, self::CREATE_EVENT);
+        $this->registry->getEventDispatcher()->trigger($this, self::CREATE_PAGE_EVENT);
+        return $this;
+    }
+
+    /**
+     * @param ComponentEntity $component
+     * @return $this
+     */
+    public function createComponentData(ComponentEntity $component)
+    {
+        $this->data = [
+            'component' => $component,
+            'map' => $this->map,
+            'name' => $component->getName(),
+            'language' => substr($component->getLanguage()->getLanguage(), 0, 2),
+            'locale' => str_replace('_', '-', $component->getLanguage()->getLanguage()),
+            'path' => explode('/', trim($this->request->getUri(), '/')),
+            'global' => $this->map->findPage('global')
+        ];
+
+        $this->registry->getEventDispatcher()->trigger($this, self::CREATE_COMPONENT_EVENT);
+        return $this;
     }
 
     /**

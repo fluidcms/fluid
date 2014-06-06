@@ -1,6 +1,7 @@
 <?php
 namespace Fluid\Data;
 
+use Fluid\Component\ComponentEntity;
 use Fluid\Map\MapEntity;
 use Fluid\Page\PageEntity;
 use Fluid\RegistryInterface;
@@ -37,7 +38,16 @@ class DataMapper
      */
     public function mapPage(PageEntity $page)
     {
-        return new DataCollection($this->registry, $this->getRequest(), $this->getMap(), $page);
+        return (new DataCollection($this->registry, $this->getRequest(), $this->getMap()))->createPageData($page);
+    }
+
+    /**
+     * @param ComponentEntity $component
+     * @return DataCollection
+     */
+    public function mapComponent(ComponentEntity $component)
+    {
+        return (new DataCollection($this->registry, $this->getRequest(), $this->getMap()))->createComponentData($component);
     }
 
     /**

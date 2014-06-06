@@ -121,7 +121,7 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
             $this->variables = [];
             foreach ($variables as $data) {
                 if (isset($data['name']) && isset($data['type'])) {
-                    $variable = new VariableEntity($this->registry);
+                    $variable = new VariableEntity($this->registry, $this->language);
                     $variable->setName($data['name']);
                     $variable->setType($data['type']);
                     if (isset($data['value'])) {
@@ -129,7 +129,7 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
                     }
                     $this->addVariable($variable);
                 } elseif (isset($data['name']) && isset($data['variables'])) {
-                    $variable = new VariableGroup($this->registry);
+                    $variable = new VariableGroup($this->registry, $this->language);
                     $variable->setName($data['name']);
                     $variable->reset($data['variables']);
                     $this->addVariable($variable);

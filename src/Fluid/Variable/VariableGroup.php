@@ -2,6 +2,7 @@
 namespace Fluid\Variable;
 
 use Countable;
+use Fluid\Language\LanguageEntity;
 use Fluid\RegistryInterface;
 use IteratorAggregate;
 use ArrayAccess;
@@ -26,8 +27,9 @@ class VariableGroup implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @param RegistryInterface $registry
+     * @param LanguageEntity $language
      */
-    public function __construct(RegistryInterface $registry)
+    public function __construct(RegistryInterface $registry, LanguageEntity $language = null)
     {
         $this->registry = $registry;
     }

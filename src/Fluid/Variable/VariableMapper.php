@@ -95,8 +95,8 @@ class VariableMapper
      */
     public function mapVariableValue(VariableEntity $variable, array $attributes)
     {
-        if ($attributes['type'] === ) {
-
+        if ($attributes['type'] === 'string') {
+            $variable->setValue(isset($attributes['value']) ? $attributes['value'] : null);
         }
         return $variable;
     }

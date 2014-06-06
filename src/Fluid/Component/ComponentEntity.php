@@ -1,6 +1,9 @@
 <?php
 namespace Fluid\Component;
 
+use Fluid\Component\Renderer\RenderComponent;
+use Fluid\Data\DataCollection;
+use JsonSerializable;
 use Countable;
 use Fluid\RegistryInterface;
 use IteratorAggregate;
@@ -10,7 +13,7 @@ use Fluid\Variable\VariableCollection;
 use Fluid\StorageInterface;
 use Fluid\XmlMappingLoaderInterface;
 
-class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess
+class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSerializable
 {
     /**
      * @var string
@@ -61,6 +64,11 @@ class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess
     private $registry;
 
     /**
+     * @var
+     */
+    private $renderer;
+
+    /**
      * @param RegistryInterface $registry
      * @param ComponentCollection|null $collection
      */
@@ -78,13 +86,43 @@ class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @return array
+     * @deprecated
      */
     public function toArray()
     {
+        return $this->jsonSerialize();
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize() {
         return [
             'config' => $this->getConfig()->toArray(),
             'variables' => $this->getVariables()->toArray()
         ];
+    }
+
+    /**
+     * @return DataCollection
+     */
+    public function getData()
+    {
+        $data = $this->registry->getDataMapper();
+        $data->setMap($this->registry->getMap());
+        $data->setRequest($this->registry->getRouter()->getRequest());
+        return $data->mapComponent($this);
+    }
+
+    /**
+     * @return string
+     */
+    public function render()
+    {
+        if (null === $this->renderer) {
+            $this->renderer = new RenderComponent($this->registry, $this);
+        }
+        return $this->renderer->render();
     }
 
     /**

@@ -113,10 +113,9 @@ class ComponentMapper
         $this->mapEntity($component);
 
         if (isset($attributes['variables'])) {
-            $component->getVariables()->setValues($attributes['variables']);
+            $this->registry->getVariableMapper()->mapCollectionValues($component->getVariables(), $attributes['variables']);
         }
-        var_dump($component);
-        die('yo');
+        return $component;
     }
 
     /**

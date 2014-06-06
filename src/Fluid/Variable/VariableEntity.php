@@ -1,6 +1,7 @@
 <?php
 namespace Fluid\Variable;
 
+use Fluid\Language\LanguageEntity;
 use Fluid\RegistryInterface;
 use Fluid\Variable\Renderer\RenderContent;
 use JsonSerializable;
@@ -37,8 +38,9 @@ class VariableEntity implements JsonSerializable
 
     /**
      * @param RegistryInterface $registry
+     * @param LanguageEntity $language
      */
-    public function __construct(RegistryInterface $registry)
+    public function __construct(RegistryInterface $registry, LanguageEntity $language = null)
     {
         $this->registry = $registry;
     }

@@ -2,6 +2,7 @@
 namespace Fluid\Page;
 
 use Countable;
+use Fluid\Data\DataCollection;
 use JsonSerializable;
 use Fluid\Language\LanguageEntity;
 use Fluid\Page\Renderer\RenderPage;
