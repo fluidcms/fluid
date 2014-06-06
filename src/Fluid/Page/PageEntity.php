@@ -384,6 +384,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
 
     /**
      * @return int
+     * todo: make sure these are not provided by the data object
      */
     public function count()
     {
@@ -393,6 +394,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
 
     /**
      * @return ArrayIterator
+     * todo: make sure these are not provided by the data object
      */
     public function getIterator()
     {
@@ -415,6 +417,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     /**
      * @param int $offset
      * @return bool
+     * todo: make sure these are not provided by the data object
      */
     public function offsetExists($offset)
     {
@@ -429,6 +432,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     /**
      * @param int $offset
      * @return mixed
+     * todo: make sure these are not provided by the data object
      */
     public function offsetGet($offset)
     {
@@ -456,6 +460,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     /**
      * @param int $offset
      * @param mixed $value
+     * todo: make sure these are not provided by the data object
      */
     public function offsetSet($offset, $value)
     {
@@ -482,6 +487,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
 
     /**
      * @param int $offset
+     * todo: make sure these are not provided by the data object
      */
     public function offsetUnset($offset)
     {

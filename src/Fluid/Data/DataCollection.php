@@ -53,8 +53,8 @@ class DataCollection implements Countable, IteratorAggregate, ArrayAccess
             'page' => $page,
             'map' => $this->map,
             'name' => $page->getName(),
-            'language' => substr($page->getLanguage()->getLanguage(), 0, 2),
-            'locale' => str_replace('_', '-', $page->getLanguage()->getLanguage()),
+            'language' => substr($this->registry->getLanguage()->getLanguage(), 0, 2),
+            'locale' => str_replace('_', '-', $this->registry->getLanguage()->getLanguage()),
             'pages' => $page->getPages(),
             'parent' => $page->getParent(),
             'parents' => $page->getParents(),
@@ -81,8 +81,8 @@ class DataCollection implements Countable, IteratorAggregate, ArrayAccess
             'component' => $component,
             'map' => $this->map,
             'name' => $component->getName(),
-            'language' => substr($component->getLanguage()->getLanguage(), 0, 2),
-            'locale' => str_replace('_', '-', $component->getLanguage()->getLanguage()),
+            'language' => substr($this->registry->getLanguage()->getLanguage(), 0, 2),
+            'locale' => str_replace('_', '-', $this->registry->getLanguage()->getLanguage()),
             'path' => explode('/', trim($this->request->getUri(), '/')),
             'global' => $this->map->findPage('global')
         ];

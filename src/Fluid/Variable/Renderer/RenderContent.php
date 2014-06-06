@@ -64,11 +64,11 @@ class RenderContent implements RendererInterface
     {
         $componentMapper = $this->registry->getComponentMapper();
         foreach ($components as $component) {
+            $id = $component['id'];
             if (!$component instanceof ComponentEntity) {
                 $component = $componentMapper->mapObject($component);
             }
-            $result = $component->render();
-            echo '';
+            $text = str_replace('{' . $id . '}', $component->render(), $text);
         }
         return $text;
     }

@@ -31,8 +31,7 @@ class RenderComponent implements RendererInterface
      */
     public function render()
     {
-        $render = $this->registry->getTemplateEngine()->renderCompontent($this->component);
-        return $this->getRegistry()->getTemplateEngine()->renderPage($this->page);
+        return $this->registry->getTemplateEngine()->renderCompontent($this->component);
     }
 
     /**

@@ -10,8 +10,7 @@ use IteratorAggregate;
 use ArrayAccess;
 use ArrayIterator;
 use Fluid\Variable\VariableCollection;
-use Fluid\StorageInterface;
-use Fluid\XmlMappingLoaderInterface;
+use Fluid\Component\Renderer\RendererInterface;
 
 class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSerializable
 {
@@ -36,24 +35,6 @@ class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess, Json
     private $xmlMappingFile;
 
     /**
-     * @var StorageInterface
-     * @deprecated
-     */
-    private $storage;
-
-    /**
-     * @var XmlMappingLoaderInterface
-     * @deprecated
-     */
-    private $xmlMappingLoader;
-
-    /**
-     * @var ComponentMapper
-     * @deprecated
-     */
-    private $mapper;
-
-    /**
      * @var ComponentCollection
      */
     private $collection;
@@ -64,7 +45,7 @@ class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess, Json
     private $registry;
 
     /**
-     * @var
+     * @var RendererInterface
      */
     private $renderer;
 
@@ -75,8 +56,6 @@ class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess, Json
     public function __construct(RegistryInterface $registry, ComponentCollection $collection = null)
     {
         $this->registry = $registry;
-        $this->setStorage($this->registry->getStorage());
-        $this->setXmlMappingLoader($this->registry->getXmlMappingLoader());
         if (null !== $collection) {
             $this->setCollection($collection);
         }
@@ -144,26 +123,6 @@ class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess, Json
     }
 
     /**
-     * @param ComponentMapper $mapper
-     * @return $this
-     * @deprecated
-     */
-    public function setMapper(ComponentMapper $mapper)
-    {
-        $this->mapper = $mapper;
-        return $this;
-    }
-
-    /**
-     * @return ComponentMapper
-     * @deprecated
-     */
-    public function getMapper()
-    {
-        return $this->registry->getComponentMapper();
-    }
-
-    /**
      * @param ComponentConfig $config
      * @return $this
      */
@@ -197,26 +156,6 @@ class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess, Json
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * @param StorageInterface $storage
-     * @return $this
-     * @deprecated
-     */
-    public function setStorage(StorageInterface $storage)
-    {
-        $this->storage = $storage;
-        return $this;
-    }
-
-    /**
-     * @return StorageInterface
-     * @deprecated
-     */
-    public function getStorage()
-    {
-        return $this->storage;
     }
 
     /**
@@ -256,23 +195,31 @@ class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess, Json
     }
 
     /**
-     * @param XmlMappingLoaderInterface $xmlMappingLoader
-     * @return $this
-     * @deprecated
+     * @param string $name
+     * @return bool
      */
-    public function setXmlMappingLoader(XmlMappingLoaderInterface $xmlMappingLoader)
+    public function __isset($name)
     {
-        $this->xmlMappingLoader = $xmlMappingLoader;
-        return $this;
+        return $this->offsetExists($name);
     }
 
     /**
-     * @return XmlMappingLoaderInterface
-     * @deprecated
+     * @param string $name
+     * @param array $arguments
+     * @return mixed
      */
-    public function getXmlMappingLoader()
+    public function __call($name, array $arguments)
     {
-        return $this->xmlMappingLoader;
+        return $this->offsetGet($name);
+    }
+
+    /**
+     * @param string $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        return $this->offsetGet($name);
     }
 
     /**
@@ -280,15 +227,26 @@ class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess, Json
      */
     public function count()
     {
-        //return count($this->items);
+        $array = ['name', 'file', 'macro', 'icon'];
+        return $this->getVariables()->count() + count($array);
     }
+
 
     /**
      * @return ArrayIterator
      */
     public function getIterator()
     {
-        //return new ArrayIterator($this->items);
+        $array = array_merge(
+            [
+                'name' => $this->getName(),
+                'file' => $this->getConfig()->getFile(),
+                'macro' => $this->getConfig()->getMacro(),
+                'icon' => $this->getConfig()->getIcon()
+            ],
+            $this->getVariables()->getIterator()
+        );
+        return new ArrayIterator($array);
     }
 
     /**
@@ -297,7 +255,10 @@ class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess, Json
      */
     public function offsetExists($offset)
     {
-        //return isset($this->items[$offset]);
+        if ($offset === 'name' || $offset === 'file' || $offset === 'macro' || $offset === 'icon') {
+            return true;
+        }
+        return isset($this->getVariables()[$offset]);
     }
 
     /**
@@ -306,8 +267,17 @@ class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess, Json
      */
     public function offsetGet($offset)
     {
-        //return $this->getVariables()[$offset];
-        //return $this->items[$offset];
+        if ($offset === 'name') {
+            return $this->getName();
+        } elseif ($offset === 'file') {
+            return $this->getConfig()->getFile();
+        } elseif ($offset === 'macro') {
+            return $this->getConfig()->getMacro();
+        } elseif ($offset === 'icon') {
+            return $this->getConfig()->getIcon();
+        } else {
+            return $this->getVariables()[$offset];
+        }
     }
 
     /**
@@ -316,7 +286,17 @@ class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess, Json
      */
     public function offsetSet($offset, $value)
     {
-        //$this->items[$offset] = $value;
+        if ($offset === 'name') {
+            $this->setName($value);
+        } elseif ($offset === 'file') {
+            $this->getConfig()->setFile($value);
+        } elseif ($offset === 'macro') {
+            $this->getConfig()->setMacro($value);
+        } elseif ($offset === 'icon') {
+            $this->getConfig()->setIcon($value);
+        } else {
+            $this->getVariables()[$offset] = $value;
+        }
     }
 
     /**
@@ -324,6 +304,16 @@ class ComponentEntity implements Countable, IteratorAggregate, ArrayAccess, Json
      */
     public function offsetUnset($offset)
     {
-        //unset($this->items[$offset]);
+        if ($offset === 'name') {
+            $this->setName(null);
+        } elseif ($offset === 'file') {
+            $this->getConfig()->setFile(null);
+        } elseif ($offset === 'macro') {
+            $this->getConfig()->setMacro(null);
+        } elseif ($offset === 'icon') {
+            $this->getConfig()->setIcon(null);
+        } else {
+            unset($this->getVariables()[$offset]);
+        }
     }
 }
