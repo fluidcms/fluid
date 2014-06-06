@@ -25,29 +25,6 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
     protected $pages = [];
 
     /**
-     * @var StorageInterface
-     * @deprecated Use registry instead
-     */
-    private $storage;
-
-    /**
-     * @var PageMapper
-     * @deprecated
-     */
-    private $mapper;
-
-    /**
-     * @var XmlMappingLoaderInterface
-     * @deprecated Use registry instead
-     */
-    private $xmlMappingLoader;
-
-    /**
-     * @var LanguageEntity
-     */
-    private $language;
-
-    /**
      * @var RegistryInterface
      */
     private $registry;
@@ -59,16 +36,11 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @param RegistryInterface $registry
-     * @param LanguageEntity $language
      * @param PageEntity|null $parent
      */
-    public function __construct(RegistryInterface $registry, LanguageEntity $language, PageEntity $parent = null)
+    public function __construct(RegistryInterface $registry, PageEntity $parent = null)
     {
         $this->setRegistry($registry);
-        $this->setStorage($registry->getStorage());
-        $this->setXmlMappingLoader($registry->getXmlMappingLoader());
-        $this->setMapper($registry->getPageMapper());
-        $this->setLanguage($language);
         if (null !== $parent) {
             $this->setParent($parent);
         }
@@ -143,7 +115,7 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
             $page = $this->addPage(['name' => $mapping['attributes']['name']], false);
         }
 
-        $this->getMapper()->mapXmlObject($page, $mapping);
+        $this->registry->getPageMapper()->mapXmlObject($page, $mapping);
 
         return $page;
     }
@@ -174,7 +146,7 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
                 $page = $this->find($data['name']);
             }
             if (!isset($page)) {
-                $page = new PageEntity($this->getRegistry(), $this->getLanguage());
+                $page = new PageEntity($this->getRegistry());
             }
 
             $this->pages[$data['name']] = $page;
@@ -235,84 +207,6 @@ class PageCollection implements Countable, IteratorAggregate, ArrayAccess
     public function getPath()
     {
         return $this->path;
-    }
-
-    /**
-     * @param StorageInterface $storage
-     * @return $this
-     * @deprecated Use registry instead
-     */
-    public function setStorage(StorageInterface $storage)
-    {
-        $this->storage = $storage;
-        return $this;
-    }
-
-    /**
-     * @return StorageInterface
-     * @deprecated Use registry instead
-     */
-    public function getStorage()
-    {
-        return $this->storage;
-    }
-
-    /**
-     * @param XmlMappingLoaderInterface $xmlMappingLoader
-     * @return $this
-     * @deprecated Use registry instead
-     */
-    public function setXmlMappingLoader(XmlMappingLoaderInterface $xmlMappingLoader)
-    {
-        $this->xmlMappingLoader = $xmlMappingLoader;
-        return $this;
-    }
-
-    /**
-     * @return XmlMappingLoaderInterface
-     * @deprecated Use registry instead
-     */
-    public function getXmlMappingLoader()
-    {
-        return $this->xmlMappingLoader;
-    }
-
-    /**
-     * @param PageMapper $mapper
-     * @return $this
-     * @deprecated
-     */
-    public function setMapper(PageMapper $mapper)
-    {
-        $this->mapper = $mapper;
-        return $this;
-    }
-
-    /**
-     * @return PageMapper
-     * @deprecated
-     */
-    public function getMapper()
-    {
-        return $this->mapper;
-    }
-
-    /**
-     * @param LanguageEntity $language
-     * @return $this
-     */
-    public function setLanguage(LanguageEntity $language)
-    {
-        $this->language = $language;
-        return $this;
-    }
-
-    /**
-     * @return LanguageEntity
-     */
-    public function getLanguage()
-    {
-        return $this->language;
     }
 
     /**

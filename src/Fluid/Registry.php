@@ -91,6 +91,11 @@ class Registry implements RegistryInterface
     private $language;
 
     /**
+     * @var MapMapper
+     */
+    private $mapMapper;
+
+    /**
      * @return Fluid
      */
     public function getFluid()
@@ -255,11 +260,30 @@ class Registry implements RegistryInterface
     public function getMap()
     {
         if (null === $this->map) {
-            $mapper = new MapMapper($this, $this->getStorage(), $this->getXmlMappingLoader(), $this->getEvent(), $this->getFluid()->getLanguage());
-            $this->setMap($mapper->map());
+            $this->setMap($this->getMapMapper()->map());
         }
-
         return $this->map;
+    }
+
+    /**
+     * @param $mapMapper
+     * @return $this
+     */
+    public function setMapMapper($mapMapper)
+    {
+        $this->mapMapper = $mapMapper;
+        return $this;
+    }
+
+    /**
+     * @return MapMapper
+     */
+    public function getMapMapper()
+    {
+        if (null === $this->mapMapper) {
+            $this->setMapMapper(new MapMapper($this, $this->getEvent()));
+        }
+        return $this->mapMapper;
     }
 
     /**
@@ -394,6 +418,9 @@ class Registry implements RegistryInterface
      */
     public function getLanguage()
     {
+        if (null === $this->language) {
+            $this->setLanguage(new LanguageEntity($this->getConfig()->getLanguage()));
+        }
         return $this->language;
     }
 

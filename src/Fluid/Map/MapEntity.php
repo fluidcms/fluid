@@ -21,11 +21,6 @@ use Fluid\RegistryInterface;
 class MapEntity implements Countable, IteratorAggregate, ArrayAccess
 {
     /**
-     * @var MapMapper
-     */
-    private $mapper;
-
-    /**
      * @var MapConfig
      */
     private $config;
@@ -37,13 +32,9 @@ class MapEntity implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @var Event
+     * @deprecated
      */
     private $event;
-
-    /**
-     * @var LanguageEntity
-     */
-    private $language;
 
     /**
      * @var RegistryInterface
@@ -52,16 +43,12 @@ class MapEntity implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @param RegistryInterface $registry
-     * @param MapMapper $mapper
      * @param Event $event
-     * @param LanguageEntity $language
      */
-    public function __construct(RegistryInterface $registry, MapMapper $mapper, Event $event = null, LanguageEntity $language)
+    public function __construct(RegistryInterface $registry, Event $event = null)
     {
         $this->setRegistry($registry);
-        $this->setMapper($mapper);
-        $this->setLanguage($language);
-        $this->setPages(new PageCollection($this->getRegistry(), $this->getLanguage()));
+        $this->setPages(new PageCollection($this->getRegistry()));
         $this->setConfig(new MapConfig($this));
         if (null !== $event) {
             $this->setEvent($event);
@@ -143,24 +130,6 @@ class MapEntity implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
-     * @param MapMapper $mapper
-     * @return $this
-     */
-    public function setMapper(MapMapper $mapper)
-    {
-        $this->mapper = $mapper;
-        return $this;
-    }
-
-    /**
-     * @return MapMapper
-     */
-    public function getMapper()
-    {
-        return $this->mapper;
-    }
-
-    /**
      * @param MapConfig $config
      * @return $this
      */
@@ -181,6 +150,7 @@ class MapEntity implements Countable, IteratorAggregate, ArrayAccess
     /**
      * @param Event $event
      * @return $this
+     * @deprecated
      */
     public function setEvent(Event $event)
     {
@@ -190,28 +160,11 @@ class MapEntity implements Countable, IteratorAggregate, ArrayAccess
 
     /**
      * @return Event
+     * @deprecated
      */
     public function getEvent()
     {
         return $this->event;
-    }
-
-    /**
-     * @param LanguageEntity $language
-     * @return $this
-     */
-    public function setLanguage(LanguageEntity $language)
-    {
-        $this->language = $language;
-        return $this;
-    }
-
-    /**
-     * @return LanguageEntity
-     */
-    public function getLanguage()
-    {
-        return $this->language;
     }
 
     /**
@@ -282,7 +235,7 @@ class MapEntity implements Countable, IteratorAggregate, ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
-        return $this->getPages()->offsetSet($offset, $value);
+        $this->getPages()->offsetSet($offset, $value);
     }
 
     /**
@@ -290,6 +243,6 @@ class MapEntity implements Countable, IteratorAggregate, ArrayAccess
      */
     public function offsetUnset($offset)
     {
-        return $this->getPages()->offsetUnset($offset);
+        $this->getPages()->offsetUnset($offset);
     }
 }

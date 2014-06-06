@@ -50,11 +50,6 @@ class Fluid
     private $sessionToken;
 
     /**
-     * @var LanguageEntity
-     */
-    private $language;
-
-    /**
      * @var RegistryInterface
      */
     private $registry;
@@ -295,7 +290,7 @@ class Fluid
      */
     public function setLanguage(LanguageEntity $language)
     {
-        $this->language = $language;
+        $this->registry->setLanguage($language);
         return $this;
     }
 
@@ -304,18 +299,7 @@ class Fluid
      */
     public function getLanguage()
     {
-        if (null === $this->language) {
-            $this->createLanguage();
-        }
-        return $this->language;
-    }
-
-    /**
-     * @return $this
-     */
-    private function createLanguage()
-    {
-        return $this->setLanguage(new LanguageEntity($this->getConfig()->getLanguage()));
+        return $this->registry->getLanguage();
     }
 
     /**

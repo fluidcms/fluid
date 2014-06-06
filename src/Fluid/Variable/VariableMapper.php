@@ -1,25 +1,12 @@
 <?php
 namespace Fluid\Variable;
 
-use Fluid\Language\LanguageEntity;
 use Fluid\Page\PageEntity;
 use Fluid\RegistryInterface;
-use Fluid\StorageInterface;
 
 class VariableMapper
 {
     const DATA_DIRECTORY = 'pages';
-
-    /**
-     * @var LanguageEntity
-     */
-    private $language;
-
-    /**
-     * @var StorageInterface
-     * @deprecated
-     */
-    private $storage;
 
     /**
      * @var RegistryInterface
@@ -28,15 +15,10 @@ class VariableMapper
 
     /**
      * @param RegistryInterface $registry
-     * @param LanguageEntity $language
      */
-    public function __construct(RegistryInterface $registry, LanguageEntity $language = null)
+    public function __construct(RegistryInterface $registry)
     {
         $this->registry = $registry;
-        $this->setStorage($registry->getStorage());
-        if (null !== $language) {
-            $this->setLanguage($language);
-        }
     }
 
     /**
@@ -44,8 +26,8 @@ class VariableMapper
      */
     public function persist(VariableCollection $collection)
     {
-        $file = $this->getFile($collection->getPage(), $this->getLanguage()->getLanguage());
-        $this->getStorage()->saveBranchData($file, $collection->toArray());
+        $file = $this->getFile($collection->getPage(), $this->registry->getLanguage()->getLanguage());
+        $this->registry->getStorage()->saveBranchData($file, $collection->toArray());
     }
 
     /**
@@ -54,8 +36,8 @@ class VariableMapper
     public function mapCollection(VariableCollection $collection)
     {
         $variables = $collection->getPage()->getTemplate()->getVariables();
-        $file = $this->getFile($collection->getPage(), $this->getLanguage()->getLanguage());
-        $data = $this->getStorage()->loadBranchData($file);
+        $file = $this->getFile($collection->getPage(), $this->registry->getLanguage()->getLanguage());
+        $data = $this->registry->getStorage()->loadBranchData($file);
 
         if (is_array($data)) {
             foreach ($data as $item) {
@@ -117,43 +99,5 @@ class VariableMapper
 
         $filepath .= DIRECTORY_SEPARATOR . $page->getName();
         return self::DATA_DIRECTORY . $filepath . '_' . $language . '.json';
-    }
-
-    /**
-     * @param LanguageEntity $language
-     * @return $this
-     */
-    public function setLanguage(LanguageEntity $language)
-    {
-        $this->language = $language;
-        return $this;
-    }
-
-    /**
-     * @return LanguageEntity
-     */
-    public function getLanguage()
-    {
-        return $this->language;
-    }
-
-    /**
-     * @param StorageInterface $storage
-     * @return $this
-     * @deprecated
-     */
-    public function setStorage(StorageInterface $storage)
-    {
-        $this->storage = $storage;
-        return $this;
-    }
-
-    /**
-     * @return StorageInterface
-     * @deprecated
-     */
-    public function getStorage()
-    {
-        return $this->storage;
     }
 }

@@ -2,13 +2,10 @@
 namespace Fluid\Variable;
 
 use Countable;
-use Fluid\Language\LanguageEntity;
 use Fluid\RegistryInterface;
 use IteratorAggregate;
 use ArrayAccess;
 use ArrayIterator;
-use Fluid\StorageInterface;
-use Fluid\XmlMappingLoaderInterface;
 use Fluid\Page\PageEntity;
 
 class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
@@ -24,29 +21,6 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
     private $page;
 
     /**
-     * @var StorageInterface
-     * @deprecated
-     */
-    private $storage;
-
-    /**
-     * @var VariableMapper
-     * @deprecated
-     */
-    private $mapper;
-
-    /**
-     * @var XmlMappingLoaderInterface
-     * @deprecated
-     */
-    private $xmlMappingLoader;
-
-    /**
-     * @var LanguageEntity
-     */
-    private $language;
-
-    /**
      * @var bool
      */
     private $isMapped = false;
@@ -59,19 +33,13 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
     /**
      * @param RegistryInterface $registry
      * @param PageEntity $page
-     * @param LanguageEntity $language
      */
-    public function __construct(RegistryInterface $registry, PageEntity $page = null, LanguageEntity $language = null)
+    public function __construct(RegistryInterface $registry, PageEntity $page = null)
     {
         $this->registry = $registry;
-        if (null !== $language) {
-            $this->setLanguage($language);
-        }
         if (null !== $page) {
             $this->setPage($page);
         }
-        $this->setStorage($registry->getStorage());
-        $this->setXmlMappingLoader($registry->getXmlMappingLoader());
     }
 
     public function mapCollection()
@@ -79,7 +47,6 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
         if (null !== $this->getPage()) {
             $this->setIsMapped(true);
             $mapper = $this->registry->getVariableMapper();
-            $mapper->setLanguage($this->getLanguage());
             $mapper->mapCollection($this);
         }
     }
@@ -121,7 +88,7 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
             $this->variables = [];
             foreach ($variables as $data) {
                 if (isset($data['name']) && isset($data['type'])) {
-                    $variable = new VariableEntity($this->registry, $this->language);
+                    $variable = new VariableEntity($this->registry);
                     $variable->setName($data['name']);
                     $variable->setType($data['type']);
                     if (isset($data['value'])) {
@@ -129,7 +96,7 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
                     }
                     $this->addVariable($variable);
                 } elseif (isset($data['name']) && isset($data['variables'])) {
-                    $variable = new VariableGroup($this->registry, $this->language);
+                    $variable = new VariableGroup($this->registry);
                     $variable->setName($data['name']);
                     $variable->reset($data['variables']);
                     $this->addVariable($variable);
@@ -144,7 +111,7 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
      */
     public function persist()
     {
-        $this->getMapper()->persist($this);
+        $this->registry->getVariableMapper()->persist($this);
         return $this;
     }
 
@@ -187,96 +154,6 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
     public function getPage()
     {
         return $this->page;
-    }
-
-    /**
-     * @param StorageInterface $storage
-     * @return $this
-     * @deprecated
-     */
-    public function setStorage(StorageInterface $storage)
-    {
-        $this->storage = $storage;
-        return $this;
-    }
-
-    /**
-     * @return StorageInterface
-     * @deprecated
-     */
-    public function getStorage()
-    {
-        return $this->storage;
-    }
-
-    /**
-     * @param XmlMappingLoaderInterface $xmlMappingLoader
-     * @return $this
-     * @deprecated
-     */
-    public function setXmlMappingLoader(XmlMappingLoaderInterface $xmlMappingLoader)
-    {
-        $this->xmlMappingLoader = $xmlMappingLoader;
-        return $this;
-    }
-
-    /**
-     * @return XmlMappingLoaderInterface
-     * @deprecated
-     */
-    public function getXmlMappingLoader()
-    {
-        return $this->xmlMappingLoader;
-    }
-
-    /**
-     * @param VariableMapper $mapper
-     * @return $this
-     * @deprecated
-     */
-    public function setMapper(VariableMapper $mapper)
-    {
-        $this->mapper = $mapper;
-        return $this;
-    }
-
-    /**
-     * @return VariableMapper
-     * @deprecated
-     */
-    public function getMapper()
-    {
-        if (null === $this->mapper) {
-            $this->createMapper();
-        }
-        return $this->mapper;
-    }
-
-    /**
-     * @return $this
-     * @deprecated
-     */
-    private function createMapper()
-    {
-        return $this->setMapper(new VariableMapper($this->getStorage(), $this->getLanguage()));
-    }
-
-    /**
-     * @param LanguageEntity $language
-     * @return $this
-     */
-    public function setLanguage(LanguageEntity $language)
-    {
-        $this->language = $language;
-        return $this;
-    }
-
-    /**
-     * @return LanguageEntity
-     */
-    public function getLanguage()
-    {
-        return $this->language;
     }
 
     /**

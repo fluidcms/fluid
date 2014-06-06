@@ -41,18 +41,6 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     private $variables;
 
     /**
-     * @var StorageInterface
-     * @deprecated Use registry
-     */
-    private $storage;
-
-    /**
-     * @var XmlMappingLoaderInterface
-     * @deprecated Use registry
-     */
-    private $xmlMappingLoader;
-
-    /**
      * @var RegistryInterface
      */
     private $registry;
@@ -68,11 +56,6 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     private $config;
 
     /**
-     * @var LanguageEntity
-     */
-    private $language;
-
-    /**
      * @var RendererInterface
      */
     private $renderer;
@@ -84,18 +67,14 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
 
     /**
      * @param RegistryInterface $registry
-     * @param LanguageEntity $language
      */
-    public function __construct(RegistryInterface $registry, LanguageEntity $language)
+    public function __construct(RegistryInterface $registry)
     {
         $this->registry = $registry;
-        $this->setStorage($registry->getStorage());
-        $this->setXmlMappingLoader($registry->getXmlMappingLoader());
         $this->setPageMapper($registry->getPageMapper());
         $this->setConfig(new PageConfig($this));
-        $this->setLanguage($language);
-        $this->setPages(new PageCollection($registry, $this->getLanguage(), $this));
-        $this->setVariables(new VariableCollection($this->registry, $this, $this->getLanguage()));
+        $this->setPages(new PageCollection($registry, $this));
+        $this->setVariables(new VariableCollection($this->registry, $this));
     }
 
     /**
@@ -340,46 +319,6 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     }
 
     /**
-     * @param StorageInterface $storage
-     * @return $this
-     * @deprecated Use registry
-     */
-    public function setStorage(StorageInterface $storage)
-    {
-        $this->storage = $storage;
-        return $this;
-    }
-
-    /**
-     * @return StorageInterface
-     * @deprecated Use registry
-     */
-    public function getStorage()
-    {
-        return $this->storage;
-    }
-
-    /**
-     * @param XmlMappingLoaderInterface $xmlMappingLoader
-     * @return $this
-     * @deprecated Use registry
-     */
-    public function setXmlMappingLoader(XmlMappingLoaderInterface $xmlMappingLoader)
-    {
-        $this->xmlMappingLoader = $xmlMappingLoader;
-        return $this;
-    }
-
-    /**
-     * @return XmlMappingLoaderInterface
-     * @deprecated Use registry
-     */
-    public function getXmlMappingLoader()
-    {
-        return $this->xmlMappingLoader;
-    }
-
-    /**
      * @param PageConfig $config
      * @return $this
      */
@@ -395,24 +334,6 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     public function getConfig()
     {
         return $this->config;
-    }
-
-    /**
-     * @param LanguageEntity $language
-     * @return $this
-     */
-    public function setLanguage(LanguageEntity $language)
-    {
-        $this->language = $language;
-        return $this;
-    }
-
-    /**
-     * @return LanguageEntity
-     */
-    public function getLanguage()
-    {
-        return $this->language;
     }
 
     /**
@@ -478,7 +399,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
         $array = array_merge(
             [
                 'name' => $this->getName(),
-                'language' => $this->getLanguage()->getLanguage(),
+                'language' => $this->registry->getLanguage()->getLanguage(),
                 'pages' => $this->getPages()->getIterator(),
                 'url' => $this->getConfig()->getUrl(),
                 'template' => $this->getConfig()->getTemplate(),
@@ -514,7 +435,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
         if ($offset === 'name') {
             return $this->getName();
         } elseif ($offset === 'language') {
-            return $this->getLanguage()->getLanguage();
+            return $this->registry->getLanguage()->getLanguage();
         } elseif ($offset === 'pages') {
             return $this->getPages();
         } elseif ($offset === 'url') {
@@ -541,7 +462,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
         if ($offset === 'name') {
             $this->setName($value);
         } elseif ($offset === 'language') {
-            $this->getLanguage()->setLanguage($value);
+            $this->registry->getLanguage()->setLanguage($value);
         } elseif ($offset === 'pages') {
             $this->setPages($value);
         } elseif ($offset === 'url') {
@@ -569,7 +490,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
         } elseif ($offset === 'pages') {
             $this->setPages(null);
         } elseif ($offset === 'language') {
-            $this->getLanguage()->setLanguage(null);
+            $this->registry->getLanguage()->setLanguage(null);
         } elseif ($offset === 'url') {
             $this->getConfig()->setUrl(null);
         } elseif ($offset === 'template') {

@@ -8,6 +8,7 @@ use Psr\Log\LoggerInterface;
 use Fluid\Page\PageMapper;
 use Fluid\Variable\VariableMapper;
 use Fluid\Component\ComponentMapper;
+use Fluid\Language\LanguageEntity;
 
 interface RegistryInterface
 {
@@ -166,4 +167,15 @@ interface RegistryInterface
      * @return $this
      */
     public function setComponentMapper(ComponentMapper $componentMapper);
+
+    /**
+     * @return LanguageEntity
+     */
+    public function getLanguage();
+
+    /**
+     * @param LanguageEntity $language
+     * @return $this
+     */
+    public function setLanguage(LanguageEntity $language);
 }
