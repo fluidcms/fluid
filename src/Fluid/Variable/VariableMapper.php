@@ -62,6 +62,7 @@ class VariableMapper
                 $variables->addVariable($variableGroup);
             } elseif (isset($value['name']) && $value['name'] === 'image') {
                 $variable = new VariableEntity($this->registry);
+                $variable->setType(VariableEntity::TYPE_IMAGE);
                 $attributes = [];
                 $formats = [];
                 foreach ($value as $attributeKey => $attributeValue) {

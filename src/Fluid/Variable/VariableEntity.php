@@ -104,6 +104,8 @@ class VariableEntity implements JsonSerializable
                     return '';
                 }
                 return $this->getValue();
+            case self::TYPE_IMAGE:
+                return '';
         }
         return null;
     }
@@ -184,7 +186,7 @@ class VariableEntity implements JsonSerializable
      */
     public function getFormats()
     {
-        return $this->formats;
+        return array_values($this->formats);
     }
 
     /**
@@ -193,7 +195,11 @@ class VariableEntity implements JsonSerializable
      */
     public function setFormats($formats)
     {
-        $this->formats = $formats;
+        $array = [];
+        foreach ($formats as $value) {
+            $array[$value['name']] = $value;
+        }
+        $this->formats = $array;
         return $this;
     }
 
@@ -215,6 +221,48 @@ class VariableEntity implements JsonSerializable
         return $this;
     }
 
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function __isset($name)
+    {
+        switch ($this->getType()) {
+            case self::TYPE_IMAGE:
+                if (isset($this->formats[$name])) {
+                    return true;
+                }
+        }
+        return false;
+    }
+
+    /**
+     * @param string $name
+     * @param array $arguments
+     * @return mixed
+     */
+    public function __call($name, array $arguments)
+    {
+        return $this->__get($name);
+    }
+
+    /**
+     * @param string $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        switch ($this->getType()) {
+            case self::TYPE_IMAGE:
+                if (isset($this->formats[$name])) {
+                    return $this->formats[$name]['attributes'];
+                } else {
+                    return $this->getAttributes();
+                }
+        }
+        return $this->renderValue();
+    }
 
     /**
      * @return mixed
