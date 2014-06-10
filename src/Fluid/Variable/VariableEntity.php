@@ -10,6 +10,7 @@ class VariableEntity implements JsonSerializable
 {
     const TYPE_STRING = 'string';
     const TYPE_CONTENT = 'content';
+    const TYPE_IMAGE = 'image';
 
     /**
      * @var array
@@ -32,6 +33,16 @@ class VariableEntity implements JsonSerializable
     private $value;
 
     /**
+     * @var array
+     */
+    private $formats;
+
+    /**
+     * @var array
+     */
+    private $attributes;
+
+    /**
      * @var RegistryInterface
      */
     private $registry;
@@ -50,11 +61,25 @@ class VariableEntity implements JsonSerializable
      */
     public function jsonSerialize()
     {
-        return [
-            'name' => $this->getName(),
-            'type' => $this->getType(),
-            'value' => $this->getValue()
-        ];
+        switch ($this->getType()) {
+            case self::TYPE_STRING:
+                return [
+                    'name' => $this->getName(),
+                    'type' => $this->getType(),
+                    'value' => $this->getValue()
+                ];
+            case self::TYPE_IMAGE:
+                return [
+                    'name' => $this->getName(),
+                    'type' => $this->getType(),
+                    'attributes' => $this->getAttributes(),
+                    'formats' => $this->getFormats()
+                ];
+            case self::TYPE_CONTENT:
+                return [
+                ];
+        }
+        return null;
     }
 
     /**
@@ -153,6 +178,43 @@ class VariableEntity implements JsonSerializable
     {
         return $this->type;
     }
+
+    /**
+     * @return array
+     */
+    public function getFormats()
+    {
+        return $this->formats;
+    }
+
+    /**
+     * @param array $formats
+     * @return $this
+     */
+    public function setFormats($formats)
+    {
+        $this->formats = $formats;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * @param array $attributes
+     * @return $this
+     */
+    public function setAttributes($attributes)
+    {
+        $this->attributes = $attributes;
+        return $this;
+    }
+
 
     /**
      * @return mixed

@@ -40,27 +40,7 @@ class TemplateMapper
         $mapping = $this->getXmlMappingLoader()->load(self::MAPPING_DIRECTORY . DIRECTORY_SEPARATOR . $template->getTemplate() . '.xml');
         $template->getConfig()->set($mapping->getConfig());
 
-        foreach ($mapping->getContent() as $key => $value) {
-            if (isset($value['name']) && $value['name'] === 'variable') {
-                $attributes = isset($value['attributes']) ? $value['attributes'] : [];
-                $variable = new VariableEntity($this->registry);
-                $variable->set($attributes);
-                $variables->addVariable($variable);
-            } elseif (isset($value['name']) && $value['name'] === 'group') {
-                $attributes = isset($value['attributes']) ? $value['attributes'] : [];
-                $variableGroup = new VariableGroup($this->registry);
-                $variableGroup->setName(isset($attributes['name']) ? $attributes['name'] : null);
-                foreach ($value as $groupVariable) {
-                    if (isset($groupVariable['name']) && $groupVariable['name'] === 'variable') {
-                        $attributes = isset($groupVariable['attributes']) ? $groupVariable['attributes'] : [];
-                        $variable = new VariableEntity($this->registry);
-                        $variable->set($attributes);
-                        $variableGroup->add($variable);
-                    }
-                }
-                $variables->addVariable($variableGroup);
-            }
-        }
+        $this->registry->getVariableMapper()->mapXmlObject($mapping,  $variables);
     }
 
     /**
