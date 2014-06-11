@@ -1,6 +1,7 @@
 <?php
 namespace Fluid\Variable;
 
+use JsonSerializable;
 use Countable;
 use Fluid\Language\LanguageEntity;
 use Fluid\RegistryInterface;
@@ -8,7 +9,7 @@ use IteratorAggregate;
 use ArrayAccess;
 use ArrayIterator;
 
-class VariableGroup implements Countable, IteratorAggregate, ArrayAccess, VariableInterface
+class VariableGroup implements Countable, IteratorAggregate, ArrayAccess, VariableInterface, JsonSerializable
 {
     /**
      * @var string
@@ -37,7 +38,7 @@ class VariableGroup implements Countable, IteratorAggregate, ArrayAccess, Variab
     /**
      * @return array
      */
-    public function toArray()
+    public function jsonSerialize()
     {
         $variables = [];
         foreach ($this->variables as $variable) {
@@ -45,6 +46,7 @@ class VariableGroup implements Countable, IteratorAggregate, ArrayAccess, Variab
         }
         return [
             'name' => $this->getName(),
+            'type' => 'group',
             'variables' => $variables
         ];
     }
@@ -52,6 +54,7 @@ class VariableGroup implements Countable, IteratorAggregate, ArrayAccess, Variab
     /**
      * @param array $variables
      * @return $this
+     * @deprecated
      */
     public function reset(array $variables = null)
     {
@@ -79,6 +82,14 @@ class VariableGroup implements Countable, IteratorAggregate, ArrayAccess, Variab
     public function add(VariableInterface $variable)
     {
         $this->variables[$variable->getName()] = $variable;
+    }
+
+    /**
+     * @return array|VariableEntity[]
+     */
+    public function getVariables()
+    {
+        return $this->variables;
     }
 
     /**

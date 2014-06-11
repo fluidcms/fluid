@@ -91,7 +91,7 @@ class ComponentMapper
         $this->mapEntity($component);
 
         if (isset($attributes['variables'])) {
-            $this->registry->getVariableMapper()->mapCollectionValues($component->getVariables(), $attributes['variables']);
+            $this->registry->getVariableMapper()->mapJsonCollection($component->getVariables(), $attributes['variables']);
         }
         return $component;
     }
