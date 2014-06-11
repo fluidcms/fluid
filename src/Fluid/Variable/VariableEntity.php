@@ -6,7 +6,7 @@ use Fluid\RegistryInterface;
 use Fluid\Variable\Renderer\RenderContent;
 use JsonSerializable;
 
-class VariableEntity implements JsonSerializable
+class VariableEntity implements JsonSerializable, VariableInterface
 {
     const TYPE_STRING = 'string';
     const TYPE_CONTENT = 'content';

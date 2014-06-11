@@ -51,15 +51,17 @@ class VariableMapper
                 $attributes = isset($value['attributes']) ? $value['attributes'] : [];
                 $variableGroup = new VariableGroup($this->registry);
                 $variableGroup->setName(isset($attributes['name']) ? $attributes['name'] : null);
-                foreach ($value as $groupVariable) {
-                    if (isset($groupVariable['name']) && $groupVariable['name'] === 'variable') {
-                        $attributes = isset($groupVariable['attributes']) ? $groupVariable['attributes'] : [];
-                        $variable = new VariableEntity($this->registry);
-                        $variable->set($attributes);
-                        $variableGroup->add($variable);
+                foreach ($value as $groupVariableKey => $groupVariable) {
+                    if ($groupVariableKey !== 'attributes' && $groupVariableKey !== 'name') {
+                        $variable = $this->mapXmlItem($groupVariable);
+                        if ($variable) {
+                            $variableGroup->add($variable);
+                        }
                     }
                 }
                 $variables->addVariable($variableGroup);
+            } elseif (isset($value['name']) && $value['name'] === 'array') {
+                die('yo');
             } elseif (isset($value['name']) && $value['name'] === 'image') {
                 $variable = new VariableEntity($this->registry);
                 $variable->setType(VariableEntity::TYPE_IMAGE);
@@ -101,9 +103,59 @@ class VariableMapper
                 $variable->setAttributes($attributes);
                 $variable->setFormats($formats);
                 $variables->addVariable($variable);
+            } else {
+                echo '';
             }
         }
         return $variables;
+    }
+
+    /**
+     * @param array $xml
+     * @return VariableArray|VariableEntity|null
+     */
+    public function mapXmlItem($xml)
+    {
+        if (isset($xml['name']) && $xml['name'] === 'variable') {
+            return $this->mapXmlVariable($xml);
+        } elseif (isset($xml['name']) && $xml['name'] === 'array') {
+            return $this->mapXmlArray($xml);
+        }
+        return null;
+    }
+
+    /**
+     * @param array $xml
+     * @return VariableEntity
+     */
+    public function mapXmlVariable($xml)
+    {
+        $variable = new VariableEntity($this->registry);
+        $variable->set($xml['attributes']);
+        return $variable;
+    }
+
+    /**
+     * @param array $xml
+     * @return VariableArray|null
+     */
+    public function mapXmlArray($xml)
+    {
+        if (isset($xml['attributes']['name'])) {
+            $variable = new VariableArray($this->registry);
+            $variable->setName($xml['attributes']['name']);
+            foreach ($xml as $key => $value) {
+                if ($key !== 'attributes' && $key !== 'name') {
+                    $var = $this->mapXmlVariable($value);
+                    if ($var) {
+                        $variable->addVariable($var);
+                    }
+                }
+            }
+            return $variable;
+        }
+
+        return null;
     }
 
     /**

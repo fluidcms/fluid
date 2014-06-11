@@ -8,7 +8,7 @@ use IteratorAggregate;
 use ArrayAccess;
 use ArrayIterator;
 
-class VariableGroup implements Countable, IteratorAggregate, ArrayAccess, VariableInterface
+class VariableArray implements Countable, IteratorAggregate, ArrayAccess, VariableInterface
 {
     /**
      * @var string
@@ -19,6 +19,11 @@ class VariableGroup implements Countable, IteratorAggregate, ArrayAccess, Variab
      * @var array|VariableEntity[]
      */
     private $variables;
+
+    /**
+     * @var array
+     */
+    private $items;
 
     /**
      * @var RegistryInterface
@@ -50,33 +55,9 @@ class VariableGroup implements Countable, IteratorAggregate, ArrayAccess, Variab
     }
 
     /**
-     * @param array $variables
-     * @return $this
+     * @param VariableEntity $variable
      */
-    public function reset(array $variables = null)
-    {
-        $this->variables = null;
-        if (is_array($variables)) {
-            $this->variables = [];
-            foreach ($variables as $data) {
-                if (isset($data['name']) && isset($data['type'])) {
-                    $variable = new VariableEntity($this->registry);
-                    $variable->setName($data['name']);
-                    $variable->setType($data['type']);
-                    if (isset($data['value'])) {
-                        $variable->setValue($data['value']);
-                    }
-                    $this->add($variable);
-                }
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * @param VariableInterface $variable
-     */
-    public function add(VariableInterface $variable)
+    public function addVariable(VariableEntity $variable)
     {
         $this->variables[$variable->getName()] = $variable;
     }
