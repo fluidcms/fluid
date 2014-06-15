@@ -245,6 +245,8 @@ class VariableMapper
     {
         if ($json['type'] === 'string') {
             $variable->setValue(isset($json['value']) ? $json['value'] : null);
+        } elseif ($json['type'] === 'content') {
+            $variable->setValue(isset($json['value']) ? $json['value'] : null);
         } elseif ($json['type'] === 'image') {
             $varAttributes = $variable->getAttributes();
             if (isset($json['attributes']['src'])) {
