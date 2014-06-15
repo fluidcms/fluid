@@ -233,7 +233,37 @@ class VariableMapper
      */
     public function mapJsonArray(VariableArray $array, array $json)
     {
+        if (isset($json['variables'])) {
+            foreach ($json['variables'] as $item) {
+                $item = $this->mapJsonArrayItem($array->getVariables(), $item);
+                $array->addItem($item);
+            }
+        }
         return $array;
+    }
+
+    /**
+     * @param VariableEntity[] $variables
+     * @param array $json
+     * @return VariableEntity[]
+     */
+    public function mapJsonArrayItem(array $variables, array $json)
+    {
+        $data = [];
+        foreach ($json as $value) {
+            $data[$value['name']] = $value;
+        }
+
+        $retval = new VariableArrayItem();
+        foreach ($variables as $prototype) {
+            $variable = clone($prototype);
+            if (isset($data[$variable->getName()])) {
+                $variable = $this->mapJsonVariable($variable, $data[$variable->getName()]);
+            }
+            $retval->add($variable);
+        }
+
+        return $retval;
     }
 
     /**

@@ -11,6 +11,7 @@ class VariableEntity implements JsonSerializable, VariableInterface
     const TYPE_STRING = 'string';
     const TYPE_CONTENT = 'content';
     const TYPE_IMAGE = 'image';
+    const TYPE_OPTION = 'option';
 
     /**
      * @var array
@@ -100,12 +101,16 @@ class VariableEntity implements JsonSerializable, VariableInterface
             case self::TYPE_CONTENT:
                 return (new RenderContent($this->registry, $this))->render();
             case self::TYPE_STRING:
+            case self::TYPE_OPTION:
                 if ($this->getValue() === null) {
                     return '';
                 }
                 return $this->getValue();
             case self::TYPE_IMAGE:
                 return '';
+            default:
+                return '';
+                trigger_error('Type uknown');
         }
         return null;
     }

@@ -170,7 +170,13 @@ class VariableGroup implements Countable, IteratorAggregate, ArrayAccess, Variab
     public function offsetGet($offset)
     {
         if (isset($this->variables[$offset])) {
-            return $this->variables[$offset]->renderValue();
+            if ($this->variables[$offset] instanceof VariableEntity) {
+                return $this->variables[$offset]->renderValue();
+            } elseif ($this->variables[$offset] instanceof VariableArray) {
+                return $this->variables[$offset];
+            } else {
+                trigger_error('Not suppose to get here, fixme');
+            }
         }
         return null;
     }

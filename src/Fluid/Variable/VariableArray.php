@@ -21,7 +21,7 @@ class VariableArray implements Countable, IteratorAggregate, ArrayAccess, Variab
     private $variables;
 
     /**
-     * @var array
+     * @var array|VariableArrayItem[]
      */
     private $items;
 
@@ -55,6 +55,14 @@ class VariableArray implements Countable, IteratorAggregate, ArrayAccess, Variab
     }
 
     /**
+     * @return array|VariableEntity[]
+     */
+    public function getVariables()
+    {
+        return $this->variables;
+    }
+
+    /**
      * @param VariableEntity $variable
      */
     public function addVariable(VariableEntity $variable)
@@ -63,7 +71,15 @@ class VariableArray implements Countable, IteratorAggregate, ArrayAccess, Variab
     }
 
     /**
-     * @param string $name
+     * @param VariableArrayItem $item
+     */
+    public function addItem(VariableArrayItem $item)
+    {
+        $this->items[] = $item;
+    }
+
+    /**
+     * @param string $name+
      * @return $this
      */
     public function setName($name)
@@ -113,7 +129,7 @@ class VariableArray implements Countable, IteratorAggregate, ArrayAccess, Variab
      */
     public function count()
     {
-        return count($this->variables);
+        return count($this->items);
     }
 
     /**
@@ -121,7 +137,7 @@ class VariableArray implements Countable, IteratorAggregate, ArrayAccess, Variab
      */
     public function getIterator()
     {
-        return new ArrayIterator($this->variables);
+        return new ArrayIterator($this->items);
     }
 
     /**
@@ -130,7 +146,7 @@ class VariableArray implements Countable, IteratorAggregate, ArrayAccess, Variab
      */
     public function offsetExists($offset)
     {
-        return isset($this->variables[$offset]);
+        return isset($this->items[$offset]);
     }
 
     /**
@@ -139,8 +155,8 @@ class VariableArray implements Countable, IteratorAggregate, ArrayAccess, Variab
      */
     public function offsetGet($offset)
     {
-        if (isset($this->variables[$offset])) {
-            return $this->variables[$offset]->renderValue();
+        if (isset($this->items[$offset])) {
+            return $this->items[$offset];
         }
         return null;
     }
@@ -151,7 +167,7 @@ class VariableArray implements Countable, IteratorAggregate, ArrayAccess, Variab
      */
     public function offsetSet($offset, $value)
     {
-        $this->variables[$offset] = $value;
+        $this->items[$offset] = $value;
     }
 
     /**
@@ -159,6 +175,6 @@ class VariableArray implements Countable, IteratorAggregate, ArrayAccess, Variab
      */
     public function offsetUnset($offset)
     {
-        unset($this->variables[$offset]);
+        unset($this->items[$offset]);
     }
 }
