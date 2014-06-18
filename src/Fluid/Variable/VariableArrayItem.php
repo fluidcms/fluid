@@ -14,10 +14,13 @@ class VariableArrayItem implements Countable, IteratorAggregate, ArrayAccess
     private $variables;
 
     /**
-     * @param VariableEntity $variable
+     * @param VariableEntity|VariableImage $variable
      */
-    public function add(VariableEntity $variable)
+    public function add($variable)
     {
+        if (!$variable instanceof VariableEntity && !$variable instanceof VariableImage) {
+            throw new \InvalidArgumentException;
+        }
         $this->variables[$variable->getName()] = $variable;
     }
 

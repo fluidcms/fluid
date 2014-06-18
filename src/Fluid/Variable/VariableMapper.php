@@ -38,6 +38,7 @@ class VariableMapper
      * @param MappingInterface $mapping
      * @param VariableCollection $variables
      * @return VariableCollection
+     * todo rename to mapXmlCollection
      */
     public function mapXmlObject(MappingInterface $mapping, VariableCollection $variables)
     {
@@ -64,46 +65,10 @@ class VariableMapper
                 // todo switch to mapXmlArray (below)
                 trigger_error('Switch to mapXmlArray (below)');
             } elseif (isset($value['name']) && $value['name'] === 'image') {
-                $variable = new VariableEntity($this->registry);
-                $variable->setType(VariableEntity::TYPE_IMAGE);
-                $attributes = [];
-                $formats = [];
-                foreach ($value as $attributeKey => $attributeValue) {
-                    if ($attributeKey === 'attributes') {
-                        if (isset($attributeValue['name'])) {
-                            $variable->setName($attributeValue['name']);
-                        }
-                        if (isset($attributeValue['format'])) {
-                            $attributes['format'] = $attributeValue['format'];
-                        }
-                        if (isset($attributeValue['width'])) {
-                            $attributes['width'] = $attributeValue['width'];
-                        }
-                        if (isset($attributeValue['height'])) {
-                            $attributes['height'] = $attributeValue['height'];
-                        }
-                    } elseif (isset($attributeValue['name']) && $attributeValue['name'] === 'format' && isset($attributeValue['attributes'])) {
-                        $format = [];
-                        foreach ($attributeValue['attributes'] as $subAttributeKey => $subAttributeValue) {
-                            if ($subAttributeKey === 'name') {
-                                $format['name'] = $subAttributeValue;
-                            }
-                            if ($subAttributeKey === 'format') {
-                                $format['attributes']['format'] = $subAttributeValue;
-                            }
-                            if ($subAttributeKey === 'width') {
-                                $format['attributes']['width'] = $subAttributeValue;
-                            }
-                            if ($subAttributeKey === 'height') {
-                                $format['attributes']['height'] = $subAttributeValue;
-                            }
-                        }
-                        $formats[] = $format;
-                    }
+                $variable = $this->mapXmlImage($value);
+                if ($variable) {
+                    $variables->addVariable($variable);
                 }
-                $variable->setAttributes($attributes);
-                $variable->setFormats($formats);
-                $variables->addVariable($variable);
             }
         }
         return $variables;
@@ -121,6 +86,53 @@ class VariableMapper
             return $this->mapXmlArray($xml);
         }
         return null;
+    }
+
+    /**
+     * @param array $xml
+     * @return VariableImage
+     */
+    public function mapXmlImage($xml)
+    {
+        $variable = new VariableImage($this->registry);
+        $attributes = [];
+        $formats = [];
+        foreach ($xml as $attributeKey => $attributeValue) {
+            if ($attributeKey === 'attributes') {
+                if (isset($attributeValue['name'])) {
+                    $variable->setName($attributeValue['name']);
+                }
+                if (isset($attributeValue['format'])) {
+                    $attributes['format'] = $attributeValue['format'];
+                }
+                if (isset($attributeValue['width'])) {
+                    $attributes['width'] = $attributeValue['width'];
+                }
+                if (isset($attributeValue['height'])) {
+                    $attributes['height'] = $attributeValue['height'];
+                }
+            } elseif (isset($attributeValue['name']) && $attributeValue['name'] === 'format' && isset($attributeValue['attributes'])) {
+                $format = [];
+                foreach ($attributeValue['attributes'] as $subAttributeKey => $subAttributeValue) {
+                    if ($subAttributeKey === 'name') {
+                        $format['name'] = $subAttributeValue;
+                    }
+                    if ($subAttributeKey === 'format') {
+                        $format['attributes']['format'] = $subAttributeValue;
+                    }
+                    if ($subAttributeKey === 'width') {
+                        $format['attributes']['width'] = $subAttributeValue;
+                    }
+                    if ($subAttributeKey === 'height') {
+                        $format['attributes']['height'] = $subAttributeValue;
+                    }
+                }
+                $formats[] = $format;
+            }
+        }
+        $variable->setAttributes($attributes);
+        $variable->setFormats($formats);
+        return $variable;
     }
 
     /**
@@ -145,7 +157,14 @@ class VariableMapper
             $variable->setName($xml['attributes']['name']);
             foreach ($xml as $key => $value) {
                 if ($key !== 'attributes' && $key !== 'name') {
-                    $var = $this->mapXmlVariable($value);
+                    if (isset($value['name']) && $value['name'] === 'variable') {
+                        $var = $this->mapXmlVariable($value);
+                    } elseif (isset($value['name']) && $value['name'] === 'image') {
+                        $var = $this->mapXmlImage($value);
+                    } else {
+                        trigger_error('Type not implemented yet');
+                        exit;
+                    }
                     if ($var) {
                         $variable->addVariable($var);
                     }
@@ -193,7 +212,14 @@ class VariableMapper
         foreach ($json as $data) {
             if (isset($data['name'])) {
                 if ($variable = $collection->find($data['name'])) {
-                    $this->mapJsonVariable($variable, $data);
+                    if ($variable instanceof VariableEntity) {
+                        $this->mapJsonVariable($variable, $data);
+                    } elseif ($variable instanceof VariableImage) {
+                        $this->mapJsonImage($variable, $data);
+                    } else {
+                        trigger_error('Need to impleement this type toooo');
+                        exit;
+                    }
                 }
             }
         }
@@ -219,6 +245,8 @@ class VariableMapper
                     $this->mapJsonVariable($variable, $json['variables'][$variable->getName()]);
                 } elseif ($variable instanceof VariableArray) {
                     $this->mapJsonArray($variable, $json['variables'][$variable->getName()]);
+                } elseif ($variable instanceof VariableImage) {
+                    $this->mapJsonImage($variable, $json['variables'][$variable->getName()]);
                 }
             }
         }
@@ -245,7 +273,7 @@ class VariableMapper
     /**
      * @param VariableEntity[] $variables
      * @param array $json
-     * @return VariableEntity[]
+     * @return VariableArrayItem
      */
     public function mapJsonArrayItem(array $variables, array $json)
     {
@@ -258,7 +286,13 @@ class VariableMapper
         foreach ($variables as $prototype) {
             $variable = clone($prototype);
             if (isset($data[$variable->getName()])) {
-                $variable = $this->mapJsonVariable($variable, $data[$variable->getName()]);
+                if ($variable instanceof VariableEntity) {
+                    $this->mapJsonVariable($variable, $data[$variable->getName()]);
+                } elseif ($variable instanceof VariableArray) {
+                    $this->mapJsonArray($variable, $data[$variable->getName()]);
+                } elseif ($variable instanceof VariableImage) {
+                    $this->mapJsonImage($variable, $data[$variable->getName()]);
+                }
             }
             $retval->add($variable);
         }
@@ -273,51 +307,56 @@ class VariableMapper
      */
     public function mapJsonVariable(VariableEntity $variable, array $json)
     {
-        if ($json['type'] === 'string') {
-            $variable->setValue(isset($json['value']) ? $json['value'] : null);
-        } elseif ($json['type'] === 'content') {
-            $variable->setValue(isset($json['value']) ? $json['value'] : null);
-        } elseif ($json['type'] === 'image') {
-            $varAttributes = $variable->getAttributes();
-            if (isset($json['attributes']['src'])) {
-                $varAttributes['src'] = $json['attributes']['src'];
-            }
-            if (isset($json['attributes']['alt'])) {
-                $varAttributes['alt'] = $json['attributes']['alt'];
-            }
-            if (isset($json['attributes']['width']) && !isset($varAttributes['width'])) {
-                $varAttributes['width'] = $json['attributes']['width'];
-            }
-            if (isset($json['attributes']['height']) && !isset($varAttributes['height'])) {
-                $varAttributes['height'] = $json['attributes']['height'];
-            }
-            $variable->setAttributes($varAttributes);
+        $variable->setValue(isset($json['value']) ? $json['value'] : null);
+        return $variable;
+    }
 
-            $varFormats = $variable->getFormats();
-            if (isset($json['formats'])) {
-                foreach ($varFormats as $key => $varFormat) {
-                    foreach ($json['formats'] as $format) {
-                        if (isset($format['name']) && isset($varFormat['name']) && $format['name'] === $varFormat['name']) {
-                            if (isset($format['attributes']['src'])) {
-                                $varFormat['attributes']['src'] = $format['attributes']['src'];
-                            }
-                            if (isset($format['attributes']['alt'])) {
-                                $varFormat['attributes']['alt'] = $format['attributes']['alt'];
-                            }
-                            if (isset($format['attributes']['width']) && !isset($varFormat['attributes']['width'])) {
-                                $varFormat['attributes']['width'] = $format['attributes']['width'];
-                            }
-                            if (isset($format['attributes']['height']) && !isset($varFormat['attributes']['height'])) {
-                                $varFormat['attributes']['height'] = $format['attributes']['height'];
-                            }
+    /**
+     * @param VariableImage $variable
+     * @param array $json
+     * @return VariableImage
+     */
+    public function mapJsonImage(VariableImage $variable, array $json)
+    {
+        $varAttributes = $variable->getAttributes();
+        if (isset($json['attributes']['src'])) {
+            $varAttributes['src'] = $json['attributes']['src'];
+        }
+        if (isset($json['attributes']['alt'])) {
+            $varAttributes['alt'] = $json['attributes']['alt'];
+        }
+        if (isset($json['attributes']['width']) && !isset($varAttributes['width'])) {
+            $varAttributes['width'] = $json['attributes']['width'];
+        }
+        if (isset($json['attributes']['height']) && !isset($varAttributes['height'])) {
+            $varAttributes['height'] = $json['attributes']['height'];
+        }
+        $variable->setAttributes($varAttributes);
+
+        $varFormats = $variable->getFormats();
+        if (isset($json['formats'])) {
+            foreach ($varFormats as $key => $varFormat) {
+                foreach ($json['formats'] as $format) {
+                    if (isset($format['name']) && isset($varFormat['name']) && $format['name'] === $varFormat['name']) {
+                        if (isset($format['attributes']['src'])) {
+                            $varFormat['attributes']['src'] = $format['attributes']['src'];
+                        }
+                        if (isset($format['attributes']['alt'])) {
+                            $varFormat['attributes']['alt'] = $format['attributes']['alt'];
+                        }
+                        if (isset($format['attributes']['width']) && !isset($varFormat['attributes']['width'])) {
+                            $varFormat['attributes']['width'] = $format['attributes']['width'];
+                        }
+                        if (isset($format['attributes']['height']) && !isset($varFormat['attributes']['height'])) {
+                            $varFormat['attributes']['height'] = $format['attributes']['height'];
                         }
                     }
-                    $varFormats[$key] = $varFormat;
                 }
+                $varFormats[$key] = $varFormat;
             }
-
-            $variable->setFormats($varFormats);
         }
+
+        $variable->setFormats($varFormats);
         return $variable;
     }
 

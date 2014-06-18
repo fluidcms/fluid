@@ -63,10 +63,13 @@ class VariableArray implements Countable, IteratorAggregate, ArrayAccess, Variab
     }
 
     /**
-     * @param VariableEntity $variable
+     * @param VariableEntity|VariableImage $variable
      */
-    public function addVariable(VariableEntity $variable)
+    public function addVariable($variable)
     {
+        if (!$variable instanceof VariableEntity && !$variable instanceof VariableImage) {
+            throw new \InvalidArgumentException;
+        }
         $this->variables[$variable->getName()] = $variable;
     }
 

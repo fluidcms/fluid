@@ -116,13 +116,13 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
-     * @param VariableEntity|VariableGroup $variable
+     * @param VariableEntity|VariableGroup|VariableImage $variable
      * @return $this
      * @throws \InvalidArgumentException
      */
     public function addVariable($variable)
     {
-        if (!$variable instanceof VariableGroup && !$variable instanceof VariableEntity) {
+        if (!$variable instanceof VariableGroup && !$variable instanceof VariableEntity && !$variable instanceof VariableImage) {
             throw new \InvalidArgumentException;
         }
         $this->variables[$variable->getName()] = $variable;

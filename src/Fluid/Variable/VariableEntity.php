@@ -10,7 +10,6 @@ class VariableEntity implements JsonSerializable, VariableInterface
 {
     const TYPE_STRING = 'string';
     const TYPE_CONTENT = 'content';
-    const TYPE_IMAGE = 'image';
     const TYPE_OPTION = 'option';
 
     /**
@@ -32,16 +31,6 @@ class VariableEntity implements JsonSerializable, VariableInterface
      * @var mixed
      */
     private $value;
-
-    /**
-     * @var array
-     */
-    private $formats;
-
-    /**
-     * @var array
-     */
-    private $attributes;
 
     /**
      * @var RegistryInterface
@@ -68,13 +57,6 @@ class VariableEntity implements JsonSerializable, VariableInterface
                     'name' => $this->getName(),
                     'type' => $this->getType(),
                     'value' => $this->getValue()
-                ];
-            case self::TYPE_IMAGE:
-                return [
-                    'name' => $this->getName(),
-                    'type' => $this->getType(),
-                    'attributes' => $this->getAttributes(),
-                    'formats' => $this->getFormats()
                 ];
             case self::TYPE_CONTENT:
                 return [
@@ -106,13 +88,10 @@ class VariableEntity implements JsonSerializable, VariableInterface
                     return '';
                 }
                 return $this->getValue();
-            case self::TYPE_IMAGE:
-                return '';
             default:
-                return '';
                 trigger_error('Type uknown');
+                return null;
         }
-        return null;
     }
 
     /**
@@ -187,58 +166,11 @@ class VariableEntity implements JsonSerializable, VariableInterface
     }
 
     /**
-     * @return array
-     */
-    public function getFormats()
-    {
-        return array_values($this->formats);
-    }
-
-    /**
-     * @param array $formats
-     * @return $this
-     */
-    public function setFormats($formats)
-    {
-        $array = [];
-        foreach ($formats as $value) {
-            $array[$value['name']] = $value;
-        }
-        $this->formats = $array;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAttributes()
-    {
-        return $this->attributes;
-    }
-
-    /**
-     * @param array $attributes
-     * @return $this
-     */
-    public function setAttributes($attributes)
-    {
-        $this->attributes = $attributes;
-        return $this;
-    }
-
-
-    /**
      * @param string $name
      * @return bool
      */
     public function __isset($name)
     {
-        switch ($this->getType()) {
-            case self::TYPE_IMAGE:
-                if (isset($this->formats[$name])) {
-                    return true;
-                }
-        }
         return false;
     }
 
@@ -258,14 +190,6 @@ class VariableEntity implements JsonSerializable, VariableInterface
      */
     public function __get($name)
     {
-        switch ($this->getType()) {
-            case self::TYPE_IMAGE:
-                if (isset($this->formats[$name])) {
-                    return $this->formats[$name]['attributes'];
-                } else {
-                    return $this->getAttributes();
-                }
-        }
         return $this->renderValue();
     }
 
