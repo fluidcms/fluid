@@ -11,6 +11,7 @@ class VariableEntity implements JsonSerializable, VariableInterface
     const TYPE_STRING = 'string';
     const TYPE_CONTENT = 'content';
     const TYPE_OPTION = 'option';
+    const TYPE_BOOL = 'bool';
 
     /**
      * @var array
@@ -80,6 +81,8 @@ class VariableEntity implements JsonSerializable, VariableInterface
     public function renderValue()
     {
         switch ($this->getType()) {
+            case self::TYPE_BOOL:
+                return (bool)$this->getValue();
             case self::TYPE_CONTENT:
                 return (new RenderContent($this->registry, $this))->render();
             case self::TYPE_STRING:
