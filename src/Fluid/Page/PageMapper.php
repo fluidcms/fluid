@@ -67,7 +67,7 @@ class PageMapper
         $data = $this->registry->getStorage()->loadBranchData($file);
 
         if (is_array($data)) {
-            $this->mapJsonCollection($variables, $data);
+            $this->registry->getVariableMapper()->mapJsonCollection($variables, $data);
         }
     }
 

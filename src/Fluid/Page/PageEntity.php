@@ -386,6 +386,9 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
      */
     public function __isset($name)
     {
+        if (!$this->isMapped()) {
+            $this->registry->getPageMapper()->mapJsonObject($this);
+        }
         return $this->offsetExists($name);
     }
 
@@ -396,6 +399,9 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
      */
     public function __call($name, array $arguments)
     {
+        if (!$this->isMapped()) {
+            $this->registry->getPageMapper()->mapJsonObject($this);
+        }
         return $this->offsetGet($name);
     }
 
@@ -405,6 +411,9 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
      */
     public function __get($name)
     {
+        if (!$this->isMapped()) {
+            $this->registry->getPageMapper()->mapJsonObject($this);
+        }
         return $this->offsetGet($name);
     }
 
@@ -414,6 +423,10 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
      */
     public function count()
     {
+        if (!$this->isMapped()) {
+            $this->registry->getPageMapper()->mapJsonObject($this);
+        }
+
         $array = ['name', 'language', 'pages', 'url', 'template', 'languages', 'allow_childs', 'child_templates'];
         return $this->getVariables()->count() + count($array);
     }
@@ -424,6 +437,10 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
      */
     public function getIterator()
     {
+        if (!$this->isMapped()) {
+            $this->registry->getPageMapper()->mapJsonObject($this);
+        }
+
         $array = array_merge(
             [
                 'name' => $this->getName(),
@@ -447,6 +464,10 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
      */
     public function offsetExists($offset)
     {
+        if (!$this->isMapped()) {
+            $this->registry->getPageMapper()->mapJsonObject($this);
+        }
+
         if ($offset === 'name' || $offset === 'language' || $offset === 'pages' || $offset === 'url' || $offset === 'template' ||
             $offset === 'languages' || $offset === 'allow_childs' || $offset === 'child_templates'
         ) {
@@ -462,6 +483,10 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
      */
     public function offsetGet($offset)
     {
+        if (!$this->isMapped()) {
+            $this->registry->getPageMapper()->mapJsonObject($this);
+        }
+
         if ($offset === 'name') {
             return $this->getName();
         } elseif ($offset === 'language') {
@@ -490,6 +515,10 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
      */
     public function offsetSet($offset, $value)
     {
+        if (!$this->isMapped()) {
+            $this->registry->getPageMapper()->mapJsonObject($this);
+        }
+
         if ($offset === 'name') {
             $this->setName($value);
         } elseif ($offset === 'language') {
@@ -517,6 +546,10 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
      */
     public function offsetUnset($offset)
     {
+        if (!$this->isMapped()) {
+            $this->registry->getPageMapper()->mapJsonObject($this);
+        }
+
         if ($offset === 'name') {
             $this->setName(null);
         } elseif ($offset === 'pages') {
