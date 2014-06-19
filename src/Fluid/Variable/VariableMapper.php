@@ -2,16 +2,10 @@
 namespace Fluid\Variable;
 
 use Fluid\MappingInterface;
-use Fluid\Page\PageEntity;
 use Fluid\RegistryInterface;
 
-/**
- * todo redo this entire class, its a mess of patching over patching
- */
 class VariableMapper
 {
-    const DATA_DIRECTORY = 'pages';
-
     /**
      * @var RegistryInterface
      */
@@ -30,7 +24,7 @@ class VariableMapper
      */
     public function persist(VariableCollection $collection)
     {
-        $file = $this->getFile($collection->getPage(), $this->registry->getLanguage()->getLanguage());
+        $file = $this->registry->getPageMapper()->getFile($collection->getPage(), $this->registry->getLanguage()->getLanguage());
         $this->registry->getStorage()->saveBranchData($file, $collection->toArray());
     }
 
@@ -178,27 +172,18 @@ class VariableMapper
 
     /**
      * @param VariableCollection $collection
+     * @deprecated this is specific to the page and thus, should be in the page mapper
+     * note: this is already in the page mapper, it has to be eventually removed from here
      */
     public function mapCollection(VariableCollection $collection)
     {
         $variables = $collection->getPage()->getTemplate()->getVariables();
-        $file = $this->getFile($collection->getPage(), $this->registry->getLanguage()->getLanguage());
+        $collection->getPage()->setIsMapped(true);
+        $file = $this->registry->getPageMapper()->getFile($collection->getPage(), $this->registry->getLanguage()->getLanguage());
         $data = $this->registry->getStorage()->loadBranchData($file);
 
         if (is_array($data)) {
-            foreach ($data as $item) {
-                $variable = $variables->find($item['name']);
-                if ($variable) {
-                    if ($variable instanceof VariableEntity) {
-                        $this->mapJsonVariable($variable, $item);
-                    } elseif ($variable instanceof VariableGroup) {
-                        $this->mapJsonGroup($variable, $item);
-                    } else {
-                        // todo switch to mapCollectionValues (below)
-                        trigger_error('Switch to mapCollectionValues (below)');
-                    }
-                }
-            }
+            $this->mapJsonCollection($variables, $data);
         }
     }
 
@@ -216,6 +201,8 @@ class VariableMapper
                         $this->mapJsonVariable($variable, $data);
                     } elseif ($variable instanceof VariableImage) {
                         $this->mapJsonImage($variable, $data);
+                    } elseif ($variable instanceof VariableGroup) {
+                        $this->mapJsonGroup($variable, $data);
                     } else {
                         trigger_error('Need to impleement this type toooo');
                         exit;
@@ -358,23 +345,5 @@ class VariableMapper
 
         $variable->setFormats($varFormats);
         return $variable;
-    }
-
-    /**
-     * @param PageEntity $page
-     * @param string $language
-     * @return string
-     */
-    private function getFile(PageEntity $page, $language)
-    {
-        $filepath = '';
-        $parent = $page->getParent();
-        while ($parent) {
-            $filepath .= DIRECTORY_SEPARATOR . $parent->getName();
-            $parent = $parent->getParent();
-        }
-
-        $filepath .= DIRECTORY_SEPARATOR . $page->getName();
-        return self::DATA_DIRECTORY . $filepath . '_' . $language . '.json';
     }
 }

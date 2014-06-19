@@ -46,7 +46,13 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     private $registry;
 
     /**
+     * @var bool
+     */
+    private $isMapped = false;
+
+    /**
      * @var PageMapper
+     * @deprecated
      */
     private $pageMapper;
 
@@ -283,8 +289,27 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
     }
 
     /**
+     * @return bool
+     */
+    public function isMapped()
+    {
+        return $this->isMapped;
+    }
+
+    /**
+     * @param bool $isMapped
+     * @return $this
+     */
+    public function setIsMapped($isMapped)
+    {
+        $this->isMapped = $isMapped;
+        return $this;
+    }
+
+    /**
      * @param PageMapper $pageMapper
      * @return $this
+     * @deprecated
      */
     public function setPageMapper(PageMapper $pageMapper)
     {
@@ -294,6 +319,7 @@ class PageEntity implements Countable, IteratorAggregate, ArrayAccess, JsonSeria
 
     /**
      * @return PageMapper
+     * @deprecated
      */
     public function getPageMapper()
     {

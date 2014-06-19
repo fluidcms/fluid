@@ -7,6 +7,8 @@ use Fluid\XmlMappingLoaderInterface;
 
 class PageMapper
 {
+    const DATA_DIRECTORY = 'pages';
+
     /**
      * @var StorageInterface
      * @deprecated
@@ -55,6 +57,21 @@ class PageMapper
     }
 
     /**
+     * @param PageEntity $page
+     */
+    public function mapJsonObject(PageEntity $page)
+    {
+        $variables = $page->getTemplate()->getVariables();
+        $page->setIsMapped(true);
+        $file = $this->getFile($page, $this->registry->getLanguage()->getLanguage());
+        $data = $this->registry->getStorage()->loadBranchData($file);
+
+        if (is_array($data)) {
+            $this->mapJsonCollection($variables, $data);
+        }
+    }
+
+    /**
      * @param StorageInterface $storage
      * @return $this
      * @deprecated
@@ -92,5 +109,24 @@ class PageMapper
     public function getXmlMappingLoader()
     {
         return $this->xmlMappingLoader;
+    }
+
+
+    /**
+     * @param PageEntity $page
+     * @param string $language
+     * @return string
+     */
+    public function getFile(PageEntity $page, $language)
+    {
+        $filepath = '';
+        $parent = $page->getParent();
+        while ($parent) {
+            $filepath .= DIRECTORY_SEPARATOR . $parent->getName();
+            $parent = $parent->getParent();
+        }
+
+        $filepath .= DIRECTORY_SEPARATOR . $page->getName();
+        return self::DATA_DIRECTORY . $filepath . '_' . $language . '.json';
     }
 }
