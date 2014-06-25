@@ -66,7 +66,7 @@ class PageMapper
         $file = $this->getFile($page, $this->registry->getLanguage()->getLanguage());
         $data = $this->registry->getStorage()->loadBranchData($file);
 
-        if (is_array($data)) {
+        if (is_array($data) && !$variables->isMapped()) {
             $this->registry->getVariableMapper()->mapJsonCollection($variables, $data);
         }
     }

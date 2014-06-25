@@ -45,9 +45,9 @@ class VariableCollection implements Countable, IteratorAggregate, ArrayAccess
     public function mapCollection()
     {
         if (null !== $this->getPage()) {
-            $this->setIsMapped(true);
             $mapper = $this->registry->getVariableMapper();
             $mapper->mapCollection($this);
+            $this->setIsMapped(true);
         }
     }
 

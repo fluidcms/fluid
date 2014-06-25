@@ -182,7 +182,7 @@ class VariableMapper
         $file = $this->registry->getPageMapper()->getFile($collection->getPage(), $this->registry->getLanguage()->getLanguage());
         $data = $this->registry->getStorage()->loadBranchData($file);
 
-        if (is_array($data)) {
+        if (is_array($data) && !$variables->isMapped()) {
             $this->mapJsonCollection($variables, $data);
         }
     }
@@ -210,6 +210,7 @@ class VariableMapper
                 }
             }
         }
+        $collection->setIsMapped(true);
         return $collection;
     }
 
